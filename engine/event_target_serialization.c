@@ -7,6 +7,8 @@ typedef void (__thiscall *BeginNamedFieldMethod)(
 typedef void (__thiscall *EndNamedFieldMethod)(void *reader);
 typedef unsigned char (__thiscall *ReadIntegerFieldMethod)(
     void *reader, const char *field_name, int *value, int size);
+typedef unsigned char (__thiscall *ReadByteFieldMethod)(
+    void *reader, const char *field_name, char *value, int size);
 typedef void (__thiscall *WriteStringFieldMethod)(
     void *reader, const char *field_name, void *value, uint32_t flags);
 typedef unsigned char (__thiscall *ReadStringFieldMethod)(
@@ -39,6 +41,9 @@ extern char __cdecl parse_integer_string(char *string, int *value);
 extern uint8_t *__cdecl format_event_reference(uint8_t *string,
                                                 unsigned int value);
 extern char __cdecl parse_event_reference(char *string, int *value);
+extern char __thiscall serialize_boolean_field_as_string(
+    uint8_t *reader, const char *field_name, char *value,
+    char *default_value);
 
 /* engine/engine_logging.c */
 extern int log_engine_message(int engine_address, const char *format, ...);
@@ -78,6 +83,23 @@ char __thiscall serialize_integer_field(
   }
   destroy_runtime_string(&text);
   return (char)result;
+}
+
+char __cdecl serialize_boolean_field(uint8_t *reader, const char *field_name,
+                                     char *value, char *default_value)
+{
+  if (reader[5])
+    return serialize_boolean_field_as_string(reader, field_name, value,
+                                             default_value);
+
+  uint32_t *methods = *(uint32_t **)reader;
+  const ReadByteFieldMethod read_byte =
+      (ReadByteFieldMethod)(uintptr_t)methods[16 / sizeof(uint32_t)];
+  if (!read_byte(reader, field_name, value, 1)) {
+    *value = *default_value;
+    return 0;
+  }
+  return 1;
 }
 
 char __thiscall read_serialized_event_reference(

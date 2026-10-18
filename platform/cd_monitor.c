@@ -98,8 +98,8 @@ _Static_assert(sizeof(CdVolumeEntry) == 12, "CD volume entry size");
 extern const char Key[4];
 extern int game_engine_address;
 extern int system_profile_address;
-extern int (__stdcall *off_6B87A0[2])(char);
-extern int (__stdcall *off_6F3054)(char);
+extern int (__stdcall *cd_drive_event_worker_vtable[2])(char);
+extern int (__stdcall *cd_monitor_vtable)(char);
 
 /* common/memory.c */
 extern uint32_t *__cdecl allocate_tracked_memory(int size);
@@ -438,7 +438,7 @@ char *__thiscall construct_cd_monitor(char *memory)
   CdMonitor *monitor = (CdMonitor *)memory;
   initialize_cd_monitor_strings(memory);
 
-  monitor->vtable = (uint32_t)(uintptr_t)&off_6F3054;
+  monitor->vtable = (uint32_t)(uintptr_t)&cd_monitor_vtable;
   monitor->query_cancel_auto_play_message =
       RegisterWindowMessageA("QueryCancelAutoPlay");
   monitor->no_drive_type_auto_run = 149;
@@ -467,7 +467,7 @@ char *__thiscall construct_cd_monitor(char *memory)
 
   uint32_t *drive_event_worker = allocate_tracked_memory(8);
   if (drive_event_worker) {
-    drive_event_worker[0] = (uint32_t)(uintptr_t)off_6B87A0;
+    drive_event_worker[0] = (uint32_t)(uintptr_t)cd_drive_event_worker_vtable;
     *((uint8_t *)drive_event_worker + 4) = 0;
   }
   monitor->drive_event_worker = (uint32_t)(uintptr_t)drive_event_worker;

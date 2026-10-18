@@ -84,6 +84,12 @@ extern uint8_t shared_arena_allocator_storage[64];
 extern int address_map_instance_count;
 extern int ordered_map_allocator_reference_count;
 extern int ordered_map_arena_address;
+extern int broadcast_target_base_offset_adjustment;
+extern uint32_t broadcast_target_type_descriptor[15];
+extern int event_handler_base_offset_adjustment;
+extern uint32_t event_handler_type_descriptor[15];
+extern uint32_t registered_object_base_vtable[];
+extern uint32_t registered_game_object_vtable[];
 
 /* common/memory.c */
 extern uint32_t *__cdecl allocate_tracked_memory(int size);
@@ -932,4 +938,38 @@ void __thiscall destroy_runtime_type_instance_map(
     free_tracked_memory((int)map_address);
   }
   type_descriptor->instances_by_address = 0;
+}
+
+uint8_t *__thiscall construct_registered_object_base(uint8_t *object)
+{
+  find_or_create_registry_entry(
+      broadcast_target_type_descriptor,
+      (uint32_t)(uintptr_t)object
+          + (uint32_t)broadcast_target_base_offset_adjustment + 4);
+  object[4] = 0;
+  *(uint32_t *)(void *)object =
+      (uint32_t)(uintptr_t)registered_object_base_vtable;
+  return object;
+}
+
+uint32_t *__thiscall destroy_registered_object_base(uint32_t *object)
+{
+  *object = (uint32_t)(uintptr_t)registered_object_base_vtable;
+  const uint32_t registered_address =
+      (uint32_t)broadcast_target_base_offset_adjustment
+      + (object ? (uint32_t)(uintptr_t)(object + 1) : 0);
+  return erase_map_entry_impl(broadcast_target_type_descriptor,
+                              registered_address);
+}
+
+uint8_t *__thiscall construct_registered_game_object(uint8_t *object)
+{
+  construct_registered_object_base(object);
+  find_or_create_registry_entry(
+      event_handler_type_descriptor,
+      (uint32_t)(uintptr_t)object
+          + (uint32_t)event_handler_base_offset_adjustment + 9);
+  *(uint32_t *)(void *)object =
+      (uint32_t)(uintptr_t)registered_game_object_vtable;
+  return object;
 }

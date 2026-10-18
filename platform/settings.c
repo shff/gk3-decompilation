@@ -21,11 +21,11 @@ typedef struct {
 } DisplayOptions;
 
 /* gk3/GK3R_rest.c */
-extern uint32_t dword_76C640[16];
-extern int dword_76C63C;
-extern uint32_t *off_6C1C08;
-extern uint32_t *off_6C1C0C;
-extern uint32_t *off_6C1C10;
+extern uint32_t settings_context_type_descriptor[16];
+extern int settings_registry_base_offset;
+extern uint32_t *settings_context_vtable;
+extern uint32_t *settings_backend_vtable;
+extern uint32_t *settings_backend_destructor_vtable;
 
 /* engine/registry.c */
 extern uint32_t *__thiscall find_or_create_registry_entry(
@@ -43,6 +43,9 @@ extern int game_engine_address;
 extern const char Key[4];
 extern const char Str1[4];
 extern uint32_t *__thiscall initialize_display_options(uint32_t *options);
+extern uint32_t display_mode_resource_ids[];
+extern int __cdecl format_guid_runtime_string(RuntimeString *string,
+                                              const GUID *identifier);
 extern int *__cdecl resolve_display_dimensions(
     int *result, char width_set, int width, char height_set, int height);
 extern char __cdecl parse_display_mode_name(char *name, char **mode);
@@ -125,24 +128,24 @@ char __thiscall read_boolean_setting(
 uint32_t *__thiscall construct_settings_context(uint32_t *object)
 {
   find_or_create_registry_entry(
-      dword_76C640,
-      (uint32_t)(uintptr_t)((uint8_t *)object + dword_76C63C + 4));
-  object[1] = (uint32_t)(uintptr_t)off_6C1C0C;
+      settings_context_type_descriptor,
+      (uint32_t)(uintptr_t)((uint8_t *)object + settings_registry_base_offset + 4));
+  object[1] = (uint32_t)(uintptr_t)settings_backend_vtable;
   construct_ini_settings_backend(object + 2);
-  object[0] = (uint32_t)(uintptr_t)off_6C1C08;
+  object[0] = (uint32_t)(uintptr_t)settings_context_vtable;
   return object;
 }
 
 uint32_t *__thiscall destroy_settings_context(uint32_t *object)
 {
-  object[0] = (uint32_t)(uintptr_t)off_6C1C08;
-  object[2] = (uint32_t)(uintptr_t)off_6C1C10;
+  object[0] = (uint32_t)(uintptr_t)settings_context_vtable;
+  object[2] = (uint32_t)(uintptr_t)settings_backend_destructor_vtable;
   release_and_clear_interface(object + 3);
-  object[1] = (uint32_t)(uintptr_t)off_6C1C0C;
+  object[1] = (uint32_t)(uintptr_t)settings_backend_vtable;
 
-  const uint32_t address = dword_76C63C
+  const uint32_t address = settings_registry_base_offset
       + (object ? (uint32_t)(uintptr_t)(object + 1) : 0);
-  return erase_map_entry(dword_76C640, address);
+  return erase_map_entry(settings_context_type_descriptor, address);
 }
 
 void *__thiscall load_display_options_from_settings(
@@ -260,4 +263,133 @@ int *__thiscall load_window_position_from_settings(
   destroy_runtime_string(&section);
   destroy_runtime_string(&key);
   return result;
+}
+
+int __thiscall increment_and_persist_setting_value(uint32_t **settings)
+{
+  RuntimeString section = {0};
+  RuntimeString key = {0};
+  construct_resource_string(&section, 0x2712);
+  construct_resource_string(&key, 0x5640);
+
+  char *section_name = section.data
+      ? (char *)(uintptr_t)section.data : (char *)Key;
+  char *setting_name = key.data
+      ? (char *)(uintptr_t)key.data : (char *)Key;
+  DWORD value = (DWORD)(uintptr_t)read_dword_setting(
+      settings, section_name, setting_name, NULL) + 1;
+
+  char path[512];
+  const int length = snprintf(path, sizeof(path),
+      "Software\\Sierra On-Line\\Gabriel Knight 3\\%s", section_name);
+  LSTATUS status = ERROR_INSUFFICIENT_BUFFER;
+  if (length >= 0 && (size_t)length < sizeof(path)) {
+    HKEY registry_key;
+    status = RegCreateKeyExA(HKEY_CURRENT_USER, path, 0, NULL, 0,
+                             KEY_SET_VALUE, NULL, &registry_key, NULL);
+    if (status == ERROR_SUCCESS) {
+      status = RegSetValueExA(registry_key, setting_name, 0, REG_DWORD,
+                              (const BYTE *)&value, sizeof(value));
+      RegCloseKey(registry_key);
+    }
+  }
+
+  destroy_runtime_string(&key);
+  destroy_runtime_string(&section);
+  return (int)status;
+}
+
+int __stdcall save_display_options_to_settings(
+    int mode, uint8_t width, uint8_t height, char fullscreen,
+    GUID device_identity, int option_8)
+{
+  if (mode == 0)
+    memset(&device_identity, 0, sizeof(device_identity));
+
+  RuntimeString section = {0};
+  RuntimeString mode_key = {0};
+  RuntimeString mode_value = {0};
+  RuntimeString width_key = {0};
+  RuntimeString height_key = {0};
+  RuntimeString fullscreen_key = {0};
+  RuntimeString identity_key = {0};
+  RuntimeString identity_value = {0};
+  RuntimeString option_key = {0};
+  construct_resource_string(&section, 0x2713);
+  construct_resource_string(&mode_key, 0x59E2);
+  construct_resource_string(&mode_value, display_mode_resource_ids[2 * mode]);
+  construct_resource_string(&width_key, 0x5A28);
+  construct_resource_string(&height_key, 0x5A32);
+  construct_resource_string(&fullscreen_key, 0x5A1E);
+  construct_resource_string(&identity_key, 0x59EB);
+  format_guid_runtime_string(&identity_value, &device_identity);
+  construct_resource_string(&option_key, 0x59EC);
+
+  char *section_name = section.data
+      ? (char *)(uintptr_t)section.data : (char *)Key;
+  char path[512];
+  const int length = snprintf(path, sizeof(path),
+      "Software\\Sierra On-Line\\Gabriel Knight 3\\%s", section_name);
+  LSTATUS status = ERROR_INSUFFICIENT_BUFFER;
+  if (length >= 0 && (size_t)length < sizeof(path)) {
+    HKEY registry_key;
+    status = RegCreateKeyExA(HKEY_CURRENT_USER, path, 0, NULL, 0,
+                             KEY_SET_VALUE, NULL, &registry_key, NULL);
+    if (status == ERROR_SUCCESS) {
+      char *setting_name = mode_key.data
+          ? (char *)(uintptr_t)mode_key.data : (char *)Key;
+      const char *setting_value = mode_value.data
+          ? (const char *)(uintptr_t)mode_value.data : Key;
+      status = RegSetValueExA(registry_key, setting_name, 0, REG_SZ,
+          (const BYTE *)setting_value, mode_value.length + 1);
+
+      const uint32_t width_value = width;
+      setting_name = width_key.data
+          ? (char *)(uintptr_t)width_key.data : (char *)Key;
+      if (status == ERROR_SUCCESS)
+        status = RegSetValueExA(registry_key, setting_name, 0, REG_DWORD,
+            (const BYTE *)&width_value, sizeof(width_value));
+
+      const uint32_t height_value = height;
+      setting_name = height_key.data
+          ? (char *)(uintptr_t)height_key.data : (char *)Key;
+      if (status == ERROR_SUCCESS)
+        status = RegSetValueExA(registry_key, setting_name, 0, REG_DWORD,
+            (const BYTE *)&height_value, sizeof(height_value));
+
+      const uint32_t fullscreen_value = fullscreen != 0;
+      setting_name = fullscreen_key.data
+          ? (char *)(uintptr_t)fullscreen_key.data : (char *)Key;
+      if (status == ERROR_SUCCESS)
+        status = RegSetValueExA(registry_key, setting_name, 0, REG_DWORD,
+            (const BYTE *)&fullscreen_value, sizeof(fullscreen_value));
+
+      setting_name = identity_key.data
+          ? (char *)(uintptr_t)identity_key.data : (char *)Key;
+      const char *identity_text = identity_value.data
+          ? (const char *)(uintptr_t)identity_value.data : Key;
+      if (status == ERROR_SUCCESS)
+        status = RegSetValueExA(registry_key, setting_name, 0, REG_SZ,
+            (const BYTE *)identity_text, identity_value.length + 1);
+
+      const uint32_t option_value = (uint32_t)option_8;
+      setting_name = option_key.data
+          ? (char *)(uintptr_t)option_key.data : (char *)Key;
+      if (status == ERROR_SUCCESS)
+        status = RegSetValueExA(registry_key, setting_name, 0, REG_DWORD,
+            (const BYTE *)&option_value, sizeof(option_value));
+      RegCloseKey(registry_key);
+    }
+  }
+
+  destroy_runtime_string(&option_key);
+  destroy_runtime_string(&identity_value);
+  destroy_runtime_string(&identity_key);
+  destroy_runtime_string(&fullscreen_key);
+  destroy_runtime_string(&height_key);
+  destroy_runtime_string(&width_key);
+  destroy_runtime_string(&mode_value);
+  destroy_runtime_string(&mode_key);
+  destroy_runtime_string(&section);
+  return (int)status;
 }

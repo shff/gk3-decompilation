@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <windows.h>
 
@@ -32,12 +33,31 @@ int sound_resource_cache_address; /* Global sound-resource cache object. */
 /* gk3/GK3R_rest.c */
 extern uint32_t shared_zero_vector[3]; /* Shared zero-valued 3D vector. */
 extern int active_sound_manager_address; /* Current sound manager instance. */
+extern int game_engine_address; /* Engine used for sound failure logging. */
 extern uint32_t sound_collection_vtable[];
 extern uint32_t sound_manager_purecall_vtable[];
 extern uint32_t sound_manager_vtable[];
 
 /* C runtime */
 extern int __cdecl _strcmpi(const char *left, const char *right);
+
+/* gk3/GK3R_rest.c */
+extern void __cdecl normalize_sound_volume(float volume);
+extern uint32_t *__thiscall insert_sound_list_node(
+    uint32_t *collection, uint32_t *insert_args, int anchor,
+    uint32_t *sound_address);
+extern int __thiscall start_sound_with_manager_pause_check(int sound,
+                                                           int *event);
+extern int __thiscall stop_sound_and_clear_flag_0x40(
+    int (__thiscall ***sound)(void *));
+extern int __thiscall queue_engine_event(uint32_t *engine, int *event);
+extern int __thiscall advance_soundtrack_queue(uint32_t *soundtrack);
+extern uint8_t *__thiscall select_random_soundtrack_entry(uint32_t *node);
+extern uint32_t *__thiscall initialize_event_context(uint32_t *event_context,
+                                                      int source, int code);
+extern int *__thiscall play_or_update_soundtrack_sound(
+    int sound_node, float volume, int event_value, char *event_name,
+    int action);
 
 char *__thiscall construct_sound_collection(char *collection);
 uint32_t *__cdecl initialize_sound_resource_cache(void);
@@ -106,6 +126,16 @@ int __thiscall release_object_reference(void *object)
   ObjectReferenceMethod method =
       (ObjectReferenceMethod)(uintptr_t)method_address;
   return method(object);
+}
+
+int __thiscall add_sound_object_reference(void *sound)
+{
+  return add_object_reference(sound);
+}
+
+int __thiscall release_sound_object_reference(void *sound)
+{
+  return release_object_reference(sound);
 }
 
 int __thiscall initialize_sound_reference(uint32_t *reference, void *sound)
@@ -594,6 +624,47 @@ insert_node:
   return result;
 }
 
+static uint32_t *__thiscall find_sound_option_tree_lower_bound(
+    uint32_t *tree, uint32_t *key)
+{
+  SoundOptionTreeNode *header =
+      (SoundOptionTreeNode *)(uintptr_t)tree[1];
+  SoundOptionTreeNode *candidate = header;
+  SoundOptionTreeNode *node =
+      (SoundOptionTreeNode *)(uintptr_t)header->parent;
+  const uint32_t nil_node = (uint32_t)sound_option_tree_nil_node_address;
+  uint32_t lock_storage = 0;
+
+  construct_runtime_lockit(&lock_storage);
+  while ((uint32_t)(uintptr_t)node != nil_node) {
+    if ((int32_t)node->value.key >= (int32_t)*key) {
+      candidate = node;
+      node = (SoundOptionTreeNode *)(uintptr_t)node->left;
+    } else {
+      node = (SoundOptionTreeNode *)(uintptr_t)node->right;
+    }
+  }
+  destroy_runtime_lockit(&lock_storage);
+  return (uint32_t *)(void *)candidate;
+}
+
+uint32_t *__thiscall find_sound_option_tree_node(
+    uint32_t *tree, uint32_t *result, uint32_t *key)
+{
+  SoundOptionTreeNode *header =
+      (SoundOptionTreeNode *)(uintptr_t)tree[1];
+  SoundOptionTreeNode *candidate =
+      (SoundOptionTreeNode *)(void *)find_sound_option_tree_lower_bound(
+          tree, key);
+
+  if ((uint32_t)(uintptr_t)candidate == (uint32_t)(uintptr_t)header ||
+      (int32_t)*key < (int32_t)candidate->value.key)
+    *result = (uint32_t)(uintptr_t)header;
+  else
+    *result = (uint32_t)(uintptr_t)candidate;
+  return result;
+}
+
 char *__thiscall initialize_sound_manager_core(char *manager)
 {
   char *settings = manager + 56;
@@ -652,6 +723,59 @@ char *__thiscall initialize_sound_worker_queue(char *queue)
   ((uint32_t *)queue)[13] = 1;
   queue[56] = 1;
   return queue;
+}
+
+char __thiscall ensure_sound_system_initialized(uint32_t *audio_settings)
+{
+  typedef int (__thiscall *InitializeSoundSystemMethod)(uint32_t *settings);
+  typedef void (__thiscall *SetSoundOptionMethod)(uint32_t *settings,
+                                                   uint32_t value);
+  typedef void (__thiscall *ConfigureSoundMethod)(uint32_t *settings,
+                                                   uint32_t *values,
+                                                   uint32_t first_option,
+                                                   uint32_t second_option);
+  typedef void (__thiscall *LogEngineMessageMethod)(int engine,
+                                                    const char *message,
+                                                    uint32_t flags,
+                                                    int severity);
+
+  uint8_t *settings_bytes = (uint8_t *)(void *)audio_settings;
+  if (settings_bytes[4] == 0) {
+    uint32_t *settings_words = audio_settings;
+    uint32_t attempts = settings_words[2];
+
+    if (attempts >= 25) {
+      if (attempts == 25) {
+        settings_words[2] = 26;
+        uint32_t *engine = (uint32_t *)(uintptr_t)(uint32_t)game_engine_address;
+        uint32_t *engine_methods = *(uint32_t **)(void *)engine;
+        LogEngineMessageMethod log_message =
+            (LogEngineMessageMethod)(uintptr_t)engine_methods[144 / 4];
+        log_message(game_engine_address,
+                    "Sound system failed to initialize after multiple attempts, sound disabled.",
+                    0, 16);
+      }
+    } else {
+      settings_words[2] = attempts + 1;
+      uint32_t *sound_methods = *(uint32_t **)(void *)audio_settings;
+      InitializeSoundSystemMethod initialize =
+          (InitializeSoundSystemMethod)(uintptr_t)sound_methods[0];
+      settings_bytes[4] = (uint8_t)initialize(audio_settings);
+
+      if (settings_bytes[4] != 0) {
+        SetSoundOptionMethod set_option =
+            (SetSoundOptionMethod)(uintptr_t)sound_methods[60 / 4];
+        set_option(audio_settings, settings_words[4]);
+
+        ConfigureSoundMethod configure =
+            (ConfigureSoundMethod)(uintptr_t)sound_methods[64 / 4];
+        configure(audio_settings, &settings_words[5], settings_words[8],
+                  settings_words[9]);
+      }
+    }
+  }
+
+  return (char)settings_bytes[4];
 }
 
 int __thiscall resume_sound_by_id(int *manager, int sound_id)
@@ -824,4 +948,237 @@ int __thiscall construct_sound_manager(int address)
   *(uint32_t *)(manager + 84) = 0;
   *(uint32_t *)manager = (uint32_t)(uintptr_t)sound_manager_vtable;
   return address;
+}
+
+char *__stdcall normalize_sound_filename(char *source, char *buffer)
+{
+  char *result;
+
+  strcpy(buffer, source);
+  result = strchr(buffer, '.');
+  if (!result)
+    return strcat(buffer, ".wav");
+  return result;
+}
+
+BOOL __thiscall add_sound_to_collection(int collection, int sound_address)
+{
+  HANDLE *context = (HANDLE *)(uintptr_t)(collection + 32);
+  uint32_t insert_args[2];
+  int count;
+
+  insert_args[1] = (uint32_t)(collection + 32);
+  lock_synchronization_context(context);
+  count = *(int *)(uintptr_t)(collection + 8);
+  insert_sound_list_node((uint32_t *)(uintptr_t)(collection + 4), insert_args,
+                         count, (uint32_t *)(void *)&sound_address);
+  return unlock_synchronization_context(context);
+}
+
+int __thiscall set_sound_volume(
+    int (__thiscall ***sound)(void *),
+    int (__thiscall **volume_bits)(void *))
+{
+  sound[12] = volume_bits;
+  return (**sound)(sound);
+}
+
+int __thiscall set_sound_position(int *sound, int *position)
+{
+  int vtable_address = *sound;
+
+  sound[16] = *position;
+  sound[17] = position[1];
+  sound[18] = position[2];
+  return (*(int (__stdcall **)(int *))(vtable_address + 48))(sound + 16);
+}
+
+int __thiscall set_sound_distance_range(float *sound,
+                                        int min_distance_bits,
+                                        float max_distance)
+{
+  *((uint32_t *)sound + 19) = (uint32_t)min_distance_bits;
+  sound[20] = max_distance;
+  return (*(int (__stdcall **)(int, uint32_t))(*(uint32_t *)sound + 56))(
+      min_distance_bits, *(uint32_t *)(void *)&max_distance);
+}
+
+int __thiscall play_sound(
+    int manager_address, float sound_category, char *sound_name, float volume,
+    char looping, int sound_flags, int *event, int spatial,
+    int *position, int min_distance_bits, float max_distance)
+{
+  uint8_t *manager = (uint8_t *)(uintptr_t)(uint32_t)manager_address;
+  float requested_sound_category = sound_category;
+  float requested_volume = volume;
+  int sound_address;
+  char normalized_filename[260];
+  uint32_t category_key;
+  uint32_t option_node;
+
+  memcpy(&category_key, &sound_category, sizeof(category_key));
+  if (!manager[49] ||
+      !(*(uint8_t *)(uintptr_t)(find_sound_option_tree_node(
+            (uint32_t *)(void *)(manager + 56), &option_node,
+            &category_key)[0] + 16)) ||
+      (!*(uint8_t *)(uintptr_t)(manager + 4) &&
+       !ensure_sound_system_initialized((uint32_t *)(void *)manager))) {
+    if (event)
+      queue_engine_event((uint32_t *)(uintptr_t)(uint32_t)game_engine_address,
+                         event);
+    return 0;
+  }
+
+  normalize_sound_volume(volume);
+  normalize_sound_filename(sound_name, normalized_filename);
+  sound_address = (*(int (__thiscall **)(int, float, char *, int))
+      (*(uint32_t *)(void *)manager + 4))(
+          manager_address, requested_sound_category, normalized_filename,
+          spatial);
+  if (!sound_address) {
+    if (event)
+      queue_engine_event((uint32_t *)(uintptr_t)(uint32_t)game_engine_address,
+                         event);
+    return 0;
+  }
+
+  uint32_t volume_bits;
+  memcpy(&volume_bits, &requested_volume, sizeof(volume_bits));
+  if (looping)
+    *(uint32_t *)(uintptr_t)(sound_address + 44) |= 1u;
+  else
+    *(uint32_t *)(uintptr_t)(sound_address + 44) &= ~1u;
+  *(uint32_t *)(uintptr_t)(sound_address + 84) = (uint32_t)sound_flags;
+  set_sound_volume((int (__thiscall ***)(void *))(uintptr_t)sound_address, 0);
+  if (spatial) {
+    set_sound_position((int *)(uintptr_t)sound_address, position);
+    set_sound_distance_range((float *)(uintptr_t)sound_address,
+                             min_distance_bits, max_distance);
+  }
+  start_sound_with_manager_pause_check(sound_address, event);
+  set_sound_volume((int (__thiscall ***)(void *))(uintptr_t)sound_address,
+                   (int (__thiscall **)(void *))(uintptr_t)volume_bits);
+  if ((*(uint8_t *)(uintptr_t)(sound_address + 44) & 4u) != 0)
+    stop_sound_and_clear_flag_0x40(
+        (int (__thiscall ***)(void *))(uintptr_t)sound_address);
+  release_object_reference((void *)(uintptr_t)sound_address);
+  add_sound_to_collection(*(int *)(void *)(manager + 72), sound_address);
+  return *(int *)(uintptr_t)(sound_address + 4);
+}
+
+int __thiscall play_2d_sound(
+    void *manager, float sound_category, char *sound_name, float volume,
+    char looping, int sound_flags, int *event)
+{
+  return play_sound((int)(uintptr_t)manager, sound_category, sound_name,
+                    volume, looping, sound_flags, event, 0,
+                    (int *)(void *)shared_zero_vector, 0, 0.0f);
+}
+
+int __thiscall play_3d_sound(
+    void *manager, float sound_category, char *sound_name, float volume,
+    char looping, int sound_flags, int *position, int min_distance_bits,
+    float max_distance, int *event)
+{
+  return play_sound((int)(uintptr_t)manager, sound_category, sound_name,
+                    volume, looping, sound_flags, event, 1, position,
+                    min_distance_bits, max_distance);
+}
+
+int __thiscall process_soundtrack_node(int soundtrack_address)
+{
+  uint8_t *soundtrack =
+      (uint8_t *)(uintptr_t)(uint32_t)soundtrack_address;
+  int result;
+  int current_node_address;
+  int node_type;
+  int random_value;
+  int random_percent;
+  int min_wait_ms;
+  int max_wait_ms;
+  uint32_t event_context_storage[2];
+  uint32_t *event_context;
+
+  uint32_t vtable_address = *(uint32_t *)(void *)soundtrack;
+  *(int *)(void *)(soundtrack + 52) = -1;
+  ((void (__stdcall *)(int))(uintptr_t)(vtable_address + 24))(1);
+  current_node_address =
+      advance_soundtrack_queue((uint32_t *)(void *)soundtrack);
+  if (!current_node_address) {
+    *(int *)(void *)(soundtrack + 52) = 1;
+    return 0;
+  }
+
+  *(int *)(void *)(soundtrack + 88) = 0;
+  node_type = *(int *)(uintptr_t)(current_node_address + 4) - 1;
+  if (node_type) {
+    node_type -= 1;
+    if (node_type) {
+      if (node_type - 1 == 0) {
+        uint8_t *selected_entry =
+            select_random_soundtrack_entry(
+                (uint32_t *)(uintptr_t)current_node_address);
+        *(uint32_t *)(void *)(soundtrack + 88) =
+            (uint32_t)(uintptr_t)selected_entry;
+        if (selected_entry) {
+          event_context = initialize_event_context(event_context_storage,
+                                                   soundtrack_address, 3);
+          result = (int)play_or_update_soundtrack_sound(
+              *(int *)(void *)(soundtrack + 88) + 12,
+              *(float *)(void *)(soundtrack + 80), (int)event_context[0],
+              (char *)(uintptr_t)event_context[1], 1);
+          *(int *)(void *)(soundtrack + 52) = 0;
+          return result;
+        }
+      }
+    } else {
+      int repeats_remaining = *(int *)(uintptr_t)(current_node_address + 20);
+      if (repeats_remaining <= 1) {
+        if (repeats_remaining == 1)
+          *(uint8_t *)(uintptr_t)(current_node_address + 8) = 1;
+      } else {
+        *(int *)(uintptr_t)(current_node_address + 20) = repeats_remaining - 1;
+      }
+
+      if (*(int *)(uintptr_t)(current_node_address + 24) == 100 ||
+          ((random_value = rand(), random_percent = random_value % 100,
+            result = random_value / 100,
+            random_percent <= *(int *)(uintptr_t)(current_node_address + 24)))) {
+        min_wait_ms = *(int *)(uintptr_t)(current_node_address + 12);
+        max_wait_ms = *(int *)(uintptr_t)(current_node_address + 16);
+        if (max_wait_ms) {
+          int wait_range_ms = max_wait_ms - min_wait_ms;
+          if (wait_range_ms > 0)
+            min_wait_ms += rand() % wait_range_ms;
+        }
+        vtable_address = *(uint32_t *)(void *)soundtrack;
+        return ((int (__thiscall *)(int, int))
+            (uintptr_t)(vtable_address + 24))(soundtrack_address, min_wait_ms);
+      }
+    }
+  } else {
+    int repeats_remaining = *(int *)(uintptr_t)(current_node_address + 36);
+    if (repeats_remaining <= 1) {
+      if (repeats_remaining == 1)
+        *(uint8_t *)(uintptr_t)(current_node_address + 8) = 1;
+    } else {
+      *(int *)(uintptr_t)(current_node_address + 36) = repeats_remaining - 1;
+    }
+
+    uint8_t random_threshold =
+        *(uint8_t *)(uintptr_t)(current_node_address + 40);
+    if (random_threshold == 100 || rand() % 100 <= random_threshold) {
+      *(int *)(void *)(soundtrack + 88) = current_node_address;
+      event_context = initialize_event_context(event_context_storage,
+                                               soundtrack_address, 3);
+      result = (int)play_or_update_soundtrack_sound(
+          *(int *)(void *)(soundtrack + 88) + 12,
+          *(float *)(void *)(soundtrack + 80), (int)event_context[0],
+          (char *)(uintptr_t)event_context[1], 1);
+      *(int *)(void *)(soundtrack + 52) = 0;
+      return result;
+    }
+  }
+
+  return result;
 }

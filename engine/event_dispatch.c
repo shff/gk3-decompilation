@@ -51,10 +51,15 @@ _Static_assert(sizeof(EngineEventQueue) == 16,
 /* gk3/GK3R_rest.c */
 extern uint32_t registered_event_registry[18];
 extern uint16_t word_751900; /* Next registered event-target ID. */
-extern int dword_77369C; /* GNotifyTarget base offset adjustment. */
-extern uint32_t dword_7736A8[16]; /* GNotifyTarget type descriptor. */
-extern uint32_t off_6A6958[]; /* GNotifyTarget vtable. */
-extern int *__thiscall sub_5747D0(int *registry, int *entry, int target);
+extern int registered_event_target_base_offset_adjustment;
+extern uint32_t registered_event_target_type_descriptor[16];
+extern uint32_t registered_event_target_vtable[];
+extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
+                                                  uint32_t address);
+extern int __thiscall unregister_registered_event_target(
+    uint32_t *registry, int target);
+extern int *__thiscall register_event_target(
+    int *registry, int *entry, int target);
 extern int game_engine_address; /* Current game engine object. */
 
 /* engine/registry.c */
@@ -74,14 +79,35 @@ uint16_t *__thiscall construct_registered_event_target(
 
   registration_arguments[1] = (int)(uintptr_t)target;
   find_or_create_registry_entry(
-      dword_7736A8,
-      (unsigned int)(uintptr_t)target + dword_77369C + 6);
+      registered_event_target_type_descriptor,
+      (unsigned int)(uintptr_t)target
+          + registered_event_target_base_offset_adjustment + 6);
   target->registration_handle = 0;
-  target->method_table = (uint32_t)(uintptr_t)off_6A6958;
-  target->registration_handle = (uint32_t)*sub_5747D0(
+  target->method_table = (uint32_t)(uintptr_t)registered_event_target_vtable;
+  target->registration_handle = (uint32_t)*register_event_target(
       (int *)(void *)registered_event_registry, registration_arguments,
       (int)(uintptr_t)target);
   return event_target;
+}
+
+uint32_t *__thiscall destroy_registered_event_target(uint16_t *storage)
+{
+  RegisteredEventTarget *target =
+      (RegisteredEventTarget *)(void *)storage;
+  if (!target)
+    return NULL;
+
+  target->method_table = (uint32_t)(uintptr_t)registered_event_target_vtable;
+  unregister_registered_event_target(registered_event_registry,
+                                     (int)(uintptr_t)target);
+  uint32_t registration_address = (uint32_t)(uintptr_t)target
+      + (uint32_t)registered_event_target_base_offset_adjustment + 6;
+  uint32_t *result = erase_map_entry_impl(
+                                           registered_event_target_type_descriptor,
+                                           registration_address);
+  target->target_id = 0;
+  target->reserved_06 = 0;
+  return result;
 }
 
 /* common/memory.c */

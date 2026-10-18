@@ -69,14 +69,13 @@ extern void __thiscall verify_display_mode_state_unchanged(int16_t *temporary);
 extern void __cdecl report_directx_call_failure(int object, const char *device, int flags,
                                char ramp);
 extern void __thiscall sub_5BDF20(int object);
-extern int *__thiscall sub_566D10(uint32_t *registry, unsigned int address);
+extern uint32_t *__thiscall find_or_create_registry_entry(
+    uint32_t *registry, uint32_t address);
 extern uint32_t *__thiscall sub_5B1340(uint32_t *object, char *storage);
 extern uint32_t *__thiscall sub_5B1360(uint32_t *object, char *storage);
 extern float *__thiscall sub_5CE200(float *object);
 extern void __thiscall sub_5AEF70(int engine);
 extern void __thiscall sub_5B1190(int engine);
-extern uint16_t *__thiscall sub_581910(uint16_t *memory, const char *name);
-extern int __thiscall sub_581BA0(int sprite, int surface);
 extern int __thiscall sub_593F40(uint32_t *sprite_collection, int sprite);
 extern int __thiscall sub_5A7A10(int engine, int flags, void *lock,
                                  int force);
@@ -84,19 +83,30 @@ extern int __thiscall get_engine_object_by_id(uint32_t *engine,
                                               uint16_t resource_id);
 extern int __thiscall get_sprite_surface(int object);
 extern int __thiscall probe_surface_lock(int surface, int flags);
-extern int __thiscall sub_5843A0(int surface, int flags);
-extern void __thiscall sub_584490(int surface);
-extern int __thiscall sub_581A90(int sprite);
-extern int __thiscall sub_582510(int *sprite);
-extern int __thiscall sub_582570(int *sprite);
-extern uint32_t __thiscall sub_56B700(uint32_t *engine,
-                                      uint16_t resource_id, int x, int y);
-extern uint32_t __thiscall sub_582200(uint16_t *sprite, int x, int y);
-extern int __cdecl sub_5AEA20(const char *label, char enabled);
-extern int sub_570E50(int engine, int format, ...);
 extern void __cdecl sub_5AEA80(void);
 extern void __cdecl sub_5AEA90(void);
 extern char *get_mouse_cursor_worker_manager(void);
+
+/* gk3/sprite.c */
+extern uint16_t *__thiscall construct_named_sprite(uint16_t *memory,
+                                                    const char *name);
+extern int __thiscall set_sprite_surface(int sprite, int surface);
+extern int __thiscall destroy_sprite_members(int sprite);
+extern uint32_t __thiscall get_engine_sprite_pixel(uint32_t *engine,
+                                                   uint16_t resource_id,
+                                                   int x, int y);
+extern uint32_t __thiscall get_sprite_pixel(uint16_t *sprite, int x, int y);
+
+/* gk3/control_graphics.c */
+extern int __thiscall lock_graphics_surface(int surface, int flags);
+extern void __thiscall unlock_graphics_surface(int surface);
+extern int __thiscall lock_sprite_pixels(int *sprite);
+extern int __thiscall unlock_sprite_pixels(int *sprite);
+
+/* engine/engine_logging.c */
+extern int __cdecl log_engine_boolean_setting(const char *label,
+                                              char enabled);
+extern int write_engine_log_message(int engine, int format, ...);
 
 /* common/memory.c */
 extern uint32_t *__cdecl allocate_tracked_memory(int size);
@@ -191,14 +201,14 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   engine[70] = (uint32_t)(uintptr_t)settings;
 
   uint32_t *pause_cookie_memory = allocate_tracked_memory(40);
-  int *registration = sub_566D10(
+  uint32_t *registration = find_or_create_registry_entry(
       dword_777030, (unsigned int)(uintptr_t)pause_cookie_memory);
   registration[2] = 1;
   if (pause_cookie_memory) {
     const uint32_t base_address =
         (uint32_t)(uintptr_t)pause_cookie_memory +
         (uint32_t)dword_77702C + 4;
-    sub_566D10(dword_777030, base_address);
+    find_or_create_registry_entry(dword_777030, base_address);
     char first_string_storage[4];
     char second_string_storage[4];
     sub_5B1340(pause_cookie_memory + 2, first_string_storage);
@@ -210,7 +220,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   sub_5AEF70((int)(uintptr_t)engine);
 
   float *gamma_resource_memory = (float *)allocate_tracked_memory(208);
-  registration = sub_566D10(
+  registration = find_or_create_registry_entry(
       dword_777D30, (unsigned int)(uintptr_t)gamma_resource_memory);
   registration[2] = 1;
   engine[114] = (uint32_t)(uintptr_t)(gamma_resource_memory
@@ -219,16 +229,17 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
 
   uint16_t *sprite_memory = (uint16_t *)allocate_tracked_memory(60);
   uint16_t *sprite = sprite_memory
-      ? sub_581910(sprite_memory, "(PrimarySprite)") : NULL;
-  sub_581BA0((int)(uintptr_t)sprite, primary_surface_address);
+      ? construct_named_sprite(sprite_memory, "(PrimarySprite)") : NULL;
+  set_sprite_surface((int)(uintptr_t)sprite, primary_surface_address);
   uint32_t sprite_id = (uint16_t)sub_593F40(engine + 71,
                                             (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[8] = sprite_id;
 
   sprite_memory = (uint16_t *)allocate_tracked_memory(60);
-  sprite = sprite_memory ? sub_581910(sprite_memory, "(ScreenSprite)") : NULL;
-  sub_581BA0((int)(uintptr_t)sprite, screen_surface_address);
+  sprite = sprite_memory
+      ? construct_named_sprite(sprite_memory, "(ScreenSprite)") : NULL;
+  set_sprite_surface((int)(uintptr_t)sprite, screen_surface_address);
   sprite_id = (uint16_t)sub_593F40(engine + 71, (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[6] = sprite_id;
@@ -236,8 +247,9 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   if (secondary_screen_surface_address) {
     sprite_memory = (uint16_t *)allocate_tracked_memory(60);
     sprite = sprite_memory
-        ? sub_581910(sprite_memory, "(Screen2Sprite)") : NULL;
-    sub_581BA0((int)(uintptr_t)sprite, secondary_screen_surface_address);
+        ? construct_named_sprite(sprite_memory, "(Screen2Sprite)") : NULL;
+    set_sprite_surface((int)(uintptr_t)sprite,
+                       secondary_screen_surface_address);
     sprite_id = (uint16_t)sub_593F40(engine + 71,
                                      (int)(uintptr_t)sprite);
     sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
@@ -246,8 +258,8 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
 
   sprite_memory = (uint16_t *)allocate_tracked_memory(60);
   sprite = sprite_memory
-      ? sub_581910(sprite_memory, "(ZBufferSprite)") : NULL;
-  sub_581BA0((int)(uintptr_t)sprite, z_buffer_surface_address);
+      ? construct_named_sprite(sprite_memory, "(ZBufferSprite)") : NULL;
+  set_sprite_surface((int)(uintptr_t)sprite, z_buffer_surface_address);
   sprite_id = (uint16_t)sub_593F40(engine + 71, (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[9] = sprite_id;
@@ -261,11 +273,11 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
       int z_buffer_surface = get_sprite_surface(z_buffer_object);
       if (probe_surface_lock(z_buffer_surface, 0xFFFF)) {
         uint16_t *pixel = (uint16_t *)(uintptr_t)
-            sub_5843A0(z_buffer_surface, 0xFFFF);
+            lock_graphics_surface(z_buffer_surface, 0xFFFF);
         *pixel = 0x1234;
         if (*pixel == 0x1234)
           engine[38] |= 1u | 4u;
-        sub_584490(z_buffer_surface);
+        unlock_graphics_surface(z_buffer_surface);
       }
 
       if ((z_buffer_test_initialization_flags & 1) == 0) {
@@ -291,13 +303,13 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
       }
 
       uint32_t test_sprite_storage[15] = {0};
-      uint16_t *test_sprite = sub_581910(
+      uint16_t *test_sprite = construct_named_sprite(
           (uint16_t *)test_sprite_storage, "test");
-      sub_581BA0((int)(uintptr_t)test_sprite, dword_773668);
+      set_sprite_surface((int)(uintptr_t)test_sprite, dword_773668);
       uint16_t *test_surface_description =
-          (uint16_t *)(uintptr_t)sub_582510((int *)test_sprite);
+          (uint16_t *)(uintptr_t)lock_sprite_pixels((int *)test_sprite);
       *test_surface_description = z_buffer_test_reference_color;
-      sub_582570((int *)test_sprite);
+      unlock_sprite_pixels((int *)test_sprite);
 
       int test_surface_object = get_sprite_surface((int)(uintptr_t)test_sprite);
       int test_surface = *(int *)(uintptr_t)(test_surface_object + 44);
@@ -316,18 +328,18 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
           &z_buffer_test_rectangle, 0, 0);
 
       if (result >= 0) {
-        uint32_t pixel = sub_56B700(engine, (uint16_t)engine[9],
-                                    z_buffer_test_pixel_x,
-                                    z_buffer_test_pixel_y);
+      uint32_t pixel = get_engine_sprite_pixel(
+          engine, (uint16_t)engine[9], z_buffer_test_pixel_x,
+          z_buffer_test_pixel_y);
         uint16_t packed_pixel = (uint16_t)(
             (((pixel & 0xFF0000u) >> (dword_7737E4 + 16)) << dword_7737E0) |
             (((pixel & 0xFF00u) >> (dword_7737D4 + 8)) << dword_7737D0) |
             (((uint8_t)pixel >> dword_7737C4) << dword_7737C0));
         if (packed_pixel == z_buffer_test_reference_color) {
           test_surface_description =
-              (uint16_t *)(uintptr_t)sub_582510((int *)test_sprite);
+              (uint16_t *)(uintptr_t)lock_sprite_pixels((int *)test_sprite);
           *test_surface_description = 0;
-          sub_582570((int *)test_sprite);
+          unlock_sprite_pixels((int *)test_sprite);
 
           z_buffer_object = get_engine_object_by_id(engine,
                                                     (uint16_t)engine[9]);
@@ -346,9 +358,9 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
                                        z_buffer_direct_draw_surface,
                                        &z_buffer_test_rectangle, 0, 0);
           if (result >= 0) {
-            pixel = sub_582200(test_sprite,
-                               z_buffer_test_rectangle.left,
-                               z_buffer_test_rectangle.top);
+            pixel = get_sprite_pixel(test_sprite,
+                                     z_buffer_test_rectangle.left,
+                                     z_buffer_test_rectangle.top);
             packed_pixel = (uint16_t)(
                 (((pixel & 0xFF0000u) >> (dword_7737E4 + 16)) << dword_7737E0) |
                 (((pixel & 0xFF00u) >> (dword_7737D4 + 8)) << dword_7737D0) |
@@ -358,19 +370,19 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
           }
         }
       }
-      sub_581A90((int)(uintptr_t)test_sprite);
+      destroy_sprite_members((int)(uintptr_t)test_sprite);
     }
   } else {
     engine[38] |= 7u;
   }
 
   if ((engine[38] & 1u) != 0) {
-    sub_5AEA20("Z-buffer save/restore supported using Blt()",
-               (engine[38] & 2u) != 0);
-    sub_5AEA20("Z-buffer save/restore supported using memcpy()",
-               (engine[38] & 4u) != 0);
+    log_engine_boolean_setting("Z-buffer save/restore supported using Blt()",
+                               (engine[38] & 2u) != 0);
+    log_engine_boolean_setting("Z-buffer save/restore supported using memcpy()",
+                               (engine[38] & 4u) != 0);
   } else {
-    sub_570E50((int)(uintptr_t)engine,
+    write_engine_log_message((int)(uintptr_t)engine,
                (int)"Z-buffer save/restore NOT supported");
   }
 
@@ -378,7 +390,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
     rebuild_software_gamma_lookup_table((float *)dword_779B00, 1.0f);
   initialize_software_color_lookup_table((char *)word_773DF0);
   get_mouse_cursor_worker_manager();
-  return sub_570E50((int)(uintptr_t)engine,
+  return write_engine_log_message((int)(uintptr_t)engine,
                     (int)"GEngine initialization complete");
 }
 
