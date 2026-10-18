@@ -9,7 +9,9 @@ extern void init_system_profile(uint8_t *profile);
 extern void clear_system_profile(void);
 
 /* gk3/GK3R_rest.c */
-extern LONG __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *exception_info);
+extern int game_engine_address;
+extern int is_reporting_unhandled_exception;
+extern int report_engine_error(int engine_address, char *format, ...);
 
 /* platform/window_resources.c */
 extern void cleanup_window_resources(void);
@@ -17,6 +19,22 @@ extern void cleanup_window_resources(void);
 /* platform/runtime_options.c */
 extern uint32_t (__cdecl *window_creation_callback)(HINSTANCE instance, uint32_t previous_instance, uint32_t command_line);
 extern uint32_t (__cdecl *message_loop_callback)(uint32_t window);
+
+static int report_unhandled_exception(char *message)
+{
+  if (game_engine_address == 0)
+    return MessageBoxA(NULL, message, "Unhandled exception", MB_OK);
+
+  is_reporting_unhandled_exception = 1;
+  return report_engine_error(game_engine_address, message);
+}
+
+LONG __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *exception_info)
+{
+  (void)exception_info;
+  report_unhandled_exception("Unrecognized fatal exception");
+  return 1;
+}
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd)
 {

@@ -1,6 +1,7 @@
 #include <stdint.h>
 
 /* engine/registry.c */
+extern uint8_t *__thiscall construct_registered_game_object(uint8_t *object);
 extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
@@ -11,12 +12,10 @@ extern int sprite_control_base_offset_adjustment;
 extern uint32_t sprite_control_type_descriptor[15];
 extern uint32_t registered_control_vtable[];
 extern uint32_t sprite_control_vtable[];
-extern uint32_t *__thiscall construct_registered_game_object_base(
-    uint32_t *object, int mode);
 
 uint32_t *__thiscall construct_registered_control(uint32_t *object, int mode)
 {
-  construct_registered_game_object_base(object, mode);
+  construct_registered_game_object((uint8_t *)(void *)object);
   find_or_create_registry_entry(
       registered_control_type_descriptor,
       (uint32_t)(uintptr_t)object

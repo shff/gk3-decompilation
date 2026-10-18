@@ -9,8 +9,35 @@ typedef struct {
 } RegisteredEventTarget;
 
 typedef struct {
-  uint32_t unknown_00[2];
-  uint32_t target_slots;
+  uint32_t segment_begin;
+  uint32_t segment_end;
+  uint32_t current;
+  uint32_t map_position;
+} SegmentedArrayCursor;
+
+/* Four-word array storage embedded at offsets 4 through 16. */
+typedef struct {
+  uint32_t reserved;
+  uint32_t begin;
+  uint32_t end;
+  uint32_t capacity;
+} EventTargetSlotArray;
+
+/* Chunked deque of reusable target-slot indices. */
+typedef struct {
+  uint32_t reserved;
+  SegmentedArrayCursor first;
+  SegmentedArrayCursor last;
+  uint32_t block_map;
+  uint32_t block_map_capacity;
+  uint32_t count;
+} ReusableEventTargetSlots;
+
+typedef struct {
+  uint32_t unknown_00;
+  EventTargetSlotArray target_slots;
+  ReusableEventTargetSlots reusable_slots;
+  uint32_t unknown_44;
 } RegisteredEventRegistry;
 
 typedef struct {
@@ -41,6 +68,14 @@ _Static_assert(sizeof(RegisteredEventTarget) == 12,
                "registered event target size");
 _Static_assert(sizeof(QueuedEngineEvent) == 8,
                "queued engine event size");
+_Static_assert(offsetof(RegisteredEventRegistry, target_slots.begin) == 8,
+               "event target slot array offset");
+_Static_assert(offsetof(RegisteredEventRegistry, reusable_slots.first) == 24,
+               "event target free slot deque offset");
+_Static_assert(offsetof(RegisteredEventRegistry, reusable_slots.count) == 64,
+               "event target free slot count offset");
+_Static_assert(sizeof(RegisteredEventRegistry) == 72,
+               "registered event registry size");
 _Static_assert(offsetof(EngineEventQueue, begin) == 4,
                "engine event queue begin offset");
 _Static_assert(offsetof(EngineEventQueue, end) == 8,
@@ -56,11 +91,26 @@ extern uint32_t registered_event_target_type_descriptor[16];
 extern uint32_t registered_event_target_vtable[];
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
-extern int __thiscall unregister_registered_event_target(
-    uint32_t *registry, int target);
-extern int *__thiscall register_event_target(
-    int *registry, int *entry, int target);
 extern int game_engine_address; /* Current game engine object. */
+
+int *__thiscall register_event_target(RegisteredEventRegistry *registry,
+                                     int *registration_handle,
+                                     int target_address);
+int __thiscall unregister_registered_event_target(
+    RegisteredEventRegistry *registry, int target_address);
+
+/* engine/dynamic_array.c */
+extern uint32_t __thiscall insert_segmented_deque_block_map_entry(
+    uint32_t *deque, int index);
+
+/* gk3/GK3R_rest.c */
+extern int __thiscall advance_segmented_array_cursor(
+    SegmentedArrayCursor *cursor, int offset);
+extern void __thiscall destroy_segmented_array(int deque_address);
+extern uint32_t *__thiscall insert_repeated_array_values(
+    uint32_t *array, uint32_t *position, int count, uint32_t *value);
+extern uint32_t *__thiscall set_segmented_array_cursor(
+    uint32_t *cursor, int current, uint32_t *map_position);
 
 /* engine/registry.c */
 extern uint32_t *__thiscall find_or_create_registry_entry(
@@ -85,7 +135,8 @@ uint16_t *__thiscall construct_registered_event_target(
   target->registration_handle = 0;
   target->method_table = (uint32_t)(uintptr_t)registered_event_target_vtable;
   target->registration_handle = (uint32_t)*register_event_target(
-      (int *)(void *)registered_event_registry, registration_arguments,
+      (RegisteredEventRegistry *)(void *)registered_event_registry,
+      registration_arguments,
       (int)(uintptr_t)target);
   return event_target;
 }
@@ -98,8 +149,9 @@ uint32_t *__thiscall destroy_registered_event_target(uint16_t *storage)
     return NULL;
 
   target->method_table = (uint32_t)(uintptr_t)registered_event_target_vtable;
-  unregister_registered_event_target(registered_event_registry,
-                                     (int)(uintptr_t)target);
+  unregister_registered_event_target(
+      (RegisteredEventRegistry *)(void *)registered_event_registry,
+      (int)(uintptr_t)target);
   uint32_t registration_address = (uint32_t)(uintptr_t)target
       + (uint32_t)registered_event_target_base_offset_adjustment + 6;
   uint32_t *result = erase_map_entry_impl(
@@ -120,7 +172,7 @@ static RegisteredEventTarget *find_registered_event_target(int registration_hand
       (const RegisteredEventRegistry *)(const void *)registered_event_registry;
   const uint16_t slot = (uint16_t)registration_handle;
   const uint32_t *target_slots =
-      (const uint32_t *)(uintptr_t)registry->target_slots;
+      (const uint32_t *)(uintptr_t)registry->target_slots.begin;
   const uint32_t target_address = target_slots[slot];
   if (!target_address)
     return NULL;
@@ -137,7 +189,7 @@ static int __thiscall dispatch_event_to_registered_target(
   const RegisteredEventRegistry *registry =
       (const RegisteredEventRegistry *)(const void *)registered_event_registry;
   const uint32_t *target_slots =
-      (const uint32_t *)(uintptr_t)registry->target_slots;
+      (const uint32_t *)(uintptr_t)registry->target_slots.begin;
   const uint32_t target_address = target_slots[target_slot];
   if (!target_address)
     return target_slot;
@@ -261,4 +313,162 @@ int __thiscall queue_and_clear_event_reference(int *reference)
   reference[0] = 0;
   reference[1] = 0;
   return result;
+}
+
+int *__thiscall register_event_target(RegisteredEventRegistry *registry,
+                                     int *registration_handle,
+                                     int target_address)
+{
+  EventTargetSlotArray *target_slots = &registry->target_slots;
+  ReusableEventTargetSlots *free_slots = &registry->reusable_slots;
+  const uint32_t target = (uint32_t)target_address;
+  uint32_t slot_index;
+
+  if (free_slots->count == 0) {
+    slot_index = target_slots->begin
+        ? (target_slots->end - target_slots->begin) / sizeof(uint32_t)
+        : 0;
+    insert_repeated_array_values(
+        (uint32_t *)(void *)target_slots,
+        (uint32_t *)(uintptr_t)target_slots->end, 1,
+        (uint32_t *)(void *)&target);
+  } else {
+    /* Reuse the most recently released slot and pop it from the deque. */
+    SegmentedArrayCursor free_slot_cursor = free_slots->last;
+    advance_segmented_array_cursor(&free_slot_cursor, -1);
+    slot_index = *(uint32_t *)(uintptr_t)free_slot_cursor.current;
+    ((uint32_t *)(uintptr_t)target_slots->begin)[slot_index] = target;
+
+    uint32_t *old_block_map_position =
+        (uint32_t *)(uintptr_t)free_slots->last.map_position;
+    uint32_t previous_slot_address = free_slots->last.current;
+    if (previous_slot_address == free_slots->last.segment_begin) {
+      uint32_t *previous_block_map_position = old_block_map_position - 1;
+      if (*previous_block_map_position) {
+        free_slots->last.map_position =
+            (uint32_t)(uintptr_t)previous_block_map_position;
+        free_slots->last.segment_begin = *previous_block_map_position;
+        free_slots->last.segment_end =
+            *previous_block_map_position + 4096;
+        previous_slot_address = free_slots->last.segment_end;
+      }
+    }
+    free_slots->last.current = previous_slot_address - sizeof(uint32_t);
+
+    if (--free_slots->count != 0) {
+      if (old_block_map_position
+          != (uint32_t *)(uintptr_t)free_slots->last.map_position) {
+        free_tracked_memory((int)*old_block_map_position);
+        *old_block_map_position = 0;
+      }
+    } else {
+      destroy_segmented_array((int)(uintptr_t)free_slots);
+    }
+  }
+
+  const uint16_t target_id =
+      *(const uint16_t *)(uintptr_t)(target + offsetof(RegisteredEventTarget,
+                                                       target_id));
+  const uint32_t encoded_target = (target & UINT16_MAX)
+      | ((uint32_t)target_id << 16);
+  /* The handle combines the target identity with its registry slot. */
+  *registration_handle = (int)(encoded_target
+      ^ (uint16_t)(slot_index ^ target));
+  return registration_handle;
+}
+
+int __thiscall unregister_registered_event_target(
+    RegisteredEventRegistry *registry, int target_address)
+{
+  EventTargetSlotArray *target_slots = &registry->target_slots;
+  ReusableEventTargetSlots *free_slots = &registry->reusable_slots;
+  RegisteredEventTarget *target =
+      (RegisteredEventTarget *)(uintptr_t)target_address;
+  const uint32_t slot_index = (uint16_t)target->registration_handle;
+  ((uint32_t *)(uintptr_t)target_slots->begin)[slot_index] = 0;
+
+  if (free_slots->count == 0
+      || free_slots->last.current == free_slots->last.segment_end) {
+    /* Add another 1024-entry block when the deque reaches its end. */
+    uint32_t *new_block = allocate_tracked_memory(4096);
+    const uint32_t new_block_address = (uint32_t)(uintptr_t)new_block;
+
+    if (free_slots->count != 0) {
+      uint32_t *last_map_position =
+          (uint32_t *)(uintptr_t)free_slots->last.map_position;
+      uint32_t *map_begin =
+          (uint32_t *)(uintptr_t)free_slots->block_map;
+      uint32_t *map_end = map_begin + free_slots->block_map_capacity;
+
+      if ((uintptr_t)last_map_position >= (uintptr_t)(map_end - 2)) {
+        uint32_t *first_map_position =
+            (uint32_t *)(uintptr_t)free_slots->first.map_position;
+        const int insert_at =
+            (int)(last_map_position - first_map_position) + 1;
+        const uint32_t new_map_address =
+            insert_segmented_deque_block_map_entry(
+                (uint32_t *)(void *)free_slots, insert_at);
+        uint32_t *new_map_position =
+            (uint32_t *)(uintptr_t)new_map_address;
+        uint32_t *new_block_map_entry = new_map_position + insert_at;
+        new_block_map_entry[0] = new_block_address;
+        new_block_map_entry[1] = 0;
+
+        set_segmented_array_cursor(
+            (uint32_t *)(void *)&free_slots->first,
+            (int)free_slots->first.current, new_map_position);
+        set_segmented_array_cursor(
+            (uint32_t *)(void *)&free_slots->last,
+            (int)new_block_address, new_block_map_entry);
+      } else {
+        uint32_t *new_block_map_entry = last_map_position + 1;
+        free_slots->last.map_position =
+            (uint32_t)(uintptr_t)new_block_map_entry;
+        new_block_map_entry[0] = new_block_address;
+        new_block_map_entry[1] = 0;
+        set_segmented_array_cursor(
+            (uint32_t *)(void *)&free_slots->last,
+            (int)new_block_address, new_block_map_entry);
+      }
+    } else {
+      uint32_t *block_map = allocate_tracked_memory(32);
+      free_slots->block_map = (uint32_t)(uintptr_t)block_map;
+      free_slots->block_map_capacity = 8;
+      block_map[3] = 0;
+      block_map[4] = new_block_address;
+      block_map[5] = 0;
+      uint32_t *first_entry = &block_map[4];
+      const uint32_t middle_of_block = new_block_address + 2048;
+
+      set_segmented_array_cursor(
+          (uint32_t *)(void *)&free_slots->first,
+          (int)middle_of_block, first_entry);
+      set_segmented_array_cursor(
+          (uint32_t *)(void *)&free_slots->last,
+          (int)middle_of_block, first_entry);
+    }
+  }
+
+  uint32_t *write_position =
+      (uint32_t *)(uintptr_t)free_slots->last.current;
+  if (free_slots->last.current != free_slots->last.segment_end) {
+    ++write_position;
+    free_slots->last.current = (uint32_t)(uintptr_t)write_position;
+    if (free_slots->last.current == free_slots->last.segment_end) {
+      uint32_t *next_map_position =
+          (uint32_t *)(uintptr_t)free_slots->last.map_position + 1;
+      if (*next_map_position) {
+        free_slots->last.map_position =
+            (uint32_t)(uintptr_t)next_map_position;
+        free_slots->last.segment_begin = *next_map_position;
+        free_slots->last.current = *next_map_position;
+        free_slots->last.segment_end = *next_map_position + 4096;
+        write_position = (uint32_t *)(uintptr_t)free_slots->last.current;
+      }
+    }
+  }
+  if (write_position)
+    *write_position = slot_index;
+
+  return (int)++free_slots->count;
 }

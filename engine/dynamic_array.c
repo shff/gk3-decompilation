@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "../common/runtime_lockit.h"
@@ -17,6 +18,16 @@ typedef struct {
 _Static_assert(sizeof(PointerVector) == 16, "vector header layout");
 
 enum { INITIAL_VECTOR_STORAGE_BYTES = 512 };
+
+uint32_t *__thiscall construct_byte_list(uint32_t *object,
+                                         uint8_t *default_value)
+{
+  uint8_t *bytes = (uint8_t *)(void *)object;
+
+  bytes[0] = *default_value;
+  memset(object + 1, 0, 11 * sizeof(*object));
+  return object;
+}
 
 PointerVector *__thiscall initialize_16_byte_vector(PointerVector *vector)
 {
@@ -251,4 +262,80 @@ int __thiscall append_dynamic_array_pair(int *array, const uint32_t *entry)
   vector->end = vector->begin + (uint32_t)((count + 1) * 2 * sizeof(*new_entries));
   vector->capacity = vector->begin + (uint32_t)(new_capacity * 2 * sizeof(*new_entries));
   return (int)(uintptr_t)vector->end;
+}
+
+typedef struct {
+  uint32_t segment_begin;
+  uint32_t segment_end;
+  uint32_t current;
+  uint32_t map_position;
+} SegmentedBlockDequeCursor;
+
+typedef struct {
+  uint32_t reserved;
+  SegmentedBlockDequeCursor first;
+  SegmentedBlockDequeCursor last;
+  uint32_t block_map;
+  uint32_t block_map_capacity;
+  uint32_t count;
+} SegmentedBlockDeque;
+
+_Static_assert(offsetof(SegmentedBlockDeque, first.map_position) == 16,
+               "segmented deque first cursor layout");
+_Static_assert(offsetof(SegmentedBlockDeque, last.map_position) == 32,
+               "segmented deque last cursor layout");
+_Static_assert(offsetof(SegmentedBlockDeque, block_map) == 36,
+               "segmented deque block map layout");
+
+uint32_t __thiscall insert_segmented_deque_block_map_entry(
+    SegmentedBlockDeque *deque, int insertion_index)
+{
+  uint32_t required_word_capacity = 2U * (uint32_t)insertion_index + 2U;
+  if (required_word_capacity < 8)
+    required_word_capacity = 8;
+
+  uint32_t *block_map = (uint32_t *)(uintptr_t)deque->block_map;
+  uint32_t *insertion_anchor;
+  if (required_word_capacity > deque->block_map_capacity ||
+      deque->block_map_capacity / 4 >= required_word_capacity) {
+    uint32_t *new_block_map = allocate_tracked_memory(
+        (int)(required_word_capacity * sizeof(*new_block_map)));
+    insertion_anchor = new_block_map + required_word_capacity / 4;
+
+    uint32_t *first_live_word =
+        (uint32_t *)(uintptr_t)deque->first.map_position - 1;
+    uint32_t *live_words_end =
+        (uint32_t *)(uintptr_t)deque->last.map_position + 2;
+    for (uint32_t *source = first_live_word; source != live_words_end;
+         ++source, ++insertion_anchor)
+      *insertion_anchor = *source;
+
+    insertion_anchor -= live_words_end - first_live_word;
+    free_tracked_memory((int)deque->block_map);
+    deque->block_map = (uint32_t)(uintptr_t)new_block_map;
+    deque->block_map_capacity = required_word_capacity;
+    block_map = new_block_map;
+    insertion_anchor = block_map + required_word_capacity / 4;
+  } else {
+    insertion_anchor = block_map + deque->block_map_capacity / 4;
+    uint32_t *first_live_word =
+        (uint32_t *)(uintptr_t)deque->first.map_position - 1;
+    uint32_t *live_words_end =
+        (uint32_t *)(uintptr_t)deque->last.map_position + 2;
+
+    if (insertion_anchor >= first_live_word) {
+      uint32_t *source = live_words_end;
+      uint32_t *destination = insertion_anchor + insertion_index + 2;
+      while (source != first_live_word) {
+        *--destination = *--source;
+      }
+    } else {
+      uint32_t *destination = insertion_anchor;
+      for (uint32_t *source = first_live_word; source != live_words_end;
+           ++source, ++destination)
+        *destination = *source;
+    }
+  }
+
+  return (uint32_t)(uintptr_t)(insertion_anchor + 1);
 }

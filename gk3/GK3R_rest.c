@@ -3941,7 +3941,7 @@ _DWORD *__thiscall sub_469B27(_DWORD *this, char a2);
 int __thiscall sub_469B43(_DWORD *this);
 _DWORD *__thiscall sub_469BDF(_DWORD *this, int a2);
 char __thiscall sub_469C6E(unsigned __int16 *this, _BYTE *a2, int a3);
-_DWORD *__thiscall sub_469CA9(void *this);
+_DWORD *__thiscall load_local_game_configuration(void *this);
 _WORD *__thiscall sub_469D64(_WORD *this);
 char __thiscall sub_469D81(int this, unsigned int a2, char *a3);
 char __thiscall sub_469E10(int this, int *a2, char *a3, char a4);
@@ -3959,11 +3959,11 @@ _DWORD *__thiscall sub_46A271(_DWORD *this);
 _DWORD *__thiscall sub_46A2A8(_DWORD *this);
 _DWORD *__thiscall sub_46A3BE(_DWORD *this);
 void __thiscall sub_46A3F5(_DWORD *this);
-unsigned int __thiscall sub_46A425(_DWORD *this, int a2);
+unsigned int __thiscall insert_segmented_deque_block_map_entry(_DWORD *this, int a2);
 void __thiscall sub_46A4F9(_DWORD *this);
 unsigned int __thiscall sub_46A529(_DWORD *this, int a2);
-void __thiscall sub_46A5FD(int this);
-int __thiscall sub_46A65A(int *this, int a2);
+void __thiscall destroy_segmented_array(int this);
+int __thiscall advance_segmented_array_cursor(int *this, int a2);
 void __thiscall sub_46A6B3(int this);
 int __thiscall sub_46A710(int *this, int a2);
 char __cdecl sub_46A769(_BYTE *a1, const char *a2, unsigned __int16 *a3, unsigned __int16 *a4);
@@ -4003,7 +4003,7 @@ _BYTE *__thiscall construct_registered_config_file(_BYTE *this, char *a2,
                                                     char *a3);
 int __thiscall sub_46B55E(int this, int a2);
 int __thiscall sub_46B5D2(_DWORD *this, int a2, int a3);
-char __thiscall sub_46B663(_DWORD *this, int a2);
+char __thiscall load_configuration_file_section(_DWORD *this, int a2);
 int __thiscall sub_46B685(void *this);
 char __thiscall select_settings_section(_DWORD *this, char *Str);
 void __thiscall sub_46B799(void *this, int a2, char a3);
@@ -13325,7 +13325,6 @@ void sub_569D20();
 void sub_569D40();
 void sub_569D60();
 void sub_569D80();
-int __cdecl sub_569D90(CHAR *lpText);
 int sub_569E30();
 LONG __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionInfo); // idb
 int __stdcall WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd);
@@ -13611,11 +13610,11 @@ void __thiscall remove_pending_engine_event(uint32_t *engine, int *event);
 bool __thiscall serialize_event_reference(int *this, _BYTE *a2, int a3);
 int __thiscall sub_5750C0(int *this);
 _DWORD __stdcall nullsub_13(_DWORD, _DWORD); // weak
-_DWORD *__thiscall sub_575100(int *this, _DWORD *a2, int a3, _DWORD *a4);
+_DWORD *__thiscall insert_repeated_array_values(int *this, _DWORD *a2, int a3, _DWORD *a4);
 _DWORD *__thiscall sub_575310(_DWORD *this);
 _DWORD *__stdcall sub_575320(_DWORD *a1, _DWORD *a2, _DWORD *a3);
 _DWORD *__stdcall sub_575360(_DWORD *a1, _DWORD *a2, _DWORD *a3);
-_DWORD *__thiscall sub_575390(_DWORD *this, int a2, _DWORD *a3);
+_DWORD *__thiscall set_segmented_array_cursor(_DWORD *this, int a2, _DWORD *a3);
 char __thiscall sub_5753C0(_BYTE *this, const char *a2, int a3, unsigned int a4);
 _DWORD *__cdecl sub_575550(_DWORD *a1, _DWORD *a2);
 char __thiscall read_serialized_event_reference(
@@ -21462,7 +21461,7 @@ _UNKNOWN *off_6B9D04 = &unk_70616D; // weak
 void *(__thiscall *off_6B9D50)(std::istrstream *__hidden this, unsigned int) = &std::istrstream::`scalar deleting destructor'; // weak
 _UNKNOWN unk_6B9D54; // weak
 _UNKNOWN unk_6B9D5C; // weak
-int (__stdcall *off_6B9DA4)(char) = &sub_469B27; // weak
+int (__stdcall *static_configuration_vtable)(char) = &sub_469B27; // weak
 __int16 word_6B9DC8 = 0; // weak
 int (__stdcall *off_6B9DCC)(char) = &sub_46A8E9; // weak
 _UNKNOWN *off_6B9EC0 = &loc_46B3D7; // weak
@@ -44171,7 +44170,7 @@ int dword_7643C8; // weak
 int dword_7643CC; // weak
 int dword_7643D0; // weak
 char byte_7643D8; // weak
-int dword_7643DC; // weak
+int static_configuration_base_offset_adjustment; // weak
 _DWORD dword_7643E0[15]; // weak
 int dword_76441C; // weak
 char byte_764420; // weak
@@ -45467,7 +45466,7 @@ int window_clipper_address; // weak
 int direct3d_interface_address; // weak
 int hardware_rasterizer_address; // weak
 int direct3d_viewport_address; // weak
-int dword_77367C; // weak
+int is_reporting_unhandled_exception; // weak
 int dword_773680; // weak
 int dword_773684; // weak
 int dword_773688; // weak
@@ -68108,7 +68107,7 @@ _DWORD *sub_411EDA()
 
   construct_registered_config_file(v1, "faces.txt", "faces");
   v2 = 0;
-  if ( sub_46B663(v1, 1) )
+  if ( load_configuration_file_section(v1, 1) )
     sub_41202F(v1);
   v2 = -1;
   return sub_411F2D(v1);
@@ -123398,7 +123397,7 @@ int __thiscall sub_4484AE(char *this)
     v8 = (char *)Key;
   construct_registered_config_file(v43, v8, v6);
   LOBYTE(v71) = 6;
-  if ( sub_46B663(v43, 1) )
+  if ( load_configuration_file_section(v43, 1) )
   {
     v9 = v53;
     if ( !v53 )
@@ -134958,25 +134957,7 @@ float *__thiscall sub_4554A5(float *this, float *a2)
 }
 
 //----- (004554FC) --------------------------------------------------------
-_DWORD *__thiscall construct_byte_list(_DWORD *this, _BYTE *a2)
-{
-  _DWORD *result; // eax
-
-  result = this;
-  *(_BYTE *)this = *a2;
-  this[1] = 0;
-  this[2] = 0;
-  this[3] = 0;
-  this[4] = 0;
-  this[5] = 0;
-  this[6] = 0;
-  this[7] = 0;
-  this[8] = 0;
-  this[9] = 0;
-  this[10] = 0;
-  this[11] = 0;
-  return result;
-}
+/* Extracted to engine/dynamic_array.c. */
 
 //----- (0045552C) --------------------------------------------------------
 int __thiscall sub_45552C(_DWORD *this)
@@ -143384,7 +143365,7 @@ int __thiscall sub_45DBFE(void *this)
     v2 = (char *)Key;
   construct_registered_config_file(v89, v2, v1);
   LOBYTE(v105) = 5;
-  if ( sub_46B663(v89, 1) )
+  if ( load_configuration_file_section(v89, 1) )
   {
     sub_45F040((int *)&v100, (int)v90, (int)&v93);
     if ( !sub_45E92C(&v93) )
@@ -143695,7 +143676,7 @@ void __thiscall sub_45E635(void *this)
     v3 = v18;
   construct_registered_config_file(v10, v3, v2);
   LOBYTE(v23) = 3;
-  if ( sub_46B663(v10, 1) )
+  if ( load_configuration_file_section(v10, 1) )
   {
     sub_45F07B(&v22, (int)v11, v13);
     if ( v12 > 0 )
@@ -153627,58 +153608,12 @@ void __cdecl sub_4699E7()
 //----- (00469A07) --------------------------------------------------------
 void sub_469A07()
 {
-  dword_7643DC = -61;
+  static_configuration_base_offset_adjustment = -61;
 }
-// 7643DC: using guessed type int dword_7643DC;
+// 7643DC: using guessed type int static_configuration_base_offset_adjustment;
 
 //----- (00469A12) --------------------------------------------------------
-int __thiscall construct_game_configuration(int this)
-{
-  size_t v2; // eax
-  char *v3; // eax
-  _BYTE v5[16]; // [esp+8h] [ebp-34h] BYREF
-  char v6[16]; // [esp+18h] [ebp-24h] BYREF
-  int v7; // [esp+28h] [ebp-14h]
-  char v8; // [esp+2Eh] [ebp-Eh] BYREF
-  char v9; // [esp+2Fh] [ebp-Dh] BYREF
-  int v10; // [esp+38h] [ebp-4h]
-
-  v7 = this;
-  v6[0] = v9;
-  std::string::_Tidy(0);
-  v2 = strlen("game");
-  std::string::assign((void *)"game", v2);
-  v10 = 0;
-  v3 = (char *)*((_DWORD *)append_string_suffix(v5, v6, ".cfg") + 1);
-  LOBYTE(v10) = 1;
-  if ( !v3 )
-    v3 = (char *)Key;
-  construct_registered_config_file((_BYTE *)this, v3, "game");
-  LOBYTE(v10) = 4;
-  std::string::_Tidy(1);
-  LOBYTE(v10) = 3;
-  std::string::_Tidy(1);
-  find_or_create_registry_entry(dword_7643E0, dword_7643DC + this + 61);
-  LOBYTE(v10) = 5;
-  sub_46A02B((_DWORD *)(this + 64), &v9);
-  LOBYTE(v10) = 6;
-  construct_byte_list((_DWORD *)(this + 112), &v8);
-  LOBYTE(v10) = 7;
-  sub_46A0C3((_DWORD *)(this + 160), &v9);
-  LOBYTE(v10) = 8;
-  sub_4151F2((_DWORD *)(this + 208), &v8);
-  LOBYTE(v10) = 9;
-  *(_DWORD *)this = &off_6B9DA4;
-  *(_WORD *)(this + 256) = 1;
-  sub_46B663((_DWORD *)this, 1);
-  sub_469CA9((void *)this);
-  return this;
-}
-// 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
-// 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6B9DA4: using guessed type int (__stdcall *off_6B9DA4)(char);
-// 7643DC: using guessed type int dword_7643DC;
-// 7643E0: using guessed type _DWORD dword_7643E0[15];
+/* Extracted to gk3/game_configuration.c as construct_game_configuration. */
 
 //----- (00469B27) --------------------------------------------------------
 _DWORD *__thiscall sub_469B27(_DWORD *this, char a2)
@@ -153694,7 +153629,7 @@ int __thiscall sub_469B43(_DWORD *this)
 {
   _DWORD *v2; // edi
 
-  *this = &off_6B9DA4;
+  *this = &static_configuration_vtable;
   v2 = this + 52;
   if ( this[63] )
   {
@@ -153705,7 +153640,7 @@ int __thiscall sub_469B43(_DWORD *this)
   sub_46A0F3(this + 40);
   sub_45552C(this + 28);
   sub_46A05B(this + 16);
-  erase_map_entry_impl(dword_7643DC + (this != 0 ? (unsigned int)this + 61 : 0));
+  erase_map_entry_impl(static_configuration_base_offset_adjustment + (this != 0 ? (unsigned int)this + 61 : 0));
   return sub_411F2D(this);
 }
 // 411F2D: using guessed type int __thiscall sub_411F2D(_DWORD);
@@ -153714,8 +153649,8 @@ int __thiscall sub_469B43(_DWORD *this)
 // 46A05B: using guessed type int __thiscall sub_46A05B(_DWORD);
 // 46A0F3: using guessed type int __thiscall sub_46A0F3(_DWORD);
 // 566D70: using guessed type _DWORD __stdcall erase_map_entry_impl(_DWORD);
-// 6B9DA4: using guessed type int (__stdcall *off_6B9DA4)(char);
-// 7643DC: using guessed type int dword_7643DC;
+// 6B9DA4: using guessed type int (__stdcall *static_configuration_vtable)(char);
+// 7643DC: using guessed type int static_configuration_base_offset_adjustment;
 
 //----- (00469BDF) --------------------------------------------------------
 _DWORD *__thiscall sub_469BDF(_DWORD *this, int a2)
@@ -153725,18 +153660,18 @@ _DWORD *__thiscall sub_469BDF(_DWORD *this, int a2)
 
   sub_46B55E((int)this, a2);
   v5 = 2;
-  find_or_create_registry_entry(dword_7643E0, (unsigned int)this + dword_7643DC + 61);
+  find_or_create_registry_entry(dword_7643E0, (unsigned int)this + static_configuration_base_offset_adjustment + 61);
   sub_46A02B(this + 16, (_BYTE *)&a2 + 3);
   construct_byte_list(this + 28, &v4);
   LOBYTE(v5) = 3;
   sub_46A0C3(this + 40, (_BYTE *)&a2 + 3);
   LOBYTE(v5) = 4;
   sub_4151F2(this + 52, &v4);
-  *this = &off_6B9DA4;
+  *this = &static_configuration_vtable;
   return this;
 }
-// 6B9DA4: using guessed type int (__stdcall *off_6B9DA4)(char);
-// 7643DC: using guessed type int dword_7643DC;
+// 6B9DA4: using guessed type int (__stdcall *static_configuration_vtable)(char);
+// 7643DC: using guessed type int static_configuration_base_offset_adjustment;
 // 7643E0: using guessed type _DWORD dword_7643E0[15];
 
 //----- (00469C6E) --------------------------------------------------------
@@ -153748,14 +153683,14 @@ char __thiscall sub_469C6E(unsigned __int16 *this, _BYTE *a2, int a3)
   if ( !a2[4] )
   {
     (*(void (__thiscall **)(unsigned __int16 *))(*(_DWORD *)this + 8))(this);
-    return (unsigned __int8)sub_469CA9(this);
+    return (unsigned __int8)load_local_game_configuration(this);
   }
   return result;
 }
 // 6B9DC8: using guessed type __int16 word_6B9DC8;
 
 //----- (00469CA9) --------------------------------------------------------
-_DWORD *__thiscall sub_469CA9(void *this)
+_DWORD *__thiscall load_local_game_configuration(void *this)
 {
   size_t v2; // eax
   char *v3; // eax
@@ -153778,7 +153713,7 @@ _DWORD *__thiscall sub_469CA9(void *this)
   std::string::_Tidy(1);
   LOBYTE(v8) = 3;
   std::string::_Tidy(1);
-  if ( sub_46B663(v5, 1) )
+  if ( load_configuration_file_section(v5, 1) )
     sub_46B799(this, (int)v5, 1);
   v8 = -1;
   return sub_411F2D(v5);
@@ -153983,7 +153918,7 @@ _DWORD *__thiscall sub_46A070(_DWORD *this, _DWORD *a2)
   v4[1] = this[6];
   v5 = (_DWORD *)this[7];
   v6 = this[8];
-  sub_46A65A(v4, -1);
+  advance_segmented_array_cursor(v4, -1);
   result = v5;
   if ( v5 )
     *v5 = *a2;
@@ -154077,7 +154012,7 @@ _DWORD *__thiscall sub_46A15B(_DWORD *this)
     if ( v6 >= this[9] + 4 * this[10] - 8 )
     {
       v8 = ((int)(v6 - this[4]) >> 2) + 1;
-      v9 = (_DWORD *)sub_46A425(this, v8);
+      v9 = (_DWORD *)insert_segmented_deque_block_map_entry(this, v8);
       v10 = &v9[v8];
       *v10 = v2;
       v10[1] = 0;
@@ -154295,7 +154230,7 @@ void __thiscall sub_46A3F5(_DWORD *this)
   sub_46A271(this + 1);
   if ( this[11]-- == 1 )
   {
-    sub_46A5FD((int)this);
+    destroy_segmented_array((int)this);
   }
   else if ( v2 != (int *)this[4] )
   {
@@ -154305,85 +154240,7 @@ void __thiscall sub_46A3F5(_DWORD *this)
 }
 
 //----- (0046A425) --------------------------------------------------------
-unsigned int __thiscall sub_46A425(_DWORD *this, int a2)
-{
-  unsigned int v4; // ebx
-  unsigned int v5; // eax
-  unsigned int v6; // eax
-  unsigned int v7; // edi
-  int v8; // eax
-  _DWORD *v9; // ecx
-  int v10; // esi
-  _DWORD *j; // eax
-  int v12; // eax
-  int v13; // esi
-  _DWORD *i; // ecx
-  int v15; // edx
-  int v16; // eax
-  int v17; // ecx
-  int *v18; // eax
-  _DWORD *v19; // edx
-  int v20; // ebx
-  _DWORD *v22; // [esp+Ch] [ebp-4h]
-  unsigned int v23; // [esp+18h] [ebp+8h]
 
-  v23 = 2 * a2 + 2;
-  v4 = v23;
-  if ( v23 < 8 )
-  {
-    v4 = 8;
-    v23 = 8;
-  }
-  v5 = this[10];
-  if ( v4 > v5 || (v6 = v5 >> 2, v6 >= v4) )
-  {
-    v16 = 4 * v4;
-    if ( (v4 & 0x20000000) != 0 )
-      v16 = 0;
-    v22 = allocate_tracked_memory(v16);
-    v7 = (unsigned int)&v22[v4 >> 2];
-    v17 = this[8] + 8;
-    v18 = (int *)(this[4] - 4);
-    v19 = (_DWORD *)v7;
-    if ( v18 != (int *)v17 )
-    {
-      do
-      {
-        v20 = *v18++;
-        *v19++ = v20;
-      }
-      while ( v18 != (int *)v17 );
-      v4 = v23;
-    }
-    free_tracked_memory(this[9]);
-    this[9] = v22;
-    this[10] = v4;
-  }
-  else
-  {
-    v7 = this[9] + 4 * v6;
-    v8 = this[4];
-    if ( v7 >= v8 - 4 )
-    {
-      v12 = v8 - 4;
-      v13 = this[8] + 8;
-      for ( i = (_DWORD *)(v7 + 4 * a2 + 8); v13 != v12; *i = v15 )
-      {
-        v15 = *(_DWORD *)(v13 - 4);
-        v13 -= 4;
-        --i;
-      }
-    }
-    else
-    {
-      v9 = (_DWORD *)v7;
-      v10 = this[8] + 8;
-      for ( j = (_DWORD *)(v8 - 4); j != (_DWORD *)v10; ++j )
-        *v9++ = *j;
-    }
-  }
-  return v7 + 4;
-}
 
 //----- (0046A4F9) --------------------------------------------------------
 void __thiscall sub_46A4F9(_DWORD *this)
@@ -154485,7 +154342,7 @@ unsigned int __thiscall sub_46A529(_DWORD *this, int a2)
 }
 
 //----- (0046A5FD) --------------------------------------------------------
-void __thiscall sub_46A5FD(int this)
+void __thiscall destroy_segmented_array(int this)
 {
   int v2; // [esp-10h] [ebp-2Ch]
 
@@ -154505,7 +154362,7 @@ void __thiscall sub_46A5FD(int this)
 }
 
 //----- (0046A65A) --------------------------------------------------------
-int __thiscall sub_46A65A(int *this, int a2)
+int __thiscall advance_segmented_array_cursor(int *this, int a2)
 {
   int result; // eax
   unsigned int v3; // edx
@@ -155655,7 +155512,7 @@ int __thiscall sub_46B5D2(_DWORD *this, int a2, int a3)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (0046B663) --------------------------------------------------------
-char __thiscall sub_46B663(_DWORD *this, int a2)
+char __thiscall load_configuration_file_section(_DWORD *this, int a2)
 {
   char v3; // bl
 
@@ -177251,7 +177108,7 @@ int __thiscall sub_47FD6E(int this)
     v4 = (char *)Key;
   construct_registered_config_file(v71, v4, v3);
   LOBYTE(v78) = 8;
-  if ( sub_46B663(v71, 1) )
+  if ( load_configuration_file_section(v71, 1) )
   {
     v6 = v43;
     if ( !v43 )
@@ -181991,7 +181848,7 @@ int __thiscall initialize_cursor_spec(int this, char *Str)
   construct_registered_config_file(v12, v5, v20);
   LOBYTE(v21) = 5;
   std::string::_Tidy(1);
-  if ( sub_46B663(v12, 1) )
+  if ( load_configuration_file_section(v12, 1) )
   {
     v6 = (int (__thiscall ***)(_DWORD, int))sub_42A145(v12);
     sub_42471B((_DWORD *)(this + 16), v6);
@@ -209647,7 +209504,7 @@ char __thiscall sub_4A0B40(void *this, void *a2, _DWORD *a3)
               v17[1] = *((_DWORD *)this + 35);
               v18 = (int *)*((_DWORD *)this + 36);
               v19 = *((_DWORD *)this + 37);
-              sub_46A65A(v17, v36 - 1);
+              advance_segmented_array_cursor(v17, v36 - 1);
               v34 = *v18;
             }
             else
@@ -209658,7 +209515,7 @@ char __thiscall sub_4A0B40(void *this, void *a2, _DWORD *a3)
             v14[1] = *((_DWORD *)this + 35);
             v15 = (_DWORD *)*((_DWORD *)this + 36);
             v16 = *((_DWORD *)this + 37);
-            sub_46A65A(v14, v36);
+            advance_segmented_array_cursor(v14, v36);
             v11 = *v15 - v34;
             if ( v30[v34] )
             {
@@ -209741,7 +209598,7 @@ int __thiscall sub_4A0D31(int *this)
             v13 = this[35];
             v14 = (int *)this[36];
             v15 = this[37];
-            sub_46A65A(&v12, v22);
+            advance_segmented_array_cursor(&v12, v22);
             if ( this[23] < *v14 )
               break;
             v7 = this[32];
@@ -209764,7 +209621,7 @@ int __thiscall sub_4A0D31(int *this)
           v13 = this[35];
           v14 = (int *)this[36];
           v15 = this[37];
-          sub_46A65A(&v12, v19);
+          advance_segmented_array_cursor(&v12, v19);
           if ( *v14 <= this[23] - this[21] )
             break;
           --v21;
@@ -209776,7 +209633,7 @@ int __thiscall sub_4A0D31(int *this)
         v13 = this[35];
         v14 = (int *)this[36];
         v15 = this[37];
-        sub_46A65A(&v12, v21 - 1);
+        advance_segmented_array_cursor(&v12, v21 - 1);
         v18 = *v14;
       }
 LABEL_17:
@@ -209786,7 +209643,7 @@ LABEL_17:
             v13 = this[35],
             v14 = (int *)this[36],
             v15 = this[37],
-            sub_46A65A(&v12, v22 - 1),
+            advance_segmented_array_cursor(&v12, v22 - 1),
             this[23] == *v14) )
       {
         v4 = 0;
@@ -209922,7 +209779,7 @@ int __thiscall sub_4A0F4C(_DWORD *this, int *a2)
             v18[1] = this[35];
             v19 = (int *)this[36];
             v20 = this[37];
-            sub_46A65A(v18, result - 1);
+            advance_segmented_array_cursor(v18, result - 1);
             v8 = v29;
             v30 = *v19;
             result = v27;
@@ -209939,7 +209796,7 @@ int __thiscall sub_4A0F4C(_DWORD *this, int *a2)
             v15[1] = this[35];
             v16 = (_DWORD *)this[36];
             v17 = this[37];
-            sub_46A65A(v15, result);
+            advance_segmented_array_cursor(v15, result);
             v8 = v29;
             v32 = *v16 - v30;
           }
@@ -209979,7 +209836,7 @@ int __thiscall sub_4A0F4C(_DWORD *this, int *a2)
           v22 = this[35];
           v23 = (_DWORD *)this[36];
           v24 = this[37];
-          sub_46A65A(&v21, result - 1);
+          advance_segmented_array_cursor(&v21, result - 1);
           v31 += *v23;
         }
       }
@@ -210113,7 +209970,7 @@ int __thiscall sub_4A11B7(_DWORD *this, signed int a2, char *Str)
                 v22 = this[35];
                 v23 = (int *)this[36];
                 v24 = this[37];
-                sub_46A65A(&v21, v32);
+                advance_segmented_array_cursor(&v21, v32);
                 if ( this[23] < *v23 )
                   break;
                 v9 = this[32];
@@ -210126,7 +209983,7 @@ int __thiscall sub_4A11B7(_DWORD *this, signed int a2, char *Str)
                 v22 = this[35];
                 v23 = (int *)this[36];
                 v24 = this[37];
-                sub_46A65A(&v21, v32 - 1);
+                advance_segmented_array_cursor(&v21, v32 - 1);
                 v31 = *v23;
               }
               v5 = v30;
@@ -210141,7 +209998,7 @@ int __thiscall sub_4A11B7(_DWORD *this, signed int a2, char *Str)
               v18 = this[35];
               v19 = (_DWORD *)this[36];
               v20 = this[37];
-              sub_46A65A(&v17, v32);
+              advance_segmented_array_cursor(&v17, v32);
               v5 = v30;
               v10 = *v19 - v31;
             }
@@ -210363,7 +210220,7 @@ int __thiscall sub_4A15FF(void *this)
         v16 = *((_DWORD *)this + 35);
         v17 = (int *)*((_DWORD *)this + 36);
         v18 = *((_DWORD *)this + 37);
-        sub_46A65A(&v15, v25);
+        advance_segmented_array_cursor(&v15, v25);
         if ( *((_DWORD *)this + 23) < *v17 )
           break;
         v3 = *((_DWORD *)this + 32);
@@ -210386,14 +210243,14 @@ int __thiscall sub_4A15FF(void *this)
         v16 = *((_DWORD *)this + 35);
         v17 = (int *)*((_DWORD *)this + 36);
         v18 = *((_DWORD *)this + 37);
-        sub_46A65A(&v15, v25 - 1);
+        advance_segmented_array_cursor(&v15, v25 - 1);
         v23 = *v17;
       }
       v15 = *((_DWORD *)this + 34);
       v16 = *((_DWORD *)this + 35);
       v17 = (int *)*((_DWORD *)this + 36);
       v18 = *((_DWORD *)this + 37);
-      sub_46A65A(&v15, v25);
+      advance_segmented_array_cursor(&v15, v25);
       v15 = *((_DWORD *)this + 34);
       v16 = *((_DWORD *)this + 35);
       v6 = *v17;
@@ -210401,7 +210258,7 @@ int __thiscall sub_4A15FF(void *this)
       v18 = *((_DWORD *)this + 37);
       v7 = v25;
       v24 = v6;
-      sub_46A65A(&v15, v25);
+      advance_segmented_array_cursor(&v15, v25);
       v8 = *v17 - v23;
       v9 = *((_DWORD *)this + 32) - 1;
       v25 = v8;
@@ -210415,7 +210272,7 @@ int __thiscall sub_4A15FF(void *this)
         v16 = *((_DWORD *)this + 35);
         v17 = (int *)*((_DWORD *)this + 36);
         v18 = *((_DWORD *)this + 37);
-        sub_46A65A(&v15, v7 + 1);
+        advance_segmented_array_cursor(&v15, v7 + 1);
         v8 = v25;
         v10 = *v17 - v24 - 1;
       }
@@ -210482,7 +210339,7 @@ int __thiscall sub_4A178B(void *this)
         v15 = *((_DWORD *)this + 35);
         v16 = (int *)*((_DWORD *)this + 36);
         v17 = *((_DWORD *)this + 37);
-        sub_46A65A(&v14, v25);
+        advance_segmented_array_cursor(&v14, v25);
         result = *((_DWORD *)this + 23);
         if ( result < *v16 )
           break;
@@ -210505,7 +210362,7 @@ int __thiscall sub_4A178B(void *this)
         v6 = v25 - 1;
         v20 = &v4[v5];
         v23 = v25 - 1;
-        sub_46A65A(&v14, v25 - 1);
+        advance_segmented_array_cursor(&v14, v25 - 1);
         v22 = *v16;
         if ( v6 > 0 )
         {
@@ -210513,14 +210370,14 @@ int __thiscall sub_4A178B(void *this)
           v15 = *((_DWORD *)this + 35);
           v16 = (int *)*((_DWORD *)this + 36);
           v17 = *((_DWORD *)this + 37);
-          sub_46A65A(&v14, v25 - 2);
+          advance_segmented_array_cursor(&v14, v25 - 2);
           v24 = *v16;
         }
         v14 = *((_DWORD *)this + 34);
         v15 = *((_DWORD *)this + 35);
         v16 = (int *)*((_DWORD *)this + 36);
         v17 = *((_DWORD *)this + 37);
-        sub_46A65A(&v14, v25);
+        advance_segmented_array_cursor(&v14, v25);
         v7 = v22;
         v8 = *v16 - v22;
         v25 = v8;
@@ -210534,7 +210391,7 @@ int __thiscall sub_4A178B(void *this)
           v15 = *((_DWORD *)this + 35);
           v16 = (int *)*((_DWORD *)this + 36);
           v17 = *((_DWORD *)this + 37);
-          sub_46A65A(&v14, v23);
+          advance_segmented_array_cursor(&v14, v23);
           v7 = v22;
           v8 = v25;
           v9 = *v16 - v24 - 1;
@@ -210588,7 +210445,7 @@ int __thiscall sub_4A1915(_DWORD *this)
     v6 = this[35];
     v7 = (_DWORD *)this[36];
     v8 = this[37];
-    sub_46A65A(&v5, v9);
+    advance_segmented_array_cursor(&v5, v9);
     if ( this[23] < *v7 )
       break;
     v3 = this[32];
@@ -210601,7 +210458,7 @@ int __thiscall sub_4A1915(_DWORD *this)
   v6 = this[35];
   v7 = (_DWORD *)this[36];
   v8 = this[37];
-  sub_46A65A(&v5, v9 - 1);
+  advance_segmented_array_cursor(&v5, v9 - 1);
   return (*(int (__thiscall **)(_DWORD *, _DWORD))(*this + 220))(this, *v7);
 }
 
@@ -210628,7 +210485,7 @@ int __thiscall sub_4A19A8(_DWORD *this)
       v6 = this[35];
       v7 = (_DWORD *)this[36];
       v8 = this[37];
-      sub_46A65A(&v5, v9);
+      advance_segmented_array_cursor(&v5, v9);
       if ( this[23] < *v7 )
         break;
       v3 = this[32];
@@ -210642,14 +210499,14 @@ int __thiscall sub_4A19A8(_DWORD *this)
   v6 = this[35];
   v7 = (_DWORD *)this[36];
   v8 = this[37];
-  sub_46A65A(&v5, v9);
+  advance_segmented_array_cursor(&v5, v9);
   if ( this[23] == *v7 - 1 )
     return (*(int (__thiscall **)(_DWORD *, _DWORD))(*this + 220))(this, this[14]);
   v5 = this[34];
   v6 = this[35];
   v7 = (_DWORD *)this[36];
   v8 = this[37];
-  sub_46A65A(&v5, v9);
+  advance_segmented_array_cursor(&v5, v9);
   return (*(int (__thiscall **)(_DWORD *, int))(*this + 220))(this, *v7 - 1);
 }
 
@@ -210781,7 +210638,7 @@ int *__thiscall sub_4A1B03(int *this, int *a2, int a3, int a4, _DWORD *a5, int a
     v24 = v33[1];
     v25 = (_DWORD *)v33[2];
     v26 = v33[3];
-    sub_46A65A(&v23, v32);
+    advance_segmented_array_cursor(&v23, v32);
     a3 = v23;
     a4 = v24;
     a5 = v25;
@@ -210813,7 +210670,7 @@ void __thiscall sub_4A1C4C(_DWORD *this)
     v2[1] = this[6];
     v2[2] = this[7];
     v2[3] = this[8];
-    sub_46A65A(v2, -1);
+    advance_segmented_array_cursor(v2, -1);
     sub_4A1CC0(this);
   }
 }
@@ -210841,7 +210698,7 @@ void __thiscall sub_4A1CC0(_DWORD *this)
   sub_4A1CF0(this + 5);
   if ( this[11]-- == 1 )
   {
-    sub_46A5FD((int)this);
+    destroy_segmented_array((int)this);
   }
   else if ( v2 != (int *)this[8] )
   {
@@ -211018,7 +210875,7 @@ int *__thiscall sub_4A1F2A(int *this, unsigned int a2, int a3)
     v12 = this[2];
     v13 = (_DWORD *)this[3];
     v14 = this[4];
-    sub_46A65A(&v11, a2);
+    advance_segmented_array_cursor(&v11, a2);
     return sub_4A1B03(this, v6, v11, v12, v13, v14, v7, v8, v9, v10);
   }
   return result;
@@ -211158,7 +211015,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v45 = v58[1];
       v46 = (_DWORD *)v58[2];
       j = v58[3];
-      sub_46A65A(&v44, v57);
+      advance_segmented_array_cursor(&v44, v57);
       v52 = v44;
       v53 = v45;
       v54 = v46;
@@ -211167,7 +211024,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v49 = v45;
       v50 = v46;
       m = j;
-      sub_46A65A(&v48, v9);
+      advance_segmented_array_cursor(&v48, v9);
       v32 = v48;
       v33 = v49;
       v34 = v50;
@@ -211201,7 +211058,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v45 = v58[1];
       v46 = (_DWORD *)v58[2];
       j = v58[3];
-      sub_46A65A(&v44, v10);
+      advance_segmented_array_cursor(&v44, v10);
       v52 = v44;
       v53 = v45;
       v54 = v46;
@@ -211210,7 +211067,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v41 = v45;
       v42 = v46;
       v43 = j;
-      sub_46A65A(&v40, v57);
+      advance_segmented_array_cursor(&v40, v57);
       v32 = v40;
       v33 = v41;
       v34 = v42;
@@ -211219,7 +211076,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v45 = v53;
       v46 = v54;
       j = v55;
-      sub_46A65A(&v44, v10);
+      advance_segmented_array_cursor(&v44, v10);
       v36 = v52;
       v37 = v53;
       v38 = v54;
@@ -211239,7 +211096,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v37 = v53;
       v38 = v54;
       v39 = v55;
-      sub_46A65A(&v36, v57);
+      advance_segmented_array_cursor(&v36, v57);
       v32 = v36;
       v33 = v37;
       v34 = v38;
@@ -211248,7 +211105,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v45 = v58[1];
       v46 = (_DWORD *)v58[2];
       j = v58[3];
-      result = (_DWORD *)sub_46A65A(&v44, v57);
+      result = (_DWORD *)advance_segmented_array_cursor(&v44, v57);
       v48 = v44;
       v49 = v45;
       v50 = v46;
@@ -211284,7 +211141,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v49 = v58[1];
       v50 = (_DWORD *)v58[2];
       m = v58[3];
-      sub_46A65A(&v48, v10);
+      advance_segmented_array_cursor(&v48, v10);
       v52 = v48;
       v53 = v49;
       v54 = v50;
@@ -211293,7 +211150,7 @@ _DWORD *__thiscall sub_4A1FA4(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v45 = v49;
       v46 = v50;
       j = m;
-      sub_46A65A(&v44, v57);
+      advance_segmented_array_cursor(&v44, v57);
       v36 = v44;
       v37 = v45;
       v38 = v46;
@@ -211325,7 +211182,7 @@ _DWORD *__thiscall sub_4A2390(int *this, _DWORD *a2, int a3)
   v5 = this[1];
   v6 = this[2];
   v7 = this[3];
-  sub_46A65A(&v4, a3);
+  advance_segmented_array_cursor(&v4, a3);
   result = a2;
   *a2 = v4;
   a2[1] = v5;
@@ -211347,7 +211204,7 @@ _DWORD *__thiscall sub_4A23BE(int *this, _DWORD *a2, int a3)
   v5 = this[1];
   v6 = this[2];
   v7 = this[3];
-  sub_46A65A(&v4, -a3);
+  advance_segmented_array_cursor(&v4, -a3);
   result = a2;
   *a2 = v4;
   a2[1] = v5;
@@ -211429,7 +211286,7 @@ _DWORD *__thiscall sub_4A245E(_DWORD *this)
     if ( this[9] + 4 >= v7 )
     {
       v15 = ((int)(this[8] - v7) >> 2) + 1;
-      v8 = sub_46A425(this, v15);
+      v8 = insert_segmented_deque_block_map_entry(this, v15);
       v14 = (_DWORD *)(v8 - 4);
       *(_DWORD *)(v8 - 8) = 0;
       *v14 = v3;
@@ -224776,7 +224633,7 @@ char __thiscall load_floor_mapping_file(char *this, char *a2)
   construct_registered_config_file(v16, Buffer, a2);
   v2 = 1;
   v34 = 0;
-  if ( sub_46B663(v16, 1) )
+  if ( load_configuration_file_section(v16, 1) )
   {
     if ( select_settings_section(v16, "FloorMap") )
     {
@@ -225704,7 +225561,7 @@ _DWORD *__thiscall sub_4B1E42(char *this, char *Str)
   construct_registered_config_file(v8, v6, v10);
   LOBYTE(v11) = 2;
   std::string::_Tidy(1);
-  if ( sub_46B663(v8, 1) )
+  if ( load_configuration_file_section(v8, 1) )
     sub_4B1F2C((int)this, v8);
   else
     log_source_message(
@@ -226875,7 +226732,7 @@ char __thiscall load_stage_sound_map(char *this, char *a2)
   sprintf(Buffer, "%s.txt", a2);
   construct_registered_config_file(v9, Buffer, a2);
   v23 = 0;
-  if ( sub_46B663(v9, 1) )
+  if ( load_configuration_file_section(v9, 1) )
   {
     sub_4151F2(v10, (_BYTE *)&a2 + 3);
     LOBYTE(v23) = 1;
@@ -285779,7 +285636,7 @@ char __thiscall sub_4F0906(int this, int a2, _DWORD *a3)
               v14[1] = *(_DWORD *)(this + 80);
               v15 = *(int **)(this + 84);
               v16 = *(_DWORD *)(this + 88);
-              sub_46A65A(v14, v33 - 1);
+              advance_segmented_array_cursor(v14, v33 - 1);
               v30 = *v15;
             }
             else
@@ -285790,7 +285647,7 @@ char __thiscall sub_4F0906(int this, int a2, _DWORD *a3)
             v11[1] = *(_DWORD *)(this + 80);
             v12 = *(_DWORD **)(this + 84);
             v13 = *(_DWORD *)(this + 88);
-            sub_46A65A(v11, v33);
+            advance_segmented_array_cursor(v11, v33);
             v29 = Key;
             v27 = *v12 - v30;
             if ( *(_DWORD *)(this + 52) )
@@ -285799,7 +285656,7 @@ char __thiscall sub_4F0906(int this, int a2, _DWORD *a3)
             v8[1] = *(_DWORD *)(this + 128);
             v9 = *(int **)(this + 132);
             v10 = *(_DWORD *)(this + 136);
-            sub_46A65A(v8, v33);
+            advance_segmented_array_cursor(v8, v33);
             v6 = v28;
             v7 = *v9;
             v24[1] = v28;
@@ -297924,7 +297781,7 @@ _DWORD *__thiscall sub_4FD7A7(int this)
   std::string::_Tidy(1);
   LOBYTE(v72) = 3;
   std::string::_Tidy(1);
-  if ( !sub_46B663(v51, 1) )
+  if ( !load_configuration_file_section(v51, 1) )
     log_source_message(
       (int)"Z:\\Proj\\GK3\\gk3app\\Source\\MiscLayers.cpp",
       378,
@@ -299072,7 +298929,7 @@ _DWORD *__thiscall sub_4FF038(_DWORD *this)
   std::string::_Tidy(1);
   LOBYTE(v27) = 9;
   std::string::_Tidy(1);
-  if ( sub_46B663(v13, 1) )
+  if ( load_configuration_file_section(v13, 1) )
   {
     v6 = this[247] - 3;
     v25 = 14;
@@ -323126,7 +322983,7 @@ _DWORD *__thiscall sub_517B0D(char **this)
   std::string::_Tidy(1);
   LOBYTE(v148) = 3;
   std::string::_Tidy(1);
-  if ( !sub_46B663(v137, 1) )
+  if ( !load_configuration_file_section(v137, 1) )
     log_source_message(
       (int)"Z:\\Proj\\GK3\\gk3app\\Source\\RCBar.cpp",
       2588,
@@ -343797,14 +343654,14 @@ int __thiscall sub_52E07B(int this)
       v17 = v21;
       v18 = v22;
       v19 = v23;
-      sub_46A65A(&v16, -1);
+      advance_segmented_array_cursor(&v16, -1);
       if ( *v18 != -1 )
       {
         v12 = v20;
         v13 = v21;
         v14 = v22;
         v15 = v23;
-        sub_46A65A(&v12, -1);
+        advance_segmented_array_cursor(&v12, -1);
         v6 = (__int64)((double)*v14 * *(float *)(this + 196));
         v7 = v28;
         if ( (int)v6 >= v28 - 1 )
@@ -387169,7 +387026,7 @@ LABEL_5:
     construct_registered_config_file(v24, v8, v37);
     LOBYTE(v38) = 5;
     std::string::_Tidy(1);
-    if ( sub_46B663(v24, 1) )
+    if ( load_configuration_file_section(v24, 1) )
     {
       v9 = sub_46C10A(v24, &v30, "Font Name", (char *)Str1);
       LOBYTE(v38) = 6;
@@ -401340,19 +401197,7 @@ void sub_569D80()
 // 7715C4: using guessed type int dword_7715C4;
 
 //----- (00569D90) --------------------------------------------------------
-int __cdecl sub_569D90(CHAR *lpText)
-{
-  _DWORD v2[7]; // [esp+0h] [ebp-1Ch] BYREF
-
-  v2[3] = v2;
-  v2[6] = 0;
-  if ( !game_engine_address )
-    return MessageBoxA(0, lpText, "Unhandled exception", 0);
-  dword_77367C = 1;
-  return report_engine_error(game_engine_address, lpText);
-}
-// 7715D4: using guessed type int game_engine_address;
-// 77367C: using guessed type int dword_77367C;
+/* Extracted to platform/main.c as report_unhandled_exception. */
 
 //----- (00569E30) --------------------------------------------------------
 int sub_569E30()
@@ -401361,11 +401206,7 @@ int sub_569E30()
 }
 
 //----- (00569E80) --------------------------------------------------------
-LONG __stdcall TopLevelExceptionFilter(struct _EXCEPTION_POINTERS *ExceptionInfo)
-{
-  sub_569D90("Unrecognized fatal exception");
-  return 1;
-}
+/* Extracted to platform/main.c as TopLevelExceptionFilter. */
 
 //----- (0056A410) --------------------------------------------------------
 /* Extracted to engine/game_engine.c. */
@@ -405683,9 +405524,9 @@ int __thiscall show_engine_error_message(int this, int a2)
     while ( dword_776F18 )
       sub_590C00((_BYTE *)this);
     (*(void (__thiscall **)(int, int, _DWORD, int))(*(_DWORD *)this + 144))(this, a2, 0, 16);
-    result = dword_77367C;
+    result = is_reporting_unhandled_exception;
     v7 = -1;
-    if ( !dword_77367C )
+    if ( !is_reporting_unhandled_exception )
     {
       pExceptionObject[0] = 0;
       _CxxThrowException(pExceptionObject, (_ThrowInfo *)&_TI1H);
@@ -405693,7 +405534,7 @@ int __thiscall show_engine_error_message(int this, int a2)
   }
   return result;
 }
-// 77367C: using guessed type int dword_77367C;
+// 77367C: using guessed type int is_reporting_unhandled_exception;
 // 776F18: using guessed type int dword_776F18;
 
 //----- (00570C40) --------------------------------------------------------
@@ -408274,7 +408115,7 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
           v34 = v5[6];
           v35 = (_DWORD *)v5[7];
           v36 = v5[8];
-          sub_46A65A(&v33, -1);
+          advance_segmented_array_cursor(&v33, -1);
           v6 = (int *)v5[8];
           sub_4A1CF0(v5 + 5);
           v7 = v5[11] - 1;
@@ -408289,7 +408130,7 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
           }
           else
           {
-            sub_46A5FD((int)v5);
+            destroy_segmented_array((int)v5);
           }
         }
         v3 = v40;
@@ -408314,17 +408155,17 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
             if ( v13 >= v9[9] + 4 * v9[10] - 8 )
             {
               v16 = ((int)(v13 - v9[4]) >> 2) + 1;
-              v17 = (_DWORD *)sub_46A425(v9, v16);
+              v17 = (_DWORD *)insert_segmented_deque_block_map_entry(v9, v16);
               v38 = &v17[v16];
               *v38 = v10;
               v17[v16 + 1] = 0;
-              v18 = sub_575390(v30, v9[3], v17);
+              v18 = set_segmented_array_cursor(v30, v9[3], v17);
               v9[1] = *v18;
               v9[2] = v18[1];
               v9[3] = v18[2];
               v28 = v38;
               v9[4] = v18[3];
-              v15 = sub_575390(v29, (int)v10, v28);
+              v15 = set_segmented_array_cursor(v29, (int)v10, v28);
               v8 = v39;
             }
             else
@@ -408333,7 +408174,7 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
               v9[8] = v14;
               *v14 = v10;
               *(_DWORD *)(v9[8] + 4) = 0;
-              v15 = sub_575390(v31, (int)v10, (_DWORD *)v9[8]);
+              v15 = set_segmented_array_cursor(v31, (int)v10, (_DWORD *)v9[8]);
             }
             v9[5] = *v15;
             v9[6] = v15[1];
@@ -408348,7 +408189,7 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
             v11[3] = 0;
             *(_DWORD *)(v9[9] + 16) = v10;
             *(_DWORD *)(v9[9] + 20) = 0;
-            v12 = sub_575390(v32, (int)(v10 + 512), (_DWORD *)(v9[9] + 16));
+            v12 = set_segmented_array_cursor(v32, (int)(v10 + 512), (_DWORD *)(v9[9] + 16));
             v9[1] = *v12;
             v9[2] = v12[1];
             v9[3] = v12[2];
@@ -408385,7 +408226,7 @@ char __thiscall sub_5743D0(_DWORD *this, _BYTE *a2, int a3)
         v35 = v24;
         v34 = v25;
         v36 = v26;
-        sub_46A65A(&v33, -1);
+        advance_segmented_array_cursor(&v33, -1);
         if ( v35 )
           *v35 = i;
         v3 = v40;
@@ -408483,212 +408324,10 @@ void __thiscall sub_574690(_DWORD *this)
 // 6F1CCC: using guessed type int (__stdcall *off_6F1CCC)(char);
 
 //----- (005747D0) --------------------------------------------------------
-int *__thiscall register_event_target(int *this, int *a2, int a3)
-{
-  int v4; // eax
-  int *v5; // ecx
-  int v6; // ebx
-  _DWORD *v7; // edi
-  _DWORD *v8; // esi
-  int v9; // eax
-  int *v10; // ecx
-  bool v11; // zf
-  int *v12; // eax
-  int v13; // eax
-  int v14; // eax
-  int *result; // eax
-  int v16; // [esp+Ch] [ebp-14h] BYREF
-  int v17; // [esp+10h] [ebp-10h]
-  int *v18; // [esp+14h] [ebp-Ch]
-  int v19; // [esp+18h] [ebp-8h]
-  int *v20; // [esp+1Ch] [ebp-4h]
-
-  if ( !this[16] )
-  {
-    v4 = this[2];
-    v5 = this + 1;
-    if ( v4 )
-      v6 = (this[3] - v4) >> 2;
-    else
-      LOWORD(v6) = 0;
-    sub_575100(v5, (_DWORD *)this[3], 1, &a3);
-    goto LABEL_15;
-  }
-  v16 = this[10];
-  v17 = this[11];
-  v18 = (int *)this[12];
-  v19 = this[13];
-  sub_46A65A(&v16, -1);
-  v7 = this + 5;
-  v6 = *v18;
-  *(_DWORD *)(this[2] + 4 * *v18) = a3;
-  if ( !this[16] )
-    goto LABEL_15;
-  v8 = this + 10;
-  v16 = v7[5];
-  v17 = v7[6];
-  v18 = (int *)v7[7];
-  v19 = v7[8];
-  sub_46A65A(&v16, -1);
-  v9 = v7[7];
-  v10 = (int *)v7[8];
-  v11 = v9 == *v8;
-  v20 = v10;
-  if ( v11 )
-  {
-    v12 = (int *)(v7[8] - 4);
-    if ( !*v12 )
-      goto LABEL_11;
-    v7[8] = v12;
-    v13 = *v12;
-    *v8 = v13;
-    v9 = v13 + 4096;
-    v7[6] = v9;
-  }
-  v7[7] = v9 - 4;
-LABEL_11:
-  v14 = v7[11] - 1;
-  v7[11] = v14;
-  if ( v14 )
-  {
-    if ( v10 != (int *)v7[8] )
-    {
-      free_tracked_memory(*v10);
-      *v20 = 0;
-    }
-  }
-  else
-  {
-    sub_46A5FD((int)v7);
-  }
-LABEL_15:
-  result = a2;
-  *a2 = ((unsigned __int16)a3 | (*(unsigned __int16 *)(a3 + 4) << 16)) ^ (unsigned __int16)(v6 ^ a3);
-  return result;
-}
+/* Extracted to engine/event_dispatch.c as register_event_target. */
 
 //----- (00574900) --------------------------------------------------------
-int __thiscall unregister_registered_event_target(_DWORD *this, int a2)
-{
-  int v2; // edx
-  _DWORD *v3; // esi
-  _DWORD *v4; // edi
-  _DWORD *v5; // eax
-  int *v6; // eax
-  _DWORD *v7; // edi
-  int v8; // ecx
-  unsigned int v9; // eax
-  _DWORD *v10; // eax
-  _DWORD *v11; // eax
-  int v12; // ebx
-  _DWORD *v13; // eax
-  _DWORD *v14; // eax
-  int v15; // eax
-  int v16; // ecx
-  int v17; // eax
-  int *v18; // eax
-  int v19; // eax
-  _DWORD *v20; // ecx
-  int v21; // eax
-  int v22; // edx
-  int result; // eax
-  int v24[2]; // [esp+Ch] [ebp-14h] BYREF
-  _DWORD *v25; // [esp+14h] [ebp-Ch]
-  int v26; // [esp+18h] [ebp-8h]
-  int v27; // [esp+1Ch] [ebp-4h]
-  _DWORD *v28; // [esp+28h] [ebp+8h]
-
-  v2 = this[2];
-  v3 = this + 5;
-  v27 = (unsigned __int16)*(_DWORD *)(a2 + 8);
-  *(_DWORD *)(v2 + 4 * v27) = 0;
-  if ( !this[16] || this[12] == this[11] )
-  {
-    v4 = allocate_tracked_memory(4096);
-    if ( v3[11] )
-    {
-      v9 = v3[8];
-      if ( v9 >= v3[9] + 4 * v3[10] - 8 )
-      {
-        v12 = ((int)(v9 - v3[4]) >> 2) + 1;
-        v13 = (_DWORD *)sub_46A425(v3, v12);
-        v28 = &v13[v12];
-        *v28 = v4;
-        v28[1] = 0;
-        v14 = sub_575390(v24, v3[3], v13);
-        v3[1] = *v14;
-        v3[2] = v14[1];
-        v3[3] = v14[2];
-        v3[4] = v14[3];
-        v11 = sub_575390(v24, (int)v4, v28);
-      }
-      else
-      {
-        v10 = (_DWORD *)(v9 + 4);
-        v3[8] = v10;
-        *v10 = v4;
-        *(_DWORD *)(v3[8] + 4) = 0;
-        v11 = sub_575390(v24, (int)v4, (_DWORD *)v3[8]);
-      }
-      v3[5] = *v11;
-      v3[6] = v11[1];
-      v3[7] = v11[2];
-      v3[8] = v11[3];
-    }
-    else
-    {
-      v5 = allocate_tracked_memory(32);
-      v3[9] = v5;
-      v3[10] = 8;
-      v5[3] = 0;
-      *(_DWORD *)(v3[9] + 16) = v4;
-      *(_DWORD *)(v3[9] + 20) = 0;
-      v6 = (int *)(v3[9] + 16);
-      v7 = v4 + 512;
-      v8 = *v6;
-      v3[1] = *v6;
-      v3[2] = v8 + 4096;
-      v3[3] = v7;
-      v3[4] = v6;
-      v3[5] = v8;
-      v3[6] = v8 + 4096;
-      v3[7] = v7;
-      v3[8] = v6;
-    }
-  }
-  v15 = v3[7];
-  v16 = v3[6];
-  if ( v15 != v16 )
-  {
-    v17 = v15 + 4;
-    v3[7] = v17;
-    if ( v17 == v16 )
-    {
-      v18 = (int *)(v3[8] + 4);
-      if ( *v18 )
-      {
-        v3[8] = v18;
-        v19 = *v18;
-        v3[5] = v19;
-        v3[7] = v3[5];
-        v3[6] = v19 + 4096;
-      }
-    }
-  }
-  v20 = (_DWORD *)v3[7];
-  v21 = v3[6];
-  v24[0] = v3[5];
-  v22 = v3[8];
-  v25 = v20;
-  v24[1] = v21;
-  v26 = v22;
-  sub_46A65A(v24, -1);
-  if ( v25 )
-    *v25 = v27;
-  result = v3[11] + 1;
-  v3[11] = result;
-  return result;
-}
+/* Extracted to engine/event_dispatch.c as unregister_registered_event_target. */
 
 //----- (00574B90) --------------------------------------------------------
 bool __thiscall deserialize_event_target(
@@ -408757,7 +408396,7 @@ int __thiscall sub_5750C0(int *this)
 }
 
 //----- (00575100) --------------------------------------------------------
-_DWORD *__thiscall sub_575100(int *this, _DWORD *a2, int a3, _DWORD *a4)
+_DWORD *__thiscall insert_repeated_array_values(int *this, _DWORD *a2, int a3, _DWORD *a4)
 {
   int *v4; // ebx
   _DWORD *result; // eax
@@ -408982,7 +408621,7 @@ _DWORD *__stdcall sub_575360(_DWORD *a1, _DWORD *a2, _DWORD *a3)
 }
 
 //----- (00575390) --------------------------------------------------------
-_DWORD *__thiscall sub_575390(_DWORD *this, int a2, _DWORD *a3)
+_DWORD *__thiscall set_segmented_array_cursor(_DWORD *this, int a2, _DWORD *a3)
 {
   _DWORD *result; // eax
   int v4; // edx
@@ -560801,7 +560440,7 @@ int __thiscall sub_6679BE(int *this, unsigned __int16 a2, _DWORD *a3)
     v14 = (int *)this[47];
     v18 = v6;
     v15 = this[48];
-    sub_46A65A(&v12, 0);
+    advance_segmented_array_cursor(&v12, 0);
     v7 = this + 45;
     if ( *v14 <= v18 )
     {
@@ -560809,7 +560448,7 @@ int __thiscall sub_6679BE(int *this, unsigned __int16 a2, _DWORD *a3)
       v13 = this[46];
       v14 = (int *)this[47];
       v15 = this[48];
-      sub_46A65A(&v12, 0);
+      advance_segmented_array_cursor(&v12, 0);
       *v14 = v18;
       v8 = 0;
     }
@@ -560819,7 +560458,7 @@ int __thiscall sub_6679BE(int *this, unsigned __int16 a2, _DWORD *a3)
       v13 = this[46];
       v14 = (int *)this[47];
       v15 = this[48];
-      sub_46A65A(&v12, 0);
+      advance_segmented_array_cursor(&v12, 0);
       v8 = (*v14 - v18) >> 1;
     }
     v17[0] = this[7];
@@ -561787,7 +561426,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
   v32[1] = mini_console_coordinate_default_b;
   v32[3] = v4 + mini_console_coordinate_default_b;
   v39 = this[48];
-  sub_46A65A(&v36, 0);
+  advance_segmented_array_cursor(&v36, 0);
   v41 = *v38;
   result = this[31];
   if ( result > 0 )
@@ -561805,7 +561444,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
         v23[1] = this[46];
         v24 = (int *)this[47];
         v25 = this[48];
-        sub_46A65A(v23, v47 + 1);
+        advance_segmented_array_cursor(v23, v47 + 1);
         v40 = *v24;
       }
       if ( v47 )
@@ -561814,7 +561453,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
         v29[1] = this[34];
         v30 = (int *)this[35];
         v31 = this[36];
-        sub_46A65A(v29, v47 - 1);
+        advance_segmented_array_cursor(v29, v47 - 1);
         v48 = *v30;
       }
       else
@@ -561829,7 +561468,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
       v37 = this[34];
       v38 = (int *)this[35];
       v39 = this[36];
-      sub_46A65A(&v36, v47);
+      advance_segmented_array_cursor(&v36, v47);
       v7 = v48;
       if ( v48 < *v38 )
       {
@@ -561849,7 +561488,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
           v26[1] = this[34];
           v27 = (_DWORD *)this[35];
           v28 = this[36];
-          sub_46A65A(v26, v47);
+          advance_segmented_array_cursor(v26, v47);
           v11 = v46;
           if ( v46 >= *v27 )
           {
@@ -561857,7 +561496,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
             v20[1] = this[34];
             v21 = (int *)this[35];
             v22 = this[36];
-            sub_46A65A(v20, v47);
+            advance_segmented_array_cursor(v20, v47);
             v11 = *v21;
           }
           v12 = (const char *)this[18];
@@ -561880,7 +561519,7 @@ int __thiscall sub_668929(_DWORD *this, int a2)
           v37 = this[34];
           v38 = (int *)this[35];
           v39 = this[36];
-          sub_46A65A(&v36, v47);
+          advance_segmented_array_cursor(&v36, v47);
           v7 = v48;
           if ( v48 >= *v38 )
             break;
@@ -589427,7 +589066,7 @@ int __thiscall construct_private_bottom_layer(int this)
   construct_registered_config_file(v89, v63, v62);
   LOBYTE(v109) = 30;
   std::string::_Tidy(1);
-  if ( !sub_46B663(v89, 1) )
+  if ( !load_configuration_file_section(v89, 1) )
   {
     v83 = v96;
     v84 = v97;
@@ -594462,7 +594101,7 @@ int __thiscall sub_68E393(char *this)
     v2 = (char *)Key;
   construct_registered_config_file(v12, v2, v1);
   LOBYTE(v32) = 3;
-  if ( sub_46B663(v12, 1) )
+  if ( load_configuration_file_section(v12, 1) )
   {
     sub_45F040(&v15, (int)v13, (int)&v24);
     if ( !sub_45E92C(&v24) )
@@ -595243,7 +594882,7 @@ int __thiscall sub_68F4A4(int *this)
     v2 = (char *)Key;
   construct_registered_config_file(v31, v2, v1);
   LOBYTE(v60) = 3;
-  if ( sub_46B663(v31, 1) )
+  if ( load_configuration_file_section(v31, 1) )
   {
     sub_45F040(&v57, (int)v32, (int)&v49);
     if ( v50 != v51 )
