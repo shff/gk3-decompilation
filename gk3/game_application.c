@@ -108,7 +108,7 @@ extern uint32_t unk_763FD8[]; /* Camera type descriptor. */
 extern uint32_t unk_7640B8[]; /* Camera-angle manager type descriptor. */
 extern uint32_t unk_764D78[]; /* Cursor-manager type descriptor. */
 extern uint32_t unk_7650C8[]; /* Dialogue-manager type descriptor. */
-extern uint32_t unk_765708[]; /* Flag-manager type descriptor. */
+extern uint32_t flag_manager_type_descriptor[];
 extern uint32_t unk_765C18[]; /* Game-state type descriptor. */
 extern uint32_t generics_manager_type_descriptor[15];
 extern uint32_t unk_7664C0[]; /* Interface-manager type descriptor. */
@@ -118,7 +118,7 @@ extern uint32_t unk_76C8E8[]; /* Score-manager type descriptor. */
 extern uint32_t unk_76CA08[]; /* Sheep-engine type descriptor. */
 extern uint32_t unk_76CFD0[]; /* Soundtrack-manager type descriptor. */
 extern uint32_t unk_76D128[]; /* Stage-manager type descriptor. */
-extern uint32_t unk_7643E0[]; /* Static-configuration type descriptor. */
+extern uint32_t static_configuration_type_descriptor[]; /* Static-configuration type descriptor. */
 extern uint32_t unk_7644B8[]; /* Mini-console type descriptor. */
 extern uint32_t debug_manager_type_descriptor[15];
 extern uint32_t unk_764F48[]; /* Developer-control type descriptor. */
@@ -582,7 +582,7 @@ int __thiscall serialize_game_application_fields(
     { "mCameraAngleMgr", offsetof(GameApplication, camera_angle_manager), unk_7640B8 },
     { "mCursorMgr", offsetof(GameApplication, cursor_manager), unk_764D78 },
     { "mDialogueMgr", offsetof(GameApplication, dialogue_manager), unk_7650C8 },
-    { "mFlagMgr", offsetof(GameApplication, flag_manager), unk_765708 },
+    { "mFlagMgr", offsetof(GameApplication, flag_manager), flag_manager_type_descriptor },
     { "mGameState", offsetof(GameApplication, game_state), unk_765C18 },
     { "mGenerics", offsetof(GameApplication, generics_manager), generics_manager_type_descriptor },
     { "mInterfaceMgr", offsetof(GameApplication, interface_manager), unk_7664C0 },
@@ -592,7 +592,7 @@ int __thiscall serialize_game_application_fields(
     { "mSheepEngine", offsetof(GameApplication, sheep_engine), unk_76CA08 },
     { "mSoundTrackMgr", offsetof(GameApplication, soundtrack_manager), unk_76CFD0 },
     { "mStageMgr", offsetof(GameApplication, stage_manager), unk_76D128 },
-    { "mStaticConfig", offsetof(GameApplication, static_configuration), unk_7643E0 },
+    { "mStaticConfig", offsetof(GameApplication, static_configuration), static_configuration_type_descriptor },
     { "mMiniConsole", offsetof(GameApplication, mini_console), unk_7644B8 },
     { "mDebugMgr", offsetof(GameApplication, debug_manager), debug_manager_type_descriptor },
     { "mDevControl", offsetof(GameApplication, developer_control), unk_764F48 },

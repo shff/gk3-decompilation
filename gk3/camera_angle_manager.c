@@ -15,18 +15,18 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_7640B8[];
-extern uint32_t dword_7640F8[15];
-extern int dword_7640B4;
-extern int dword_7640F4;
-extern int dword_7647B0;
-extern int dword_7647B4;
-extern int dword_7647B8;
+extern uint32_t camera_angle_type_registry[15];
+extern int camera_angle_manager_registry_adjustment;
+extern int camera_angle_registry_adjustment;
+extern int unset_camera_position_x;
+extern int unset_camera_position_y;
+extern int unset_camera_position_z;
 extern void *Buf2;
 extern int active_scene_controller_address;
-extern int dword_76417C;
-extern int dword_764180;
-extern void *__thiscall (*off_6AE0C8)(void *object, char flags);
-extern uint32_t off_6A72AC[];
+extern int camera_angle_map_nil_node;
+extern int camera_angle_map_sentinel_reference_count;
+extern void *__thiscall (*camera_angle_manager_vtable)(void *object, char flags);
+extern uint32_t camera_angle_vtable[];
 extern int game_engine_instance_address;
 extern const char Key[4];
 extern int __thiscall tidy_std_string_storage(char *string_storage,
@@ -34,53 +34,53 @@ extern int __thiscall tidy_std_string_storage(char *string_storage,
 extern char *__thiscall assign_std_string_storage(char *storage,
                                                   const char *value,
                                                   size_t length);
-extern int *__thiscall sub_4589E1(uint32_t *tree, int *result, int key);
-extern int *__thiscall sub_458A25(uint32_t *tree, int *result, int key);
-extern uint32_t *__thiscall sub_458576(uint32_t *tree, char *key);
-extern uint32_t *__thiscall sub_458657(uint32_t *tree, uint32_t *result,
-                                       uint32_t *node);
-extern uint32_t *__thiscall sub_4589CD(int tree);
-extern uint32_t *__thiscall sub_458925(uint32_t *tree, uint32_t *result,
-                                       uint32_t *first, uint32_t *last);
-extern uint32_t *__cdecl sub_457CA5(int size);
+extern int *__thiscall find_ordered_map_node(uint32_t *tree, int *result, int key);
+extern int *__thiscall lookup_camera_angle_tree_node(uint32_t *tree, int *result, int key);
+extern uint32_t *__thiscall find_or_insert_ordered_map_value(uint32_t *tree, char *key);
+extern uint32_t *__thiscall erase_ordered_map_entry(uint32_t *tree, uint32_t *result,
+                                                    uint32_t *node);
+extern uint32_t *__thiscall clear_ordered_map(int tree);
+extern uint32_t *__thiscall destroy_ordered_map_range(uint32_t *tree, uint32_t *result,
+                                                      uint32_t *first, uint32_t *last);
+extern uint32_t *__cdecl allocate_registered_camera_angle(int size);
 extern uint32_t *__thiscall find_or_create_registry_entry(uint32_t *registry,
                                       uint32_t address);
-extern void *__thiscall sub_447754(void *object);
-extern uint32_t *__thiscall sub_40ECE2(uint32_t *object);
-extern int __thiscall sub_40EE23(float *first, float *second);
-extern float *__thiscall sub_40D73E(float *matrix, float *vector);
-extern void __thiscall sub_575F20(float *matrix, float angle);
-extern void __thiscall sub_575F80(float *matrix, float angle);
-extern void __thiscall sub_578B90(float *matrix, float *first,
-                                  float *second, int flags, int count);
+extern void *__thiscall construct_camera_angle_state_data(void *object);
+extern uint32_t *__thiscall construct_camera_angle_base(uint32_t *object);
+extern int __thiscall vectors_are_approximately_equal(float *first, float *second);
+extern float *__thiscall add_vector_to_matrix_translation(float *matrix, float *vector);
+extern void __thiscall rotate_matrix_about_x(float *matrix, float angle);
+extern void __thiscall rotate_matrix_about_y(float *matrix, float angle);
+extern void __thiscall transform_vector_array(float *matrix, float *destination,
+                                              float *source, int count, int stride);
 extern uint32_t *__thiscall begin_interface_debug_log(uint32_t *logger, int source,
                                       int line, int category, void *context);
 extern int __thiscall log_interface_debug_message(uint32_t *logger, const char *format, ...);
 extern void __thiscall end_interface_debug_log(int *logger);
-extern char *__cdecl sub_475282(int camera_type);
+extern char *__cdecl camera_type_name(int camera_type);
 extern char *__thiscall copy_camera_angle_state(char *destination, int source);
-extern char __thiscall sub_459038(uint8_t *serializer, int field,
+extern char __thiscall serialize_camera_angle_map(uint8_t *serializer, int field,
                                  uint32_t *value, int mode);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                  uint32_t address);
-extern char __thiscall sub_454F29(int camera, uint32_t *position);
-extern void *__thiscall sub_41838F(uint32_t *bounds, uint8_t *rectangle);
-extern void __thiscall sub_458A69(int *iterator);
-extern void __thiscall sub_45945F(int *iterator, int index);
-extern void __thiscall sub_45367B(int camera, int angle, int *target,
+extern char __thiscall is_camera_position_within_bounds(int camera, uint32_t *position);
+extern void *__thiscall append_vector_element(uint32_t *vector, uint8_t *element);
+extern void __thiscall increment_ordered_map_iterator(int *iterator);
+extern void __thiscall advance_camera_angle_map_iterator(int *iterator, int index);
+extern void __thiscall glide_camera_to_angle(int camera, int angle, int *target,
                                   char transition, int flags, char mode);
-extern void __thiscall sub_453A7E(int camera, int angle, char cut, char mode);
+extern void __thiscall cut_camera_to_angle(int camera, int angle, char cut, char mode);
 extern int __cdecl log_source_message(int source_file, int line, int severity,
                               int flags, const char *format, ...);
 extern void __cdecl free_tracked_memory(int address);
 
 uint32_t *__thiscall construct_camera_angle(uint32_t *angle)
 {
-  sub_447754(angle + 6);
-  sub_40ECE2(angle);
-  find_or_create_registry_entry(dword_7640F8,
-             (uint32_t)(uintptr_t)angle + (uint32_t)dword_7640F4 + 56);
-  angle[0] = (uint32_t)(uintptr_t)off_6A72AC;
+  construct_camera_angle_state_data(angle + 6);
+  construct_camera_angle_base(angle);
+  find_or_create_registry_entry(camera_angle_type_registry,
+             (uint32_t)(uintptr_t)angle + (uint32_t)camera_angle_registry_adjustment + 56);
+  angle[0] = (uint32_t)(uintptr_t)camera_angle_vtable;
   return angle;
 }
 
@@ -89,22 +89,22 @@ void __thiscall calculate_camera_angle_view_position(float *angle,
 {
   float transform[12];
 
-  if (sub_40EE23((float *)&dword_7647B0, angle + 2)) {
-    position[0] = *(float *)&dword_7647B0;
-    position[1] = *(float *)&dword_7647B4;
-    position[2] = *(float *)&dword_7647B8;
+  if (vectors_are_approximately_equal((float *)&unset_camera_position_x, angle + 2)) {
+    position[0] = *(float *)&unset_camera_position_x;
+    position[1] = *(float *)&unset_camera_position_y;
+    position[2] = *(float *)&unset_camera_position_z;
     return;
   }
 
   memcpy(transform, Buf2, sizeof(transform));
   transform[11] -= angle[5];
-  sub_575F20(transform, angle[1]);
-  sub_575F80(transform, angle[0]);
-  sub_40D73E(transform, angle + 2);
+  rotate_matrix_about_x(transform, angle[1]);
+  rotate_matrix_about_y(transform, angle[0]);
+  add_vector_to_matrix_translation(transform, angle + 2);
   position[0] = 0.0f;
   position[1] = 0.0f;
   position[2] = 0.0f;
-  sub_578B90(transform, position, position, 1, 12);
+  transform_vector_array(transform, position, position, 1, 12);
 }
 
 double __thiscall get_camera_angle_field_of_view(float *angle)
@@ -121,21 +121,21 @@ void __thiscall set_camera_angle_target_position(float *angle,
 {
   float transform[12];
 
-  if (sub_40EE23((float *)&dword_7647B0, position)) {
-    angle[2] = *(float *)&dword_7647B0;
-    angle[3] = *(float *)&dword_7647B4;
-    angle[4] = *(float *)&dword_7647B8;
+  if (vectors_are_approximately_equal((float *)&unset_camera_position_x, position)) {
+    angle[2] = *(float *)&unset_camera_position_x;
+    angle[3] = *(float *)&unset_camera_position_y;
+    angle[4] = *(float *)&unset_camera_position_z;
     return;
   }
 
   memcpy(transform, Buf2, sizeof(transform));
-  sub_575F20(transform, angle[1]);
-  sub_575F80(transform, angle[0]);
-  sub_40D73E(transform, position);
+  rotate_matrix_about_x(transform, angle[1]);
+  rotate_matrix_about_y(transform, angle[0]);
+  add_vector_to_matrix_translation(transform, position);
   angle[2] = 0.0f;
   angle[3] = 0.0f;
   angle[4] = angle[5];
-  sub_578B90(transform, angle + 2, angle + 2, 1, 12);
+  transform_vector_array(transform, angle + 2, angle + 2, 1, 12);
 }
 
 char __thiscall camera_angles_equal(float *first, float *second)
@@ -149,7 +149,7 @@ char __thiscall camera_angles_equal(float *first, float *second)
            get_camera_angle_field_of_view(second)) >= epsilon) {
     return 0;
   }
-  return (char)sub_40EE23(first + 2, second + 2);
+  return (char)vectors_are_approximately_equal(first + 2, second + 2);
 }
 
 void __thiscall log_camera_angle_details(float *angle, uint32_t *context)
@@ -160,7 +160,7 @@ void __thiscall log_camera_angle_details(float *angle, uint32_t *context)
       (int)"Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
       118, 7, context);
   const double field_of_view = get_camera_angle_field_of_view(angle);
-  char *type = sub_475282(*(int *)(void *)(angle + 7));
+  char *type = camera_type_name(*(int *)(void *)(angle + 7));
 
   log_interface_debug_message(entry,
              "angles: horizontal = %f, vertical = %f\n"
@@ -226,7 +226,7 @@ int __thiscall find_camera_angle_by_name(uint32_t *manager, char *name)
   key_storage[0] = (char)((uintptr_t)name >> 24);
   tidy_std_string_storage(key_storage, 0);
   assign_std_string_storage(key_storage, name, strlen(name));
-  sub_4589E1(manager + 1, &node, (int)(uintptr_t)key_storage);
+  find_ordered_map_node(manager + 1, &node, (int)(uintptr_t)key_storage);
   tidy_std_string_storage(key_storage, 1);
 
   if ((uint32_t)node == manager[2])
@@ -242,7 +242,7 @@ int __thiscall lookup_camera_angle_by_name(uint32_t *manager, char *name)
   key_storage[0] = (char)((uintptr_t)name >> 24);
   tidy_std_string_storage(key_storage, 0);
   assign_std_string_storage(key_storage, name, strlen(name));
-  sub_458A25(manager + 1, &node, (int)(uintptr_t)key_storage);
+  lookup_camera_angle_tree_node(manager + 1, &node, (int)(uintptr_t)key_storage);
   tidy_std_string_storage(key_storage, 1);
 
   if ((uint32_t)node == manager[2])
@@ -254,7 +254,7 @@ char __thiscall serialize_camera_angle_manager(uint32_t *manager,
                                               uint8_t *serializer, int mode)
 {
   (void)mode;
-  return sub_459038(serializer, (int)(uintptr_t)"mAngles", manager + 1,
+  return serialize_camera_angle_map(serializer, (int)(uintptr_t)"mAngles", manager + 1,
                     1);
 }
 
@@ -272,7 +272,7 @@ void __thiscall glide_to_camera_angle(uint32_t *manager, char *name,
   if (angle != 0) {
     int camera_manager = *(int *)(uintptr_t)(
         *(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40);
-    sub_45367B(camera_manager, angle, target, transition, flags, mode);
+    glide_camera_to_angle(camera_manager, angle, target, transition, flags, mode);
   } else {
     log_source_message(
         (int)(uintptr_t)
@@ -289,7 +289,7 @@ void __thiscall cut_to_camera_angle(uint32_t *manager, char *name,
   if (angle != 0) {
     int camera_manager = *(int *)(uintptr_t)(
         *(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40);
-    sub_453A7E(camera_manager, angle, cut, mode);
+    cut_camera_to_angle(camera_manager, angle, cut, mode);
   } else {
     log_source_message(
         (int)(uintptr_t)
@@ -323,12 +323,12 @@ int __thiscall count_camera_angles_outside_bounds(uint32_t *manager,
       angle_position[0] = camera_position[0];
       angle_position[1] = camera_position[1];
       angle_position[2] = camera_position[2];
-      inside = sub_454F29(
+      inside = is_camera_position_within_bounds(
           *(int *)(uintptr_t)(*(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40),
           angle_position);
 
       if ((!inside && !include_contained)
-          || (sub_41838F(bounds, (uint8_t *)(uintptr_t)(iterator + 12)),
+          || (append_vector_element(bounds, (uint8_t *)(uintptr_t)(iterator + 12)),
               ++outside_count, !inside)) {
         const char *name = *(const char **)(uintptr_t)(iterator + 16);
         if (name == NULL)
@@ -339,7 +339,7 @@ int __thiscall count_camera_angles_outside_bounds(uint32_t *manager,
             329, 5, 0, "Warning: Camera ('%s') outside bounds!\n", name);
       }
     }
-    sub_458A69(&iterator);
+    increment_ordered_map_iterator(&iterator);
   }
   return outside_count;
 }
@@ -353,14 +353,14 @@ uint32_t **__thiscall camera_angle_entry_at_index(uint32_t **manager,
                                                  int index)
 {
   uint32_t **iterator = (uint32_t **)*manager[2];
-  sub_45945F((int *)&iterator, index);
+  advance_camera_angle_map_iterator((int *)&iterator, index);
   return iterator + 3;
 }
 
 int __thiscall set_camera_angle_from_spec(uint32_t *manager, char *name,
                                           int angle_spec)
 {
-  uint32_t *angle = sub_457CA5(56);
+  uint32_t *angle = allocate_registered_camera_angle(56);
   angle = angle ? construct_camera_angle(angle) : NULL;
   copy_camera_angle_state((char *)(void *)angle, angle_spec);
 
@@ -370,7 +370,7 @@ int __thiscall set_camera_angle_from_spec(uint32_t *manager, char *name,
   assign_std_string_storage(lookup_key, name, strlen(name));
 
   int node;
-  sub_4589E1(manager + 1, &node, (int)(uintptr_t)lookup_key);
+  find_ordered_map_node(manager + 1, &node, (int)(uintptr_t)lookup_key);
   tidy_std_string_storage(lookup_key, 1);
   if ((uint32_t)node == manager[2]) {
     char insert_key[16] = {0};
@@ -378,7 +378,7 @@ int __thiscall set_camera_angle_from_spec(uint32_t *manager, char *name,
     tidy_std_string_storage(insert_key, 0);
     assign_std_string_storage(insert_key, name, strlen(name));
     uint32_t *value_address = (uint32_t *)(void *)
-        sub_458576(manager + 1, insert_key);
+        find_or_insert_ordered_map_value(manager + 1, insert_key);
     *value_address = (uint32_t)(uintptr_t)angle;
     tidy_std_string_storage(insert_key, 1);
   } else {
@@ -415,7 +415,7 @@ uint32_t *__thiscall remove_camera_angle(uint32_t *manager, char *name)
   key_storage[0] = (char)((uintptr_t)name >> 24);
   tidy_std_string_storage(key_storage, 0);
   assign_std_string_storage(key_storage, name, strlen(name));
-  sub_4589E1(manager + 1, &node, (int)(uintptr_t)key_storage);
+  find_ordered_map_node(manager + 1, &node, (int)(uintptr_t)key_storage);
   tidy_std_string_storage(key_storage, 1);
 
   uint32_t *entry = (uint32_t *)(uintptr_t)node;
@@ -427,7 +427,7 @@ uint32_t *__thiscall remove_camera_angle(uint32_t *manager, char *name)
     destroy(angle, 1);
   }
   uint32_t result = 0;
-  return sub_458657(manager + 1, &result, entry);
+  return erase_ordered_map_entry(manager + 1, &result, entry);
 }
 
 uint32_t *__thiscall clear_camera_angles(uint32_t *manager)
@@ -444,9 +444,9 @@ uint32_t *__thiscall clear_camera_angles(uint32_t *manager)
           *(uint32_t *)(void *)angle;
       destroy(angle, 1);
     }
-    sub_458A69(&node);
+    increment_ordered_map_iterator(&node);
   }
-  return sub_4589CD((int)(uintptr_t)(manager + 1));
+  return clear_ordered_map((int)(uintptr_t)(manager + 1));
 }
 
 void __thiscall log_camera_angles(uint32_t *manager, uint32_t *context)
@@ -467,7 +467,7 @@ void __thiscall log_camera_angles(uint32_t *manager, uint32_t *context)
     log_interface_debug_message(logger, "%s = ", name);
     log_camera_angle_summary((float *)(uintptr_t)(entry[7] + 24), logger);
     log_interface_debug_message(logger, "\n");
-    sub_458A69(&node);
+    increment_ordered_map_iterator(&node);
   }
   end_interface_debug_log((int *)(void *)logger);
 }
@@ -476,16 +476,16 @@ uint32_t *__thiscall destroy_camera_angle_map(uint32_t *map)
 {
   uint32_t ignored_result[4];
   uint32_t *header = (uint32_t *)(uintptr_t)map[1];
-  sub_458925(map, ignored_result, (uint32_t *)(uintptr_t)*header, header);
+  destroy_ordered_map_range(map, ignored_result, (uint32_t *)(uintptr_t)*header, header);
   free_tracked_memory((int)map[1]);
   map[1] = 0;
   map[3] = 0;
 
   uint32_t lock_storage = 0;
   construct_runtime_lockit(&lock_storage);
-  if (--dword_764180 == 0) {
-    free_tracked_memory(dword_76417C);
-    dword_76417C = 0;
+  if (--camera_angle_map_sentinel_reference_count == 0) {
+    free_tracked_memory(camera_angle_map_nil_node);
+    camera_angle_map_nil_node = 0;
   }
   destroy_runtime_lockit(&lock_storage);
   return map;
@@ -493,12 +493,12 @@ uint32_t *__thiscall destroy_camera_angle_map(uint32_t *map)
 
 uint32_t *__thiscall destroy_camera_angle_manager_members(uint32_t *manager)
 {
-  manager[0] = (uint32_t)(uintptr_t)&off_6AE0C8;
+  manager[0] = (uint32_t)(uintptr_t)&camera_angle_manager_vtable;
   clear_camera_angles(manager);
   destroy_camera_angle_map(manager + 1);
   return erase_map_entry_impl(
       unk_7640B8,
-      (uint32_t)dword_7640B4
+      (uint32_t)camera_angle_manager_registry_adjustment
           + ((uintptr_t)manager != 0
                  ? (uint32_t)(uintptr_t)(manager + 1)
                  : 0));
@@ -517,18 +517,18 @@ void __thiscall initialize_camera_angle_map(uint32_t *map)
   uint32_t lock_storage = 0;
   construct_runtime_lockit(&lock_storage);
 
-  if (dword_76417C == 0) {
+  if (camera_angle_map_nil_node == 0) {
     uint32_t *nil_node = allocate_tracked_memory(36);
     nil_node[1] = 0;
     nil_node[8] = 1;
-    dword_76417C = (int)(uintptr_t)nil_node;
+    camera_angle_map_nil_node = (int)(uintptr_t)nil_node;
     nil_node[0] = 0;
     nil_node[2] = 0;
   }
 
-  ++dword_764180;
+  ++camera_angle_map_sentinel_reference_count;
   uint32_t *node = allocate_tracked_memory(36);
-  node[1] = (uint32_t)dword_76417C;
+  node[1] = (uint32_t)camera_angle_map_nil_node;
   node[8] = 0;
   map[1] = (uint32_t)(uintptr_t)node;
   map[3] = 0;
@@ -542,12 +542,12 @@ char *__thiscall construct_camera_angle_manager(char *object)
 {
   char default_value;
   find_or_create_registry_entry(unk_7640B8,
-             (uint32_t)(uintptr_t)&object[dword_7640B4 + 4]);
+             (uint32_t)(uintptr_t)&object[camera_angle_manager_registry_adjustment + 4]);
   object[12] = 0;
   object[4] = default_value;
   object[5] = default_value;
   initialize_camera_angle_map((uint32_t *)(void *)object + 1);
-  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&off_6AE0C8;
+  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&camera_angle_manager_vtable;
   return object;
 }
 
@@ -556,12 +556,12 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
 {
   char default_value;
   find_or_create_registry_entry(unk_7640B8,
-             (uint32_t)(uintptr_t)&object[dword_7640B4 + 4]);
+             (uint32_t)(uintptr_t)&object[camera_angle_manager_registry_adjustment + 4]);
   object[12] = 0;
   object[4] = default_value;
   object[5] = default_value;
   initialize_camera_angle_map((uint32_t *)(void *)object + 1);
-  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&off_6AE0C8;
+  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&camera_angle_manager_vtable;
   return object;
 }
 

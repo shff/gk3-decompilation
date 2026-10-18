@@ -12,20 +12,20 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_765708[];
-extern int dword_765704;
-extern void *__thiscall (*off_6C1340)(void *object, char flags);
+extern uint32_t flag_manager_type_descriptor[];
+extern int flag_manager_registry_adjustment;
+extern void *__thiscall (*flag_manager_vtable)(void *object, char flags);
 extern int game_engine_instance_address;
 extern int __thiscall tidy_std_string_storage(char *string_storage, char mode);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                  uint32_t address);
-extern void __thiscall sub_4AF0BD(uint32_t *map);
-extern int *__thiscall sub_4AF1D1(uint32_t *map, int *node_address,
+extern void __thiscall destroy_tree_map(uint32_t *map);
+extern int *__thiscall find_map_entry_node(uint32_t *map, int *node_address,
                                  int key_context);
-extern int *__thiscall sub_4AF214(int map_address, int *result,
+extern int *__thiscall find_or_insert_map_entry(int map_address, int *result,
                                  int *key_context);
-extern int __thiscall sub_4AF088(void *map, uint32_t *key_context);
-extern int __thiscall sub_45CA57(int *vector);
+extern int __thiscall get_map_entry_value_address(void *map, uint32_t *key_context);
+extern int __thiscall destroy_byte_vector(int *vector);
 extern void __thiscall initialize_flag_map(uint32_t *object);
 extern int __thiscall grow_std_string_storage(char *string_storage,
                                               uint32_t capacity, char mode);
@@ -33,15 +33,16 @@ extern uint8_t *__thiscall resize_byte_vector(int *vector, unsigned int count,
                                              uint8_t *fill_value);
 extern uint32_t *__cdecl allocate_registered_flag_manager(int size);
 extern int __thiscall sub_4ADBC5(int object);
-extern int __thiscall sub_402D32(char *string, int position, int count);
-extern uint32_t *__thiscall sub_4AF1BD(uint32_t *map);
-extern uint32_t *__stdcall sub_4AED9D(uint32_t *string, int case_id);
+extern int __thiscall erase_std_string_range(char *string, int position,
+                                             int count);
+extern uint32_t *__thiscall clear_tree_map(uint32_t *map);
+extern uint32_t *__stdcall construct_sheep_case_signature(uint32_t *string, int case_id);
 extern char *__thiscall get_noun_vocabulary_string(int id);
-extern uint32_t *__thiscall sub_402BAA(uint32_t *string, const char *text,
+extern uint32_t *__thiscall assign_std_string_storage_from_c_string(uint32_t *string, const char *text,
                                        char *temporary);
 extern uint32_t *__thiscall assign_std_string_storage(uint32_t *destination,
                                        uint32_t *source);
-extern uint32_t *__thiscall sub_402BD8(uint32_t *string, const void *text,
+extern uint32_t *__thiscall append_std_string_storage_bytes(uint32_t *string, const void *text,
                                        int length);
 extern char __thiscall sub_53B1CA(int ***sheep_compiler, int source);
 extern int __thiscall sub_53ADBD(uint32_t *sheep_compiler, int compiled_id);
@@ -66,7 +67,7 @@ extern int *__thiscall sub_50303A(uint32_t *object, int value);
 extern char __thiscall sub_5042DA(int *object);
 extern char __thiscall sub_49193B(uint32_t *object, int noun, int verb,
                                  int case_id, char active_ego);
-extern char __cdecl sub_4AEFAE(int flag_id);
+extern char __cdecl is_global_flag_set(int flag_id);
 extern int __thiscall write_source_message(const char *source, int line, int severity,
                                  int flags, const char *format, ...);
 extern int __cdecl log_source_message(int source_file, int line, int severity,
@@ -75,17 +76,17 @@ extern uint32_t *__thiscall begin_interface_debug_log(uint32_t *logger, const ch
                                        int line, int severity,
                                        uint32_t *arguments);
 extern void __thiscall end_interface_debug_log(uint32_t *logger);
-extern void __thiscall sub_52D1CF(uint32_t *logger, char *text, size_t length);
+extern void __thiscall write_source_message_from_log_context(uint32_t *logger, char *text, size_t length);
 extern uint32_t *__thiscall log_interface_debug_message(uint32_t *string, const char *text);
-extern char __thiscall sub_4053DF(uint8_t *serializer, const char *field_name,
+extern char __thiscall serialize_noun_field(uint8_t *serializer, const char *field_name,
                                   int *value, int *default_value);
-extern char __thiscall sub_4054E4(uint8_t *serializer, const char *field_name,
+extern char __thiscall serialize_verb_field(uint8_t *serializer, const char *field_name,
                                   int *value, int *default_value);
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             const char *field_name,
                                             char *value, char *default_value);
-extern int dword_6A6460;
-extern int dword_6A64B0;
+extern int default_noun_id;
+extern int default_verb_id;
 extern char byte_6A6454;
 extern char *Key;
 extern uint32_t unk_6BFF88[];
@@ -93,10 +94,10 @@ extern int dword_6C01BC;
 int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager);
 extern int __thiscall set_flag_bit(uint32_t *state, int index, char enabled);
 extern char __thiscall is_game_layer_active(char *layer, int layer_id);
-extern int sub_463CF3(void);
+extern int get_inventory_layer_instance(void);
 extern int __thiscall sub_4EA9FC(int object);
-extern int __thiscall sub_4EA988(uint32_t *object);
-extern char *__cdecl sub_4AD1DA(int inventory_id);
+extern int __thiscall select_inventory_item_control(uint32_t *object);
+extern char *__cdecl get_inventory_item_name(int inventory_id);
 extern int __cdecl write_source_message(const char *source, int line, int severity,
                               int flags, const char *format, ...);
 extern int __cdecl log_source_message(int source_file, int line, int severity,
@@ -125,9 +126,9 @@ bool __thiscall serialize_flag_nvc_state(uint32_t *state,
       (EndObjectSerialization)(uintptr_t)methods[52 / sizeof(uint32_t)];
 
   begin(serializer, flags);
-  bool success = sub_4053DF(serializer, "noun", (int *)state,
-                            &dword_6A6460) != 0;
-  if (!sub_4054E4(serializer, "verb", (int *)(state + 1), &dword_6A64B0))
+  bool success = serialize_noun_field(serializer, "noun", (int *)state,
+                            &default_noun_id) != 0;
+  if (!serialize_verb_field(serializer, "verb", (int *)(state + 1), &default_verb_id))
     success = false;
   if (!serialize_boolean_field(serializer, "egoIsGabe",
                                 (char *)state + 8, &byte_6A6454))
@@ -273,7 +274,7 @@ char __thiscall set_selected_inventory_item_for_active_ego(
           (int)(uintptr_t)
               "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
           1378, 5, 0, "Gabe does not have %s.",
-          sub_4AD1DA(inventory_id));
+          get_inventory_item_name(inventory_id));
     }
     flag_manager[1805] = (uint32_t)inventory_id;
   } else if (scene_id == 529) {
@@ -282,7 +283,7 @@ char __thiscall set_selected_inventory_item_for_active_ego(
           (int)(uintptr_t)
               "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
           1386, 5, 0, "Grace does not have %s.",
-          sub_4AD1DA(inventory_id));
+          get_inventory_item_name(inventory_id));
     }
     flag_manager[1806] = (uint32_t)inventory_id;
   } else {
@@ -293,7 +294,7 @@ char __thiscall set_selected_inventory_item_for_active_ego(
   char active = is_game_layer_active(
       *(char **)(uintptr_t)(application + 72), 8);
   if (active)
-    return (char)sub_4EA988((uint32_t *)(uintptr_t)sub_463CF3());
+    return (char)select_inventory_item_control((uint32_t *)(uintptr_t)get_inventory_layer_instance());
   return active;
 }
 
@@ -310,7 +311,7 @@ char __thiscall set_flag_manager_inventory_status(
   char active = is_game_layer_active(
       *(char **)(uintptr_t)(application + 72), 8);
   if (active && notify)
-    return (char)sub_4EA9FC(sub_463CF3());
+    return (char)sub_4EA9FC(get_inventory_layer_instance());
   return active;
 }
 
@@ -345,7 +346,7 @@ char __thiscall lookup_flag_manager_nvc_state(uint32_t *flag_manager,
   key_context[0] = (uint32_t)noun_id;
   key_context[1] = (uint32_t)property_id;
   key_context[2] = (uint32_t)is_gabe_or_grace_scene_active();
-  sub_4AF1D1(flag_manager + 1659, &node_address,
+  find_map_entry_node(flag_manager + 1659, &node_address,
              (int)(uintptr_t)key_context);
   if ((uint32_t)node_address == flag_manager[1660])
     return 0;
@@ -360,12 +361,12 @@ int __thiscall get_or_create_flag_manager_nvc_state(
       (uint32_t)noun_id, (uint32_t)property_id,
       (uint32_t)is_gabe_or_grace_scene_active()};
   int lookup_key = noun_id;
-  if (*sub_4AF1D1(map, &lookup_key, (int)(uintptr_t)lookup_context)
+  if (*find_map_entry_node(map, &lookup_key, (int)(uintptr_t)lookup_context)
       == (int)flag_manager[1660]) {
     int insertion_context[4] = {
         (uint32_t)noun_id, (uint32_t)property_id, lookup_context[2], 0};
     int inserted_node[2];
-    int *entry = sub_4AF214((int)(uintptr_t)map, inserted_node,
+    int *entry = find_or_insert_map_entry((int)(uintptr_t)map, inserted_node,
                             insertion_context);
     int node_address = entry[0];
     *(uint8_t *)(uintptr_t)(node_address + 24) = 1;
@@ -375,7 +376,7 @@ int __thiscall get_or_create_flag_manager_nvc_state(
   int insertion_context[4] = {
       (uint32_t)noun_id, (uint32_t)property_id, lookup_context[2], 0};
   int inserted_node[2];
-  int node_address = *sub_4AF214((int)(uintptr_t)map, inserted_node,
+  int node_address = *find_or_insert_map_entry((int)(uintptr_t)map, inserted_node,
                                 insertion_context);
   ++*(uint8_t *)(uintptr_t)(node_address + 24);
   return node_address;
@@ -389,7 +390,7 @@ int __thiscall set_flag_manager_secondary_state(uint32_t *flag_manager,
       (uint32_t)noun_id, (uint32_t)property_id,
       (uint32_t)is_gabe_or_grace_scene_active(), 0};
   int result_storage[2];
-  int node_address = *sub_4AF214(
+  int node_address = *find_or_insert_map_entry(
       (int)(uintptr_t)(flag_manager + 6636), result_storage,
       (int *)key_context);
   *(uint8_t *)(uintptr_t)(node_address + 24) = (uint8_t)value;
@@ -402,20 +403,20 @@ int __thiscall increment_flag_manager_nvc_state(uint32_t *flag_manager,
   uint32_t *map = flag_manager + 1659;
   uint32_t first_key[3] = {(uint32_t)noun_id, (uint32_t)property_id, 0};
   int lookup_key = noun_id;
-  if (*sub_4AF1D1(map, &lookup_key, (int)(uintptr_t)first_key)
+  if (*find_map_entry_node(map, &lookup_key, (int)(uintptr_t)first_key)
       == (int)flag_manager[1660]) {
-    *(uint8_t *)(uintptr_t)sub_4AF088(map, first_key) = 1;
+    *(uint8_t *)(uintptr_t)get_map_entry_value_address(map, first_key) = 1;
   } else {
-    ++*(uint8_t *)(uintptr_t)sub_4AF088(map, first_key);
+    ++*(uint8_t *)(uintptr_t)get_map_entry_value_address(map, first_key);
   }
 
   uint32_t second_key[4] = {
       (uint32_t)noun_id, (uint32_t)property_id, 1, 0};
   lookup_key = noun_id;
-  if (*sub_4AF1D1(map, &lookup_key, (int)(uintptr_t)second_key)
+  if (*find_map_entry_node(map, &lookup_key, (int)(uintptr_t)second_key)
       == (int)flag_manager[1660]) {
     int result_storage[2];
-    int *entry = sub_4AF214((int)(uintptr_t)map, result_storage,
+    int *entry = find_or_insert_map_entry((int)(uintptr_t)map, result_storage,
                             (int *)second_key);
     int node_address = entry[0];
     *(uint8_t *)(uintptr_t)(node_address + 24) = 1;
@@ -423,7 +424,7 @@ int __thiscall increment_flag_manager_nvc_state(uint32_t *flag_manager,
   }
 
   int result_storage[2];
-  int node_address = *sub_4AF214((int)(uintptr_t)map, result_storage,
+  int node_address = *find_or_insert_map_entry((int)(uintptr_t)map, result_storage,
                                 (int *)second_key);
   ++*(uint8_t *)(uintptr_t)(node_address + 24);
   return node_address;
@@ -436,13 +437,13 @@ int __thiscall set_flag_manager_nvc_state_pair(uint32_t *flag_manager,
   uint32_t *map = flag_manager + 6636;
   uint32_t first_key[4] = {(uint32_t)noun_id, (uint32_t)property_id, 0, 0};
   int result_storage[2];
-  int node_address = *sub_4AF214((int)(uintptr_t)map, result_storage,
+  int node_address = *find_or_insert_map_entry((int)(uintptr_t)map, result_storage,
                                 (int *)first_key);
   *(uint8_t *)(uintptr_t)(node_address + 24) = (uint8_t)value;
 
   uint32_t second_key[4] = {
       (uint32_t)noun_id, (uint32_t)property_id, 1, (uint32_t)result_storage[1]};
-  node_address = *sub_4AF214((int)(uintptr_t)map, result_storage,
+  node_address = *find_or_insert_map_entry((int)(uintptr_t)map, result_storage,
                              (int *)second_key);
   *(uint8_t *)(uintptr_t)(node_address + 24) = (uint8_t)value;
   return node_address;
@@ -469,7 +470,7 @@ int __thiscall clear_compiled_sheep_cases(uint32_t *flag_manager)
 {
   int compiled_id = (int)flag_manager[1];
   if (compiled_id != -1) {
-    sub_402D32((char *)(void *)(flag_manager + 2), 0, -1);
+    erase_std_string_range((char *)(void *)(flag_manager + 2), 0, -1);
     sub_53ADBD((uint32_t *)(uintptr_t)(
                    *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                compiled_id);
@@ -510,17 +511,17 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
 
   code = flag_manager + 2;
   if (!flag_manager[4]) {
-    sub_402BAA((uint32_t *)(void *)initialized_string,
+    assign_std_string_storage_from_c_string((uint32_t *)(void *)initialized_string,
                "symbols\n{\n\tint n$, v$, c$, m$;\n}\n\ncode\n{\n",
                &temporary);
     assign_std_string_storage(code, (uint32_t *)(void *)initialized_string);
     tidy_std_string_storage(initialized_string, 1);
   }
 
-  signature = (char *)sub_4AED9D((uint32_t *)(void *)initialized_string,
+  signature = (char *)construct_sheep_case_signature((uint32_t *)(void *)initialized_string,
                                  case_id);
   signature_length = (int)strlen("()");
-  sub_402BD8((uint32_t *)(void *)signature, "()", signature_length);
+  append_std_string_storage_bytes((uint32_t *)(void *)signature, "()", signature_length);
   signature_data = signature;
   if (!signature_data)
     signature_data = Key;
@@ -554,7 +555,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
       sprintf(case_buffer,
               "\t// %s\n\tC%d$()\n\t{\n\t\tm$ = %s;\n\t}\n",
               case_name, case_id, expression);
-      sub_402BD8(code, case_buffer, (int)strlen(case_buffer));
+      append_std_string_storage_bytes(code, case_buffer, (int)strlen(case_buffer));
       added = 1;
     } else {
       added = 0;
@@ -567,7 +568,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
 
 void __thiscall finish_compiled_sheep_cases(uint32_t *flag_manager)
 {
-  sub_402BD8(flag_manager + 2, "}\n", 2);
+  append_std_string_storage_bytes(flag_manager + 2, "}\n", 2);
   rebuild_compiled_sheep_cases(flag_manager);
 }
 
@@ -614,7 +615,7 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
   uint32_t *sheep_compiler = (uint32_t *)(uintptr_t)(
       *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88);
   uint32_t signature_storage[4] = {0};
-  uint32_t *signature_object = sub_4AED9D(signature_storage, case_id);
+  uint32_t *signature_object = construct_sheep_case_signature(signature_storage, case_id);
   char *signature = (char *)(uintptr_t)signature_object[1];
   if (!signature)
     signature = Key;
@@ -799,7 +800,7 @@ char __thiscall should_run_sheep_case(uint32_t *flag_manager,
         return 0;
       if ((uint8_t)lookup_flag_manager_nvc_state(flag_manager, 978, 187) > 1)
         goto matched;
-      if (sub_4AEFAE(64))
+      if (is_global_flag_set(64))
         goto matched;
       return 0;
     case 3:
@@ -868,7 +869,7 @@ char __thiscall should_run_sheep_case(uint32_t *flag_manager,
     case 12:
       if (*actor_id != 31)
         return 0;
-      if (sub_4AEFAE(28))
+      if (is_global_flag_set(28))
         goto matched;
       return 0;
     case 13:
@@ -933,7 +934,7 @@ uint32_t *__thiscall log_flag_manager_sheep_code(uint32_t *flag_manager,
     if (!code)
       code = Key;
     code_length = flag_manager[4];
-    sub_52D1CF(logger, code, code_length);
+    write_source_message_from_log_context(logger, code, code_length);
   }
   end_interface_debug_log(logger);
   return flag_manager;
@@ -961,18 +962,18 @@ uint32_t *__thiscall reset_flag_manager_state(uint32_t *flag_manager)
   do {
     *inventory_status++ = *default_values++;
   } while (default_values <= (uint32_t *)&dword_6C01BC);
-  return sub_4AF1BD(flag_manager + 1659);
+  return clear_tree_map(flag_manager + 1659);
 }
 
 uint32_t *__thiscall destroy_flag_manager_members(uint32_t *flag_manager)
 {
-  flag_manager[0] = (uint32_t)(uintptr_t)&off_6C1340;
-  sub_4AF0BD(flag_manager + 1659);
-  sub_45CA57((int *)(void *)(flag_manager + 6));
+  flag_manager[0] = (uint32_t)(uintptr_t)&flag_manager_vtable;
+  destroy_tree_map(flag_manager + 1659);
+  destroy_byte_vector((int *)(void *)(flag_manager + 6));
   tidy_std_string_storage((char *)(void *)flag_manager + 12, 1);
   return erase_map_entry_impl(
-      unk_765708,
-      (uint32_t)dword_765704
+      flag_manager_type_descriptor,
+      (uint32_t)flag_manager_registry_adjustment
           + ((uintptr_t)flag_manager != 0
                  ? (uint32_t)(uintptr_t)(flag_manager + 1)
                  : 0));
@@ -1014,8 +1015,8 @@ int __thiscall construct_registered_flag_manager(int object, int unused)
 {
   char default_value;
 
-  find_or_create_registry_entry(unk_765708,
-                                (uint32_t)dword_765704 + (uint32_t)object + 4);
+  find_or_create_registry_entry(flag_manager_type_descriptor,
+                                (uint32_t)flag_manager_registry_adjustment + (uint32_t)object + 4);
   *(uint8_t *)(uintptr_t)(object + 8) = (uint8_t)default_value;
   tidy_std_string_storage((char *)(uintptr_t)(object + 12), 0);
   *(uint32_t *)(uintptr_t)(object + 28) = 0;
@@ -1026,7 +1027,7 @@ int __thiscall construct_registered_flag_manager(int object, int unused)
   *(uint8_t *)(uintptr_t)(object + 6637) = (uint8_t)default_value;
   *(uint8_t *)(uintptr_t)(object + 6644) = 0;
   initialize_flag_map((uint32_t *)(uintptr_t)(object + 6636));
-  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)&off_6C1340;
+  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)&flag_manager_vtable;
   initialize_flag_manager_storage((int *)(uintptr_t)object);
   return object;
 }
@@ -1043,8 +1044,8 @@ uint32_t *__cdecl create_registered_flag_manager(void)
 int __thiscall construct_flag_manager(int object)
 {
   char default_value;
-  find_or_create_registry_entry(unk_765708,
-             (uint32_t)dword_765704 + (uint32_t)object + 4);
+  find_or_create_registry_entry(flag_manager_type_descriptor,
+             (uint32_t)flag_manager_registry_adjustment + (uint32_t)object + 4);
   *(uint8_t *)(uintptr_t)(object + 8) = (uint8_t)default_value;
   tidy_std_string_storage((char *)(uintptr_t)(object + 12), 0);
   *(uint32_t *)(uintptr_t)(object + 28) = 0;
@@ -1055,7 +1056,7 @@ int __thiscall construct_flag_manager(int object)
   *(uint8_t *)(uintptr_t)(object + 6637) = (uint8_t)default_value;
   *(uint8_t *)(uintptr_t)(object + 6644) = 0;
   initialize_flag_map((uint32_t *)(uintptr_t)(object + 6636));
-  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)&off_6C1340;
+  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)&flag_manager_vtable;
   initialize_flag_manager_storage((int *)(uintptr_t)object);
   sub_4ADBC5(object);
   return object;
@@ -1064,7 +1065,7 @@ int __thiscall construct_flag_manager(int object)
 uint32_t *__cdecl allocate_registered_flag_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_765708,
+  find_or_create_registry_entry(flag_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

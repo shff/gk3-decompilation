@@ -68,8 +68,8 @@ unsigned int __thiscall sub_402B6A(unsigned int *this);
 int __thiscall sub_402B78(_DWORD *this);
 void __thiscall sub_402B7C(_DWORD *this);
 _BYTE *__thiscall sub_402B80(_BYTE *this, _BYTE *a2);
-_BYTE *__thiscall sub_402BAA(_BYTE *this, char *Str, _BYTE *a3);
-_DWORD *__thiscall sub_402BD8(_DWORD *this, const void *a2, char *Src);
+_BYTE *__thiscall assign_std_string_storage_from_c_string(_BYTE *this, char *Str, _BYTE *a3);
+_DWORD *__thiscall append_std_string_storage_bytes(_DWORD *this, const void *a2, char *Src);
 // _DWORD __stdcall std::string::assign(_DWORD, _DWORD, _DWORD); weak
 // double __stdcall std::string::assign(void *Src, size_t Size); weak
 // _DWORD __stdcall std::string::erase(_DWORD, _DWORD); weak
@@ -114,7 +114,7 @@ char __thiscall sub_403F17(_BYTE *this, int i, _DWORD *a3, int a4);
 _BYTE *__thiscall construct_std_string_from_c_string(_BYTE *this, char *a2);
 _BYTE *__cdecl append_string_storage(_BYTE *a1, char *a2, _BYTE *a3);
 void *__thiscall sub_4043C8(void *this, _BYTE *a2);
-_BYTE *__thiscall sub_40442F(_BYTE *this, _BYTE *a2);
+_BYTE *__thiscall initialize_std_string_storage(_BYTE *this, _BYTE *a2);
 // _DWORD __stdcall std::string::append(_DWORD, _DWORD, size_t Size); weak
 _DWORD *__thiscall sub_4044CF(_DWORD **this, _DWORD *a2);
 char __thiscall sub_4044DD(_BYTE *this, const char *a2, int *a3, int a4);
@@ -154,8 +154,8 @@ char __thiscall sub_40517B(_BYTE *this, const char *a2, int *a3, int *a4);
 _BYTE *__cdecl sub_405280(_BYTE *a1, int a2);
 _DWORD *__cdecl sub_4052AD(_DWORD *a1, int a2);
 char __thiscall sub_4052DA(_BYTE *this, const char *a2, int *a3, int *a4);
-char __thiscall sub_4053DF(_BYTE *this, const char *a2, int *a3, int *a4);
-char __thiscall sub_4054E4(_BYTE *this, const char *a2, int *a3, int *a4);
+char __thiscall serialize_noun_field(_BYTE *this, const char *a2, int *a3, int *a4);
+char __thiscall serialize_verb_field(_BYTE *this, const char *a2, int *a3, int *a4);
 void __cdecl nullsub_4(); // idb
 _BYTE *__thiscall sub_40560B(_BYTE *this, int a2);
 _DWORD *__thiscall sub_405643(_DWORD *this, int a2);
@@ -235,7 +235,7 @@ int __thiscall reset_action_descriptor(uint32_t *descriptor);
 // char __userpurge sub_4070CF@<al>(int a1@<ecx>, double a2@<st0>, char *a3, char *a4, int a5, int *a6);
 // char __userpurge sub_4071CA@<al>(int a1@<ecx>, double a2@<st0>, char *Str, int a4, int *a5);
 char __stdcall sub_40727A(int *a1);
-_BYTE *__cdecl sub_407455(_BYTE *a1, char *a2, _BYTE *a3);
+_BYTE *__cdecl combine_text_prefix_and_string_storage(_BYTE *a1, char *a2, _BYTE *a3);
 char __thiscall sub_4074E2(_DWORD *this, int a2, int a3, int a4);
 char __thiscall sub_407566(_DWORD *this, int a2, int a3);
 char __thiscall sub_4075D4(_DWORD *this, int a2, int a3);
@@ -434,7 +434,7 @@ int get_scene_layer();
 void *__thiscall sub_40D4F2(_DWORD *this, int a2);
 void __thiscall sub_40D541(_DWORD *this, int a2, int a3);
 float *__thiscall sub_40D711(float *this, float *a2);
-float *__thiscall sub_40D73E(float *this, float *a2);
+float *__thiscall add_vector_to_matrix_translation(float *this, float *a2);
 BOOL __thiscall sub_40D75F(_DWORD *this);
 void sub_40D776();
 int __thiscall sub_40D77B(_DWORD *this, int a2, _DWORD *a3, int a4);
@@ -493,14 +493,14 @@ void __thiscall sub_40EC2A(_DWORD *this, _DWORD *a2);
 void __thiscall sub_40EC44(_DWORD *this, int a2);
 _DWORD *__thiscall sub_40EC5F(void *this);
 _DWORD *__thiscall sub_40EC72(_DWORD *this, void *Src);
-_DWORD *__thiscall sub_40ECE2(_DWORD *this);
+_DWORD *__thiscall construct_camera_angle_base(_DWORD *this);
 _DWORD *__thiscall sub_40ED25(_DWORD *this);
 _DWORD *__thiscall sub_40ED7E(_DWORD *this, char a2);
 void __thiscall sub_40ED9A(_DWORD *this, int a2);
 int __thiscall sub_40EDC2(_DWORD *this, _DWORD *a2, char a3);
 int __thiscall sub_40EDDF(_DWORD *this, int a2, char a3);
 char *__thiscall copy_camera_angle_state(char *this, int a2);
-BOOL __thiscall sub_40EE23(float *this, float *a2);
+BOOL __thiscall vectors_are_approximately_equal(float *this, float *a2);
 void __thiscall sub_40EE98(int *this, _DWORD *a2);
 // _DWORD __stdcall unknown_libname_4(_DWORD); weak
 // int __thiscall Concurrency::details::_AutoDeleter<Concurrency::details::_TaskProcHandle>::~_AutoDeleter<Concurrency::details::_TaskProcHandle>(_DWORD); weak
@@ -846,7 +846,7 @@ _DWORD *__cdecl sub_418281(_DWORD *a1, int i, _DWORD *a3);
 _DWORD *__thiscall sub_4182BC(_DWORD *this, _DWORD *a2);
 _DWORD *__thiscall sub_4182FE(_DWORD *this, _DWORD *a2);
 _DWORD *__thiscall sub_418340(_DWORD *this, int a2);
-void *__thiscall sub_41838F(_DWORD *this, _BYTE *a2);
+void *__thiscall append_vector_element(_DWORD *this, _BYTE *a2);
 _DWORD *__thiscall sub_4183E1(_DWORD *this);
 unsigned int __thiscall sub_4184F7(_DWORD *this, int a2);
 int __thiscall sub_4185CB(_DWORD *this, int a2);
@@ -2310,17 +2310,17 @@ void __thiscall sub_4398F8(int this);
 void __thiscall sub_439949(HANDLE *this);
 char __thiscall sub_4399D7(char *this);
 bool __thiscall sub_439A04(int this, DWORD *a2, _DWORD *a3);
-_BYTE *__thiscall sub_439CF1(_BYTE *this);
-_BYTE *__thiscall sub_439D31(_BYTE *this);
+_BYTE *__thiscall initialize_file_path_context_strings(_BYTE *this);
+_BYTE *__thiscall construct_file_path_context(_BYTE *this);
 _BYTE *__thiscall sub_439D80(_BYTE *this);
 int sub_439DD6();
 _BYTE *__thiscall sub_439E1E(unsigned __int8 (__thiscall ***this)(void *), _BYTE *a2, int a3);
-_BYTE *__thiscall sub_439E38(_DWORD *this, _BYTE *a2);
+_BYTE *__thiscall get_file_path_context_resolved_path(_DWORD *this, _BYTE *a2);
 int __thiscall sub_439E52(_DWORD *this);
 int sub_439E88();
 _BYTE *__thiscall sub_439EC1(char *this, _BYTE *a2);
 _BYTE *__cdecl sub_439F1E(_BYTE *a1, char *a2, int a3);
-int __thiscall sub_439FA8(_DWORD *this);
+int __thiscall destroy_file_path_context(_DWORD *this);
 int __thiscall sub_439FED(int this, _BYTE *a2, _BYTE *a3);
 _BYTE *__thiscall sub_43A0E9(_BYTE *this, _BYTE *a2, _BYTE *a3);
 int __fastcall sub_43A177(int a1);
@@ -2785,7 +2785,7 @@ void __cdecl sub_44721B(); // idb
 void sub_44723B();
 int __thiscall sub_447246(int this, int a2);
 _DWORD *__thiscall construct_camera_angle(_DWORD *this);
-void *__thiscall sub_447754(void *this);
+void *__thiscall construct_camera_angle_state_data(void *this);
 float *__thiscall construct_sprite_control(float *this);
 int __thiscall construct_control(int this);
 _DWORD *__thiscall sub_447840(_DWORD *this, char a2);
@@ -2846,14 +2846,14 @@ int __stdcall sub_4497E1(_DWORD *a1);
 bool __thiscall sub_449847(int *this, _BYTE *a2, int a3);
 bool __thiscall sub_449902(int *this, _BYTE *a2, int a3);
 _DWORD *sub_44995A();
-_DWORD *__cdecl sub_449990(int a1);
+_DWORD *__cdecl allocate_registered_binocs_layer(int a1);
 int __cdecl sub_4499B3(int *a1, _BYTE *a2, int a3);
 void sub_4499CA();
 int sub_4499D5();
 int *sub_4499DF();
 void __cdecl sub_449A1A(); // idb
 void sub_449A3A();
-_DWORD *__thiscall sub_449A45(_DWORD *this);
+_DWORD *__thiscall construct_binocs_layer(_DWORD *this);
 _DWORD *__thiscall sub_449AF1(_DWORD *this);
 int __thiscall sub_449BC6(_DWORD *this);
 _DWORD *__thiscall sub_449BF6(_DWORD *this, char a2);
@@ -2971,13 +2971,13 @@ int __thiscall sub_44D903(void *this);
 int __thiscall sub_44D908(void *this);
 int __thiscall sub_44D910(void *this);
 int __thiscall sub_44D915(void *this);
-int __thiscall sub_44D91D(void *this);
-int __thiscall sub_44D922(void *this);
+int __thiscall interface_target_handle_input_event(void *this);
+int __thiscall interface_target_pointer_button_1_press(void *this);
 int __thiscall sub_44D927(void *this);
-int __thiscall sub_44D92C(void *this);
+int __thiscall interface_target_pointer_button_2_press(void *this);
 int __thiscall sub_44D931(void *this);
-int __thiscall sub_44D936(void *this);
-int __thiscall sub_44D93B(void *this);
+int __thiscall interface_target_key_release(void *this);
+int __thiscall interface_target_pointer_button_3_press(void *this);
 int __thiscall sub_44D940(void *this);
 int __thiscall dispatch_pointer_position_to_interface_target(void *this);
 int __thiscall sub_44D94A(void *this);
@@ -3253,12 +3253,12 @@ _DWORD *__thiscall sub_4533D0(int *this);
 void __thiscall sub_45353D(_BYTE *this, _DWORD *a2);
 void __thiscall sub_4535C9(float *this, _DWORD *a2);
 char *__thiscall synchronize_camera_state_from_game_view(_DWORD *this);
-char *__thiscall sub_45367B(int this, int a2, int *a3, char a4, int a5, char a6);
+char *__thiscall glide_camera_to_angle(int this, int a2, int *a3, char a4, int a5, char a6);
 float *__thiscall sub_453781(float *this, float *a2);
 _DWORD *__thiscall sub_45383C(int this, int *a2, int *a3);
 _BYTE *__thiscall sub_453938(int this, int *a2);
 _BYTE *__thiscall sub_4539D5(int this, int a2, int a3, int *a4);
-char *__thiscall sub_453A7E(int this, int a2, char a3, char a4);
+char *__thiscall cut_camera_to_angle(int this, int a2, char a3, char a4);
 int __thiscall sub_453BDC(int this, int a2);
 void __thiscall sub_453C9C(int this, char a2, float a3, int a4);
 BOOL __cdecl sub_453F67(char a1);
@@ -3291,7 +3291,7 @@ void __thiscall unregister_camera_target(_DWORD *camera, int target_id);
 int __thiscall release_camera_manager_collections(_DWORD *camera);
 int __thiscall sub_454DC9(void *this, float *a2, float *a3);
 char __thiscall sub_454EB7(_DWORD *this, float *a2);
-char __thiscall sub_454F29(int this, _DWORD *a2);
+char __thiscall is_camera_position_within_bounds(int this, _DWORD *a2);
 void __thiscall pop_top_camera_controller(_DWORD *this);
 void __thiscall sub_455018(_DWORD *this, char a2);
 char *__thiscall sub_45504F(int this, int a2);
@@ -3393,7 +3393,7 @@ void __thiscall log_camera_angle_summary(float *angle, uint32_t *context);
 char *__thiscall format_camera_angle_description(float *angle,
                                                   char *string_storage);
 // int unknown_libname_38(); weak
-// _DWORD __cdecl sub_457CA5(_DWORD); weak
+// _DWORD __cdecl allocate_registered_camera_angle(_DWORD); weak
 void sub_457CCD();
 int sub_457CE2();
 int *sub_457CEC();
@@ -3435,15 +3435,15 @@ uint32_t **__thiscall camera_angle_entry_at_index(uint32_t **manager,
 uint32_t *__thiscall remove_camera_angle(uint32_t *manager, char *name);
 uint32_t *__thiscall clear_camera_angles(uint32_t *manager);
 void __thiscall log_camera_angles(uint32_t *manager, uint32_t *context);
-int __thiscall sub_458576(void *this, _BYTE *a2);
+int __thiscall find_or_insert_ordered_map_value(void *this, _BYTE *a2);
 uint32_t *__thiscall destroy_camera_angle_map(uint32_t *map);
 // int __thiscall Concurrency::details::_AutoDeleter<Concurrency::details::_TaskProcHandle>::~_AutoDeleter<Concurrency::details::_TaskProcHandle>(_DWORD); weak
-_DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3);
-_DWORD *__thiscall sub_458925(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4);
-_DWORD *__thiscall sub_4589CD(int this);
-int *__thiscall sub_4589E1(_DWORD *this, int *a2, int a3);
-int *__thiscall sub_458A25(_DWORD *this, int *a2, int a3);
-void __thiscall sub_458A69(int *this);
+_DWORD *__thiscall erase_ordered_map_entry(_DWORD *this, _DWORD *a2, _DWORD *a3);
+_DWORD *__thiscall destroy_ordered_map_range(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4);
+_DWORD *__thiscall clear_ordered_map(int this);
+int *__thiscall find_ordered_map_node(_DWORD *this, int *a2, int a3);
+int *__thiscall lookup_camera_angle_tree_node(_DWORD *this, int *a2, int a3);
+void __thiscall increment_ordered_map_iterator(int *this);
 _DWORD *__thiscall sub_458AE9(int this, _DWORD *a2, int a3);
 void __stdcall sub_458BFF(_DWORD *a1);
 void __thiscall initialize_camera_angle_map(_DWORD *this);
@@ -3453,10 +3453,10 @@ void __thiscall sub_458D80(_DWORD *this, _DWORD *a2);
 _DWORD *__thiscall sub_458DDC(_DWORD *this, _DWORD *a2, int a3, _DWORD *a4, int a5);
 _DWORD *__thiscall sub_458F61(_DWORD *this, int a2);
 void __thiscall sub_458FD0(int **this);
-char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j);
+char __thiscall serialize_camera_angle_map(_BYTE *this, int i, _DWORD *a3, int j);
 _DWORD *__thiscall sub_45943C(_DWORD **this, _DWORD *a2);
 int __thiscall sub_45944A(void *this, int a2, int a3);
-void __cdecl sub_45945F(int *a1, int a2);
+void __cdecl advance_camera_angle_map_iterator(int *a1, int a2);
 _DWORD *__cdecl sub_45948E(_DWORD *a1, int a2);
 int sub_4594BB();
 int sub_4594CF();
@@ -3481,16 +3481,16 @@ char __thiscall sub_459BB3(int this, int a2, _DWORD *a3);
 int __thiscall sub_459CB0(_DWORD *this, _DWORD *a2);
 void __thiscall sub_459CEE(int *this, int a2, int a3);
 void __thiscall sub_459D93(_DWORD *this, int a2);
-int __thiscall construct_caption_manager(int this);
+uint32_t *__thiscall construct_caption_manager(uint32_t *manager);
 _DWORD *__thiscall sub_45A085(_DWORD *this, char a2);
 _DWORD *__thiscall destroy_embedded_caption_control(_DWORD *this);
 int __thiscall sub_45A0F0(_DWORD *this);
 double __thiscall sub_45A0F4(float *this);
-_DWORD *__cdecl sub_45A0F8(int a1);
-_DWORD *__thiscall sub_45A11B(_DWORD *this, char a2);
-int __thiscall sub_45A137(int this, int a2);
-int sub_45A1BC();
-_DWORD *__cdecl allocate_registered_caption_manager(int size);
+_DWORD *__cdecl allocate_registered_config_file(int a1);
+uint32_t *__thiscall destroy_caption_manager(uint32_t *manager, char release_memory);
+uint32_t *__thiscall construct_caption_manager_with_context(uint32_t *manager, int context);
+uint32_t *create_registered_caption_manager(void);
+uint32_t *__cdecl allocate_registered_caption_manager(int size);
 char __cdecl sub_45A215(int a1, _BYTE *a2, int a3);
 void sub_45A22C();
 int sub_45A237();
@@ -3498,7 +3498,7 @@ int *sub_45A241();
 void __cdecl sub_45A27C(); // idb
 void sub_45A29C();
 char __thiscall sub_45A2A7(int this, _BYTE *a2, int a3);
-_DWORD *__thiscall sub_45A65E(_DWORD *this);
+uint32_t *__thiscall destroy_caption_manager_members(uint32_t *manager);
 int __stdcall sub_45A6F1(int a1, char *Source);
 int __thiscall sub_45A733(int *this, char *Str1);
 void __thiscall sub_45AA79(int this);
@@ -3507,15 +3507,16 @@ int __thiscall sub_45ABE5(int *this, int a2);
 int __thiscall sub_45AC81(_DWORD **this, char *a2, int a3);
 int __thiscall sub_45AD24(int this, char *Str, char *a3);
 void __thiscall sub_45AF28(_DWORD **this);
-char __thiscall sub_45AF2F(_BYTE *this, char a2);
+char __thiscall update_caption_display_state(_BYTE *this, char force_update);
 void __thiscall sub_45AF75(int *this, int a2);
 void __thiscall sub_45B0DE(int this);
 void __thiscall sub_45B17C(_DWORD *this, int a2, int a3, int a4);
-void *__thiscall sub_45B1E5(void *this);
+void *__thiscall register_color_control_member(void *this);
 _DWORD *__thiscall sub_45B211(_DWORD *this, _DWORD *a2);
-_DWORD *__thiscall sub_45B25C(_DWORD *this, _BYTE *a2);
+_DWORD *__thiscall initialize_caption_item_collection(_DWORD *this,
+                                                      _BYTE *a2);
 void __thiscall sub_45B2A0(_DWORD *this, _DWORD **a2);
-void __thiscall sub_45B2D5(int this);
+void __thiscall destroy_caption_item_collection(int this);
 void __thiscall sub_45B2EF(_DWORD *this);
 _DWORD *__thiscall sub_45B328(_DWORD *this);
 _DWORD *__thiscall sub_45B35F(_DWORD *this, _DWORD **a2);
@@ -3563,7 +3564,7 @@ _BYTE *__thiscall resize_byte_vector(int *this, unsigned int a2, _BYTE *a3);
 // int __thiscall std::string::_Freeze(_DWORD); weak
 _BYTE *__thiscall sub_45C8B5(int *this, _BYTE *a2, signed int a3, _BYTE *a4);
 _BYTE *__thiscall sub_45CA2B(_DWORD *this, _BYTE *a2, _BYTE *a3);
-int __thiscall sub_45CA57(int *this);
+int __thiscall destroy_byte_vector(int *this);
 bool __cdecl strings_differ(const char *a1, char *Str2, size_t MaxCount);
 int __thiscall sub_45CAED(void *this);
 int __thiscall sub_45CAF7(void *this);
@@ -3724,14 +3725,14 @@ char __thiscall sub_4635BA(_BYTE *this, const char *a2, int *a3, int *a4);
 int sub_4636BF();
 int sub_4636F0();
 _WORD *sub_463713();
-_DWORD *__cdecl sub_463749(int a1);
+_DWORD *__cdecl allocate_registered_close_up_layer(int a1);
 int __cdecl sub_46376C(int *a1, _BYTE *a2, int a3);
 void sub_463783();
 int sub_463798();
 int *sub_4637A2();
 void __cdecl sub_4637DD(); // idb
 void sub_4637FD();
-int __thiscall sub_463808(int this);
+int __thiscall construct_close_up_layer(int this);
 _WORD *__thiscall sub_463992(_WORD *this, int a2);
 int __thiscall sub_463A1A(int *this, _BYTE *a2, int a3);
 _DWORD *__fastcall sub_463AA6(_DWORD *a1);
@@ -3740,7 +3741,7 @@ int __thiscall sub_463B72(int *this, int a2, int a3);
 int __thiscall sub_463C60(int this);
 int sub_463C97();
 _DWORD *__cdecl sub_463CD0(int a1);
-int sub_463CF3();
+int get_inventory_layer_instance();
 int sub_463D0D();
 int __thiscall sub_463D12(int this, int a2, int a3);
 int __stdcall sub_463D41(int a1);
@@ -3998,7 +3999,8 @@ int sub_46B478();
 int *sub_46B482();
 void __cdecl sub_46B4B7(); // idb
 void sub_46B4D7();
-_BYTE *__thiscall sub_46B4E2(_BYTE *this, char *a2, char *a3);
+_BYTE *__thiscall construct_registered_config_file(_BYTE *this, char *a2,
+                                                    char *a3);
 int __thiscall sub_46B55E(int this, int a2);
 int __thiscall sub_46B5D2(_DWORD *this, int a2, int a3);
 char __thiscall sub_46B663(_DWORD *this, int a2);
@@ -4021,7 +4023,8 @@ _BYTE *__thiscall sub_46C10A(_DWORD *this, _BYTE *a2, char *a3, char *a4);
 char *__thiscall read_integer_setting_or_default(_DWORD *this, char *a2, char *a3);
 char __thiscall read_boolean_setting_or_default(_DWORD *this, char *a2, char a3);
 double __thiscall sub_46C1DB(_DWORD *this, char *a2, float a3);
-char *__thiscall sub_46C1FA(_DWORD *this, char *a2, char *a3);
+char *__thiscall read_string_setting_or_default(_DWORD *this, char *a2,
+                                                char *a3);
 char **__thiscall sub_46C217(_DWORD *this, char **a2, char *a3, char **a4);
 char **__thiscall sub_46C248(_DWORD *this, char **a2, char *a3, char **a4);
 struct tagRECT *__thiscall sub_46C279(_DWORD *this, struct tagRECT *a2, char *a3, LONG *a4);
@@ -4353,7 +4356,7 @@ char *__cdecl sub_474FF3(int a1);
 bool __cdecl sub_475005(int a1, int *a2);
 int __cdecl sub_47504C(int a1);
 char *__cdecl report_entry_category_name(int a1);
-int __cdecl sub_475064(int a1, int *a2);
+int __cdecl find_report_entry_category_index(int a1, int *a2);
 int __cdecl sub_47509C(int a1);
 char *__cdecl sub_4750A2(int a1);
 bool __cdecl sub_4750B4(int a1, int *a2);
@@ -4372,7 +4375,7 @@ int __cdecl sub_475221(int a1);
 char *__cdecl sub_475226(int a1);
 bool __cdecl sub_475238(int a1, _DWORD *a2);
 int __cdecl sub_47527C(int a1);
-char *__cdecl sub_475282(int a1);
+char *__cdecl camera_type_name(int a1);
 bool __cdecl sub_475294(int a1, int *a2);
 int __cdecl sub_4752D8(int a1);
 char *__cdecl sub_4752DD(int a1);
@@ -4471,7 +4474,7 @@ BOOL __cdecl has_application_event_dispatcher(void);
 _DWORD *__thiscall sub_476BA2(void *this);
 void __thiscall sub_476BF5(int this);
 int __thiscall sub_476C1B(_DWORD *this, _DWORD *a2);
-int *__thiscall sub_476C91(_DWORD *this, _DWORD *a2);
+int *__thiscall update_control_bounds(_DWORD *this, _DWORD *a2);
 _DWORD *__thiscall sub_476D8B(_DWORD *this, _DWORD *a2, _DWORD *a3);
 BOOL __thiscall sub_476DE8(_DWORD *this, _DWORD *a2);
 int __thiscall set_control_active(_BYTE *this, char a2);
@@ -4494,7 +4497,7 @@ int sub_477139();
 int *sub_477143();
 void __cdecl sub_47717B(); // idb
 void sub_47719B();
-_DWORD *__thiscall sub_4771A6(_DWORD *this, int a2);
+_DWORD *__thiscall construct_color_control(_DWORD *this, int a2);
 char __thiscall sub_4771EE(int this, _BYTE *a2, int a3);
 char __thiscall sub_477226(int this, unsigned __int16 a2, _DWORD *a3);
 int sub_4772AE();
@@ -5738,12 +5741,12 @@ void __cdecl sub_49544D(); // idb
 void sub_49546D();
 void *__thiscall sub_495475(void *this, int a2);
 int __thiscall sub_495490(int *this, _BYTE *a2, int a3);
-int __thiscall sub_495548(int this);
+int __thiscall construct_driving_layer(int this);
 _DWORD *__thiscall sub_495E6D(_DWORD *this, int a2, int a3);
 _DWORD *__cdecl sub_495EBE(int a1);
 _WORD *__thiscall sub_495EFD(_WORD *this, int a2);
 _WORD *sub_495FCF();
-_DWORD *__cdecl sub_496005(int a1);
+_DWORD *__cdecl allocate_registered_driving_layer(int a1);
 void __cdecl sub_496028(int a1, _BYTE *a2, int a3);
 void sub_49603F();
 int sub_496054();
@@ -6140,7 +6143,7 @@ int __thiscall sub_4A355C(int *this, char *a2, int a3, _DWORD *a4);
 int __thiscall sub_4A375E(int *this);
 int __thiscall sub_4A377E(int *this, char *a2, int a3, _DWORD *a4);
 int __thiscall sub_4A3980(int *this);
-char __cdecl sub_4A39C1(int a1, int a2);
+char __cdecl record_file_system_activity(int a1, int a2);
 void __cdecl loc_4A3B10(); // idb
 char *__thiscall sub_4A3B31(char *this, char a2);
 void __thiscall sub_4A3B4D(char *this);
@@ -6169,8 +6172,8 @@ bool __stdcall sub_4A42A7(int a1, _DWORD *a2, _DWORD *a3);
 bool __thiscall sub_4A42DA(_DWORD *this, int a2, _DWORD *a3);
 void __cdecl sub_4A4309(_DWORD *a1);
 void __cdecl sub_4A4314(_DWORD *a1);
-BOOL __thiscall sub_4A437B(_DWORD *this, CHAR *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes);
-void __thiscall sub_4A43D6(HANDLE *this);
+BOOL __thiscall open_tracked_file(_DWORD *this, CHAR *lpFileName, DWORD dwDesiredAccess, DWORD dwShareMode, DWORD dwCreationDisposition, DWORD dwFlagsAndAttributes);
+void __thiscall close_tracked_file(HANDLE *this);
 BOOL __thiscall sub_4A4407(_DWORD *this, HANDLE hFile, DWORD flProtect, DWORD dwMaximumSizeLow, LPCSTR lpName);
 void __thiscall sub_4A445B(HANDLE *this);
 BOOL __thiscall sub_4A448C(_DWORD *this, HANDLE hFileMappingObject, DWORD dwDesiredAccess, DWORD dwFileOffsetLow, int *dwNumberOfBytesToMap);
@@ -6198,7 +6201,7 @@ bool __cdecl sub_4A4FCC(char *a1);
 char __cdecl sub_4A4FE7(int a1);
 char __cdecl sub_4A504A(char *a1);
 _BYTE *__cdecl sub_4A5175(_BYTE *a1, HMODULE hModule, int a3);
-_BYTE *__cdecl sub_4A51EC(_BYTE *a1, char *a2);
+_BYTE *__cdecl resolve_file_path(_BYTE *a1, char *a2);
 _BYTE *__cdecl sub_4A52D3(_BYTE *a1, char *a2);
 _BYTE *__cdecl sub_4A53B4(_BYTE *a1, HMODULE hModule);
 _BYTE *__cdecl sub_4A5413(_BYTE *a1);
@@ -6258,7 +6261,7 @@ int __thiscall sub_4A70A1(_DWORD *this, _BYTE *a2);
 BOOL __thiscall sub_4A7166(int this);
 BOOL __thiscall sub_4A7187(void *this);
 _BYTE *__thiscall sub_4A71EC(int this, _BYTE *a2);
-int __thiscall sub_4A7263(_DWORD *this, _BYTE *a2);
+int __thiscall set_file_path_context_path(_DWORD *this, _BYTE *a2);
 int __thiscall sub_4A72D5(int this);
 _DWORD *__thiscall sub_4A72EC(_DWORD *this);
 char *__thiscall sub_4A7313(void *this, unsigned int *a2);
@@ -6347,7 +6350,7 @@ int sub_4AA04B();
 char *__thiscall sub_4AA063(char *this, _DWORD *a2);
 void sub_4AA0A6();
 char *sub_4AA0D4();
-_DWORD *__cdecl sub_4AA10A(int a1);
+_DWORD *__cdecl allocate_registered_fingerprint_layer(int a1);
 int __cdecl sub_4AA12D(int a1, _BYTE *a2, int a3);
 void sub_4AA144();
 int sub_4AA159();
@@ -6356,7 +6359,7 @@ void __cdecl sub_4AA19E(); // idb
 void sub_4AA1BE();
 char *__thiscall sub_4AA1C9(char *this, int a2);
 int __thiscall sub_4AA323(int this, _BYTE *a2, int a3);
-int __thiscall sub_4AA587(int this);
+int __thiscall construct_fingerprint_layer(int this);
 _DWORD *__fastcall sub_4AAC91(_DWORD *a1);
 int __thiscall sub_4AADB4(int this);
 int *__thiscall sub_4AB1C4(int *this, int *a2, _DWORD *a3);
@@ -6406,7 +6409,7 @@ int __cdecl sub_4AD18F(int a1, int *a2);
 int __cdecl sub_4AD1A7(int a1, int *a2);
 BOOL __cdecl sub_4AD1BF(int a1);
 int __cdecl sub_4AD1D5(int a1);
-char *__cdecl sub_4AD1DA(int a1);
+char *__cdecl get_inventory_item_name(int a1);
 BOOL __cdecl sub_4AD1F2(char *a1, int *a2);
 char __cdecl sub_4AD227(int a1, int *a2);
 int __cdecl sub_4AD2A1(int a1, int *a2);
@@ -6481,7 +6484,7 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
                                              int noun_id, int verb_id,
                                              int case_id,
                                              uint8_t *condition_matched);
-_BYTE *__stdcall sub_4AED9D(_BYTE *a1, int a2);
+_BYTE *__stdcall construct_sheep_case_signature(_BYTE *a1, int a2);
 int __thiscall is_inventory_item_owned_by_active_ego(
     uint32_t *flag_manager, int inventory_id);
 char __thiscall set_flag_manager_inventory_status(
@@ -6490,16 +6493,16 @@ int __thiscall get_selected_inventory_item_for_active_ego(
     uint32_t *flag_manager);
 char __thiscall set_selected_inventory_item_for_active_ego(
     uint32_t *flag_manager, int inventory_id);
-BOOL __cdecl sub_4AEFAE(int a1);
+BOOL __cdecl is_global_flag_set(int a1);
 int __cdecl sub_4AEFE9(int a1);
 int __cdecl sub_4AF003(int a1);
 bool __cdecl sub_4AF042(int a1, int a2);
-int __thiscall sub_4AF088(void *this, _DWORD *a2);
-void __thiscall sub_4AF0BD(_DWORD *this);
+int __thiscall get_map_entry_value_address(void *this, _DWORD *a2);
+void __thiscall destroy_tree_map(_DWORD *this);
 _DWORD *__thiscall sub_4AF115(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4);
-_DWORD *__thiscall sub_4AF1BD(int this);
-int *__thiscall sub_4AF1D1(_DWORD *this, int *a2, int a3);
-_DWORD *__thiscall sub_4AF214(int this, _DWORD *a2, _DWORD *a3);
+_DWORD *__thiscall clear_tree_map(int this);
+int *__thiscall find_map_entry_node(_DWORD *this, int *a2, int a3);
+_DWORD *__thiscall find_or_insert_map_entry(int this, _DWORD *a2, _DWORD *a3);
 _DWORD *__thiscall sub_4AF30F(_DWORD *this, _DWORD *a2, _DWORD *a3);
 void __stdcall sub_4AF5D1(_DWORD *a1);
 void __thiscall initialize_flag_map(_DWORD *this);
@@ -6754,7 +6757,7 @@ int __thiscall sub_4B9CE5(_DWORD *this);
 int __thiscall sub_4B9D49(int this);
 int __thiscall apply_game_engine_command_line_options(int this, _BYTE *a2);
 char __stdcall sub_4BA0FB(char a1, _BYTE *a2, int a3, int a4);
-int __thiscall sub_4BA1D4(int this, int a2, char a3, char a4);
+int __thiscall process_game_engine_frame(int this, int a2, char a3, char a4);
 BOOL __thiscall sub_4BA618(_DWORD *this);
 int __thiscall sub_4BA643(int *this, int a2);
 int *__thiscall set_minimum_engine_render_skip_count(int *this, int a2);
@@ -6802,14 +6805,14 @@ char __thiscall sub_4BB2D3(_BYTE *this, const char *a2, long double *a3, double 
 char __thiscall sub_4BB3C4(_BYTE *this, const char *a2, unsigned int *a3, unsigned int *a4);
 int sub_4BB4D9();
 _DWORD *sub_4BB4F1();
-_DWORD *__cdecl sub_4BB527(int a1);
+_DWORD *__cdecl allocate_registered_game_layer(int a1);
 int __cdecl sub_4BB54A(void *a1, int a2, int a3);
 void sub_4BB561();
 int sub_4BB56C();
 int *sub_4BB576();
 void __cdecl sub_4BB5B1(); // idb
 void sub_4BB5D1();
-_DWORD *__thiscall sub_4BB5DC(_DWORD *this);
+_DWORD *__thiscall construct_game_layer(_DWORD *this);
 _DWORD *__thiscall sub_4BB65A(_DWORD *this, char a2);
 _DWORD *__thiscall sub_4BB676(_DWORD *this);
 _DWORD *__thiscall sub_4BB6C8(_DWORD *this, int a2);
@@ -7526,7 +7529,7 @@ int __stdcall sub_4CA276(char *a1, char *a2);
 int __stdcall sub_4CA288(char *a1, char *a2, int a3);
 int __stdcall sub_4CA332(char *a1, char *a2);
 int __stdcall sub_4CA344(char *a1, char *a2);
-int __stdcall sub_4CA356(void *a1);
+int __stdcall take_screenshot(void *a1);
 int __stdcall sub_4CA3D6(void *a1, const char *a2);
 _DWORD *__thiscall sub_4CA6D2(int *this, _DWORD *a2, _DWORD *a3);
 int __thiscall sub_4CA709(int *this);
@@ -7612,7 +7615,7 @@ int __stdcall sub_4CC98D(char *a1);
 int __stdcall sub_4CC9AF(char a1);
 // BOOL __userpurge sub_4CC9CD@<eax>(double a1@<st0>, char *a2);
 // BOOL __userpurge sub_4CC9F0@<eax>(double a1@<st0>, char *a2, char *a3);
-int __thiscall sub_4CCA17(void *this);
+int __thiscall write_qa_report(void *this);
 int __stdcall sub_4CCE9C(_BYTE *a1);
 int __stdcall sub_4CCECC(char *a1);
 int __stdcall sub_4CCEE5(char *a1);
@@ -8723,19 +8726,19 @@ _DWORD *__thiscall sub_4E9DFC(_DWORD *this, _DWORD *a2);
 _DWORD *__thiscall sub_4E9E31(_DWORD *this);
 _DWORD *__cdecl sub_4E9F49(int a1, int a2, _DWORD *a3, int a4, int a5, int a6, _DWORD *a7, int a8, _DWORD *a9);
 _DWORD *sub_4E9F6D();
-_DWORD *__cdecl sub_4E9FA3(int a1);
+_DWORD *__cdecl allocate_registered_inventory_layer(int a1);
 char __cdecl sub_4E9FC6(int a1, _BYTE *a2, int a3);
 void sub_4E9FDD();
 int sub_4E9FFC();
 int *sub_4EA006();
 void __cdecl sub_4EA041(); // idb
 void sub_4EA061();
-int __thiscall sub_4EA06C(int this);
+int __thiscall construct_inventory_layer(int this);
 _DWORD *__thiscall sub_4EA442(_DWORD *this, int a2);
 char __thiscall sub_4EA514(int this, _BYTE *a2, int a3);
 _DWORD *__fastcall sub_4EA622(int *a1);
 void __thiscall sub_4EA73C(void *this, int a2, char *a3, _DWORD *a4);
-int __thiscall sub_4EA988(_DWORD *this);
+int __thiscall select_inventory_item_control(_DWORD *this);
 int __thiscall sub_4EA9FC(_DWORD); // weak
 _BYTE *__thiscall sub_4EAA01(_DWORD *this, _BYTE *a2, int a3);
 _BYTE *__thiscall sub_4EAA6C(_DWORD *this, _BYTE *a2, int a3);
@@ -8870,20 +8873,20 @@ int __thiscall detach_game_layer_18(uint32_t *manager);
 uint32_t *__thiscall get_or_create_caption_manager(uint32_t *manager);
 char __thiscall has_caption_manager(uint32_t *manager);
 char *__thiscall get_game_layer_slot(char *this, int a2, char a3);
-_DWORD *__cdecl sub_4EE4F9(int a1);
-_DWORD *__cdecl sub_4EE51C(int a1);
-_DWORD *__cdecl sub_4EE53F(int a1);
-_DWORD *__cdecl sub_4EE562(int a1);
-_DWORD *__cdecl sub_4EE585(int a1);
-_DWORD *__cdecl sub_4EE5A8(int a1);
-_DWORD *__cdecl sub_4EE5CB(int a1);
-_DWORD *__cdecl sub_4EE5EE(int a1);
-_DWORD *__cdecl sub_4EE611(int a1);
-_DWORD *__cdecl sub_4EE634(int a1);
-_DWORD *__cdecl sub_4EE657(int a1);
-_DWORD *__cdecl sub_4EE67A(int a1);
-_DWORD *__cdecl sub_4EE69D(int a1);
-_DWORD *__cdecl sub_4EE6C0(int a1);
+_DWORD *__cdecl allocate_registered_game_help_layer(int a1);
+_DWORD *__cdecl allocate_registered_config_controls_layer(int a1);
+_DWORD *__cdecl allocate_registered_load_save_layer(int a1);
+_DWORD *__cdecl allocate_registered_save_game_layer(int a1);
+_DWORD *__cdecl allocate_registered_lsr_layer(int a1);
+_DWORD *__cdecl allocate_registered_pause_layer(int a1);
+_DWORD *__cdecl allocate_registered_confirm_quit_layer(int a1);
+_DWORD *__cdecl allocate_registered_modal_message_layer(int a1);
+_DWORD *__cdecl allocate_registered_time_block_layer(int a1);
+_DWORD *__cdecl allocate_registered_death_layer(int a1);
+_DWORD *__cdecl allocate_registered_finished_layer(int a1);
+_DWORD *__cdecl allocate_registered_movie_layer(int a1);
+_DWORD *__cdecl allocate_registered_private_bottom_layer(int a1);
+_DWORD *__cdecl allocate_registered_title_layer(int a1);
 int __cdecl sub_4EE6F6(_DWORD *a1);
 char __thiscall sub_4EE70C(void *this, const char *a2, int a3, int a4, char a5);
 int sub_4EE764();
@@ -9064,7 +9067,7 @@ int sub_4F3CFD();
 int *sub_4F3D07();
 void __cdecl sub_4F3D42(); // idb
 void sub_4F3D62();
-_DWORD *__thiscall sub_4F3D6D(_DWORD *this);
+_DWORD *__thiscall construct_load_save_layer(_DWORD *this);
 _DWORD *__thiscall sub_4F3E04(_DWORD *this, int a2);
 _DWORD __stdcall nullsub_177(_DWORD, _DWORD); // weak
 _DWORD *__thiscall sub_4F3E66(_DWORD *this);
@@ -9076,7 +9079,7 @@ int sub_4F3FBB();
 int *sub_4F3FC5();
 void __cdecl sub_4F4000(); // idb
 void sub_4F4020();
-_BYTE *__thiscall sub_4F402B(_BYTE *this);
+_BYTE *__thiscall construct_save_game_layer(_BYTE *this);
 int __thiscall sub_4F416B(int this, int a2);
 int __thiscall sub_4F4208(_BYTE *this, _BYTE *a2, int a3);
 _DWORD *__thiscall sub_4F423C(_DWORD *this);
@@ -9206,7 +9209,7 @@ int sub_4F7EDD();
 int *sub_4F7EE7();
 void __cdecl sub_4F7F22(); // idb
 void sub_4F7F42();
-int __thiscall sub_4F7F4D(int this);
+int __thiscall construct_lsr_layer(int this);
 void *__thiscall sub_4F80F4(void *this, char a2);
 _WORD *__thiscall sub_4F8110(_WORD *this, int a2);
 _DWORD *__thiscall sub_4F81BB(int this);
@@ -9367,7 +9370,7 @@ int sub_4FCB34();
 int *sub_4FCB3E();
 void __cdecl sub_4FCB79(); // idb
 void sub_4FCB99();
-_DWORD *__thiscall sub_4FCBA4(_DWORD *this);
+_DWORD *__thiscall construct_pause_layer(_DWORD *this);
 int *__thiscall sub_4FCC4E(int *this, char a2);
 _DWORD *__thiscall sub_4FCC6A(_DWORD *this, int a2);
 int __thiscall sub_4FCCB5(void *this, int a2, int a3);
@@ -9382,7 +9385,7 @@ int sub_4FCE0C();
 int *sub_4FCE16();
 void __cdecl sub_4FCE51(); // idb
 void sub_4FCE71();
-int __thiscall sub_4FCE7C(int this);
+int __thiscall construct_confirm_quit_layer(int this);
 _DWORD *__fastcall sub_4FCFCE(int a1);
 _WORD *__thiscall sub_4FD07C(_WORD *this, int a2);
 int __thiscall sub_4FD11F(void *this, int a2, int a3);
@@ -9396,7 +9399,7 @@ int sub_4FD2B5();
 int *sub_4FD2BF();
 void __cdecl sub_4FD2FA(); // idb
 void sub_4FD31A();
-int __thiscall sub_4FD325(int this);
+int __thiscall construct_modal_message_layer(int this);
 _DWORD *__fastcall sub_4FD425(int a1);
 void __thiscall sub_4FD535(int *this, _BYTE *a2);
 _WORD *__thiscall sub_4FD552(_WORD *this, int a2);
@@ -9407,7 +9410,7 @@ void __thiscall sub_4FD778(_BYTE *this, int a2, _DWORD *a3);
 _DWORD *__thiscall sub_4FD7A7(int this);
 void __thiscall sub_4FE02D(int this, int a2);
 void __thiscall sub_4FE079(int this, int a2);
-int __thiscall sub_4FE08D(int this);
+int __thiscall construct_time_block_layer(int this);
 _DWORD *__thiscall sub_4FE343(_DWORD *this, char a2);
 _WORD *__thiscall sub_4FE35F(_WORD *this, int a2);
 _WORD *sub_4FE454();
@@ -9439,7 +9442,7 @@ int sub_4FF343();
 int *sub_4FF34D();
 void __cdecl sub_4FF388(); // idb
 void sub_4FF3A8();
-int __thiscall sub_4FF3B3(int this);
+int __thiscall construct_death_layer(int this);
 _DWORD *__thiscall sub_4FF4E9(_DWORD *this, char a2);
 _WORD *__thiscall sub_4FF505(_WORD *this, int a2);
 _DWORD *__fastcall sub_4FF5A1(_DWORD *a1);
@@ -9460,7 +9463,7 @@ int sub_4FFA8A();
 int *sub_4FFA94();
 void __cdecl sub_4FFACF(); // idb
 void sub_4FFAEF();
-_DWORD *__thiscall sub_4FFAFA(_DWORD *this);
+_DWORD *__thiscall construct_finished_layer(_DWORD *this);
 _DWORD *__thiscall sub_4FFB75(_DWORD *this, char a2);
 _DWORD *__thiscall sub_4FFB91(_DWORD *this, int a2);
 int __thiscall sub_4FFBDC(_DWORD *this, int a2, int a3);
@@ -9556,7 +9559,7 @@ int sub_501A24();
 int *sub_501A2E();
 void __cdecl sub_501A69(); // idb
 void sub_501A89();
-int __thiscall sub_501A94(int this);
+int __thiscall construct_movie_layer(int this);
 int *__thiscall sub_501B80(int *this, char a2);
 _WORD *__thiscall sub_501B9C(_WORD *this, int a2);
 char __thiscall sub_501C37(int this, _BYTE *a2, int a3);
@@ -9801,7 +9804,7 @@ void __thiscall sub_506748(int **this);
 _DWORD *__thiscall attach_control_to_service(int this, int a2, char a3);
 _DWORD *__thiscall insert_object_pointer_collection_entry(
     int *collection, int item);
-_DWORD *__thiscall sub_5067E5(_BYTE *this, int a2, char a3);
+_DWORD *__thiscall insert_control_into_control_container(_BYTE *this, int a2, char a3);
 _DWORD *__thiscall sub_506838(int this, int a2);
 _DWORD *__thiscall sub_506879(int this, void *a2, int a3, char a4);
 _DWORD *__thiscall sub_5068D0(int *this, void *a2, int a3);
@@ -10442,7 +10445,7 @@ int sub_51B730();
 int *sub_51B73A();
 void __cdecl sub_51B775(); // idb
 void sub_51B795();
-int __thiscall sub_51B7A0(int this);
+int __thiscall construct_game_help_layer(int this);
 int __thiscall sub_51BF7A(_BYTE *this, int a2);
 _WORD *__thiscall sub_51CA0D(_WORD *this, int a2);
 int __thiscall sub_51CAF1(int *this, _BYTE *a2, int a3);
@@ -10462,7 +10465,7 @@ int sub_51D096();
 int *sub_51D0A0();
 void __cdecl sub_51D0DB(); // idb
 void sub_51D0FB();
-int __thiscall sub_51D106(int this);
+int __thiscall construct_config_controls_layer(int this);
 int __thiscall sub_51D74B(int this);
 _WORD *__thiscall sub_51DC53(_WORD *this, int a2);
 int __thiscall sub_51DD29(int *this, _BYTE *a2, int a3);
@@ -10856,7 +10859,7 @@ char __cdecl sub_52C110(int a1, _DWORD *a2);
 _BYTE *__cdecl sub_52C23A(_BYTE *a1, unsigned int a2);
 char __cdecl sub_52C343(int a1, _DWORD *a2);
 // int unknown_libname_167(); weak
-// _DWORD __cdecl sub_52C4A0(_DWORD); weak
+// _DWORD __cdecl allocate_registered_report_entry(_DWORD); weak
 char __cdecl sub_52C4C3(int a1, _BYTE *a2, int a3);
 int sub_52C4D5();
 int *sub_52C4DF();
@@ -10887,7 +10890,7 @@ void __thiscall disable_report_entry_file_output(
 _DWORD *__thiscall begin_interface_debug_log(_DWORD *this, int a2, int a3, int a4, _DWORD *a5);
 void __thiscall end_interface_debug_log(int *this);
 void __thiscall sub_52D1B1(int this, char *a2, va_list a3);
-void __thiscall sub_52D1CF(int this, char *a2, size_t a3);
+void __thiscall write_source_message_from_log_context(int this, char *a2, size_t a3);
 int sub_52D200();
 int sub_52D214();
 char __thiscall sub_52D22C(_BYTE *this, const char *a2, int *a3, int *a4);
@@ -10907,7 +10910,7 @@ _DWORD *__thiscall sub_52D69E(_DWORD *this, char a2);
 _DWORD *__thiscall sub_52D6BA(_DWORD *this, int a2);
 char __thiscall sub_52D702(int *this, _BYTE *a2, int a3);
 _DWORD *__thiscall sub_52D77D(_DWORD *this);
-int __thiscall sub_52D7F1(_DWORD *this, int a2);
+int __thiscall set_control_bounds(_DWORD *this, int a2);
 int __thiscall sub_52D838(_DWORD *this, unsigned int a2);
 int __thiscall sub_52D86B(_DWORD *this, int a2, char a3);
 int __thiscall sub_52D88A(_DWORD *this, int a2, int a3, int a4);
@@ -10943,14 +10946,14 @@ int __thiscall sub_52DFC5(_BYTE *this, int a2, _DWORD *a3);
 int __thiscall sub_52E00A(int *this, _DWORD *a2);
 int __thiscall sub_52E07B(int this);
 _DWORD *sub_52E291();
-_DWORD *__cdecl sub_52E2C7(int a1);
+_DWORD *__cdecl allocate_registered_frame_delay_graph(int a1);
 char __cdecl sub_52E2EA(int *a1, _BYTE *a2, int a3);
 void sub_52E301();
 int sub_52E30C();
 int *sub_52E316();
 void __cdecl sub_52E351(); // idb
 void sub_52E371();
-_DWORD *__thiscall sub_52E37C(_DWORD *this, _DWORD *a2, int a3);
+_DWORD *__thiscall construct_frame_delay_graph(_DWORD *this, _DWORD *a2, int a3);
 int __thiscall sub_52E3F8(_BYTE *this, int a2, _DWORD *a3);
 void __thiscall sub_52E419(int *this, int a2, _DWORD *a3);
 _DWORD *__thiscall sub_52E45B(int *this);
@@ -10962,14 +10965,14 @@ LONGLONG __thiscall sub_52E5CE(int this);
 void __thiscall sub_52E5E8(int this);
 bool __thiscall sub_52E610(FARPROC *this);
 _DWORD *sub_52E633();
-_DWORD *__cdecl sub_52E669(int a1);
+_DWORD *__cdecl allocate_registered_page_fault_graph(int a1);
 char __cdecl sub_52E68C(int *a1, _BYTE *a2, int a3);
 void sub_52E6A3();
 int sub_52E6AE();
 int *sub_52E6B8();
 void __cdecl sub_52E6F3(); // idb
 void sub_52E713();
-_DWORD *__thiscall sub_52E71E(_DWORD *this, _DWORD *a2, int a3);
+_DWORD *__thiscall construct_page_fault_graph(_DWORD *this, _DWORD *a2, int a3);
 int __thiscall sub_52E794(int this, int a2, _DWORD *a3);
 void __thiscall sub_52E7B5(int *this, int a2, _DWORD *a3);
 _DWORD *__thiscall sub_52E7F7(int *this);
@@ -11010,17 +11013,17 @@ int __thiscall refresh_report_manager_display(_DWORD **manager, int a2,
                                              int a3, int a4);
 int __stdcall get_report_indicator_resource_ids(int *a1, int *a2);
 int __thiscall resize_report_indicators(_DWORD **this);
-int __thiscall sub_52F543(int this, _DWORD *a2);
+int __thiscall append_pointer_array_element(int this, _DWORD *a2);
 unsigned int __thiscall resize_pointer_array(
     int *this, unsigned int a2, _DWORD *a3);
 int __thiscall insert_pointer_array_element(
     int *this, _DWORD *a2, _DWORD *a3);
-int __thiscall sub_52F62D(int *this);
+int __thiscall destroy_report_entry_pointer_array(int *this);
 int __thiscall sub_52F64D(int *this, _DWORD *a2, int a3, _DWORD *a4);
 _DWORD *__thiscall sub_52F81D(_DWORD *this, _DWORD *a2, int *a3);
-int __thiscall sub_52F84F(int *this);
+int __thiscall destroy_report_auxiliary_pointer_array(int *this);
 int __thiscall sub_52F86F(int *this, _DWORD *a2, int a3, _DWORD *a4);
-int sub_52FA3F();
+int is_psapi_available(void);
 char __thiscall sub_52FA6A(_BYTE *this, const char *a2, unsigned int a3, char a4);
 char __thiscall sub_52FADB(_BYTE *this, const char *a2, unsigned int a3, char a4);
 void __cdecl sub_52FB8E(); // idb
@@ -12849,7 +12852,7 @@ int sub_55814D();
 int *sub_558157();
 void __cdecl sub_558192(); // idb
 void sub_5581B2();
-int __thiscall sub_5581BD(int this);
+int __thiscall construct_title_layer(int this);
 _WORD *__thiscall sub_5583D4(_WORD *this, int a2);
 _DWORD *__thiscall sub_558455(int this);
 char __thiscall sub_558551(int *this, _BYTE *a2, int a3);
@@ -13506,7 +13509,7 @@ int __thiscall update_cached_window_geometry(int this);
 char __thiscall sub_570A10(_DWORD *this, char *a2, char *a3, int a4, const char *a5);
 int __thiscall sub_570AA0(void *this, const char *a2);
 int __thiscall sub_570B00(void *this, const char *a2);
-int sub_570B20(int a1, char *Format, ...);
+int report_engine_error(int a1, char *Format, ...);
 int report_engine_message(int a1, char *Format, ...);
 int __thiscall sub_570BA0(int this, int a2);
 char __thiscall sub_570C40(char *this, const char *a2);
@@ -13643,8 +13646,8 @@ float *__thiscall sub_575D80(float *this, float *a2);
 void __thiscall sub_575E10(float *this, int a2, float *a3, int a4);
 int __thiscall sub_575E60(int this);
 void __thiscall sub_575EA0(float *this, float a2, float a3, float a4);
-void __thiscall sub_575F20(float *this, float a2);
-void __thiscall sub_575F80(float *this, float a2);
+void __thiscall rotate_matrix_about_x(float *this, float a2);
+void __thiscall rotate_matrix_about_y(float *this, float a2);
 void __thiscall sub_575FF0(float *this, float a2);
 float *__thiscall sub_576140(float *this, float *a2);
 float *__thiscall sub_576430(float *this, float *a2, float *a3, float *a4);
@@ -13679,7 +13682,7 @@ void __cdecl sub_578440(int a1);
 double __cdecl sub_5787C0(int a1);
 void __thiscall sub_578920(float *this);
 void __fastcall sub_578B40(float *a1, int a2);
-void __thiscall sub_578B90(float *this, float *a2, float *a3, int a4, int a5);
+void __thiscall transform_vector_array(float *this, float *a2, float *a3, int a4, int a5);
 _DWORD *__thiscall sub_578C20(_DWORD *this, int a2, int a3, int a4);
 char __thiscall sub_578C70(int *this, _BYTE *a2, const char *a3);
 bool __thiscall sub_578C90(int *this, _BYTE *a2, int a3);
@@ -18621,7 +18624,7 @@ int sub_687F1D();
 int *sub_687F27();
 void __cdecl sub_687F62(); // idb
 void sub_687F82();
-int __thiscall sub_687F8D(int this);
+int __thiscall construct_private_bottom_layer(int this);
 _WORD *__thiscall sub_688EB3(_WORD *this, int a2);
 char __thiscall sub_688FD1(int *this, _BYTE *a2, int a3);
 _DWORD *__thiscall sub_6891EE(int this);
@@ -19650,11 +19653,11 @@ _UNKNOWN loc_6A0814; // weak
 // extern int (__stdcall *StringFromGUID2)(const GUID *const rguid, LPOLESTR lpsz, int cchMax);
 // extern HRESULT (__stdcall *CoCreateInstance)(const IID *const rclsid, LPUNKNOWN pUnkOuter, DWORD dwClsContext, const IID *const riid, LPVOID *ppv);
 char byte_6A6454 = '\0'; // weak
-int dword_6A6460 = 0; // weak
+int default_noun_id = 0; // weak
 int dword_6A6478 = 0; // weak
 const char Str1[4] = { '\0', '\0', '\0', '\0' }; // idb
 int dword_6A64A4 = 0; // weak
-int dword_6A64B0 = 0; // weak
+int default_verb_id = 0; // weak
 int dword_6A6524 = 0; // weak
 const char Key[4] = { '\0', '\0', '\0', '\0' }; // idb
 int (__stdcall *off_6A6924)(char) = &sub_40688B; // weak
@@ -19687,7 +19690,7 @@ int (__stdcall *off_6A6EA8)(char) = &sub_40CE04; // weak
 void (__noreturn *off_6A6ECC)() = &_purecall; // weak
 int dword_6A6F30 = 0; // weak
 _UNKNOWN *off_6A728C = &loc_40EBFF; // weak
-_UNKNOWN *off_6A72AC = &loc_40EDA6; // weak
+_UNKNOWN *camera_angle_vtable = &loc_40EDA6; // weak
 int (__stdcall *off_6A72CC)(char) = &sub_40ED7E; // weak
 int (__stdcall *off_6A7314)(char) = &sub_41000D; // weak
 int (__stdcall *off_6A7320)(char) = &unknown_libname_7; // weak
@@ -19792,7 +19795,7 @@ _UNKNOWN *off_6AB4C0 = &loc_439760; // weak
 _UNKNOWN *off_6AB4C4 = &loc_4397BC; // weak
 _UNKNOWN *off_6AB500 = &loc_4399AF; // weak
 _UNKNOWN *off_6AB504 = &loc_4399E8; // weak
-_UNKNOWN *off_6AB594 = &loc_4A6ECF; // weak
+_UNKNOWN *file_path_context_vtable = &loc_4A6ECF; // weak
 _UNKNOWN *off_6AB5AC = &loc_4A6ECF; // weak
 int (__stdcall *off_6AB5C0)(char) = &sub_43A1A7; // weak
 int (__stdcall *off_6AB5FC)(char) = &unknown_libname_32; // weak
@@ -19859,10 +19862,10 @@ int (__stdcall *off_6ADBB8)(char) = &sub_452FDA; // weak
 int (__stdcall *off_6ADC88)(char) = &sub_452F60; // weak
 int (__stdcall *off_6ADF04)(char) = &sub_455E8A; // weak
 int dword_6ADF40 = 1; // weak
-void *(__thiscall *off_6AE0C8)(void *, char) = &destroy_camera_angle_manager; // weak
+void *(__thiscall *camera_angle_manager_vtable)(void *, char) = &destroy_camera_angle_manager; // weak
 int (__stdcall *off_6AE760)(char) = &sub_45C168; // weak
 _UNKNOWN *off_6AE768 = &loc_459746; // weak
-int (__stdcall *caption_manager_vtable)(char) = &sub_45A11B; // weak
+int (__stdcall *caption_manager_vtable)(char) = &destroy_caption_manager; // weak
 int (__stdcall *embedded_caption_control_vtable)(char) = &sub_45A085; // weak
 int dword_6AEDCC[1573] =
 {
@@ -21848,7 +21851,7 @@ int dword_6C01C0[141] =
   340,
   341
 }; // weak
-void *(__thiscall *off_6C1340)(void *, char) = &destroy_flag_manager; // weak
+void *(__thiscall *flag_manager_vtable)(void *, char) = &destroy_flag_manager; // weak
 int dword_6C1358 = 0; // weak
 unsigned __int8 byte_6C15EC[4] = { 0u, 0u, 0u, 0u }; // weak
 int dword_6C15F0 = 0; // weak
@@ -22111,7 +22114,7 @@ int (__stdcall *off_6D34C4)(char) = &sub_52D69E; // weak
 _UNKNOWN *off_6D35E0 = &loc_52DD01; // weak
 _UNKNOWN *off_6D36F8 = &loc_52E43F; // weak
 _UNKNOWN *off_6D37F4 = &loc_52E7DB; // weak
-int (__stdcall *off_6D3920)(char) = &release_report_manager; // weak
+int (__stdcall *report_manager_vtable)(char) = &release_report_manager; // weak
 int (__stdcall *off_6D3A98)(char) = &sub_52FC5A; // weak
 int (__stdcall *off_6D3ADC)(char) = &sub_5301CE; // weak
 int (__stdcall *off_6D4098)(char) = &sub_533852; // weak
@@ -39293,7 +39296,7 @@ char *off_755E70[389] =
   "e_temple_get_on_sarcophagus",
   "e_temple_kill_demon"
 }; // weak
-char *off_755E74[388] =
+char *warning_indicator_resource_name_table[388] =
 {
   "f_warning_indicator",
   "f_error_indicator1",
@@ -39684,7 +39687,7 @@ char *off_755E74[388] =
   "e_temple_get_on_sarcophagus",
   "e_temple_kill_demon"
 }; // weak
-char *off_755E78[387] =
+char *error_indicator_icon_resource_name_table[387] =
 {
   "f_error_indicator1",
   "f_error_indicator2",
@@ -40074,7 +40077,7 @@ char *off_755E78[387] =
   "e_temple_get_on_sarcophagus",
   "e_temple_kill_demon"
 }; // weak
-char *off_755E7C[386] =
+char *error_indicator_label_resource_name_table[386] =
 {
   "f_error_indicator2",
   "e_110a_r25_tape",
@@ -44102,16 +44105,16 @@ int dword_7640AC; // weak
 char byte_7640B0; // weak
 char byte_7640B1; // weak
 char byte_7640B2; // weak
-int dword_7640B4; // weak
+int camera_angle_manager_registry_adjustment; // weak
 _DWORD dword_7640B8[15]; // weak
-int dword_7640F4; // weak
-int dword_7640F8[15]; // weak
+int camera_angle_registry_adjustment; // weak
+int camera_angle_type_registry[15]; // weak
 int dword_764134; // weak
 int dword_764138[15]; // weak
 int dword_764174; // weak
 int dword_764178; // weak
-int dword_76417C; // weak
-int dword_764180; // weak
+int camera_angle_map_nil_node; // weak
+int camera_angle_map_sentinel_reference_count; // weak
 char byte_764188; // weak
 char byte_764189; // weak
 int caption_manager_restore_value; // weak
@@ -44273,9 +44276,9 @@ _UNKNOWN unk_7647A0; // weak
 _UNKNOWN unk_7647A4; // weak
 _UNKNOWN unk_7647A8; // weak
 _UNKNOWN unk_7647AC; // weak
-int dword_7647B0; // weak
-int dword_7647B4; // weak
-int dword_7647B8; // weak
+int unset_camera_position_x; // weak
+int unset_camera_position_y; // weak
+int unset_camera_position_z; // weak
 float flt_7647C0; // weak
 float flt_7647C4; // weak
 float flt_7647C8; // weak
@@ -44512,7 +44515,7 @@ int dword_7656F8; // weak
 char byte_765700; // weak
 _UNKNOWN unk_765701; // weak
 _UNKNOWN unk_765702; // weak
-int dword_765704; // weak
+int flag_manager_registry_adjustment; // weak
 _DWORD dword_765708[15]; // weak
 int dword_765744; // weak
 int dword_765748; // weak
@@ -45055,7 +45058,7 @@ int settings_registry_base_offset; // weak
 _DWORD settings_context_type_descriptor[16]; // weak
 char byte_76C680; // weak
 int dword_76C684; // weak
-_DWORD dword_76C688[16]; // weak
+_DWORD report_entry_registry[16]; // weak
 char byte_76C6C8; // weak
 char byte_76C6C9; // weak
 int dword_76C6CC; // weak
@@ -45069,7 +45072,7 @@ int dword_76C760[15]; // weak
 char byte_76C79C; // weak
 int dword_76C7A0; // weak
 _DWORD dword_76C7A8[15]; // weak
-int dword_76C7E4; // weak
+int report_manager_registry_offset; // weak
 _DWORD dword_76C7E8[15]; // weak
 int dword_76C824; // weak
 int dword_76C828; // weak
@@ -50501,14 +50504,14 @@ bool __thiscall sub_40122F(int this, _BYTE *a2)
     v3 = 0;
   if ( !serialize_dialogue_string_field((int)a2, (int)"action", (void *)(this + 20)) )
     v3 = 0;
-  if ( !sub_4053DF(a2, "talker", (int *)(this + 36), &dword_6A6460) )
+  if ( !serialize_noun_field(a2, "talker", (int *)(this + 36), &default_noun_id) )
     v3 = 0;
   if ( !serialize_boolean_field(a2, "isDefault", (char *)(this + 40), &byte_6A6454) )
     return 0;
   return v3;
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A6478: using guessed type int dword_6A6478;
 
 //----- (004012C2) --------------------------------------------------------
@@ -50557,8 +50560,8 @@ bool __thiscall serialize_action_descriptor(int this, _BYTE *a2, int a3)
   bool v4; // bl
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
-  v4 = sub_4053DF(a2, "mNoun", (int *)this, &dword_6A6460) != 0;
-  if ( !sub_4054E4(a2, "mVerb", (int *)(this + 4), &dword_6A64B0) )
+  v4 = serialize_noun_field(a2, "mNoun", (int *)this, &default_noun_id) != 0;
+  if ( !serialize_verb_field(a2, "mVerb", (int *)(this + 4), &default_verb_id) )
     v4 = 0;
   if ( !sub_4052DA(a2, "mCase", (int *)(this + 8), &dword_6A64A4) )
     v4 = 0;
@@ -50570,9 +50573,9 @@ bool __thiscall serialize_action_descriptor(int this, _BYTE *a2, int a3)
   return v4;
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A64A4: using guessed type int dword_6A64A4;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A64B0: using guessed type int default_verb_id;
 
 //----- (004013F5) --------------------------------------------------------
 BOOL __thiscall sub_4013F5(_DWORD *this, _DWORD *a2)
@@ -50680,7 +50683,7 @@ _BYTE *__cdecl append_string_suffix(_BYTE *a1, char *a2, char *Str)
   std::string::assign(a2, 0, -1);
   v8 = 1;
   v4 = (char *)strlen(Str);
-  sub_402BD8(v6, Str, v4);
+  append_std_string_storage_bytes(v6, Str, v4);
   *a1 = v6[0];
   std::string::_Tidy(0);
   std::string::assign(v6, 0, -1);
@@ -50938,56 +50941,56 @@ _BYTE *__thiscall sub_40181B(_DWORD *this, _DWORD *a2)
     if ( !v6 )
     {
 LABEL_25:
-      sub_402BAA(v23, "none", (_BYTE *)&a2 + 3);
+      assign_std_string_storage_from_c_string(v23, "none", (_BYTE *)&a2 + 3);
       v10 = v40;
       LOBYTE(v53) = 2;
       v11 = v40 + 1;
       *(_DWORD *)sub_402E2E(v40 + 1, v23) = 0;
       LOBYTE(v53) = 0;
       std::string::_Tidy(1);
-      sub_402BAA(v29, "walkTo", &v42);
+      assign_std_string_storage_from_c_string(v29, "walkTo", &v42);
       LOBYTE(v53) = 3;
       v12 = (_DWORD *)sub_402E2E(v11, v29);
       LOBYTE(v53) = 0;
       *v12 = 1;
       std::string::_Tidy(1);
-      sub_402BAA(v25, "anim", &v48);
+      assign_std_string_storage_from_c_string(v25, "anim", &v48);
       LOBYTE(v53) = 4;
       v13 = (_DWORD *)sub_402E2E(v11, v25);
       LOBYTE(v53) = 0;
       *v13 = 2;
       std::string::_Tidy(1);
-      sub_402BAA(v27, "near", &v43);
+      assign_std_string_storage_from_c_string(v27, "near", &v43);
       LOBYTE(v53) = 5;
       v14 = (_DWORD *)sub_402E2E(v11, v27);
       LOBYTE(v53) = 0;
       *v14 = 3;
       std::string::_Tidy(1);
-      sub_402BAA(v31, "nearModel", &v46);
+      assign_std_string_storage_from_c_string(v31, "nearModel", &v46);
       LOBYTE(v53) = 6;
       v15 = (_DWORD *)sub_402E2E(v11, v31);
       LOBYTE(v53) = 0;
       *v15 = 4;
       std::string::_Tidy(1);
-      sub_402BAA(v30, "region", &v41);
+      assign_std_string_storage_from_c_string(v30, "region", &v41);
       LOBYTE(v53) = 7;
       v16 = (_DWORD *)sub_402E2E(v11, v30);
       LOBYTE(v53) = 0;
       *v16 = 5;
       std::string::_Tidy(1);
-      sub_402BAA(v28, "turnTo", &v44);
+      assign_std_string_storage_from_c_string(v28, "turnTo", &v44);
       LOBYTE(v53) = 8;
       v17 = (_DWORD *)sub_402E2E(v11, v28);
       LOBYTE(v53) = 0;
       *v17 = 6;
       std::string::_Tidy(1);
-      sub_402BAA(v26, "turnToModel", &v49);
+      assign_std_string_storage_from_c_string(v26, "turnToModel", &v49);
       LOBYTE(v53) = 9;
       v18 = (_DWORD *)sub_402E2E(v11, v26);
       LOBYTE(v53) = 0;
       *v18 = 7;
       std::string::_Tidy(1);
-      sub_402BAA(v24, "walkToSee", &v47);
+      assign_std_string_storage_from_c_string(v24, "walkToSee", &v47);
       LOBYTE(v53) = 10;
       v19 = (_DWORD *)sub_402E2E(v11, v24);
       LOBYTE(v53) = 0;
@@ -51492,7 +51495,7 @@ LABEL_59:
           if ( v51 )
             std::string::assign(String1, (size_t)v20);
           else
-            sub_402BD8(&v36, String1, v20);
+            append_std_string_storage_bytes(&v36, String1, v20);
           v48 = 125;
           if ( sub_402D99(&v36, &v48, 0x100000000uLL) == -1 )
           {
@@ -51936,7 +51939,7 @@ _BYTE *__thiscall sub_402B80(_BYTE *this, _BYTE *a2)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (00402BAA) --------------------------------------------------------
-_BYTE *__thiscall sub_402BAA(_BYTE *this, char *Str, _BYTE *a3)
+_BYTE *__thiscall assign_std_string_storage_from_c_string(_BYTE *this, char *Str, _BYTE *a3)
 {
   size_t v4; // eax
 
@@ -51950,7 +51953,7 @@ _BYTE *__thiscall sub_402BAA(_BYTE *this, char *Str, _BYTE *a3)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (00402BD8) --------------------------------------------------------
-_DWORD *__thiscall sub_402BD8(_DWORD *this, const void *a2, char *Src)
+_DWORD *__thiscall append_std_string_storage_bytes(_DWORD *this, const void *a2, char *Src)
 {
   char *v4; // edi
   int v5; // eax
@@ -53320,10 +53323,10 @@ char __thiscall sub_403F17(_BYTE *this, int i, _DWORD *a3, int a4)
       v43 = 0;
     v11 = *sub_4044CF((_DWORD **)v7, &a3);
     v12 = v7[1];
-    sub_40442F(v39, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v39, (_BYTE *)&a3 + 3);
     v41 = 0;
     LOBYTE(v44) = 2;
-    sub_40442F(v40, (_BYTE *)&a4 + 3);
+    initialize_std_string_storage(v40, (_BYTE *)&a4 + 3);
     LOBYTE(v44) = 3;
     for ( i = v11; i != v12; ++v41 )
     {
@@ -53426,7 +53429,7 @@ void *__thiscall sub_4043C8(void *this, _BYTE *a2)
 // 404447: using guessed type _DWORD __stdcall std::string::append(_DWORD, _DWORD, size_t Size);
 
 //----- (0040442F) --------------------------------------------------------
-_BYTE *__thiscall sub_40442F(_BYTE *this, _BYTE *a2)
+_BYTE *__thiscall initialize_std_string_storage(_BYTE *this, _BYTE *a2)
 {
   *this = *a2;
   std::string::_Tidy(0);
@@ -54511,7 +54514,7 @@ char __thiscall sub_4052DA(_BYTE *this, const char *a2, int *a3, int *a4)
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (004053DF) --------------------------------------------------------
-char __thiscall sub_4053DF(_BYTE *this, const char *a2, int *a3, int *a4)
+char __thiscall serialize_noun_field(_BYTE *this, const char *a2, int *a3, int *a4)
 {
   char *v5; // edi
   size_t v6; // eax
@@ -54573,7 +54576,7 @@ char __thiscall sub_4053DF(_BYTE *this, const char *a2, int *a3, int *a4)
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (004054E4) --------------------------------------------------------
-char __thiscall sub_4054E4(_BYTE *this, const char *a2, int *a3, int *a4)
+char __thiscall serialize_verb_field(_BYTE *this, const char *a2, int *a3, int *a4)
 {
   char *v5; // edi
   size_t v6; // eax
@@ -56416,21 +56419,21 @@ char __stdcall sub_40727A(int *a1)
   v1 = a1;
   if ( !a1[10] )
     return 1;
-  sub_402BAA(v27, "NVC Action", (_BYTE *)&a1 + 3);
+  assign_std_string_storage_from_c_string(v27, "NVC Action", (_BYTE *)&a1 + 3);
   v15 = v1[2];
   v32 = 0;
   v3 = get_noun_vocabulary_string(v15);
-  sub_402BAA(v26, v3, &v29);
+  assign_std_string_storage_from_c_string(v26, v3, &v29);
   v16 = v1[1];
   LOBYTE(v32) = 1;
   v4 = get_verb_vocabulary_string(v16);
-  sub_402BAA(v25, v4, &v31);
+  assign_std_string_storage_from_c_string(v25, v4, &v31);
   v17 = *v1;
   LOBYTE(v32) = 2;
   v5 = get_action_vocabulary_string(v17);
-  sub_402BAA(v24, v5, &v30);
+  assign_std_string_storage_from_c_string(v24, v5, &v30);
   LOBYTE(v32) = 3;
-  v6 = sub_407455(v18, " (", v24);
+  v6 = combine_text_prefix_and_string_storage(v18, " (", v24);
   LOBYTE(v32) = 4;
   v7 = append_string_suffix(v20, v6, " / ");
   LOBYTE(v32) = 5;
@@ -56477,7 +56480,7 @@ char __stdcall sub_40727A(int *a1)
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (00407455) --------------------------------------------------------
-_BYTE *__cdecl sub_407455(_BYTE *a1, char *a2, _BYTE *a3)
+_BYTE *__cdecl combine_text_prefix_and_string_storage(_BYTE *a1, char *a2, _BYTE *a3)
 {
   size_t v3; // eax
   _BYTE *v4; // ebx
@@ -57494,21 +57497,21 @@ int __thiscall sub_4081E7(int *this)
   v47 = (char *)v25;
   sub_4085FD(v25, 7);
   sub_4FC993(v25[0]);
-  sub_402BAA(v35, "NVC Action", &v44);
+  assign_std_string_storage_from_c_string(v35, "NVC Action", &v44);
   v25[0] = (_DWORD *)this[7];
   v49 = 2;
   v10 = get_noun_vocabulary_string((int)v25[0]);
-  sub_402BAA(v31, v10, &v45);
+  assign_std_string_storage_from_c_string(v31, v10, &v45);
   v25[0] = (_DWORD *)this[6];
   LOBYTE(v49) = 3;
   v11 = get_verb_vocabulary_string((int)v25[0]);
-  sub_402BAA(v32, v11, &v48);
+  assign_std_string_storage_from_c_string(v32, v11, &v48);
   v25[0] = (_DWORD *)*v5;
   LOBYTE(v49) = 4;
   v12 = get_action_vocabulary_string((int)v25[0]);
-  sub_402BAA(v38, v12, &v46);
+  assign_std_string_storage_from_c_string(v38, v12, &v46);
   LOBYTE(v49) = 5;
-  v13 = sub_407455(v34, " (", v38);
+  v13 = combine_text_prefix_and_string_storage(v34, " (", v38);
   LOBYTE(v49) = 6;
   v14 = append_string_suffix(v28, v13, " / ");
   LOBYTE(v49) = 7;
@@ -60852,7 +60855,7 @@ char __thiscall sub_40B114(_BYTE *this, int a2, int a3, int *a4, int a5, char a6
     LOBYTE(v22) = 1;
     if ( !v13 )
       v13 = Key;
-    v14 = sub_4053DF(v19, v13, v11, &dword_6A6460) == 0;
+    v14 = serialize_noun_field(v19, v13, v11, &default_noun_id) == 0;
     std::string::_Tidy(1);
     v22 = -1;
     std::string::_Tidy(1);
@@ -60863,7 +60866,7 @@ char __thiscall sub_40B114(_BYTE *this, int a2, int a3, int *a4, int a5, char a6
   return i;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 
 //----- (0040B1CF) --------------------------------------------------------
 char __thiscall sub_40B1CF(_BYTE *this, unsigned int a2, char *a3)
@@ -60922,7 +60925,7 @@ char __thiscall sub_40B24F(_BYTE *this, int a2, int a3, int *a4, int a5, char a6
     LOBYTE(v22) = 1;
     if ( !v13 )
       v13 = Key;
-    v14 = sub_4054E4(v19, v13, v11, &dword_6A64B0) == 0;
+    v14 = serialize_verb_field(v19, v13, v11, &default_verb_id) == 0;
     std::string::_Tidy(1);
     v22 = -1;
     std::string::_Tidy(1);
@@ -60933,7 +60936,7 @@ char __thiscall sub_40B24F(_BYTE *this, int a2, int a3, int *a4, int a5, char a6
   return i;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A64B0: using guessed type int default_verb_id;
 
 //----- (0040B30A) --------------------------------------------------------
 char __thiscall sub_40B30A(_BYTE *this, const char *a2, __int16 *a3, __int16 *a4)
@@ -63371,29 +63374,29 @@ void __thiscall sub_40D541(_DWORD *this, int a2, int a3)
   }
   qmemcpy(v18, Buf2, sizeof(v18));
   v12 = sub_40D711(&v20, v19);
-  sub_40D73E(v18, v12);
+  add_vector_to_matrix_translation(v18, v12);
   v16 = -v25;
-  sub_575F80(v18, v16);
-  sub_575F20(v18, v23);
+  rotate_matrix_about_y(v18, v16);
+  rotate_matrix_about_x(v18, v23);
   if ( sub_40D75F(this) )
   {
     v13 = sub_40D711((float *)(*(_DWORD *)(this[45] + 4) + 128), v19);
-    sub_40D73E(v18, v13);
+    add_vector_to_matrix_translation(v18, v13);
   }
-  sub_578B90(v18, (float *)a2, (float *)a2, 1, 12);
+  transform_vector_array(v18, (float *)a2, (float *)a2, 1, 12);
   if ( a3 )
   {
     qmemcpy(v18, Buf2, sizeof(v18));
     v14 = sub_40D711(&v20, v19);
-    sub_40D73E(v18, v14);
+    add_vector_to_matrix_translation(v18, v14);
     v17 = -v24;
-    sub_575F80(v18, v17);
+    rotate_matrix_about_y(v18, v17);
     if ( sub_40D75F(this) )
     {
       v15 = sub_40D711((float *)(*(_DWORD *)(this[45] + 4) + 128), v19);
-      sub_40D73E(v18, v15);
+      add_vector_to_matrix_translation(v18, v15);
     }
-    sub_578B90(v18, (float *)a3, (float *)a3, 1, 12);
+    transform_vector_array(v18, (float *)a3, (float *)a3, 1, 12);
   }
 }
 // 7715D4: using guessed type int game_engine_address;
@@ -63415,7 +63418,7 @@ float *__thiscall sub_40D711(float *this, float *a2)
 }
 
 //----- (0040D73E) --------------------------------------------------------
-float *__thiscall sub_40D73E(float *this, float *a2)
+float *__thiscall add_vector_to_matrix_translation(float *this, float *a2)
 {
   float *result; // eax
   double v3; // st7
@@ -63940,8 +63943,8 @@ int __thiscall sub_40DD09(_DWORD *this, char *a2)
   v20 = -1;
   sub_40F0ED(v18);
   if ( !this[44] || !*(_DWORD *)(this[44] + 4) )
-    return sub_570B20(game_engine_address, "Couldn't find %s in characters.txt", a2);
-  sub_402BAA(v14, "default", (_BYTE *)&a2 + 3);
+    return report_engine_error(game_engine_address, "Couldn't find %s in characters.txt", a2);
+  assign_std_string_storage_from_c_string(v14, "default", (_BYTE *)&a2 + 3);
   v6 = *(_DWORD *)(*v4 + 4);
   v20 = 2;
   v7 = *sub_40F02E((_DWORD *)(v6 + 264), &v17, (int)v14);
@@ -63951,7 +63954,7 @@ int __thiscall sub_40DD09(_DWORD *this, char *a2)
   v8 = (char **)sub_40F022((_DWORD *)(*(_DWORD *)(*v4 + 4) + 264), &v17);
   if ( a2 != *v8 )
     assign_std_string_storage(this + 46, a2 + 28);
-  sub_40442F(v15, (_BYTE *)&a2 + 3);
+  initialize_std_string_storage(v15, (_BYTE *)&a2 + 3);
   v18 = 0;
   v20 = 3;
   v17 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20);
@@ -63959,7 +63962,7 @@ int __thiscall sub_40DD09(_DWORD *this, char *a2)
   {
     do
     {
-      sub_402BAA(v14, "Clothes", &v19);
+      assign_std_string_storage_from_c_string(v14, "Clothes", &v19);
       LOBYTE(v20) = 4;
       v9 = sub_557A8D((int)v18);
       v10 = append_string_suffix(v13, v14, v9);
@@ -64685,7 +64688,7 @@ char __thiscall sub_40E822(int this, int a2)
   v3 = (void *)(this + 48);
   calculate_camera_angle_view_position((float *)(this + 48), v25);
   sub_40E7AB(v28, v25);
-  if ( !sub_40EE23(v28, (float *)&dword_7647B0) )
+  if ( !vectors_are_approximately_equal(v28, (float *)&unset_camera_position_x) )
   {
     sub_40EC72(v21, v3);
     v38 = 0;
@@ -64753,7 +64756,7 @@ char __thiscall sub_40E822(int this, int a2)
     {
       calculate_camera_angle_view_position((float *)(a2 + 24), v22);
       sub_40E7AB(v26, v22);
-      LOBYTE(v4) = sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v26);
+      LOBYTE(v4) = is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v26);
       if ( (_BYTE)v4 )
         return v4;
       if ( v37 == 4 )
@@ -64788,19 +64791,19 @@ LABEL_16:
   return v4;
 }
 // 762E2C: using guessed type int dword_762E2C;
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 765A2C: using guessed type int game_engine_instance_address;
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (0040EAEB) --------------------------------------------------------
 _DWORD *__thiscall sub_40EAEB(_DWORD *this)
 {
-  erase_map_entry_impl(dword_7640F8, dword_7640F4 + (this != 0 ? (unsigned int)(this + 14) : 0));
+  erase_map_entry_impl(camera_angle_type_registry, camera_angle_registry_adjustment + (this != 0 ? (unsigned int)(this + 14) : 0));
   sub_40EB57(this);
   return erase_map_entry_impl(dword_764138, dword_764134 + (this != 0 ? (unsigned int)(this + 6) : 0));
 }
-// 7640F4: using guessed type int dword_7640F4;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F4: using guessed type int camera_angle_registry_adjustment;
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 764134: using guessed type int dword_764134;
 // 764138: using guessed type int dword_764138[15];
 
@@ -64869,19 +64872,19 @@ _DWORD *__thiscall sub_40EC72(_DWORD *this, void *Src)
 {
   find_or_create_registry_entry(dword_764138, (unsigned int)this + dword_764134 + 24);
   memcpy(this + 6, Src, 0x20u);
-  sub_40ECE2(this);
-  find_or_create_registry_entry(dword_7640F8, (unsigned int)this + dword_7640F4 + 56);
-  *this = &off_6A72AC;
+  construct_camera_angle_base(this);
+  find_or_create_registry_entry(camera_angle_type_registry, (unsigned int)this + camera_angle_registry_adjustment + 56);
+  *this = &camera_angle_vtable;
   return this;
 }
-// 6A72AC: using guessed type _UNKNOWN *off_6A72AC;
-// 7640F4: using guessed type int dword_7640F4;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 6A72AC: using guessed type _UNKNOWN *camera_angle_vtable;
+// 7640F4: using guessed type int camera_angle_registry_adjustment;
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 764134: using guessed type int dword_764134;
 // 764138: using guessed type int dword_764138[15];
 
 //----- (0040ECE2) --------------------------------------------------------
-_DWORD *__thiscall sub_40ECE2(_DWORD *this)
+_DWORD *__thiscall construct_camera_angle_base(_DWORD *this)
 {
   sub_40ED25(this);
   find_or_create_registry_entry(dword_766F60, (unsigned int)this + dword_766F5C + 17);
@@ -64962,7 +64965,7 @@ char *__thiscall copy_camera_angle_state(char *this, int a2)
 }
 
 //----- (0040EE23) --------------------------------------------------------
-BOOL __thiscall sub_40EE23(float *this, float *a2)
+BOOL __thiscall vectors_are_approximately_equal(float *this, float *a2)
 {
   return fabs(*this - *a2) < 0.0000009999999974752427
       && fabs(this[1] - a2[1]) < 0.0000009999999974752427
@@ -68034,7 +68037,7 @@ _DWORD *__cdecl sub_411D31(_DWORD *a1, char *a2)
   v18 = 1;
   if ( dword_762ED4 )
   {
-    sub_402BAA(v12, a2, &v17);
+    assign_std_string_storage_from_c_string(v12, a2, &v17);
     LOBYTE(v18) = 2;
     v2 = *sub_415D3F((_DWORD *)dword_762ED4, &v14, (int)v12);
     LOBYTE(v18) = 1;
@@ -68104,7 +68107,7 @@ _DWORD *sub_411EDA()
   _DWORD v1[15]; // [esp+0h] [ebp-48h] BYREF
   int v2; // [esp+44h] [ebp-4h]
 
-  sub_46B4E2(v1, "faces.txt", "faces");
+  construct_registered_config_file(v1, "faces.txt", "faces");
   v2 = 0;
   if ( sub_46B663(v1, 1) )
     sub_41202F(v1);
@@ -70847,7 +70850,7 @@ _DWORD *__thiscall sub_414E0A(_DWORD *this, char *a2)
   char v14; // [esp+3Fh] [ebp-Dh] BYREF
   int v15; // [esp+48h] [ebp-4h]
 
-  sub_402BAA(v12, a2, &v14);
+  assign_std_string_storage_from_c_string(v12, a2, &v14);
   v15 = 0;
   v3 = sub_41540A(this + 43, v12);
   v15 = -1;
@@ -74946,7 +74949,7 @@ _DWORD *__cdecl sub_418281(_DWORD *a1, int i, _DWORD *a3)
   v3 = a3;
   v4 = *(int **)(i + 4);
   for ( i = *v4; (int *)i != v4; sub_40F871(&i) )
-    sub_41838F(v3, (_BYTE *)(i + 12));
+    append_vector_element(v3, (_BYTE *)(i + 12));
   result = a1;
   *a1 = v3;
   return result;
@@ -75027,7 +75030,7 @@ _DWORD *__thiscall sub_418340(_DWORD *this, int a2)
 }
 
 //----- (0041838F) --------------------------------------------------------
-void *__thiscall sub_41838F(_DWORD *this, _BYTE *a2)
+void *__thiscall append_vector_element(_DWORD *this, _BYTE *a2)
 {
   void *result; // eax
   _DWORD v4[2]; // [esp+Ch] [ebp-10h] BYREF
@@ -78224,14 +78227,14 @@ bool __userpurge sub_41B787@<al>(
     v7 = *(const char **)(*(_DWORD *)(*(_DWORD *)(a1 + 176) + 4) + 4);
     if ( !v7 )
       v7 = Key;
-    sub_570B20(game_engine_address, "Actor '%s' could not load ContWalk animation '%s'", v7, a4);
+    report_engine_error(game_engine_address, "Actor '%s' could not load ContWalk animation '%s'", v7, a4);
   }
   if ( !*(_DWORD *)(a1 + 256) )
   {
     v8 = *(const char **)(*(_DWORD *)(*(_DWORD *)(a1 + 176) + 4) + 4);
     if ( !v8 )
       v8 = Key;
-    sub_570B20(game_engine_address, "Actor '%s' could not load StartWalk animation '%s'", v8, a3);
+    report_engine_error(game_engine_address, "Actor '%s' could not load StartWalk animation '%s'", v8, a3);
   }
   sub_420910(a1, a2, *(_WORD **)(a1 + 256), a1 + 184, 1);
   if ( *(_DWORD *)(*(_DWORD *)(a1 + 180) + 24) == 79 )
@@ -78395,7 +78398,7 @@ char __usercall sub_41BA09@<al>(int a1@<ecx>, double a2@<st0>)
     v16 = *(const char **)(*(_DWORD *)(*(_DWORD *)(a1 + 176) + 4) + 4);
     if ( !v16 )
       v16 = Key;
-    sub_570B20(game_engine_address, "Unable to initialize actor %s", v16);
+    report_engine_error(game_engine_address, "Unable to initialize actor %s", v16);
     return 0;
   }
 }
@@ -79308,16 +79311,16 @@ int __thiscall sub_41CB4C(float *this, _WORD *a2, float *a3, float a4)
   sub_57A260(a2, v9, -1);
   if ( a4 == 0.0 )
   {
-    sub_40D73E(v9, a3);
+    add_vector_to_matrix_translation(v9, a3);
   }
   else
   {
     v5 = this + 68;
     v6 = sub_40D711(v5, v10);
-    sub_40D73E(v9, v6);
-    sub_575F80(v9, a4);
+    add_vector_to_matrix_translation(v9, v6);
+    rotate_matrix_about_y(v9, a4);
     v8 = sub_40E7C4(v10, v5, a3);
-    sub_40D73E(v9, v8);
+    add_vector_to_matrix_translation(v9, v8);
   }
   return sub_579FA0(a2, v9, -1);
 }
@@ -80517,7 +80520,7 @@ int __thiscall sub_41DF35(_DWORD *this, float a2)
     v8[1] = a2;
     v8[0] = 0.0;
     v8[2] = 0.0;
-    sub_40D73E(v7, v8);
+    add_vector_to_matrix_translation(v7, v8);
     result = sub_579FA0(v4, v7, -1);
   }
   return result;
@@ -80653,7 +80656,7 @@ int __cdecl sub_41E19C(float *a1)
   v3[0] = 0.0;
   v3[1] = 1.0;
   v3[2] = 0.0;
-  sub_578B90(a1, &v4, v3, 1, 12);
+  transform_vector_array(a1, &v4, v3, 1, 12);
   v4 = v4 - a1[9];
   v5 = v5 - a1[10];
   *(double *)&v1 = v6 - a1[11];
@@ -83861,7 +83864,7 @@ char __thiscall sub_420FE0(int this, int a2, int a3, int a4, int a5, int a6, int
   v10 = a2;
   v43 = 0;
     v11 = get_action_vocabulary_string(*(_DWORD *)(a2 + 24));
-  sub_402BAA(v36, v11, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v36, v11, (_BYTE *)&a2 + 3);
   v12 = v37;
   LOBYTE(v43) = 1;
   if ( !v37 )
@@ -84439,7 +84442,7 @@ int *__thiscall sub_4219FB(int this, int a2, int a3, int a4, int a5, int *a6)
   v7 = a2;
   v34 = 0;
     v8 = get_action_vocabulary_string(*(_DWORD *)(a2 + 24));
-  sub_402BAA(v26, v8, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v26, v8, (_BYTE *)&a2 + 3);
   v9 = v27;
   LOBYTE(v34) = 1;
   if ( !v27 )
@@ -85225,7 +85228,7 @@ bool __thiscall sub_422730(_DWORD *this, float *a2)
   v8[0] = v3;
   v8[2] = v5;
   v8[1] = v4 + v2;
-  sub_578B90(dword_776EB8, v7, v8, 1, 12);
+  transform_vector_array(dword_776EB8, v7, v8, 1, 12);
   return sub_590580(v7, v9);
 }
 // 776EB8: using guessed type float dword_776EB8[12];
@@ -85648,11 +85651,11 @@ void __userpurge sub_422E49(int a1@<ecx>, double a2@<st0>, int a3, int a4, char 
     v8 = *(float *)(a1 + 244);
     qmemcpy(v10, Buf2, sizeof(v10));
     v11[2] = -v8;
-    sub_40D73E(v10, v11);
+    add_vector_to_matrix_translation(v10, v11);
     a2 = *(float *)(a1 + 284) - *(float *)(a1 + 248);
     v9 = a2;
-    sub_575F80(v10, v9);
-    sub_40D73E(v10, (float *)(a1 + 272));
+    rotate_matrix_about_y(v10, v9);
+    add_vector_to_matrix_translation(v10, (float *)(a1 + 272));
     *(_DWORD *)(a1 + 328) = sub_593120((int)v12, a4, 4, v10, 0);
     *(_BYTE *)(a1 + 332) = 1;
     if ( v13 )
@@ -95199,7 +95202,7 @@ unsigned int *__thiscall construct_engine_shutdown_timer(
   }
   else
   {
-    v11 = sub_4A51EC(v13, name);
+    v11 = resolve_file_path(v13, name);
     LOBYTE(v17) = 6;
     assign_std_string_storage(v7, v11);
   }
@@ -99361,7 +99364,7 @@ char __thiscall sub_4314FB(int this, _BYTE *a2, int a3)
     this + 400,
     dword_763A68);
   serialize_boolean_field(a2, "mbCheckNear", (char *)(this + 404), &byte_6A6454);
-  sub_4053DF(a2, "mNearNounTwo", (int *)(this + 408), &dword_6A6460);
+  serialize_noun_field(a2, "mNearNounTwo", (int *)(this + 408), &default_noun_id);
   sub_436DBC(a2, (int)"mNotNearMap", (_DWORD *)(this + 412), 1);
   (*(void (__thiscall **)(_BYTE *, const char *, int, _DWORD *))(*(_DWORD *)a2 + 68))(
     a2,
@@ -99369,7 +99372,7 @@ char __thiscall sub_4314FB(int this, _BYTE *a2, int a3)
     this + 428,
     dword_763A68);
   serialize_boolean_field(a2, "mbCheckNotNear", (char *)(this + 432), &byte_6A6454);
-  sub_4053DF(a2, "mNotNearNounTwo", (int *)(this + 436), &dword_6A6460);
+  serialize_noun_field(a2, "mNotNearNounTwo", (int *)(this + 436), &default_noun_id);
   sub_436DBC(a2, (int)"mViewMap", (_DWORD *)(this + 440), 1);
   (*(void (__thiscall **)(_BYTE *, const char *, int, _DWORD *))(*(_DWORD *)a2 + 68))(
     a2,
@@ -99380,7 +99383,7 @@ char __thiscall sub_4314FB(int this, _BYTE *a2, int a3)
   return sub_40AEFE(a2, "mViewDistance", (float *)(this + 464), (float *)&dword_6A6E7C);
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A6E7C: using guessed type int dword_6A6E7C;
 // 6A6E80: using guessed type int dword_6A6E80;
 // 762E38: using guessed type _DWORD dword_762E38[15];
@@ -102966,7 +102969,7 @@ int __userpurge sub_435553@<eax>(int *a1@<ecx>, double a2@<st0>, int a3, char *a
   char v65; // [esp+57h] [ebp-Dh]
   int v66; // [esp+60h] [ebp-4h]
 
-  sub_40442F(v55, &v64);
+  initialize_std_string_storage(v55, &v64);
   v66 = 0;
   v63 = 2;
   v65 = 0;
@@ -103148,7 +103151,7 @@ LABEL_71:
         v57[0] = 0.0;
         v57[1] = 0.0;
         v57[2] = 0.0;
-        if ( !sub_40EE23((float *)v5, v57) )
+        if ( !vectors_are_approximately_equal((float *)v5, v57) )
         {
           v54 = 1;
           v53 = 0;
@@ -104515,10 +104518,10 @@ char __thiscall sub_436DBC(_BYTE *this, int i, _DWORD *a3, int j)
       v41 = 0;
     v9 = *sub_43608C((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v37, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&a3 + 3);
     v39 = 0;
     LOBYTE(v42) = 2;
-    sub_40442F(v38, (_BYTE *)&j + 3);
+    initialize_std_string_storage(v38, (_BYTE *)&j + 3);
     LOBYTE(v42) = 3;
     for ( i = v9; i != v10; ++v39 )
     {
@@ -104766,10 +104769,10 @@ char __thiscall sub_437222(_BYTE *this, int i, _DWORD *a3, int a4)
       v44 = 0;
     v11 = *sub_43763B((_DWORD **)v7, &a3);
     v12 = v7[1];
-    sub_40442F(v40, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v40, (_BYTE *)&a3 + 3);
     v42 = 0;
     LOBYTE(v45) = 2;
-    sub_40442F(v41, (_BYTE *)&a4 + 3);
+    initialize_std_string_storage(v41, (_BYTE *)&a4 + 3);
     LOBYTE(v45) = 3;
     for ( i = v11; i != v12; ++v42 )
     {
@@ -106279,7 +106282,7 @@ int __thiscall sub_438D1F(_DWORD *this, _DWORD *a2, int a3)
         v7 = strlen(v6);
         std::string::assign(v6, v7);
         v10 = 0;
-        sub_41838F(a2, v8);
+        append_vector_element(a2, v8);
         v10 = -1;
         result = std::string::_Tidy(1);
       }
@@ -106368,7 +106371,7 @@ int __thiscall sub_438E31(_DWORD *this, _DWORD *a2, int a3)
         v7 = strlen(v6);
         std::string::assign(v6, v7);
         v10 = 0;
-        sub_41838F(a2, v8);
+        append_vector_element(a2, v8);
         v10 = -1;
         result = std::string::_Tidy(1);
       }
@@ -106888,7 +106891,7 @@ int __thiscall sub_439610(_DWORD *this)
     v3 = this[8];
     if ( !v3 )
     {
-      sub_4A39C1(2, 1);
+      record_file_system_activity(2, 1);
       v3 = this[7];
     }
     return v3 + this[2];
@@ -106908,7 +106911,7 @@ int __thiscall sub_439643(_DWORD *this)
     v3 = this[8];
     if ( !v3 )
     {
-      sub_4A39C1(2, 1);
+      record_file_system_activity(2, 1);
       v3 = this[7];
     }
     return v3 + this[2];
@@ -107093,7 +107096,7 @@ void __thiscall sub_439949(HANDLE *this)
   v3 = this + 19;
   *v3 = &off_6AB500;
   if ( !v2 )
-    sub_4A43D6(v3);
+    close_tracked_file(v3);
   std::string::_Tidy(1);
   std::string::_Tidy(1);
   sub_4396FC((int)this);
@@ -107109,7 +107112,7 @@ char __thiscall sub_4399D7(char *this)
 
   v1 = (HANDLE *)(this + 76);
   if ( v1[1] != (HANDLE)-1 )
-    sub_4A43D6(v1);
+    close_tracked_file(v1);
   return 1;
 }
 
@@ -107152,19 +107155,19 @@ bool __thiscall sub_439A04(int this, DWORD *a2, _DWORD *a3)
   if ( v21 )
   {
     *(_BYTE *)(this + 40) = 1;
-    sub_439D31(v16);
+    construct_file_path_context(v16);
     LOBYTE(v26) = 3;
-    sub_439CF1(v17);
+    initialize_file_path_context_strings(v17);
     LOBYTE(v26) = 4;
-    v16[0] = (unsigned __int8 (__thiscall **)(void *))&off_6AB594;
-    sub_4A7263(v16, v20);
+    v16[0] = (unsigned __int8 (__thiscall **)(void *))&file_path_context_vtable;
+    set_file_path_context_path(v16, v20);
     LOBYTE(v26) = 5;
     v5 = sub_439E1E(v16, v23, 0);
     LOBYTE(v26) = 6;
     assign_std_string_storage((void *)(this + 44), v5);
     LOBYTE(v26) = 5;
     std::string::_Tidy(1);
-    v6 = sub_439E38(v16, v23);
+    v6 = get_file_path_context_resolved_path(v16, v23);
     LOBYTE(v26) = 7;
     assign_std_string_storage((void *)(this + 60), v6);
     LOBYTE(v26) = 5;
@@ -107192,7 +107195,7 @@ LABEL_8:
     v26 = 9;
     if ( !v7 )
       v7 = (CHAR *)Key;
-    v8 = sub_4A437B((_DWORD *)(this + 76), v7, 0x80000000, 1u, 3u, v24);
+    v8 = open_tracked_file((_DWORD *)(this + 76), v7, 0x80000000, 1u, 3u, v24);
     v26 = -1;
     v25 = v8;
     std::string::_Tidy(1);
@@ -107202,7 +107205,7 @@ LABEL_8:
       v25 = sub_4A4407(a3, *(HANDLE *)(this + 80), 2u, 0, 0);
       if ( !v25 )
       {
-        sub_4A43D6((HANDLE *)(this + 76));
+        close_tracked_file((HANDLE *)(this + 76));
         v9 = (const char *)*((_DWORD *)sub_4A5BD9(v22, 0) + 1);
         v26 = 10;
         v10 = Key;
@@ -107254,11 +107257,11 @@ LABEL_8:
   return v25;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6AB594: using guessed type _UNKNOWN *off_6AB594;
+// 6AB594: using guessed type _UNKNOWN *file_path_context_vtable;
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (00439CF1) --------------------------------------------------------
-_BYTE *__thiscall sub_439CF1(_BYTE *this)
+_BYTE *__thiscall initialize_file_path_context_strings(_BYTE *this)
 {
   char v3; // [esp+Bh] [ebp-Dh]
 
@@ -107272,7 +107275,7 @@ _BYTE *__thiscall sub_439CF1(_BYTE *this)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (00439D31) --------------------------------------------------------
-_BYTE *__thiscall sub_439D31(_BYTE *this)
+_BYTE *__thiscall construct_file_path_context(_BYTE *this)
 {
   _DWORD *v2; // eax
   char v4; // [esp+Fh] [ebp-Dh]
@@ -107322,7 +107325,7 @@ _BYTE *__thiscall sub_439E1E(unsigned __int8 (__thiscall ***this)(void *), _BYTE
 }
 
 //----- (00439E38) --------------------------------------------------------
-_BYTE *__thiscall sub_439E38(_DWORD *this, _BYTE *a2)
+_BYTE *__thiscall get_file_path_context_resolved_path(_DWORD *this, _BYTE *a2)
 {
   sub_4A6C81(this + 17, a2);
   return a2;
@@ -107390,7 +107393,7 @@ _BYTE *__cdecl sub_439F1E(_BYTE *a1, char *a2, int a3)
 // 441039: using guessed type _DWORD __stdcall std::string::append(size_t Size, _DWORD);
 
 //----- (00439FA8) --------------------------------------------------------
-int __thiscall sub_439FA8(_DWORD *this)
+int __thiscall destroy_file_path_context(_DWORD *this)
 {
   sub_439E88();
   sub_441097(this + 14);
@@ -107763,7 +107766,7 @@ bool __thiscall sub_43A588(int this, DWORD *a2, HANDLE *a3)
   if ( a3[1] )
     sub_4A445B(a3);
   if ( *(_DWORD *)(this + 80) != -1 )
-    sub_4A43D6((HANDLE *)(this + 76));
+    close_tracked_file((HANDLE *)(this + 76));
   return 0;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
@@ -107790,7 +107793,7 @@ char __thiscall sub_43A6B2(int this)
   std::string::_Tidy(1);
   sub_43B223((_DWORD *)this);
   if ( *(_DWORD *)(this + 80) != -1 )
-    sub_4A43D6((HANDLE *)(this + 76));
+    close_tracked_file((HANDLE *)(this + 76));
   return 1;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
@@ -107973,7 +107976,7 @@ LABEL_23:
     v52[0] = 272;
     v10 = (void *)(*(int (__thiscall **)(int))(v9 + 36))(this);
   }
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   if ( !sub_438C18(v59, &v62, &v63) )
   {
     v14 = (const char *)*((_DWORD *)sub_439EC1((char *)this, v55) + 1);
@@ -109478,7 +109481,7 @@ int __thiscall sub_43C0ED(int this, int a2)
       memcpy((void *)(*(_DWORD *)(this + 12) + v6), v8, v5);
       *(_DWORD *)(this + 12) += v5;
       v4 -= v5;
-      sub_4A39C1(0, v5);
+      record_file_system_activity(0, v5);
     }
     while ( *(_DWORD *)(this + 12) < a2 );
   }
@@ -109606,7 +109609,7 @@ int __thiscall sub_43C2BB(_DWORD *this, int a2)
     }
     this[5] += v9;
     v6 -= v9;
-    sub_4A39C1(0, v9);
+    record_file_system_activity(0, v9);
     if ( !v6 && v21 != 1 )
     {
       v19 = off_751978[0];
@@ -109649,9 +109652,9 @@ char *__thiscall sub_43C440(char *this, int a2, _DWORD *a3)
   v18 = 0;
   *(_DWORD *)this = &off_6AB374;
   LOBYTE(v18) = 2;
-  sub_40442F(this + 8, &v17);
+  initialize_std_string_storage(this + 8, &v17);
   LOBYTE(v18) = 3;
-  sub_40442F(this + 32, &v16);
+  initialize_std_string_storage(this + 32, &v16);
   LOBYTE(v18) = 4;
   sub_442076((_DWORD *)this + 13, (_DWORD **)&a2);
   v4 = this + 56;
@@ -110355,9 +110358,9 @@ _BYTE *__cdecl sub_43D04F(_BYTE *a1, _DWORD *a2, int a3, int a4)
   char v22; // [esp+A3h] [ebp+13h]
 
   v18 = 0;
-  sub_40442F(v14, &v20);
+  initialize_std_string_storage(v14, &v20);
   v21 = 1;
-  sub_40442F(v15, &v19);
+  initialize_std_string_storage(v15, &v19);
   LOBYTE(v21) = 2;
   v4 = *(char **)(a3 + 4);
   if ( !v4 )
@@ -110601,7 +110604,7 @@ int __thiscall sub_43D4DA(_DWORD *this, _BYTE *a2, int *a3, int a4)
 
   sub_43D574(v8, a2);
   v11 = 0;
-  v5 = sub_439E38(v8, v10);
+  v5 = get_file_path_context_resolved_path(v8, v10);
   LOBYTE(v11) = 1;
   v6 = sub_439E1E(v8, v9, 0);
   LOBYTE(v11) = 2;
@@ -110611,20 +110614,20 @@ int __thiscall sub_43D4DA(_DWORD *this, _BYTE *a2, int *a3, int a4)
   LOBYTE(v11) = 0;
   std::string::_Tidy(1);
   v11 = -1;
-  return sub_439FA8(v8);
+  return destroy_file_path_context(v8);
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (0043D574) --------------------------------------------------------
 _BYTE *__thiscall sub_43D574(_BYTE *this, _BYTE *a2)
 {
-  sub_439D31(this);
-  sub_439CF1(this + 68);
-  *(_DWORD *)this = &off_6AB594;
-  sub_4A7263(this, a2);
+  construct_file_path_context(this);
+  initialize_file_path_context_strings(this + 68);
+  *(_DWORD *)this = &file_path_context_vtable;
+  set_file_path_context_path(this, a2);
   return this;
 }
-// 6AB594: using guessed type _UNKNOWN *off_6AB594;
+// 6AB594: using guessed type _UNKNOWN *file_path_context_vtable;
 
 //----- (0043D5BB) --------------------------------------------------------
 void __thiscall sub_43D5BB(_DWORD *this, int a2, _DWORD *a3)
@@ -111921,7 +111924,7 @@ char __thiscall sub_43EB2D(int this, char *Str, int a3, int a4, int a5, int a6, 
     v8 = strcspn(Str, "/\\:");
     if ( !Str[v8] )
     {
-      sub_402BAA(v21, Str, (_BYTE *)&Str + 3);
+      assign_std_string_storage_from_c_string(v21, Str, (_BYTE *)&Str + 3);
       v22 = 0;
       sub_595430((int)v21);
       v9 = *(_DWORD *)(this + 12);
@@ -112199,15 +112202,15 @@ LABEL_45:
     std::string::_Tidy(1);
   }
   v61 = 0;
-  sub_40442F(v53, (_BYTE *)&a2 + 3);
+  initialize_std_string_storage(v53, (_BYTE *)&a2 + 3);
   v10 = *v5;
   v68 = 1;
   v63 = sub_43C856(*(int **)(v10 + 4), a3, (int)v53);
   if ( v63 )
   {
-    sub_40442F(v55, &v67);
+    initialize_std_string_storage(v55, &v67);
     LOBYTE(v68) = 2;
-    sub_402BAA(v56, (char *)(v63 + 15), &v66);
+    assign_std_string_storage_from_c_string(v56, (char *)(v63 + 15), &v66);
     LOBYTE(v68) = 3;
     if ( v54 )
     {
@@ -112245,7 +112248,7 @@ LABEL_45:
     }
     v64 = 0;
     LOBYTE(v68) = 6;
-    sub_402BAA(v51, "<Unknown>", &v65);
+    assign_std_string_storage_from_c_string(v51, "<Unknown>", &v65);
     LOBYTE(v68) = 7;
     if ( *(_BYTE *)(v63 + 12) )
     {
@@ -112509,7 +112512,7 @@ _BYTE *__cdecl sub_43F4CF(_BYTE *a1, int a2)
   v9 = 0;
   v2 = (_BYTE *)format_integer_string((int)v6, a2);
   v10 = 1;
-  v3 = sub_407455(v7, "Disc ", v2);
+  v3 = combine_text_prefix_and_string_storage(v7, "Disc ", v2);
   LOBYTE(v10) = 2;
   v4 = (char *)*((_DWORD *)append_string_suffix(v8, v3, " Description") + 1);
   LOBYTE(v10) = 3;
@@ -112972,7 +112975,7 @@ void __thiscall sub_43FAA3(int this, int a2, int a3)
       0,
       "Disconnecting all barns...\n",
       0xFFFFFFFF);
-    sub_402BAA(&v13, (char *)Str1, &v23);
+    assign_std_string_storage_from_c_string(&v13, (char *)Str1, &v23);
     LOBYTE(v24) = 5;
     sub_43F935((_DWORD *)this, (int)&v13, a2, a3);
     LOBYTE(v24) = 4;
@@ -113058,9 +113061,9 @@ void __thiscall search_for_new_barn_files(_DWORD *this)
   }
   LOBYTE(v25) = 0;
   destroy_string_vector(&v17);
-  sub_40442F(v14, &v24);
+  initialize_std_string_storage(v14, &v24);
   LOBYTE(v25) = 3;
-  sub_40442F(v12, &v22);
+  initialize_std_string_storage(v12, &v22);
   v9[83] = &v15;
   LOBYTE(v25) = 5;
   v21 = v16;
@@ -122649,23 +122652,23 @@ int __thiscall sub_447246(int this, int a2)
   (*(void (__thiscall **)(int, int *, int))(v7 + 196))(this + 304, &v13, v6);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 304) + 176))(this + 304, 1);
   sub_44F8C2((_DWORD *)(this + 376), (int)&unk_6AC1A0, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 376, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 376, 1);
   sub_44F8C2((_DWORD *)(this + 532), (int)&unk_6AC1D0, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 532, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 532, 1);
   sub_44F8C2((_DWORD *)(this + 688), (int)&unk_6AC200, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 688, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 688, 1);
   sub_44F8C2((_DWORD *)(this + 844), (int)&unk_6AC230, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 844, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 844, 1);
   sub_44F8C2((_DWORD *)(this + 1000), (int)&unk_6AC260, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 1000, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1000, 1);
   sub_44F8C2((_DWORD *)(this + 1156), (int)&unk_6AC290, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 1156, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1156, 1);
   sub_44F8C2((_DWORD *)(this + 1312), (int)&unk_6AC2C0, this != 0 ? this + 220 : 0);
-  sub_5067E5((_BYTE *)this, this + 1312, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1312, 1);
   sub_449715((_DWORD *)this);
   sub_44954F((_DWORD *)this);
-  sub_5067E5((_BYTE *)this, this + 304, 0);
-  sub_5067E5((_BYTE *)this, this + 232, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 304, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 232, 0);
   v8 = sub_447DAB();
   attach_control_to_service(this, v8, 0);
   v13 = *(_DWORD *)screen_width_address;
@@ -122685,7 +122688,7 @@ int __thiscall sub_447246(int this, int a2)
   }
   LOBYTE(v16) = 19;
   *(_DWORD *)(this + 1476) = v10;
-  sub_5067E5((_BYTE *)this, (int)v10, 1);
+  insert_control_into_control_container((_BYTE *)this, (int)v10, 1);
   (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 1476) + 176))(*(_DWORD *)(this + 1476), 1);
   assign_std_string_storage((void *)(this + 1696), (_BYTE *)(*(_DWORD *)(active_scene_controller_address + 84) + 4));
   *(_BYTE *)(this + 1480) = 0;
@@ -122720,7 +122723,7 @@ int __thiscall sub_447246(int this, int a2)
 /* Extracted to gk3/camera_angle_manager.c as construct_camera_angle. */
 
 //----- (00447754) --------------------------------------------------------
-void *__thiscall sub_447754(void *this)
+void *__thiscall construct_camera_angle_state_data(void *this)
 {
   void *result; // eax
 
@@ -122833,19 +122836,19 @@ _DWORD *__fastcall sub_4478C0(_DWORD *a1)
 //----- (0044794A) --------------------------------------------------------
 int __thiscall sub_44794A(int *this, int a2)
 {
-  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
 }
 
 //----- (0044795F) --------------------------------------------------------
 int __thiscall sub_44795F(int *this, int a2)
 {
-  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D92C, 0);
+  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_2_press, 0);
 }
 
 //----- (00447974) --------------------------------------------------------
 int __thiscall sub_447974(int *this, int a2)
 {
-  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D93B, 0);
+  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_3_press, 0);
 }
 
 //----- (00447989) --------------------------------------------------------
@@ -122881,7 +122884,7 @@ int __thiscall sub_4479DD(int *this)
 //----- (004479EC) --------------------------------------------------------
 int __thiscall sub_4479EC(int *this, int a2, int a3)
 {
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 
 //----- (00447A05) --------------------------------------------------------
@@ -122893,7 +122896,7 @@ int __thiscall sub_447A05(int *this, int a2, int a3)
 //----- (00447A1E) --------------------------------------------------------
 int __thiscall sub_447A1E(int *this, int a2, int a3)
 {
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D936, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_key_release, 0);
 }
 
 //----- (00447A37) --------------------------------------------------------
@@ -123145,9 +123148,9 @@ char __thiscall sub_447F8F(int this, _BYTE *a2, int a3)
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763C68[0]);
-  sub_4481E7(a2, this, dword_763C68, this + 1568, dword_7640F8);
+  sub_4481E7(a2, this, dword_763C68, this + 1568, camera_angle_type_registry);
   sub_40AEFE(a2, "mCurCamVert", (float *)(this + 1624), (float *)&dword_6A6E7C);
   sub_40AEFE(a2, "mCurCamHoriz", (float *)(this + 1628), (float *)&dword_6A6E7C);
   sub_40FA05((int)a2, (int)"mInitZoomCamVert", this + 1632);
@@ -123169,7 +123172,7 @@ char __thiscall sub_447F8F(int this, _BYTE *a2, int a3)
 // 763C28: using guessed type int dword_763C28[15];
 // 763C68: using guessed type int dword_763C68[15];
 // 763DD8: using guessed type int dword_763DD8[15];
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 7648F0: using guessed type int sprite_control_type_descriptor[15];
 // 764A10: using guessed type _DWORD dword_764A10[15];
 // 76D514: using guessed type int mini_console_integer_default;
@@ -123366,11 +123369,11 @@ int __thiscall sub_4484AE(char *this)
   int v71; // [esp+1F8h] [ebp-4h]
 
   v65 = this;
-  sub_40442F(v50, &v62);
+  initialize_std_string_storage(v50, &v62);
   v71 = 0;
-  sub_40442F(v51, &v64);
+  initialize_std_string_storage(v51, &v64);
   LOBYTE(v71) = 1;
-  sub_40442F(v52, &v63);
+  initialize_std_string_storage(v52, &v63);
   LOBYTE(v71) = 2;
   v1 = (char *)sub_557B2B(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 16));
   v2 = strlen(v1);
@@ -123383,7 +123386,7 @@ int __thiscall sub_4484AE(char *this)
   assign_std_string_storage(v52, v5);
   LOBYTE(v71) = 2;
   std::string::_Tidy(1);
-  sub_402BAA(v48, "binocs", &v70);
+  assign_std_string_storage_from_c_string(v48, "binocs", &v70);
   LOBYTE(v71) = 4;
   append_string_suffix(v44, v48, ".txt");
   v6 = v49;
@@ -123394,7 +123397,7 @@ int __thiscall sub_4484AE(char *this)
   v8 = v45;
   if ( !v45 )
     v8 = (char *)Key;
-  sub_46B4E2(v43, v8, v6);
+  construct_registered_config_file(v43, v8, v6);
   LOBYTE(v71) = 6;
   if ( sub_46B663(v43, 1) )
   {
@@ -123418,7 +123421,7 @@ int __thiscall sub_4484AE(char *this)
     {
       do
       {
-        sub_402BAA(&v67, v11, &v69);
+        assign_std_string_storage_from_c_string(&v67, v11, &v69);
         LOBYTE(v71) = 9;
         sub_44A64B(&v58, v60, &v67);
         LOBYTE(v71) = 8;
@@ -123426,9 +123429,9 @@ int __thiscall sub_4484AE(char *this)
         v11 = strtok(0, ",");
       }
       while ( v11 );
-      sub_40442F(v54, &v69);
+      initialize_std_string_storage(v54, &v69);
       LOBYTE(v71) = 10;
-      sub_40442F(v46, &v66);
+      initialize_std_string_storage(v46, &v66);
       LOBYTE(v71) = 11;
       v68 = v59;
       if ( v59 < v60 )
@@ -123466,7 +123469,7 @@ int __thiscall sub_4484AE(char *this)
             set_registry_object_flags(dword_764138, (unsigned int)v15, 1);
             v40 = v15;
             LOBYTE(v71) = 13;
-            v16 = v15 ? (float *)sub_447754(v15) : 0;
+            v16 = v15 ? (float *)construct_camera_angle_state_data(v15) : 0;
             v17 = v56 * 0.017453292;
             v13[1].left = (LONG)v16;
             *v16 = v17;
@@ -123662,7 +123665,7 @@ int __thiscall sub_448B30(int this)
   *(_DWORD *)(this + 1560) = 1057360530;
   (*(void (__thiscall **)(int))(*(_DWORD *)(this + 1512) + 24))(this + 1512);
   sub_4CAF21();
-  sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
+  cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
   assign_std_string_storage((void *)(this + 1712), v2 + 36);
   v7 = *(char **)(this + 1716);
   if ( !v7 )
@@ -123847,7 +123850,7 @@ int __thiscall sub_448F6C(int this)
     }
   }
   copy_camera_angle_state((char *)(this + 1512), this + 1568);
-  sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
+  cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
   *(float *)(this + 1624) = *(float *)(this + 1540);
   *(float *)(this + 1628) = *(float *)(this + 1536);
   v3 = *(char **)(this + 1700);
@@ -124062,7 +124065,7 @@ int __thiscall sub_4491A7(int this)
   *v15 = v19;
   *(float *)(this + 1540) = *v15;
   (*(void (__thiscall **)(int))(*(_DWORD *)(this + 1512) + 24))(this + 1512);
-  sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
+  cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 1512, 0, 1);
   if ( !*(_BYTE *)(this + 1480) )
   {
     v21 = *v15 * 57.295776;
@@ -124345,7 +124348,7 @@ _DWORD *sub_44995A()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_449990(460);
+  v0 = allocate_registered_binocs_layer(460);
   result = 0;
   if ( v0 )
     return sub_449CDF(v0, 0);
@@ -124353,7 +124356,7 @@ _DWORD *sub_44995A()
 }
 
 //----- (00449990) --------------------------------------------------------
-_DWORD *__cdecl sub_449990(int a1)
+_DWORD *__cdecl allocate_registered_binocs_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -124424,7 +124427,7 @@ void sub_449A3A()
 // 763C24: using guessed type int dword_763C24;
 
 //----- (00449A45) --------------------------------------------------------
-_DWORD *__thiscall sub_449A45(_DWORD *this)
+_DWORD *__thiscall construct_binocs_layer(_DWORD *this)
 {
   char v3; // [esp+Bh] [ebp-Dh] BYREF
   int v4; // [esp+14h] [ebp-4h]
@@ -124541,7 +124544,7 @@ int __thiscall sub_449D62(int *this, _BYTE *a2, int a3)
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763C28[0]);
   (*(void (__thiscall **)(_BYTE *, const char *, int *, int *))(*(_DWORD *)a2 + 68))(
     a2,
@@ -124557,7 +124560,7 @@ int __thiscall sub_449D62(int *this, _BYTE *a2, int a3)
 }
 // 763C28: using guessed type int dword_763C28[15];
 // 763C68: using guessed type int dword_763C68[15];
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 765F08: using guessed type int generic_waiter_type_descriptor[15];
 
 //----- (00449DCF) --------------------------------------------------------
@@ -124650,7 +124653,7 @@ void *__thiscall sub_449F22(int this, int a2)
       set_camera_angle_target_position((float *)(this + 348), v13);
       (*(void (__thiscall **)(int))(*(_DWORD *)(this + 324) + 24))(this + 324);
       sub_454218(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), 0);
-      sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 324, 0, 1);
+      cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 324, 0, 1);
       v4 = sub_447187(1728);
       v15 = 0;
       if ( v4 )
@@ -124660,7 +124663,7 @@ void *__thiscall sub_449F22(int this, int a2)
       v15 = -1;
       *(_DWORD *)(this + 380) = v5;
       push_camera_controller(*(int **)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v5, 0);
-      sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 380), 1);
+      insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 380), 1);
       return (void *)(*(int (__thiscall **)(int, int))(*(_DWORD *)this + 176))(this, 1);
     }
     else if ( a2 == 1038 )
@@ -124676,7 +124679,7 @@ void *__thiscall sub_449F22(int this, int a2)
       v11[1] = *(float *)&v12[1] - 10000.0;
       set_camera_angle_target_position((float *)(this + 348), v11);
       (*(void (__thiscall **)(int))(*(_DWORD *)(this + 324) + 24))(this + 324);
-      sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 324, 0, 1);
+      cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), this + 324, 0, 1);
       sub_454218(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), 1);
       v7 = *(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 40);
       v8 = get_top_camera_controller(v7);
@@ -126608,10 +126611,10 @@ char __thiscall sub_44BADC(_BYTE *this, int i, _DWORD *a3, int a4)
       v41 = 0;
     v11 = *sub_44BED8((_DWORD **)v7, &a3);
     v12 = v7[1];
-    sub_40442F(v37, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&a3 + 3);
     v39 = 0;
     LOBYTE(v42) = 2;
-    sub_40442F(v38, (_BYTE *)&a4 + 3);
+    initialize_std_string_storage(v38, (_BYTE *)&a4 + 3);
     LOBYTE(v42) = 3;
     for ( i = v11; i != v12; ++v39 )
     {
@@ -126729,10 +126732,10 @@ char __thiscall sub_44BEE6(_BYTE *this, int i, int a3, int a4)
       v43 = 0;
     v9 = *(_DWORD *)sub_44C2FB(&a3);
     v10 = *(_DWORD *)(v5 + 4);
-    sub_40442F((char *)&a3 + 3);
+    initialize_std_string_storage((char *)&a3 + 3);
     v42 = 0;
     LOBYTE(v44) = 2;
-    sub_40442F((char *)&a4 + 3);
+    initialize_std_string_storage((char *)&a4 + 3);
     LOBYTE(v44) = 3;
     for ( i = v9; i != v10; ++v42 )
     {
@@ -126847,7 +126850,7 @@ char __thiscall sub_44BEE6(_BYTE *this, int i, int a3, int a4)
 // 401C18: using guessed type _DWORD __stdcall assign_std_string_storage(_DWORD);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 404349: using guessed type _DWORD __cdecl append_string_storage(_DWORD, _DWORD, _DWORD);
-// 40442F: using guessed type _DWORD __stdcall sub_40442F(_DWORD);
+// 40442F: using guessed type _DWORD __stdcall initialize_std_string_storage(_DWORD);
 // 404836: using guessed type _DWORD __cdecl serialize_array_count_field(_DWORD, _DWORD, _DWORD, _DWORD);
 // 425338: using guessed type int __thiscall sub_425338(_DWORD);
 // 449902: using guessed type _DWORD __stdcall sub_449902(_DWORD, _DWORD);
@@ -128514,13 +128517,13 @@ int __thiscall sub_44D915(void *this)
 }
 
 //----- (0044D91D) --------------------------------------------------------
-int __thiscall sub_44D91D(void *this)
+int __thiscall interface_target_handle_input_event(void *this)
 {
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 100))(this);
 }
 
 //----- (0044D922) --------------------------------------------------------
-int __thiscall sub_44D922(void *this)
+int __thiscall interface_target_pointer_button_1_press(void *this)
 {
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 68))(this);
 }
@@ -128532,7 +128535,7 @@ int __thiscall sub_44D927(void *this)
 }
 
 //----- (0044D92C) --------------------------------------------------------
-int __thiscall sub_44D92C(void *this)
+int __thiscall interface_target_pointer_button_2_press(void *this)
 {
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 72))(this);
 }
@@ -128544,13 +128547,13 @@ int __thiscall sub_44D931(void *this)
 }
 
 //----- (0044D936) --------------------------------------------------------
-int __thiscall sub_44D936(void *this)
+int __thiscall interface_target_key_release(void *this)
 {
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 108))(this);
 }
 
 //----- (0044D93B) --------------------------------------------------------
-int __thiscall sub_44D93B(void *this)
+int __thiscall interface_target_pointer_button_3_press(void *this)
 {
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 76))(this);
 }
@@ -128844,7 +128847,7 @@ char __thiscall sub_44DD20(int this, _BYTE *a2, int a3)
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763CC8[0]);
   deserialize_event_target((int *)(this + 408), a2, (int)"mExternalNotify");
   sub_44F185(a2, "bridgeBlocks", this + 416, 1);
@@ -128866,7 +128869,7 @@ char __thiscall sub_44DD20(int this, _BYTE *a2, int a3)
 // 6A6E88: using guessed type int serialized_value_default;
 // 763CC8: using guessed type int dword_763CC8[15];
 // 764058: using guessed type _DWORD dword_764058[15];
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 
 //----- (0044DE95) --------------------------------------------------------
 int __thiscall sub_44DE95(int this)
@@ -130556,7 +130559,7 @@ int __thiscall sub_44FAD4(int this, char a2)
     goto LABEL_8;
   *(_DWORD *)(this + 152) = 2;
   sub_450094((_DWORD *)this);
-  sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+  process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
   if ( *(_BYTE *)(this + 100) )
   {
     v3 = 0;
@@ -130569,7 +130572,7 @@ int __thiscall sub_44FAD4(int this, char a2)
   }
   Sleep(0x46u);
   sub_4500FB((_DWORD *)this);
-  sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+  process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
   Sleep(0x32u);
   if ( v5 )
 LABEL_8:
@@ -131975,27 +131978,27 @@ char __thiscall sub_451357(int this, _BYTE *a2, int a3)
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763F90[0]);
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763F90[0]);
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763F90[0]);
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763F90[0]);
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_763F90[0]);
   deserialize_event_target((int *)(this + 504), a2, (int)"mNotify");
   serialize_boolean_field(a2, "mDone", (char *)(this + 512), &byte_6A6454);
@@ -132005,7 +132008,7 @@ char __thiscall sub_451357(int this, _BYTE *a2, int a3)
 // 6A6454: using guessed type char byte_6A6454;
 // 6A6E7C: using guessed type int dword_6A6E7C;
 // 763F90: using guessed type int dword_763F90[15];
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 
 //----- (00451426) --------------------------------------------------------
 _DWORD *__thiscall sub_451426(_DWORD *this)
@@ -132196,7 +132199,7 @@ void __thiscall sub_45165A(float *this)
         0,
         "Camera glide is stuck... using CutTo()",
         0xFFFFFFFF);
-      sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)(this + 70), 0, 1);
+      cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)(this + 70), 0, 1);
       *(_BYTE *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40) + 534) = 1;
     }
 LABEL_6:
@@ -132230,7 +132233,7 @@ int __thiscall sub_4517C7(int this, int a2)
 //----- (00451901) --------------------------------------------------------
 int __thiscall sub_451901(void *this)
 {
-  sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)this + 280, 0, 1);
+  cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)this + 280, 0, 1);
   return (*(int (__thiscall **)(void *))(*(_DWORD *)this + 232))(this);
 }
 // 765A2C: using guessed type int game_engine_instance_address;
@@ -133496,15 +133499,15 @@ char __thiscall sub_453138(int this, _DWORD *a2, int a3)
   serialize_boolean_field(v4, "mUseBoundaries", (char *)(this + 181), &byte_6A6454);
   sub_564410(v4, "mExtraBoundaryModels", this + 208);
   sub_4564D4(v4, "mExtraIsStatics", this + 232, 1);
-  sub_4481E7(v4, this, dword_763FD8, this + 280, dword_7640F8);
-  sub_4481E7(v4, this, dword_763FD8, this + 336, dword_7640F8);
-  sub_4481E7(v4, this, dword_763FD8, this + 392, dword_7640F8);
-  sub_4481E7(v4, this, dword_763FD8, this + 448, dword_7640F8);
+  sub_4481E7(v4, this, dword_763FD8, this + 280, camera_angle_type_registry);
+  sub_4481E7(v4, this, dword_763FD8, this + 336, camera_angle_type_registry);
+  sub_4481E7(v4, this, dword_763FD8, this + 392, camera_angle_type_registry);
+  sub_4481E7(v4, this, dword_763FD8, this + 448, camera_angle_type_registry);
   (*(void (__thiscall **)(_BYTE *, const char *, int, int *))(*(_DWORD *)v4 + 68))(
     v4,
     "mDefaultDialogueAngle",
     this + 504,
-    dword_7640F8);
+    camera_angle_type_registry);
   sub_40AEFE(v4, "mFront", (float *)(this + 508), (float *)&dword_6A6E7C);
   sub_40AEFE(v4, "mBack", (float *)(this + 512), (float *)&dword_6A6E7C);
   sub_438963(v4, "mViewRect", (int *)(this + 516), (int *)dword_76D50C);
@@ -133519,7 +133522,7 @@ char __thiscall sub_453138(int this, _DWORD *a2, int a3)
     "mLastObject",
     this + 540,
     dword_766C60);
-  sub_4481E7(v4, this, dword_763FD8, this + 544, dword_7640F8);
+  sub_4481E7(v4, this, dword_763FD8, this + 544, camera_angle_type_registry);
   (*(void (__thiscall **)(_BYTE *, const char *, int, _DWORD *))(*(_DWORD *)v4 + 68))(
     v4,
     "mCameraOnlyController",
@@ -133567,7 +133570,7 @@ char __thiscall sub_453138(int this, _DWORD *a2, int a3)
 // 6A6E7C: using guessed type int dword_6A6E7C;
 // 763FD8: using guessed type _DWORD dword_763FD8[15];
 // 764058: using guessed type _DWORD dword_764058[15];
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 765A2C: using guessed type int game_engine_instance_address;
 // 766C60: using guessed type int dword_766C60[16];
 // 76D50C: using guessed type int dword_76D50C;
@@ -133633,7 +133636,7 @@ void __thiscall sub_4535C9(float *this, _DWORD *a2)
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (0045367B) --------------------------------------------------------
-char *__thiscall sub_45367B(int this, int a2, int *a3, char a4, int a5, char a6)
+char *__thiscall glide_camera_to_angle(int this, int a2, int *a3, char a4, int a5, char a6)
 {
   _DWORD *v7; // ecx
   _BYTE *v8; // eax
@@ -133679,7 +133682,7 @@ LABEL_13:
   }
   else
   {
-    sub_453A7E(this, a2, a4, a6);
+    cut_camera_to_angle(this, a2, a4, a6);
     result = (char *)is_registered_event_target(a3);
     if ( (_BYTE)result )
       return (char *)queue_engine_event((int *)game_engine_address, a3);
@@ -133746,7 +133749,7 @@ _DWORD *__thiscall sub_45383C(int this, int *a2, int *a3)
   v10[0] = v11[0];
   v10[1] = v11[1];
   v10[2] = v11[2];
-  if ( sub_454F29(this, v10) )
+  if ( is_camera_position_within_bounds(this, v10) )
   {
     if ( *(_BYTE *)(this + 180) )
     {
@@ -133761,7 +133764,7 @@ _DWORD *__thiscall sub_45383C(int this, int *a2, int *a3)
     }
     else
     {
-      sub_453A7E(this, (int)v8, 0, 0);
+      cut_camera_to_angle(this, (int)v8, 0, 0);
       *(_DWORD *)(this + 540) = a2;
       if ( is_registered_event_target(a3) )
         queue_engine_event((int *)game_engine_address, a3);
@@ -133781,7 +133784,7 @@ _BYTE *__thiscall sub_453938(int this, int *a2)
 
   if ( !*(_BYTE *)(this + 180) || *(_BYTE *)(this + 534) )
   {
-    sub_453A7E(this, this + 544, 0, 0);
+    cut_camera_to_angle(this, this + 544, 0, 0);
     result = (_BYTE *)is_registered_event_target(a2);
     if ( (_BYTE)result )
       return (_BYTE *)queue_engine_event((int *)game_engine_address, a2);
@@ -133812,7 +133815,7 @@ _BYTE *__thiscall sub_4539D5(int this, int a2, int a3, int *a4)
   *(_BYTE *)(this + 534) = 0;
   if ( v5 )
   {
-    sub_453A7E(this, a3, 0, 0);
+    cut_camera_to_angle(this, a3, 0, 0);
     *(_DWORD *)(this + 540) = a2;
     result = (_BYTE *)is_registered_event_target(a4);
     if ( (_BYTE)result )
@@ -133832,7 +133835,7 @@ _BYTE *__thiscall sub_4539D5(int this, int a2, int a3, int *a4)
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (00453A7E) --------------------------------------------------------
-char *__thiscall sub_453A7E(int this, int a2, char a3, char a4)
+char *__thiscall cut_camera_to_angle(int this, int a2, char a3, char a4)
 {
   int v5; // edi
   float *v6; // ebx
@@ -134295,7 +134298,7 @@ int __thiscall sub_45445A(int this, char a2, char a3)
         v25 = *v7;
         v26 = v7[1];
         v27 = v7[2];
-        if ( !sub_40EE23(v21, &v25) )
+        if ( !vectors_are_approximately_equal(v21, &v25) )
         {
           v22 = v25;
           v23 = v26;
@@ -134458,14 +134461,14 @@ LABEL_8:
       v7 = this + 392;
     }
     copy_camera_angle_state((char *)v11, v7);
-    sub_453A7E(this, (int)v11, 0, 1);
+    cut_camera_to_angle(this, (int)v11, 0, 1);
     goto LABEL_8;
   }
   if ( sub_47C491(*(_DWORD **)(*(_DWORD *)(*(_DWORD *)(v5 + 96) + 12) + 8)) > 0 )
   {
     v9 = *(_DWORD *)(this + 504);
     if ( v9 )
-      sub_453A7E(this, v9, 0, 1);
+      cut_camera_to_angle(this, v9, 0, 1);
   }
   sub_45470A((_DWORD *)this, COERCE_INT(0.0));
 LABEL_13:
@@ -134556,7 +134559,7 @@ char __thiscall sub_454EB7(_DWORD *this, float *a2)
     v5[1] = a2[1];
     v5[2] = a2[2];
     sub_454DC9(this, v5, a2);
-    if ( sub_40EE23(v5, a2) )
+    if ( vectors_are_approximately_equal(v5, a2) )
       return 1;
   }
   return v3;
@@ -134564,7 +134567,7 @@ char __thiscall sub_454EB7(_DWORD *this, float *a2)
 // 76C884: using guessed type int active_scene_controller_address;
 
 //----- (00454F29) --------------------------------------------------------
-char __thiscall sub_454F29(int this, _DWORD *a2)
+char __thiscall is_camera_position_within_bounds(int this, _DWORD *a2)
 {
   int v2; // esi
   float *v4; // ebx
@@ -137854,7 +137857,7 @@ int sub_457CE2()
 int *sub_457CEC()
 {
   return sub_566840(
-           dword_7640F8,
+           camera_angle_type_registry,
            (int)"CameraAngle",
            (_DWORD *)1,
            56,
@@ -137866,7 +137869,7 @@ int *sub_457CEC()
            &dword_764174);
 }
 // 457C72: using guessed type int unknown_libname_38();
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 764174: using guessed type int dword_764174;
 
 //----- (00457D21) --------------------------------------------------------
@@ -137875,47 +137878,47 @@ void __cdecl sub_457D21()
   if ( (byte_7640B1 & 1) == 0 )
   {
     byte_7640B1 |= 1u;
-    sub_566BE0(&dword_7640F8);
+    sub_566BE0(&camera_angle_type_registry);
     --dword_76D550;
   }
 }
 // 566BE0: using guessed type int __thiscall sub_566BE0(_DWORD);
 // 7640B1: using guessed type char byte_7640B1;
-// 7640F8: using guessed type int dword_7640F8;
+// 7640F8: using guessed type int camera_angle_type_registry;
 // 76D550: using guessed type int dword_76D550;
 
 //----- (00457D41) --------------------------------------------------------
 void sub_457D41()
 {
-  dword_7640F4 = -56;
+  camera_angle_registry_adjustment = -56;
 }
-// 7640F4: using guessed type int dword_7640F4;
+// 7640F4: using guessed type int camera_angle_registry_adjustment;
 
 //----- (00457D4C) --------------------------------------------------------
 _DWORD *__thiscall sub_457D4C(_DWORD *this, int a2, int a3, _DWORD *a4, int a5, int a6, int a7)
 {
   sub_457744(this + 6, a2, a3, a4, a5, a6, a7);
-  sub_40ECE2(this);
-  find_or_create_registry_entry(dword_7640F8, (unsigned int)this + dword_7640F4 + 56);
-  *this = &off_6A72AC;
+  construct_camera_angle_base(this);
+  find_or_create_registry_entry(camera_angle_type_registry, (unsigned int)this + camera_angle_registry_adjustment + 56);
+  *this = &camera_angle_vtable;
   return this;
 }
-// 6A72AC: using guessed type _UNKNOWN *off_6A72AC;
-// 7640F4: using guessed type int dword_7640F4;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 6A72AC: using guessed type _UNKNOWN *camera_angle_vtable;
+// 7640F4: using guessed type int camera_angle_registry_adjustment;
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 
 //----- (00457DC1) --------------------------------------------------------
 _DWORD *__thiscall sub_457DC1(_DWORD *this, int a2)
 {
   sub_45778D(this + 6, a2);
   sub_505FC7(this, a2);
-  find_or_create_registry_entry(dword_7640F8, (unsigned int)this + dword_7640F4 + 56);
-  *this = &off_6A72AC;
+  find_or_create_registry_entry(camera_angle_type_registry, (unsigned int)this + camera_angle_registry_adjustment + 56);
+  *this = &camera_angle_vtable;
   return this;
 }
-// 6A72AC: using guessed type _UNKNOWN *off_6A72AC;
-// 7640F4: using guessed type int dword_7640F4;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 6A72AC: using guessed type _UNKNOWN *camera_angle_vtable;
+// 7640F4: using guessed type int camera_angle_registry_adjustment;
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 
 //----- (00457E1A) --------------------------------------------------------
 _DWORD *__cdecl create_registered_camera_angle_manager(void)
@@ -137965,16 +137968,16 @@ void __cdecl sub_457E9D()
 //----- (00457EBD) --------------------------------------------------------
 void sub_457EBD()
 {
-  dword_7640B4 = -4;
+  camera_angle_manager_registry_adjustment = -4;
 }
-// 7640B4: using guessed type int dword_7640B4;
+// 7640B4: using guessed type int camera_angle_manager_registry_adjustment;
 
 //----- (00457EC8) --------------------------------------------------------
 char *__thiscall construct_camera_angle_manager(char *this)
 /* Extracted to gk3/camera_angle_manager.c as construct_camera_angle_manager. */
 // 457EFB: variable 'v4' is possibly undefined
-// 6AE0C8: using guessed type int (__stdcall *off_6AE0C8)(char);
-// 7640B4: using guessed type int dword_7640B4;
+// 6AE0C8: using guessed type int (__stdcall *camera_angle_manager_vtable)(char);
+// 7640B4: using guessed type int camera_angle_manager_registry_adjustment;
 // 7640B8: using guessed type _DWORD dword_7640B8[15];
 
 //----- (00457F20) --------------------------------------------------------
@@ -137985,8 +137988,8 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
                                                             int unused)
 /* Extracted to gk3/camera_angle_manager.c as construct_registered_camera_angle_manager. */
 // 457F6F: variable 'v5' is possibly undefined
-// 6AE0C8: using guessed type int (__stdcall *off_6AE0C8)(char);
-// 7640B4: using guessed type int dword_7640B4;
+// 6AE0C8: using guessed type int (__stdcall *camera_angle_manager_vtable)(char);
+// 7640B4: using guessed type int camera_angle_manager_registry_adjustment;
 // 7640B8: using guessed type _DWORD dword_7640B8[15];
 
 //----- (00457F96) --------------------------------------------------------
@@ -137994,8 +137997,8 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
 
 //----- (00457FAD) --------------------------------------------------------
 /* Extracted to gk3/camera_angle_manager.c as destroy_camera_angle_manager_members. */
-// 6AE0C8: using guessed type int (__stdcall *off_6AE0C8)(char);
-// 7640B4: using guessed type int dword_7640B4;
+// 6AE0C8: using guessed type int (__stdcall *camera_angle_manager_vtable)(char);
+// 7640B4: using guessed type int camera_angle_manager_registry_adjustment;
 // 7640B8: using guessed type _DWORD dword_7640B8[15];
 
 //----- (0045800D) --------------------------------------------------------
@@ -138035,7 +138038,7 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
 /* Extracted to gk3/camera_angle_manager.c as log_camera_angles. */
 
 //----- (00458576) --------------------------------------------------------
-int __thiscall sub_458576(void *this, _BYTE *a2)
+int __thiscall find_or_insert_ordered_map_value(void *this, _BYTE *a2)
 {
   int *v3; // eax
   int v4; // esi
@@ -138064,7 +138067,7 @@ int __thiscall sub_458576(void *this, _BYTE *a2)
 /* Extracted to gk3/camera_angle_manager.c as destroy_camera_angle_map. */
 
 //----- (00458657) --------------------------------------------------------
-_DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3)
+_DWORD *__thiscall erase_ordered_map_entry(_DWORD *this, _DWORD *a2, _DWORD *a3)
 {
   _DWORD *v3; // ebx
   _DWORD *v4; // edi
@@ -138095,20 +138098,20 @@ _DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3)
   v3 = this;
   v4 = a3;
   v26 = this;
-  sub_458A69((int *)&a3);
+  increment_ordered_map_iterator((int *)&a3);
   v27 = v4;
   std::_Lockit::_Lockit((std::_Lockit *)v23);
   v5 = (_DWORD *)*v4;
   v28 = 0;
-  if ( v5 == (_DWORD *)dword_76417C )
+  if ( v5 == (_DWORD *)camera_angle_map_nil_node )
   {
     v5 = (_DWORD *)v4[2];
   }
-  else if ( v4[2] != dword_76417C )
+  else if ( v4[2] != camera_angle_map_nil_node )
   {
     v6 = v4[2];
     std::_Lockit::_Lockit((std::_Lockit *)v25);
-    for ( i = *(_DWORD **)v6; i != (_DWORD *)dword_76417C; i = (_DWORD *)*i )
+    for ( i = *(_DWORD **)v6; i != (_DWORD *)camera_angle_map_nil_node; i = (_DWORD *)*i )
       v6 = (int)i;
     std::_Lockit::~_Lockit((std::_Lockit *)v25);
     v5 = *(_DWORD **)(v6 + 8);
@@ -138169,7 +138172,7 @@ _DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3)
   v14 = (_DWORD *)v3[1];
   if ( (_DWORD *)*v14 == v4 )
   {
-    if ( v4[2] == dword_76417C )
+    if ( v4[2] == camera_angle_map_nil_node )
     {
       v15 = (_DWORD *)v4[1];
     }
@@ -138177,7 +138180,7 @@ _DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3)
     {
       v26 = v5;
       std::_Lockit::_Lockit((std::_Lockit *)v24);
-      for ( j = (_DWORD *)*v5; j != (_DWORD *)dword_76417C; j = (_DWORD *)*j )
+      for ( j = (_DWORD *)*v5; j != (_DWORD *)camera_angle_map_nil_node; j = (_DWORD *)*j )
         v26 = j;
       std::_Lockit::~_Lockit((std::_Lockit *)v24);
       v14 = (_DWORD *)v3[1];
@@ -138189,7 +138192,7 @@ _DWORD *__thiscall sub_458657(_DWORD *this, _DWORD *a2, _DWORD *a3)
   v26 = v17;
   if ( (_DWORD *)v17[2] == v4 )
   {
-    if ( *v4 == dword_76417C )
+    if ( *v4 == camera_angle_map_nil_node )
     {
       v17[2] = v4[1];
     }
@@ -138274,10 +138277,10 @@ LABEL_35:
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458925) --------------------------------------------------------
-_DWORD *__thiscall sub_458925(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
+_DWORD *__thiscall destroy_ordered_map_range(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
 {
   _DWORD *v5; // ecx
   _DWORD *v6; // eax
@@ -138298,7 +138301,7 @@ _DWORD *__thiscall sub_458925(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
     sub_458BFF(*(_DWORD **)(v7 + 4));
     v8 = this[1];
     v13 = -1;
-    *(_DWORD *)(v8 + 4) = dword_76417C;
+    *(_DWORD *)(v8 + 4) = camera_angle_map_nil_node;
     v9 = (_DWORD *)this[1];
     this[3] = 0;
     *v9 = v9;
@@ -138312,8 +138315,8 @@ _DWORD *__thiscall sub_458925(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
     while ( v5 != a4 )
     {
       v11 = v5;
-      sub_458A69((int *)&a3);
-      sub_458657(this, &v12, v11);
+      increment_ordered_map_iterator((int *)&a3);
+      erase_ordered_map_entry(this, &v12, v11);
       v5 = a3;
     }
     result = a2;
@@ -138323,19 +138326,19 @@ _DWORD *__thiscall sub_458925(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (004589CD) --------------------------------------------------------
-_DWORD *__thiscall sub_4589CD(int this)
+_DWORD *__thiscall clear_ordered_map(int this)
 {
   int v2; // [esp+0h] [ebp-4h] BYREF
 
   v2 = this;
-  return sub_458925((_DWORD *)this, &v2, **(_DWORD ***)(this + 4), *(_DWORD **)(this + 4));
+  return destroy_ordered_map_range((_DWORD *)this, &v2, **(_DWORD ***)(this + 4), *(_DWORD **)(this + 4));
 }
 
 //----- (004589E1) --------------------------------------------------------
-int *__thiscall sub_4589E1(_DWORD *this, int *a2, int a3)
+int *__thiscall find_ordered_map_node(_DWORD *this, int *a2, int a3)
 {
   _DWORD *v4; // eax
   bool v5; // zf
@@ -138363,7 +138366,7 @@ int *__thiscall sub_4589E1(_DWORD *this, int *a2, int a3)
 }
 
 //----- (00458A25) --------------------------------------------------------
-int *__thiscall sub_458A25(_DWORD *this, int *a2, int a3)
+int *__thiscall lookup_camera_angle_tree_node(_DWORD *this, int *a2, int a3)
 {
   _DWORD *v4; // eax
   bool v5; // zf
@@ -138391,7 +138394,7 @@ int *__thiscall sub_458A25(_DWORD *this, int *a2, int a3)
 }
 
 //----- (00458A69) --------------------------------------------------------
-void __thiscall sub_458A69(int *this)
+void __thiscall increment_ordered_map_iterator(int *this)
 {
   int v2; // eax
   _DWORD **v3; // edi
@@ -138404,7 +138407,7 @@ void __thiscall sub_458A69(int *this)
   v2 = *this;
   v7 = 0;
   v3 = *(_DWORD ***)(v2 + 8);
-  if ( v3 == (_DWORD **)dword_76417C )
+  if ( v3 == (_DWORD **)camera_angle_map_nil_node )
   {
     while ( 1 )
     {
@@ -138419,7 +138422,7 @@ void __thiscall sub_458A69(int *this)
   else
   {
     std::_Lockit::_Lockit((std::_Lockit *)v6);
-    for ( i = *v3; i != (_DWORD *)dword_76417C; i = (_DWORD *)*i )
+    for ( i = *v3; i != (_DWORD *)camera_angle_map_nil_node; i = (_DWORD *)*i )
       v3 = (_DWORD **)i;
     std::_Lockit::~_Lockit((std::_Lockit *)v6);
     *this = (int)v3;
@@ -138429,7 +138432,7 @@ void __thiscall sub_458A69(int *this)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458AE9) --------------------------------------------------------
 _DWORD *__thiscall sub_458AE9(int this, _DWORD *a2, int a3)
@@ -138450,7 +138453,7 @@ _DWORD *__thiscall sub_458AE9(int this, _DWORD *a2, int a3)
   v5 = (int *)v4[1];
   std::_Lockit::_Lockit((std::_Lockit *)&v10);
   v13 = 0;
-  while ( v5 != (int *)dword_76417C )
+  while ( v5 != (int *)camera_angle_map_nil_node )
   {
     v4 = v5;
     v12 = sub_403191(a3, (int)(v5 + 3));
@@ -138498,7 +138501,7 @@ LABEL_15:
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458BFF) --------------------------------------------------------
 void __stdcall sub_458BFF(_DWORD *a1)
@@ -138511,7 +138514,7 @@ void __stdcall sub_458BFF(_DWORD *a1)
   std::_Lockit::_Lockit((std::_Lockit *)v3);
   v1 = (int)a1;
   v4 = 0;
-  for ( i = a1; i != (_DWORD *)dword_76417C; v1 = (int)i )
+  for ( i = a1; i != (_DWORD *)camera_angle_map_nil_node; v1 = (int)i )
   {
     sub_458BFF(i[2]);
     i = (_DWORD *)*i;
@@ -138524,7 +138527,7 @@ void __stdcall sub_458BFF(_DWORD *a1)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458C6C) --------------------------------------------------------
 /* Extracted to gk3/camera_angle_manager.c as initialize_camera_angle_map. */
@@ -138540,7 +138543,7 @@ void __thiscall sub_458CF5(_DWORD *this, int a2)
   std::_Lockit::_Lockit((std::_Lockit *)v6);
   v3 = *(_DWORD **)(a2 + 8);
   *(_DWORD *)(a2 + 8) = *v3;
-  if ( *v3 != dword_76417C )
+  if ( *v3 != camera_angle_map_nil_node )
     *(_DWORD *)(*v3 + 4) = a2;
   v3[1] = *(_DWORD *)(a2 + 4);
   v4 = this[1];
@@ -138562,7 +138565,7 @@ void __thiscall sub_458CF5(_DWORD *this, int a2)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458D4F) --------------------------------------------------------
 int __cdecl sub_458D4F(int a1)
@@ -138573,14 +138576,14 @@ int __cdecl sub_458D4F(int a1)
 
   std::_Lockit::_Lockit((std::_Lockit *)v4);
   v1 = a1;
-  for ( i = *(_DWORD *)(a1 + 8); i != dword_76417C; i = *(_DWORD *)(i + 8) )
+  for ( i = *(_DWORD *)(a1 + 8); i != camera_angle_map_nil_node; i = *(_DWORD *)(i + 8) )
     v1 = i;
   std::_Lockit::~_Lockit((std::_Lockit *)v4);
   return v1;
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458D80) --------------------------------------------------------
 void __thiscall sub_458D80(_DWORD *this, _DWORD *a2)
@@ -138595,7 +138598,7 @@ void __thiscall sub_458D80(_DWORD *this, _DWORD *a2)
   v3 = *a2;
   *a2 = *(_DWORD *)(*a2 + 8);
   v4 = *(_DWORD *)(v3 + 8);
-  if ( v4 != dword_76417C )
+  if ( v4 != camera_angle_map_nil_node )
     *(_DWORD *)(v4 + 4) = a2;
   *(_DWORD *)(v3 + 4) = a2[1];
   v5 = this[1];
@@ -138617,7 +138620,7 @@ void __thiscall sub_458D80(_DWORD *this, _DWORD *a2)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458DDC) --------------------------------------------------------
 _DWORD *__thiscall sub_458DDC(_DWORD *this, _DWORD *a2, int a3, _DWORD *a4, int a5)
@@ -138638,11 +138641,11 @@ _DWORD *__thiscall sub_458DDC(_DWORD *this, _DWORD *a2, int a3, _DWORD *a4, int 
   v6 = allocate_tracked_memory(36);
   v6[8] = 0;
   v6[1] = a4;
-  *v6 = dword_76417C;
-  v6[2] = dword_76417C;
+  *v6 = camera_angle_map_nil_node;
+  v6[2] = camera_angle_map_nil_node;
   sub_45948E(v6 + 3, a5);
   ++this[3];
-  if ( a4 != (_DWORD *)this[1] && a3 == dword_76417C && !sub_403191(a5, (int)(a4 + 3)) )
+  if ( a4 != (_DWORD *)this[1] && a3 == camera_angle_map_nil_node && !sub_403191(a5, (int)(a4 + 3)) )
   {
     a4[2] = v6;
     v7 = this[1];
@@ -138716,7 +138719,7 @@ LABEL_10:
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458F61) --------------------------------------------------------
 _DWORD *__thiscall sub_458F61(_DWORD *this, int a2)
@@ -138732,7 +138735,7 @@ _DWORD *__thiscall sub_458F61(_DWORD *this, int a2)
   v8 = 0;
   v4 = v3;
   v5 = (_DWORD *)v3[1];
-  while ( v5 != (_DWORD *)dword_76417C )
+  while ( v5 != (_DWORD *)camera_angle_map_nil_node )
   {
     if ( sub_403191((int)(v5 + 3), a2) )
     {
@@ -138750,7 +138753,7 @@ _DWORD *__thiscall sub_458F61(_DWORD *this, int a2)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00458FD0) --------------------------------------------------------
 void __thiscall sub_458FD0(int **this)
@@ -138764,7 +138767,7 @@ void __thiscall sub_458FD0(int **this)
   v4 = 0;
   if ( v2[8] || *(int **)(v2[1] + 4) != v2 )
   {
-    if ( *v2 == dword_76417C )
+    if ( *v2 == camera_angle_map_nil_node )
     {
       while ( 1 )
       {
@@ -138789,10 +138792,10 @@ void __thiscall sub_458FD0(int **this)
 }
 // 600827: using guessed type _DWORD __thiscall std::_Lockit::_Lockit(std::_Lockit *__hidden this);
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
-// 76417C: using guessed type int dword_76417C;
+// 76417C: using guessed type int camera_angle_map_nil_node;
 
 //----- (00459038) --------------------------------------------------------
-char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
+char __thiscall serialize_camera_angle_map(_BYTE *this, int i, _DWORD *a3, int j)
 {
   _DWORD *v5; // edi
   const char *v6; // eax
@@ -138852,10 +138855,10 @@ char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
       v41 = 0;
     v9 = *sub_45943C((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v36, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v36, (_BYTE *)&a3 + 3);
     v40 = 0;
     LOBYTE(v42) = 2;
-    sub_40442F(v37, (_BYTE *)&j + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&j + 3);
     LOBYTE(v42) = 3;
     for ( i = v9; i != v10; ++v40 )
     {
@@ -138887,7 +138890,7 @@ char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
       std::string::_Tidy(1);
       if ( v17 )
         v41 = 0;
-      sub_458A69(&i);
+      increment_ordered_map_iterator(&i);
     }
     std::string::_Tidy(1);
     std::string::_Tidy(1);
@@ -138904,7 +138907,7 @@ char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
     std::string::_Tidy(1);
     if ( v20 )
       v41 = 0;
-    sub_4589CD((int)a3);
+    clear_ordered_map((int)a3);
     v37[0] = HIBYTE(a3);
     std::string::_Tidy(0);
     v36[0] = HIBYTE(a3);
@@ -138941,12 +138944,12 @@ char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
               this,
               v26,
               &v39,
-              dword_7640F8) == 0;
+              camera_angle_type_registry) == 0;
       LOBYTE(v42) = 10;
       std::string::_Tidy(1);
       if ( v27 )
         v41 = 0;
-      v28 = (_DWORD *)sub_458576(a3, v36);
+      v28 = (_DWORD *)find_or_insert_ordered_map_value(a3, v36);
       ++j;
     }
     std::string::_Tidy(1);
@@ -138958,7 +138961,7 @@ char __thiscall sub_459038(_BYTE *this, int i, _DWORD *a3, int j)
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 6A6524: using guessed type int dword_6A6524;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 
 //----- (0045943C) --------------------------------------------------------
 _DWORD *__thiscall sub_45943C(_DWORD **this, _DWORD *a2)
@@ -138973,12 +138976,12 @@ _DWORD *__thiscall sub_45943C(_DWORD **this, _DWORD *a2)
 //----- (0045944A) --------------------------------------------------------
 int __thiscall sub_45944A(void *this, int a2, int a3)
 {
-  return (*(int (__thiscall **)(void *, int, int, int *))(*(_DWORD *)this + 68))(this, a2, a3, &dword_7640F8);
+  return (*(int (__thiscall **)(void *, int, int, int *))(*(_DWORD *)this + 68))(this, a2, a3, &camera_angle_type_registry);
 }
-// 7640F8: using guessed type int dword_7640F8;
+// 7640F8: using guessed type int camera_angle_type_registry;
 
 //----- (0045945F) --------------------------------------------------------
-void __cdecl sub_45945F(int *a1, int a2)
+void __cdecl advance_camera_angle_map_iterator(int *a1, int a2)
 {
   int v2; // esi
   bool v3; // sf
@@ -138993,7 +138996,7 @@ void __cdecl sub_45945F(int *a1, int a2)
     v2 = 0;
     do
     {
-      sub_458A69(a1);
+      increment_ordered_map_iterator(a1);
       --v4;
     }
     while ( v4 );
@@ -139059,7 +139062,7 @@ char __cdecl sub_459517(int a1, int a2, char a3)
     v3 = *(void (__thiscall ****)(_DWORD, int))(a1 + 28);
     if ( v3 )
       (**v3)(v3, 1);
-    sub_458A69(&a1);
+    increment_ordered_map_iterator(&a1);
   }
   return a3;
 }
@@ -139082,7 +139085,7 @@ char __thiscall sub_45953E(_BYTE *this, const char *a2, int *a3, int *a4)
   v15 = 1;
   if ( this[4] )
   {
-    v5 = sub_475282(*a3);
+    v5 = camera_type_name(*a3);
     v12[0] = HIBYTE(a2);
     std::string::_Tidy(0);
     v6 = strlen(v5);
@@ -139543,133 +139546,7 @@ void __thiscall sub_459D93(_DWORD *this, int a2)
 }
 
 //----- (00459DA5) --------------------------------------------------------
-int __thiscall construct_caption_manager(int this)
-{
-  int v2; // eax
-  int v3; // ebx
-  char *v4; // ecx
-  int v5; // eax
-  _BYTE *v6; // eax
-  _BYTE *v7; // eax
-  int v8; // edx
-  char *v10; // [esp+10h] [ebp-18h]
-  float v11; // [esp+14h] [ebp-14h]
-  char v12; // [esp+1Bh] [ebp-Dh] BYREF
-  int v13; // [esp+24h] [ebp-4h]
-
-  construct_console_control_base(this);
-  v13 = 1;
-  find_or_create_registry_entry(caption_manager_registry, caption_manager_registry_offset + this + 197);
-  sub_45B25C((_DWORD *)(this + 376), &v12);
-  LOBYTE(v13) = 2;
-  construct_control(this + 424);
-  LOBYTE(v13) = 3;
-  sub_45B1E5((void *)(this + 468));
-  *(_DWORD *)(this + 468) = 0;
-  *(_DWORD *)(this + 424) = &embedded_caption_control_vtable;
-  *(float *)(this + 472) = 1.0;
-  *(_DWORD *)this = &caption_manager_vtable;
-  *(_DWORD *)(this + 200) = 0;
-  *(_DWORD *)(this + 204) = 0;
-  *(_DWORD *)(this + 208) = 0;
-  *(_DWORD *)(this + 212) = 0;
-  *(_DWORD *)(this + 216) = 0;
-  *(_DWORD *)(this + 220) = 0;
-  *(_DWORD *)(this + 224) = 0;
-  *(_DWORD *)(this + 228) = 0;
-  *(_DWORD *)(this + 232) = 0;
-  *(_DWORD *)(this + 236) = 0;
-  *(_DWORD *)(this + 240) = 0;
-  *(_DWORD *)(this + 244) = 0;
-  *(_DWORD *)(this + 248) = 0;
-  *(_DWORD *)(this + 252) = 0;
-  LOBYTE(v13) = 4;
-  *(_DWORD *)(this + 256) = 0;
-  *(_DWORD *)(this + 260) = 0;
-  *(_DWORD *)(this + 264) = 0;
-  *(_DWORD *)(this + 268) = 0;
-  *(_DWORD *)(this + 272) = 0;
-  *(_DWORD *)(this + 276) = 0;
-  *(_DWORD *)(this + 280) = 0;
-  *(_DWORD *)(this + 284) = 0;
-  *(_DWORD *)(this + 288) = 0;
-  *(_DWORD *)(this + 292) = 0;
-  *(_DWORD *)(this + 296) = 0;
-  *(_DWORD *)(this + 300) = 0;
-  *(_DWORD *)(this + 304) = 0;
-  *(_DWORD *)(this + 308) = 0;
-  *(_DWORD *)(this + 312) = 0;
-  *(_DWORD *)(this + 316) = 0;
-  *(_DWORD *)(this + 320) = 0;
-  *(_DWORD *)(this + 324) = 0;
-  *(_DWORD *)(this + 328) = 0;
-  *(_DWORD *)(this + 332) = 0;
-  *(_DWORD *)(this + 336) = 0;
-  *(_DWORD *)(this + 340) = 0;
-  *(_DWORD *)(this + 344) = 0;
-  *(_DWORD *)(this + 348) = 0;
-  *(_DWORD *)(this + 352) = 0;
-  *(_DWORD *)(this + 356) = 0;
-  *(_DWORD *)(this + 360) = 0;
-  *(_DWORD *)(this + 364) = 0;
-  *(_DWORD *)(this + 368) = 0;
-  *(_DWORD *)(this + 372) = 0;
-  sub_45AF2F((_BYTE *)this, 1);
-  v2 = *(_DWORD *)caption_manager_saved_state_pointer;
-  caption_manager_restore_value = 0;
-  caption_manager_current_value = v2;
-  sub_476C91((_DWORD *)this, &caption_manager_default_layout);
-  select_settings_section(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Captions");
-  *(_BYTE *)(this + 476) = read_boolean_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Shaded Captions", 0);
-  v11 = (double)(int)read_integer_setting_or_default(
-                       *(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100),
-                       "Shaded Caption Darkness",
-                       (char *)0x32)
-      * 0.0099999998;
-  v3 = this + 424;
-  v4 = sub_46C1FA(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Shaded Caption Color", 0);
-  v10 = v4;
-  if ( v11 != *(float *)(this + 472) )
-  {
-    *(float *)(this + 472) = v11;
-    (*(void (__thiscall **)(int))(*(_DWORD *)v3 + 156))(this + 424);
-    v4 = v10;
-  }
-  if ( *(char **)(this + 468) != v4 )
-  {
-    v5 = *(_DWORD *)v3;
-    *(_DWORD *)(this + 468) = v4;
-    (*(void (__thiscall **)(int))(v5 + 156))(this + 424);
-  }
-  v6 = sub_45A0F8(60);
-  LOBYTE(v13) = 5;
-  if ( v6 )
-    v7 = sub_46B4E2(v6, "fontcolor.txt", 0);
-  else
-    v7 = 0;
-  *(_DWORD *)(this + 480) = v7;
-  v8 = *(_DWORD *)v7;
-  LOBYTE(v13) = 4;
-  if ( !(*(unsigned __int8 (__thiscall **)(_BYTE *, int))(v8 + 4))(v7, 1) )
-    write_source_message(
-      "Z:\\Proj\\GK3\\gk3app\\Source\\CaptionMgr.cpp",
-      356,
-      6,
-      0,
-      "Unable to find/load/read font color config file 'fontcolor.txt'.\n",
-      0xFFFFFFFF);
-  set_control_active((_BYTE *)this, 1);
-  return this;
-}
-// 6AE970: using guessed type int (__stdcall *caption_manager_vtable)(char);
-// 6AEA48: using guessed type int (__stdcall *embedded_caption_control_vtable)(char);
-// 764190: using guessed type int caption_manager_restore_value;
-// 764194: using guessed type int caption_manager_current_value;
-// 764198: using guessed type int caption_manager_registry_offset;
-// 7641A0: using guessed type int caption_manager_registry[15];
-// 765A2C: using guessed type int game_engine_instance_address;
-// 76D3C0: using guessed type int caption_manager_default_layout;
-// 7715C8: using guessed type int caption_manager_saved_state_pointer;
+/* Extracted to gk3/caption_manager.c as construct_caption_manager. */
 
 //----- (0045A085) --------------------------------------------------------
 _DWORD *__thiscall sub_45A085(_DWORD *this, char a2)
@@ -139704,7 +139581,7 @@ double __thiscall sub_45A0F4(float *this)
 }
 
 //----- (0045A0F8) --------------------------------------------------------
-_DWORD *__cdecl sub_45A0F8(int a1)
+_DWORD *__cdecl allocate_registered_config_file(int a1)
 {
   _DWORD *v1; // esi
 
@@ -139715,63 +139592,16 @@ _DWORD *__cdecl sub_45A0F8(int a1)
 // 764428: using guessed type _DWORD dword_764428[15];
 
 //----- (0045A11B) --------------------------------------------------------
-_DWORD *__thiscall sub_45A11B(_DWORD *this, char a2)
-{
-  sub_45A65E(this);
-  if ( (a2 & 1) != 0 )
-    free_tracked_memory((int)this);
-  return this;
-}
+/* Extracted to gk3/caption_manager.c as destroy_caption_manager. */
 
 //----- (0045A137) --------------------------------------------------------
-int __thiscall sub_45A137(int this, int a2)
-{
-  int v3; // eax
-  char v5; // [esp+Bh] [ebp-Dh] BYREF
-  int v6; // [esp+14h] [ebp-4h]
-
-  construct_control_container_base((char *)this, a2);
-  v6 = 1;
-  find_or_create_registry_entry(caption_manager_registry, caption_manager_registry_offset + this + 197);
-  sub_45B25C((_DWORD *)(this + 376), &v5);
-  LOBYTE(v6) = 2;
-  sub_4771A6((_DWORD *)(this + 424), a2);
-  *(_DWORD *)this = &caption_manager_vtable;
-  v3 = *(_DWORD *)caption_manager_saved_state_pointer;
-  caption_manager_restore_value = 0;
-  caption_manager_current_value = v3;
-  return this;
-}
-// 6AE970: using guessed type int (__stdcall *caption_manager_vtable)(char);
-// 764190: using guessed type int caption_manager_restore_value;
-// 764194: using guessed type int caption_manager_current_value;
-// 764198: using guessed type int caption_manager_registry_offset;
-// 7641A0: using guessed type int caption_manager_registry[15];
-// 7715C8: using guessed type int caption_manager_saved_state_pointer;
+/* Extracted to gk3/caption_manager.c as construct_caption_manager_with_context. */
 
 //----- (0045A1BC) --------------------------------------------------------
-int sub_45A1BC()
-{
-  _DWORD *v0; // ecx
-  int result; // eax
-
-  v0 = allocate_registered_caption_manager(484);
-  result = 0;
-  if ( v0 )
-    return sub_45A137((int)v0, 0);
-  return result;
-}
+/* Extracted to gk3/caption_manager.c as create_registered_caption_manager. */
 
 //----- (0045A1F2) --------------------------------------------------------
-_DWORD *__cdecl allocate_registered_caption_manager(int size)
-{
-  _DWORD *v1; // esi
-
-  v1 = allocate_tracked_memory(size);
-  find_or_create_registry_entry(caption_manager_registry, (unsigned int)v1)[2] = 1;
-  return v1;
-}
-// 7641A0: using guessed type int caption_manager_registry[15];
+/* Extracted to gk3/caption_manager.c as allocate_registered_caption_manager. */
 
 //----- (0045A215) --------------------------------------------------------
 char __cdecl sub_45A215(int a1, _BYTE *a2, int a3)
@@ -139802,7 +139632,7 @@ int *sub_45A241()
            (_DWORD *)7,
            484,
            200,
-           (int)sub_45A1BC,
+           (int)create_registered_caption_manager,
            (int)sub_45A215,
            0,
            1,
@@ -139908,23 +139738,7 @@ char __thiscall sub_45A2A7(int this, _BYTE *a2, int a3)
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (0045A65E) --------------------------------------------------------
-_DWORD *__thiscall sub_45A65E(_DWORD *this)
-{
-  void (__thiscall ***v2)(_DWORD, int); // ecx
-
-  *this = &caption_manager_vtable;
-  v2 = (void (__thiscall ***)(_DWORD, int))this[120];
-  if ( v2 )
-    (**v2)(v2, 1);
-  destroy_embedded_caption_control(this + 106);
-  while ( this[105] )
-    sub_45B2D5((int)(this + 94));
-  erase_map_entry_impl(caption_manager_registry, caption_manager_registry_offset + (this != 0 ? (unsigned int)this + 197 : 0));
-  return destroy_mini_console_control_base(this);
-}
-// 6AE970: using guessed type int (__stdcall *caption_manager_vtable)(char);
-// 764198: using guessed type int caption_manager_registry_offset;
-// 7641A0: using guessed type int caption_manager_registry[15];
+/* Extracted to gk3/caption_manager.c as destroy_caption_manager_members. */
 
 //----- (0045A6F1) --------------------------------------------------------
 int __stdcall sub_45A6F1(int a1, char *Source)
@@ -140132,7 +139946,7 @@ void __thiscall sub_45AA79(int this)
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 424) + 168))(this + 424, this + 28);
     if ( !*(_BYTE *)(this + 448) )
       (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 424) + 176))(this + 424, 1);
-    sub_5067E5((_BYTE *)this, this + 424, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 424, 1);
   }
   else if ( *(_BYTE *)(this + 448) )
   {
@@ -140286,7 +140100,7 @@ int __thiscall sub_45AD24(int this, char *Str, char *a3)
   _DWORD *v27; // [esp+40h] [ebp-10h] BYREF
   int v28; // [esp+4Ch] [ebp-4h]
 
-  sub_45AF2F((_BYTE *)this, 0);
+  update_caption_display_state((_BYTE *)this, 0);
   if ( !*(_BYTE *)(this + 477)
     || *(_DWORD *)sub_45B687((_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 60) + 8)) == 2
     || !strlen(Str) )
@@ -140379,14 +140193,14 @@ void __thiscall sub_45AF28(_DWORD **this)
 }
 
 //----- (0045AF2F) --------------------------------------------------------
-char __thiscall sub_45AF2F(_BYTE *this, char a2)
+char __thiscall update_caption_display_state(_BYTE *this, char force_update)
 {
   int v3; // eax
   char v4; // bl
 
   v3 = *(_DWORD *)(game_engine_address + 212);
   v4 = *(_DWORD *)(v3 + 8) < 25;
-  if ( a2 || v4 != this[478] )
+  if ( force_update || v4 != this[478] )
   {
     LOBYTE(v3) = sub_529781(*(_DWORD ***)(game_engine_instance_address + 1192));
     this[477] = v3;
@@ -140515,7 +140329,7 @@ void __thiscall sub_45B0DE(int this)
     v2 = **(_DWORD ***)(this + 388);
     if ( v2 )
       ++*v2;
-    sub_45B2D5(this + 376);
+    destroy_caption_item_collection(this + 376);
     if ( !is_developer_control_option_enabled(*(_BYTE **)(*(_DWORD *)(game_engine_instance_address + 1092) + 104), 6) )
     {
       if ( v2 )
@@ -140550,7 +140364,7 @@ void __thiscall sub_45B17C(_DWORD *this, int a2, int a3, int a4)
 }
 
 //----- (0045B1E5) --------------------------------------------------------
-void *__thiscall sub_45B1E5(void *this)
+void *__thiscall register_color_control_member(void *this)
 {
   find_or_create_registry_entry(dword_764930, (unsigned int)this + dword_76492C);
   return this;
@@ -140588,7 +140402,8 @@ _DWORD *__thiscall sub_45B211(_DWORD *this, _DWORD *a2)
 }
 
 //----- (0045B25C) --------------------------------------------------------
-_DWORD *__thiscall sub_45B25C(_DWORD *this, _BYTE *a2)
+_DWORD *__thiscall initialize_caption_item_collection(_DWORD *this,
+                                                      _BYTE *a2)
 {
   _DWORD *result; // eax
 
@@ -140619,7 +140434,7 @@ void __thiscall sub_45B2A0(_DWORD *this, _DWORD **a2)
 }
 
 //----- (0045B2D5) --------------------------------------------------------
-void __thiscall sub_45B2D5(int this)
+void __thiscall destroy_caption_item_collection(int this)
 {
   if ( *(_DWORD *)(this + 44) )
   {
@@ -140763,7 +140578,7 @@ _DWORD *__thiscall sub_45B39A(
   {
     sub_45B918(&v16, *v22, v22[1], v22[2], v22[3], a3, a4, (int)a5, a6, a7, a8, (int)a9, a10);
     for ( j = v20; j; --j )
-      sub_45B2D5((int)this);
+      destroy_caption_item_collection((int)this);
   }
   if ( v21 )
   {
@@ -142015,7 +141830,7 @@ bool __cdecl sub_45C45B(HMODULE a1)
     {
       sub_5AA170((int)v19, "Validate");
       v3 = (char *)sub_5AA330(v19, "KindA", (int)Str1);
-      sub_402BAA(v25, v3, (_BYTE *)&a1 + 3);
+      assign_std_string_storage_from_c_string(v25, v3, (_BYTE *)&a1 + 3);
       v4 = v26;
       LOBYTE(v42) = 3;
       if ( !v26 )
@@ -142030,16 +141845,16 @@ bool __cdecl sub_45C45B(HMODULE a1)
       else
       {
         sub_5AA170((int)v19, "Discs");
-        sub_40442F(v32, &v41);
+        initialize_std_string_storage(v32, &v41);
         LOBYTE(v42) = 4;
-        sub_40442F(v27, &v37);
+        initialize_std_string_storage(v27, &v37);
         LOBYTE(v42) = 5;
         for ( i = sub_5AA6B0(v19, &v39); ; i = sub_5AA700(&v39) )
         {
           v7 = (char *)i;
           if ( !i )
             break;
-          sub_40442F(&v21, &v38);
+          initialize_std_string_storage(&v21, &v38);
           LOBYTE(v42) = 6;
           v8 = (char *)sub_5AA330(v19, v7, (int)Str1);
           if ( !sub_45C3D6(v8, &v21, &v40) )
@@ -142119,7 +141934,7 @@ LABEL_43:
             sub_5AA570(v19);
             v42 = -1;
             v35[0] = (int)off_6B86C8;
-            sub_45CA57(&v29);
+            destroy_byte_vector(&v29);
             return 0;
           }
         }
@@ -142147,7 +141962,7 @@ LABEL_39:
     v1 = 0;
   }
   v42 = -1;
-  sub_45CA57(&v29);
+  destroy_byte_vector(&v29);
   return v1;
 }
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
@@ -142377,7 +142192,7 @@ _BYTE *__thiscall sub_45CA2B(_DWORD *this, _BYTE *a2, _BYTE *a3)
 }
 
 //----- (0045CA57) --------------------------------------------------------
-int __thiscall sub_45CA57(int *this)
+int __thiscall destroy_byte_vector(int *this)
 {
   int result; // eax
 
@@ -142588,7 +142403,7 @@ int __stdcall sub_45CD1B(char a1)
   {
     v2 = (_BYTE *)format_integer_string((int)v7, i);
     v11 = 0;
-    sub_407455(v8, "insert_cd", v2);
+    combine_text_prefix_and_string_storage(v8, "insert_cd", v2);
     LOBYTE(v11) = 2;
     std::string::_Tidy(1);
     v3 = v9;
@@ -142625,7 +142440,7 @@ int __thiscall sub_45CDC0(_DWORD *this, int a2, char a3, int a4, int a5, int a6)
   int v19; // [esp+50h] [ebp-4h]
 
   v19 = 0;
-  v7 = sub_407455(v15, "(File = '", &a3);
+  v7 = combine_text_prefix_and_string_storage(v15, "(File = '", &a3);
   LOBYTE(v19) = 1;
   append_string_suffix(v16, v7, "')");
   LOBYTE(v19) = 3;
@@ -142635,7 +142450,7 @@ int __thiscall sub_45CDC0(_DWORD *this, int a2, char a3, int a4, int a5, int a6)
   v9 = a2;
   v10 = (_BYTE *)format_integer_string((int)v14, a2);
   LOBYTE(v19) = 4;
-  sub_407455(v17, "insert_cd", v10);
+  combine_text_prefix_and_string_storage(v17, "insert_cd", v10);
   LOBYTE(v19) = 6;
   std::string::_Tidy(1);
   v11 = v18;
@@ -142916,7 +142731,7 @@ void __thiscall sub_45D1CC(int this, _DWORD *a2, _DWORD *a3, int a4)
   }
   else
   {
-    sub_402BAA(v49, (char *)Str1, &v56);
+    assign_std_string_storage_from_c_string(v49, (char *)Str1, &v56);
     LODWORD(v55) = 1;
     v6 = v49;
     LOBYTE(v57) = 1;
@@ -142941,7 +142756,7 @@ void __thiscall sub_45D1CC(int this, _DWORD *a2, _DWORD *a3, int a4)
   }
   else
   {
-    sub_402BAA(v49, (char *)Str1, &v56);
+    assign_std_string_storage_from_c_string(v49, (char *)Str1, &v56);
     LODWORD(v55) |= 2u;
     v10 = v49;
     LOBYTE(v57) = 3;
@@ -143166,7 +142981,7 @@ void __thiscall sub_45D6D8(int this, _DWORD *a2, _DWORD *a3, char *a4)
   int v27; // [esp+58h] [ebp-4h]
 
   v27 = 0;
-  sub_402BAA(v19, a4, (_BYTE *)&a4 + 3);
+  assign_std_string_storage_from_c_string(v19, a4, (_BYTE *)&a4 + 3);
   LOBYTE(v27) = 1;
   v5 = (char *)*((_DWORD *)append_string_suffix(v24, v19, "_EYELIDS") + 1);
   LOBYTE(v27) = 2;
@@ -143379,7 +143194,7 @@ char **__thiscall sub_45DACE(_DWORD *this, char **a2, char *a3)
   int v16; // [esp+38h] [ebp-4h]
 
   v14 = 0;
-  sub_402BAA(v10, a3, &v15);
+  assign_std_string_storage_from_c_string(v10, a3, &v15);
   v16 = 1;
   v4 = *sub_45EA2A(this + 4, &v12, (int)v10);
   LOBYTE(v16) = 0;
@@ -143554,13 +143369,13 @@ int __thiscall sub_45DBFE(void *this)
   v95 = 0;
   v96 = 0;
   v105 = 0;
-  sub_402BAA(v84, "characters", &v102);
+  assign_std_string_storage_from_c_string(v84, "characters", &v102);
   LOBYTE(v105) = 1;
   append_string_suffix(v80, v84, ".txt");
   LOBYTE(v105) = 2;
-  sub_40442F(v86, &v98);
+  initialize_std_string_storage(v86, &v98);
   LOBYTE(v105) = 3;
-  sub_40442F(v91, &v103);
+  initialize_std_string_storage(v91, &v103);
   v1 = v85;
   LOBYTE(v105) = 4;
   if ( !v85 )
@@ -143568,7 +143383,7 @@ int __thiscall sub_45DBFE(void *this)
   v2 = v81;
   if ( !v81 )
     v2 = (char *)Key;
-  sub_46B4E2(v89, v2, v1);
+  construct_registered_config_file(v89, v2, v1);
   LOBYTE(v105) = 5;
   if ( sub_46B663(v89, 1) )
   {
@@ -143869,7 +143684,7 @@ void __thiscall sub_45E635(void *this)
 
   sub_4151F2(v13, &v20);
   v23 = 0;
-  sub_402BAA(v15, "faces", &v21);
+  assign_std_string_storage_from_c_string(v15, "faces", &v21);
   LOBYTE(v23) = 1;
   append_string_suffix(v17, v15, ".txt");
   v2 = v16;
@@ -143879,7 +143694,7 @@ void __thiscall sub_45E635(void *this)
     v2 = (char *)Key;
   if ( v18 )
     v3 = v18;
-  sub_46B4E2(v10, v3, v2);
+  construct_registered_config_file(v10, v3, v2);
   LOBYTE(v23) = 3;
   if ( sub_46B663(v10, 1) )
   {
@@ -144634,7 +144449,7 @@ _DWORD *__cdecl sub_45F07B(_DWORD *a1, int i, _DWORD *a3)
   v3 = a3;
   v4 = *(int **)(i + 4);
   for ( i = *v4; (int *)i != v4; sub_417D55(&i) )
-    sub_41838F(v3, (_BYTE *)(i + 12));
+    append_vector_element(v3, (_BYTE *)(i + 12));
   result = a1;
   *a1 = v3;
   return result;
@@ -146332,7 +146147,7 @@ unsigned int __thiscall sub_460F76(int this, unsigned int a2)
           do
           {
             sub_57C900((_DWORD *)game_engine_address, *v12, v38, -1);
-            sub_575F80(v38, v58);
+            rotate_matrix_about_y(v38, v58);
             sub_57C8E0((_DWORD *)game_engine_address, *v12++, v38, -1);
             --v13;
           }
@@ -146409,11 +146224,11 @@ unsigned int __thiscall sub_460F76(int this, unsigned int a2)
               v23 = v21 * (v22 * *(float *)(this + 648));
               *(float *)(this + 652) = v23 + *(float *)(this + 652);
               v31 = v23 + v58;
-              sub_575F80(v38, v31);
+              rotate_matrix_about_y(v38, v31);
               v32 = *(float *)&v57 * *(float *)(this + 648) * v56 + v58;
-              sub_575F80(v35, v32);
+              rotate_matrix_about_y(v35, v32);
               v33 = *(float *)&v57 * *(float *)(this + 648) * v56 + v58;
-              sub_575F80(v34, v33);
+              rotate_matrix_about_y(v34, v33);
               v24 = *v15 == v18;
               *v15 -= v18;
               if ( v24 )
@@ -146436,9 +146251,9 @@ unsigned int __thiscall sub_460F76(int this, unsigned int a2)
             }
             else
             {
-              sub_575F80(v38, v58);
-              sub_575F80(v35, v58);
-              sub_575F80(v34, v58);
+              rotate_matrix_about_y(v38, v58);
+              rotate_matrix_about_y(v35, v58);
+              rotate_matrix_about_y(v34, v58);
             }
             sub_57C8E0((_DWORD *)game_engine_address, *(_DWORD *)(this + 480), v38, -1);
             sub_57C8E0((_DWORD *)game_engine_address, v53, v35, -1);
@@ -146666,7 +146481,7 @@ int __thiscall sub_461617(int this)
     v7 = "wait StartAnimation(\"GabTE3PnBkH\");";
   }
   v9 = (char *)strlen(v7);
-  sub_402BD8(&v12, v7, v9);
+  append_std_string_storage_bytes(&v12, v7, v9);
   v10 = v13;
   if ( !v13 )
     v10 = (char *)Key;
@@ -146709,7 +146524,7 @@ int __thiscall sub_4617A6(int this)
   sub_57C6E0((_DWORD *)game_engine_address, *(_DWORD *)(this + 480), 0);
   v2 = sub_57C530((_DWORD *)game_engine_address, &v10, "gabmic", -1, 0);
   sub_57C6E0((_DWORD *)game_engine_address, *v2, 0);
-  if ( !sub_4AEFAE(15) )
+  if ( !is_global_flag_set(15) )
   {
     sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 371);
     sub_4AEFE9(15);
@@ -146721,7 +146536,7 @@ int __thiscall sub_4617A6(int this)
     v8[10] = v8[10] - *(float *)(this + 564);
     v7 = -*(float *)(this + 556);
     sub_575FF0(v8, v7);
-    sub_575F80(v8, 3.1415927);
+    rotate_matrix_about_y(v8, 3.1415927);
     sub_575FF0(v8, *(float *)(this + 556));
     v4 = *(float *)(this + 564) + v8[10];
     *(_BYTE *)(this + 536) = *(_BYTE *)(this + 536) == 0;
@@ -146861,7 +146676,7 @@ char __thiscall sub_461A18(int this)
     *(_DWORD *)(this + 348) = 3;
     *(_DWORD *)(this + 540) = 0;
     *(float *)(this + 584) = 0.0;
-    if ( !sub_4AEFAE(v20) )
+    if ( !is_global_flag_set(v20) )
     {
       sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 372);
       sub_4AEFE9(16);
@@ -147777,7 +147592,7 @@ void *__thiscall sub_462E97(int this)
     v47 = 0;
     append_string_suffix(v38, v40, ".txt");
     LOBYTE(v47) = 1;
-    v44 = sub_45A0F8(60);
+    v44 = allocate_registered_config_file(60);
     LOBYTE(v47) = 2;
     if ( v44 )
     {
@@ -147787,7 +147602,7 @@ void *__thiscall sub_462E97(int this)
         v4 = (char *)Key;
       if ( v39 )
         v5 = v39;
-      v6 = sub_46B4E2(v44, v5, v4);
+      v6 = construct_registered_config_file(v44, v5, v4);
       v44 = v6;
     }
     else
@@ -148150,7 +147965,7 @@ _WORD *sub_463713()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_463749(564);
+  v0 = allocate_registered_close_up_layer(564);
   result = 0;
   if ( v0 )
     return sub_463992(v0, 0);
@@ -148158,7 +147973,7 @@ _WORD *sub_463713()
 }
 
 //----- (00463749) --------------------------------------------------------
-_DWORD *__cdecl sub_463749(int a1)
+_DWORD *__cdecl allocate_registered_close_up_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -148231,7 +148046,7 @@ void sub_4637FD()
 // 764320: using guessed type int dword_764320;
 
 //----- (00463808) --------------------------------------------------------
-int __thiscall sub_463808(int this)
+int __thiscall construct_close_up_layer(int this)
 {
   size_t v2; // eax
   int *v3; // eax
@@ -148246,7 +148061,7 @@ int __thiscall sub_463808(int this)
   find_or_create_registry_entry(dword_764328, dword_764320 + this + 332);
   v6[2] = this + 336;
   construct_control(this + 336);
-  sub_45B1E5((void *)(this + 380));
+  register_color_control_member((void *)(this + 380));
   *(_DWORD *)(this + 380) = 0;
   *(_DWORD *)(this + 336) = &embedded_caption_control_vtable;
   *(float *)(this + 384) = 1.0;
@@ -148267,7 +148082,7 @@ int __thiscall sub_463808(int this)
   sub_463EF9(v6);
   sub_44F8C2((_DWORD *)(this + 408), (int)&dword_6B9858, this != 0 ? this + 320 : 0);
   (*(void (__thiscall **)(int, _DWORD *))(*(_DWORD *)(this + 408) + 172))(this + 408, v6);
-  sub_5067E5((_BYTE *)this, this + 408, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 408, 1);
   sub_476F8A((_DWORD *)(this + 408), "closeupexit");
   set_control_active((_BYTE *)this, 1);
   return this;
@@ -148287,7 +148102,7 @@ _WORD *__thiscall sub_463992(_WORD *this, int a2)
   sub_4ED3E5((int)this, a2);
   initialize_event_target_subobject(this + 160, a2);
   find_or_create_registry_entry(dword_764328, (unsigned int)this + dword_764320 + 332);
-  sub_4771A6((_DWORD *)this + 84, a2);
+  construct_color_control((_DWORD *)this + 84, a2);
   sub_44F6B2(this + 204, a2);
   *((_DWORD *)this + 80) = &off_6B98C0;
   *(_DWORD *)this = &off_6B98C8;
@@ -148379,7 +148194,7 @@ int __thiscall sub_463B72(int *this, int a2, int a3)
   v17 = 0;
   sub_4AD2A1(this[83], v12);
   v10 = this[83];
-  v4 = (_DWORD *)sub_463CF3();
+  v4 = (_DWORD *)get_inventory_layer_instance();
   v5 = sub_4EAB42(v4, v16, v10);
   LOBYTE(v17) = 1;
   assign_std_string_storage(v11, v5);
@@ -148398,8 +148213,8 @@ int __thiscall sub_463B72(int *this, int a2, int a3)
   LOBYTE(v17) = 0;
   this[97] = (int)v8;
   sub_476C1B(v8, (_DWORD *)interface_layer_type_descriptor);
-  sub_5067E5(this, this[97], 1);
-  sub_5067E5(this, (int)(this + 84), 1);
+  insert_control_into_control_container(this, this[97], 1);
+  insert_control_into_control_container(this, (int)(this + 84), 1);
   v17 = -1;
   return sub_463C97();
 }
@@ -148446,7 +148261,7 @@ _DWORD *__cdecl sub_463CD0(int a1)
 // 76BFD0: using guessed type _DWORD dword_76BFD0[15];
 
 //----- (00463CF3) --------------------------------------------------------
-int sub_463CF3()
+int get_inventory_layer_instance()
 {
   return *(_DWORD *)get_game_layer_slot(*(char **)(*(_DWORD *)(game_engine_instance_address + 1092) + 72), 8, 1);
 }
@@ -148505,7 +148320,7 @@ int __userpurge sub_463D60@<eax>(int a1@<ecx>, double a2@<st0>, int a3, int a4)
 //----- (00463DFA) --------------------------------------------------------
 int __thiscall sub_463DFA(int *this, int a2, int a3)
 {
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 
 //----- (00463E13) --------------------------------------------------------
@@ -148674,7 +148489,7 @@ char __thiscall sub_464056(_BYTE *this, const char *a2, int *a3, int *a4)
   v15 = 1;
   if ( this[4] )
   {
-    v5 = sub_4AD1DA(*a3);
+    v5 = get_inventory_item_name(*a3);
     v12[0] = HIBYTE(a2);
     std::string::_Tidy(0);
     v6 = strlen(v5);
@@ -149378,7 +149193,7 @@ char *__cdecl sub_464DE5(int a1, const char *a2, size_t *a3, char *a4, int *a5)
          1) != 1
     || v32[0] != 19778 )
   {
-    sub_570B20(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
+    report_engine_error(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
   }
   if ( (*(int (__thiscall **)(int, int, int *, int, int))(*(_DWORD *)file_manager_address + 16))(file_manager_address, a1, &v34, 40, 1) != 1
     || v34 != 40
@@ -149386,7 +149201,7 @@ char *__cdecl sub_464DE5(int a1, const char *a2, size_t *a3, char *a4, int *a5)
     || v39
     || v38 != 8 && v38 != 24 )
   {
-    sub_570B20(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
+    report_engine_error(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
   }
   v5 = ((int)(v35 * v38 + 31) >> 3) & 0xFFFFFFFC;
   v6 = v5 * v36;
@@ -149503,7 +149318,7 @@ char *__cdecl sub_464DE5(int a1, const char *a2, size_t *a3, char *a4, int *a5)
     }
     else
     {
-      sub_570B20(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
+      report_engine_error(game_engine_address, "%s is not a valid 8-bit or 24-bit BMP file", a2);
     }
   }
   free_tracked_memory((int)v43);
@@ -150602,12 +150417,12 @@ int __thiscall sub_4661F2(_DWORD *this, int a2)
   int v36; // [esp+100h] [ebp-4h]
   int v37; // [esp+10Ch] [ebp+8h]
 
-  sub_40442F(&v24, &v33);
+  initialize_std_string_storage(&v24, &v33);
   v36 = 0;
   _itoa(Value, Buffer, 10);
-  sub_402BAA(v22, Buffer, &v34);
+  assign_std_string_storage_from_c_string(v22, Buffer, &v34);
   LOBYTE(v36) = 1;
-  v3 = sub_407455(v26, (char *)&off_6B9D04, v22);
+  v3 = combine_text_prefix_and_string_storage(v26, (char *)&off_6B9D04, v22);
   LOBYTE(v36) = 2;
   assign_std_string_storage(&v24, v3);
   LOBYTE(v36) = 1;
@@ -150615,7 +150430,7 @@ int __thiscall sub_4661F2(_DWORD *this, int a2)
   LOBYTE(v36) = 0;
   std::string::_Tidy(1);
   v4 = (char *)strlen(".dat");
-  sub_402BD8(&v24, ".dat", v4);
+  append_std_string_storage_bytes(&v24, ".dat", v4);
   v5 = v25;
   if ( !v25 )
     v5 = Key;
@@ -150698,7 +150513,7 @@ LABEL_23:
     if ( j && !(j % this[6]) )
     {
       v13 = (char *)strlen("|");
-      sub_402BD8(v35, "|", v13);
+      append_std_string_storage_bytes(v35, "|", v13);
       sub_4296DB((int)&v29, v35);
       v14 = strlen("|");
       std::string::assign((void *)"|", v14);
@@ -152967,7 +152782,7 @@ char __thiscall sub_468957(_BYTE *this, const char *a2, _DWORD *a3, int i)
     v10 = *sub_468D33((_DWORD **)v6, &a3);
     v11 = v6[1];
     a2 = 0;
-    sub_40442F(v35, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v35, (_BYTE *)&a3 + 3);
     LOBYTE(v40) = 2;
     for ( i = v10; i != v11; ++a2 )
     {
@@ -153107,7 +152922,7 @@ char __thiscall sub_468D41(_BYTE *this, const char *a2, int a3, int i)
     v10 = *(_DWORD *)(v5 + 4);
     v50 = 0;
     a2 = 0;
-    sub_40442F(v48, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v48, (_BYTE *)&a3 + 3);
     LOBYTE(v52) = 2;
     for ( i = v9; i != v10; ++a2 )
     {
@@ -153802,7 +153617,7 @@ void __cdecl sub_4699E7()
   if ( (byte_7643D8 & 1) == 0 )
   {
     byte_7643D8 |= 1u;
-    sub_566BE0(&unk_7643E0);
+    sub_566BE0(&static_configuration_type_descriptor);
     --dword_76D550;
   }
 }
@@ -153839,7 +153654,7 @@ int __thiscall construct_game_configuration(int this)
   LOBYTE(v10) = 1;
   if ( !v3 )
     v3 = (char *)Key;
-  sub_46B4E2((_BYTE *)this, v3, "game");
+  construct_registered_config_file((_BYTE *)this, v3, "game");
   LOBYTE(v10) = 4;
   std::string::_Tidy(1);
   LOBYTE(v10) = 3;
@@ -153959,7 +153774,7 @@ _DWORD *__thiscall sub_469CA9(void *this)
   LOBYTE(v8) = 1;
   if ( !v3 )
     v3 = (char *)Key;
-  sub_46B4E2(v5, v3, "local");
+  construct_registered_config_file(v5, v3, "local");
   LOBYTE(v8) = 4;
   std::string::_Tidy(1);
   LOBYTE(v8) = 3;
@@ -154097,7 +153912,7 @@ _BYTE *__thiscall sub_469F06(int this, _BYTE *a2, int *a3, char *a4, char *a5)
     LOBYTE(v15) = 1;
     std::string::_Tidy(1);
     *a3 = (unsigned __int16)*(_DWORD *)(this + 252) | (*(unsigned __int16 *)(this + 256) << 16);
-    sub_41838F((_DWORD *)(this + 208), v13);
+    append_vector_element((_DWORD *)(this + 208), v13);
   }
   *a2 = v13[0];
   std::string::_Tidy(0);
@@ -155612,7 +155427,7 @@ char __thiscall sub_46B1AB(_DWORD *this, int a2)
       v9 = (CHAR *)Key;
     if ( !sub_4A450D((int)v12, v9, 0, 1u, 0x80u, (bool *)&a2 + 3) || HIBYTE(a2) )
       goto LABEL_18;
-    sub_4A39C1(2, 1);
+    record_file_system_activity(2, 1);
     v7 = v12[6];
     FileSize = GetFileSize(v12[2], 0);
   }
@@ -155677,7 +155492,7 @@ void __thiscall sub_46B347(int this)
   v2 = *(_DWORD *)(this + 8) == -1;
   *(_DWORD *)(this + 4) = &off_6AB500;
   if ( !v2 )
-    sub_4A43D6((HANDLE *)(this + 4));
+    close_tracked_file((HANDLE *)(this + 4));
 }
 // 6AB370: using guessed type int (__stdcall *off_6AB370[2])(char);
 // 6AB4C0: using guessed type _UNKNOWN *off_6AB4C0;
@@ -155697,7 +155512,7 @@ void __thiscall sub_46B3F3(int this)
   if ( *(_DWORD *)(this + 16) )
     sub_4A445B((HANDLE *)(this + 12));
   if ( *(_DWORD *)(this + 8) != -1 )
-    sub_4A43D6((HANDLE *)(this + 4));
+    close_tracked_file((HANDLE *)(this + 4));
 }
 
 //----- (0046B423) --------------------------------------------------------
@@ -155706,7 +155521,7 @@ int sub_46B423()
   _DWORD *v0; // ecx
   int result; // eax
 
-  v0 = sub_45A0F8(60);
+  v0 = allocate_registered_config_file(60);
   result = 0;
   if ( v0 )
     return sub_46B55E((int)v0, 0);
@@ -155773,7 +155588,8 @@ void sub_46B4D7()
 // 764424: using guessed type int dword_764424;
 
 //----- (0046B4E2) --------------------------------------------------------
-_BYTE *__thiscall sub_46B4E2(_BYTE *this, char *a2, char *a3)
+_BYTE *__thiscall construct_registered_config_file(_BYTE *this, char *a2,
+                                                    char *a3)
 {
   sub_46B03D((int)this, a2, a3);
   find_or_create_registry_entry(dword_764428, (unsigned int)&this[dword_764424 + 37]);
@@ -156515,7 +156331,8 @@ double __thiscall sub_46C1DB(_DWORD *this, char *a2, float a3)
 }
 
 //----- (0046C1FA) --------------------------------------------------------
-char *__thiscall sub_46C1FA(_DWORD *this, char *a2, char *a3)
+char *__thiscall read_string_setting_or_default(_DWORD *this, char *a2,
+                                                char *a3)
 {
   bool v3; // zf
   char *result; // eax
@@ -156688,7 +156505,7 @@ int __thiscall sub_46C351(_DWORD *this, float *a2, char *a3)
   char v23[16]; // [esp+50h] [ebp-1Ch] BYREF
   int v24; // [esp+68h] [ebp-4h]
 
-  sub_402BAA(v23, a3, (_BYTE *)&a3 + 3);
+  assign_std_string_storage_from_c_string(v23, a3, (_BYTE *)&a3 + 3);
   v24 = 0;
   v4 = (char *)*((_DWORD *)append_string_suffix(v16, v23, "Function") + 1);
   LOBYTE(v24) = 1;
@@ -158523,7 +158340,7 @@ int __thiscall sub_46DDAB(float *this, _DWORD *a2)
                              *(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100),
                              "Scrollback Border",
                              (char *)2);
-  *((_DWORD *)this + 15) = sub_46C1FA(
+  *((_DWORD *)this + 15) = read_string_setting_or_default(
                              *(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100),
                              "Scrollback Sel Color",
                              (char *)0xFF0000);
@@ -159531,7 +159348,7 @@ int __thiscall sub_46EE82(int *this, int a2, int a3)
   select_settings_section(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Console");
   sub_46C10A(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), v13, "Command Font", "f_console_command");
   v16 = 0;
-  v4 = sub_46C1FA(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Caret Color", (char *)0xFFC8C8);
+  v4 = read_string_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Caret Color", (char *)0xFFC8C8);
   this[30] = (int)read_integer_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Border", (char *)2);
   v5 = read_integer_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Max History", (char *)0x28);
   this[52] = -1;
@@ -159952,7 +159769,7 @@ int __thiscall sub_46F5EE(int *this)
   v2 = (char *)this[13];
   if ( !v2 )
     v2 = (char *)Key;
-  sub_402BAA(v27, v2, &v31);
+  assign_std_string_storage_from_c_string(v27, v2, &v31);
   v32 = 0;
   sub_595010((int)v27);
   if ( v29 )
@@ -160160,12 +159977,12 @@ LABEL_18:
             if ( !v45 )
             {
               v21 = (char *)strlen(", ");
-              sub_402BD8(&v40, ", ", v21);
+              append_std_string_storage_bytes(&v40, ", ", v21);
             }
             if ( *v43 == 1 )
             {
               v32 = (char *)strlen("1");
-              sub_402BD8(&v40, "1", v32);
+              append_std_string_storage_bytes(&v40, "1", v32);
             }
             else
             {
@@ -160176,23 +159993,23 @@ LABEL_18:
                   if ( v45 )
                   {
                     v29 = (char *)strlen("\"&\"");
-                    sub_402BD8(&v40, "\"&\"", v29);
+                    append_std_string_storage_bytes(&v40, "\"&\"", v29);
                   }
                   else
                   {
                     v30 = (char *)strlen("\"\"");
-                    sub_402BD8(&v40, "\"\"", v30);
+                    append_std_string_storage_bytes(&v40, "\"\"", v30);
                   }
                 }
                 goto LABEL_38;
               }
               v31 = (char *)strlen("1.0");
-              sub_402BD8(&v40, "1.0", v31);
+              append_std_string_storage_bytes(&v40, "1.0", v31);
             }
             if ( v45 )
             {
               v33 = (char *)strlen("&");
-              sub_402BD8(&v40, "&", v33);
+              append_std_string_storage_bytes(&v40, "&", v33);
 LABEL_38:
               if ( v45 )
                 v45 = 0;
@@ -160203,7 +160020,7 @@ LABEL_38:
           while ( v42 );
         }
         v22 = (char *)strlen(")");
-        sub_402BD8(&v40, ")", v22);
+        append_std_string_storage_bytes(&v40, ")", v22);
         v23 = v41;
         if ( !v41 )
           v23 = (char *)Key;
@@ -160566,7 +160383,7 @@ int __thiscall initialize_debug_console(int this)
       v8 = 0;
     LOBYTE(v49) = 0;
     *(_DWORD *)(this + 216) = v8;
-    sub_5067E5((_BYTE *)this, v8, 1);
+    insert_control_into_control_container((_BYTE *)this, v8, 1);
     (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 216) + 176))(*(_DWORD *)(this + 216), 1);
   }
   sub_46EFE6(*(_DWORD **)(this + 216), &v29);
@@ -160592,7 +160409,7 @@ int __thiscall initialize_debug_console(int this)
       v11 = 0;
     LOBYTE(v49) = 0;
     *(_DWORD *)(this + 212) = v11;
-    sub_5067E5((_BYTE *)this, v11, 1);
+    insert_control_into_control_container((_BYTE *)this, v11, 1);
   }
   v37 = v33;
   v38 = v34;
@@ -160633,7 +160450,7 @@ int __thiscall initialize_debug_console(int this)
     v41 = 0;
     v42 = (int *)v18;
     sub_438202(v17, v24, &v41, 0, 0x7FFFFFFF, -2147483647);
-    sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 224), 1);
+    insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 224), 1);
     if ( !v48 )
       (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 224) + 176))(*(_DWORD *)(this + 224), 1);
   }
@@ -160763,7 +160580,7 @@ int __thiscall sub_470587(int *this, int a2, int a3)
 {
   int v4; // edi
 
-  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   if ( !v4 && (get_engine_input_state((_DWORD *)game_engine_instance_address, 0) & 0x38) == 0x20 )
   {
     v4 = 1;
@@ -160805,21 +160622,21 @@ int __thiscall sub_47060B(int *this)
 //----- (0047061D) --------------------------------------------------------
 int __thiscall sub_47061D(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
   return 1;
 }
 
 //----- (00470635) --------------------------------------------------------
 int __thiscall sub_470635(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D92C, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_2_press, 0);
   return 1;
 }
 
 //----- (0047064D) --------------------------------------------------------
 int __thiscall sub_47064D(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D93B, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_3_press, 0);
   return 1;
 }
 
@@ -161222,7 +161039,7 @@ int __thiscall initialize_mini_console_version_display(int *this)
 int __thiscall destroy_file_version_info(int *this)
 {
   std::string::_Tidy(1);
-  return sub_45CA57(this + 2);
+  return destroy_byte_vector(this + 2);
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
@@ -161411,7 +161228,7 @@ int __thiscall sub_471002(int *this, int a2)
   select_settings_section(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "MiniConsole");
   sub_46C10A(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), v11, "Command Font", "f_mconsole_command");
   v14 = 0;
-  v3 = sub_46C1FA(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Caret Color", (char *)0xFFC8C8);
+  v3 = read_string_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Caret Color", (char *)0xFFC8C8);
   this[31] = (int)read_integer_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Border", (char *)5);
   v4 = read_integer_setting_or_default(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "Command Max History", (char *)0x14);
   this[45] = -1;
@@ -161689,7 +161506,7 @@ int __thiscall sub_471414(int *this)
   v2 = (char *)this[13];
   if ( !v2 )
     v2 = (char *)Key;
-  sub_402BAA(v26, v2, &v30);
+  assign_std_string_storage_from_c_string(v26, v2, &v30);
   v31 = 0;
   sub_595010((int)v26);
   if ( v28 )
@@ -161846,12 +161663,12 @@ char __thiscall sub_471637(_DWORD *this)
         if ( !v32 )
         {
           v14 = (char *)strlen(", ");
-          sub_402BD8(&v28, ", ", v14);
+          append_std_string_storage_bytes(&v28, ", ", v14);
         }
         if ( *v31 == 1 )
         {
           v22 = (char *)strlen("1");
-          sub_402BD8(&v28, "1", v22);
+          append_std_string_storage_bytes(&v28, "1", v22);
         }
         else
         {
@@ -161862,23 +161679,23 @@ char __thiscall sub_471637(_DWORD *this)
               if ( v32 )
               {
                 v19 = (char *)strlen("\"&\"");
-                sub_402BD8(&v28, "\"&\"", v19);
+                append_std_string_storage_bytes(&v28, "\"&\"", v19);
               }
               else
               {
                 v20 = (char *)strlen("\"\"");
-                sub_402BD8(&v28, "\"\"", v20);
+                append_std_string_storage_bytes(&v28, "\"\"", v20);
               }
             }
             goto LABEL_22;
           }
           v21 = (char *)strlen("1.0");
-          sub_402BD8(&v28, "1.0", v21);
+          append_std_string_storage_bytes(&v28, "1.0", v21);
         }
         if ( v32 )
         {
           v23 = (char *)strlen("&");
-          sub_402BD8(&v28, "&", v23);
+          append_std_string_storage_bytes(&v28, "&", v23);
 LABEL_22:
           if ( v32 )
             v32 = 0;
@@ -161889,7 +161706,7 @@ LABEL_22:
       while ( v30 );
     }
     v15 = (char *)strlen(")");
-    sub_402BD8(&v28, ")", v15);
+    append_std_string_storage_bytes(&v28, ")", v15);
     v16 = v29;
     if ( !v29 )
       v16 = (char *)Key;
@@ -162115,7 +161932,7 @@ int __thiscall initialize_mini_console(int this)
       v7 = 0;
     LOBYTE(v31) = 0;
     *(_DWORD *)(this + 208) = v7;
-    sub_5067E5((_BYTE *)this, (int)v7, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v7, 1);
     (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 208) + 176))(*(_DWORD *)(this + 208), 1);
   }
   sub_470B80(*(_DWORD **)(this + 208), &mini_console_coordinate_default_a);
@@ -162136,7 +161953,7 @@ int __thiscall initialize_mini_console(int this)
       v10 = 0;
     LOBYTE(v31) = 0;
     *(_DWORD *)(this + 212) = v10;
-    sub_5067E5((_BYTE *)this, v10, 1);
+    insert_control_into_control_container((_BYTE *)this, v10, 1);
     (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 212) + 176))(*(_DWORD *)(this + 212), 1);
   }
   v26 = v24[0];
@@ -162182,7 +161999,7 @@ int __thiscall initialize_mini_console(int this)
     v18[17] = 2;
     v18[18] = 2;
     sub_43862C(v18);
-    sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 216), 1);
+    insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 216), 1);
     (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 216) + 176))(*(_DWORD *)(this + 216), 1);
   }
   (*(void (__thiscall **)(int, int))(*(_DWORD *)this + 164))(this, this + 200);
@@ -162244,7 +162061,7 @@ int __thiscall sub_472021(int *this, int a2, int a3)
   int v6; // [esp+8h] [ebp-8h] BYREF
   int v7; // [esp+Ch] [ebp-4h]
 
-  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   if ( !v4 && (get_engine_input_state((_DWORD *)game_engine_instance_address, 0) & 0x38) == 0x20 )
   {
     v6 = this[7];
@@ -162285,21 +162102,21 @@ int __thiscall sub_4720E1(int *this)
 //----- (004720F3) --------------------------------------------------------
 int __thiscall sub_4720F3(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
   return 1;
 }
 
 //----- (0047210B) --------------------------------------------------------
 int __thiscall sub_47210B(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D92C, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_2_press, 0);
   return 1;
 }
 
 //----- (00472123) --------------------------------------------------------
 int __thiscall sub_472123(int *this, int a2)
 {
-  sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D93B, 0);
+  sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_3_press, 0);
   return 1;
 }
 
@@ -164421,10 +164238,10 @@ char __thiscall sub_473D20(_BYTE *this, int i, _DWORD *a3, int a4)
       v42 = 0;
     v11 = *sub_47411D((_DWORD **)v7, &a3);
     v12 = v7[1];
-    sub_40442F(v38, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v38, (_BYTE *)&a3 + 3);
     v40 = 0;
     LOBYTE(v43) = 2;
-    sub_40442F(v39, (_BYTE *)&a4 + 3);
+    initialize_std_string_storage(v39, (_BYTE *)&a4 + 3);
     LOBYTE(v43) = 3;
     for ( i = v11; i != v12; ++v40 )
     {
@@ -164538,9 +164355,9 @@ char __thiscall sub_47412B(_BYTE *this, const char *a2, _DWORD *a3, int i)
       v40 = 0;
     v9 = *sub_474589((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v37, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&a3 + 3);
     a2 = 0;
-    sub_40442F(v38, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v38, (_BYTE *)&a3 + 3);
     LOBYTE(v41) = 3;
     for ( i = v9; i != v10; ++a2 )
     {
@@ -165072,7 +164889,7 @@ _DWORD *__thiscall sub_474A5A(_DWORD *this, int a2, int a3, int a4, int a5, unsi
           v33 = (_BYTE *)v49[2];
           v34 = v49[3];
           v18 = sub_474DC1(&v31, v30, v48 + v9 + i - v15);
-          sub_41838F(v47, (_BYTE *)v18[2]);
+          append_vector_element(v47, (_BYTE *)v18[2]);
           if ( ++i >= a6 )
             break;
           v15 = a6;
@@ -165105,7 +164922,7 @@ _DWORD *__thiscall sub_474A5A(_DWORD *this, int a2, int a3, int a4, int a5, unsi
       v16 = a6 - v9;
       do
       {
-        sub_41838F(v47, a7);
+        append_vector_element(v47, a7);
         --v16;
       }
       while ( v16 );
@@ -165116,7 +164933,7 @@ _DWORD *__thiscall sub_474A5A(_DWORD *this, int a2, int a3, int a4, int a5, unsi
         v33 = (_BYTE *)v49[2];
         v34 = v49[3];
         v17 = sub_474DC1(&v31, v30, v48 + i);
-        sub_41838F(v47, (_BYTE *)v17[2]);
+        append_vector_element(v47, (_BYTE *)v17[2]);
       }
       v39 = *v49;
       v40 = v49[1];
@@ -165534,7 +165351,7 @@ int __cdecl sub_47527C(int a1)
 }
 
 //----- (00475282) --------------------------------------------------------
-char *__cdecl sub_475282(int a1)
+char *__cdecl camera_type_name(int a1)
 {
   return off_753618[sub_47527C(a1)];
 }
@@ -165669,13 +165486,13 @@ void sub_475430()
 //----- (00475448) --------------------------------------------------------
 void sub_475448()
 {
-  *(float *)&dword_7647B0 = 2147483600.0;
-  *(float *)&dword_7647B4 = 2147483600.0;
-  *(float *)&dword_7647B8 = 2147483600.0;
+  *(float *)&unset_camera_position_x = 2147483600.0;
+  *(float *)&unset_camera_position_y = 2147483600.0;
+  *(float *)&unset_camera_position_z = 2147483600.0;
 }
-// 7647B0: using guessed type int dword_7647B0;
-// 7647B4: using guessed type int dword_7647B4;
-// 7647B8: using guessed type int dword_7647B8;
+// 7647B0: using guessed type int unset_camera_position_x;
+// 7647B4: using guessed type int unset_camera_position_y;
+// 7647B8: using guessed type int unset_camera_position_z;
 
 //----- (00475466) --------------------------------------------------------
 void sub_475466()
@@ -166273,7 +166090,7 @@ char __thiscall sub_475BFB(_DWORD *this, float *a2, float *a3, float *a4)
           *a2 = *v12;
           a2[1] = v12[1];
           a2[2] = v12[2];
-          if ( !sub_40EE23(a2, v28) )
+          if ( !vectors_are_approximately_equal(a2, v28) )
             v45 = 1;
           goto LABEL_8;
         }
@@ -167370,7 +167187,7 @@ int __thiscall sub_476C1B(_DWORD *this, _DWORD *a2)
 }
 
 //----- (00476C91) --------------------------------------------------------
-int *__thiscall sub_476C91(_DWORD *this, _DWORD *a2)
+int *__thiscall update_control_bounds(_DWORD *this, _DWORD *a2)
 {
   _DWORD *v3; // esi
   int *result; // eax
@@ -167657,7 +167474,7 @@ _DWORD *sub_4770C1()
   v0 = sub_4770F4(52);
   result = 0;
   if ( v0 )
-    return sub_4771A6(v0, 0);
+    return construct_color_control(v0, 0);
   return result;
 }
 
@@ -167733,7 +167550,7 @@ void sub_47719B()
 // 76492C: using guessed type int dword_76492C;
 
 //----- (004771A6) --------------------------------------------------------
-_DWORD *__thiscall sub_4771A6(_DWORD *this, int a2)
+_DWORD *__thiscall construct_color_control(_DWORD *this, int a2)
 {
   construct_registered_control(this, a2);
   find_or_create_registry_entry(dword_764930, (unsigned int)this + dword_76492C + 44);
@@ -172166,7 +171983,7 @@ int __thiscall sub_47B1BE(_DWORD *this, _DWORD *a2)
   v2 = this + 17;
   while ( v5 != (_BYTE *)v2[2] )
   {
-    sub_41838F(a2, v5);
+    append_vector_element(a2, v5);
     ++v7;
     sub_47C534(v4);
   }
@@ -173358,7 +173175,7 @@ void __thiscall sub_47C4A2(_DWORD *this, int a2)
 
   if ( this[16] < 6u )
   {
-    sub_41838F(this + 5, (_BYTE *)a2);
+    append_vector_element(this + 5, (_BYTE *)a2);
   }
   else
   {
@@ -174447,10 +174264,10 @@ char __thiscall sub_47D1D3(_BYTE *this, int i, _DWORD *a3, int j)
       v41 = 0;
     v9 = *sub_47D5D7((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v36, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v36, (_BYTE *)&a3 + 3);
     v40 = 0;
     LOBYTE(v42) = 2;
-    sub_40442F(v37, (_BYTE *)&j + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&j + 3);
     LOBYTE(v42) = 3;
     for ( i = v9; i != v10; ++v40 )
     {
@@ -175378,18 +175195,18 @@ _DWORD *__thiscall sub_47E016(_DWORD *this)
   std::string::_Tidy(0);
   this[4] = dword_7647D0;
   this[5] = dword_7647D4;
-  this[6] = dword_7647B0;
-  this[7] = dword_7647B4;
-  this[8] = dword_7647B8;
+  this[6] = unset_camera_position_x;
+  this[7] = unset_camera_position_y;
+  this[8] = unset_camera_position_z;
   result = this;
   *((float *)this + 9) = 0.0;
   return result;
 }
 // 47E020: variable 'v3' is possibly undefined
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 7647B0: using guessed type int dword_7647B0;
-// 7647B4: using guessed type int dword_7647B4;
-// 7647B8: using guessed type int dword_7647B8;
+// 7647B0: using guessed type int unset_camera_position_x;
+// 7647B4: using guessed type int unset_camera_position_y;
+// 7647B8: using guessed type int unset_camera_position_z;
 // 7647D0: using guessed type int dword_7647D0;
 // 7647D4: using guessed type int dword_7647D4;
 
@@ -177272,7 +177089,7 @@ int __thiscall sub_47FC48(_BYTE *this)
 {
   int result; // eax
 
-  result = sub_4AEFAE(182);
+  result = is_global_flag_set(182);
   if ( (_BYTE)result )
   {
     if ( this[444] )
@@ -177421,9 +177238,9 @@ int __thiscall sub_47FD6E(int this)
   v67[0] = v77;
   std::string::_Tidy(0);
   v2 = (char *)sub_557B2B(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 16));
-  sub_402BAA(v42, v2, &v77);
+  assign_std_string_storage_from_c_string(v42, v2, &v77);
   LOBYTE(v78) = 5;
-  sub_402BAA(v50, (char *)&off_6BC048, &v76);
+  assign_std_string_storage_from_c_string(v50, (char *)&off_6BC048, &v76);
   LOBYTE(v78) = 6;
   append_string_suffix(v44, v50, ".txt");
   v3 = v51;
@@ -177433,7 +177250,7 @@ int __thiscall sub_47FD6E(int this)
   v4 = v45;
   if ( !v45 )
     v4 = (char *)Key;
-  sub_46B4E2(v71, v4, v3);
+  construct_registered_config_file(v71, v4, v3);
   LOBYTE(v78) = 8;
   if ( sub_46B663(v71, 1) )
   {
@@ -177817,7 +177634,7 @@ int __thiscall sub_480A3A(int this, int a2)
   result = a2 - 1;
   if ( a2 == 1 )
   {
-    result = sub_4AEFAE(183);
+    result = is_global_flag_set(183);
     if ( !(_BYTE)result )
     {
       *(_BYTE *)(this + 472) = 1;
@@ -177837,7 +177654,7 @@ int __thiscall sub_480AA5(int this, int a2, int a3, int a4)
 {
   int result; // eax
 
-  result = sub_4AEFAE(182);
+  result = is_global_flag_set(182);
   if ( (_BYTE)result )
   {
     if ( *(_BYTE *)(this + 444) )
@@ -177950,7 +177767,7 @@ LABEL_13:
 LABEL_19:
     *(_DWORD *)(a1 + 796) = 0;
   }
-  result = (unsigned int *)sub_4AEFAE(182);
+  result = (unsigned int *)is_global_flag_set(182);
   if ( (_BYTE)result )
   {
     result = (unsigned int *)(a1 + 1064);
@@ -177964,7 +177781,7 @@ LABEL_19:
       v27[9] = v30 + v27[9];
       v27[11] = v13 + v27[11];
       v23 = *(float *)(a1 + 1048) * -0.017453292;
-      sub_575F80(v27, v23);
+      rotate_matrix_about_y(v27, v23);
       v14 = (double)*(int *)(a1 + 996);
       v37 = v14 / *(float *)(a1 + 1052);
       v15 = (__int64)(v27[9] * v37) + (__int64)(v14 * *(float *)(a1 + 1032));
@@ -177989,7 +177806,7 @@ LABEL_19:
       v26[9] = v19 + v26[9];
       v26[11] = v31 - *(float *)(a1 + 1060) + v26[11];
       v24 = *(float *)(a1 + 1048) * -0.017453292;
-      sub_575F80(v26, v24);
+      rotate_matrix_about_y(v26, v24);
       v39 = *(_DWORD *)(a1 + 1028);
       v31 = v26[11] * 0.001;
       v20 = v26[9] * 0.001 + *(float *)(a1 + 1044);
@@ -179352,14 +179169,14 @@ int __thiscall sub_4826A6(_DWORD *this, int *a2)
     v20 = 0;
     if ( v19 )
     {
-      sub_439D31(v10);
+      construct_file_path_context(v10);
       LOBYTE(v20) = 1;
-      sub_439CF1(v12);
+      initialize_file_path_context_strings(v12);
       LOBYTE(v20) = 2;
-      v10[0] = &off_6AB594;
-      sub_4A7263(v10, v18);
+      v10[0] = &file_path_context_vtable;
+      set_file_path_context_path(v10, v18);
       LOBYTE(v20) = 3;
-      v3 = sub_439E38(v10, v15);
+      v3 = get_file_path_context_resolved_path(v10, v15);
       LOBYTE(v20) = 4;
       v4 = append_string_suffix(v14, v3, ".crash");
       LOBYTE(v20) = 5;
@@ -181105,7 +180922,7 @@ _DWORD *__thiscall sub_48472F(_DWORD *this)
   *this = &off_6BCAB0;
   v5[2] = 1;
   v5[3] = 1;
-  sub_476C91(this, v5);
+  update_control_bounds(this, v5);
   sub_4A2628(this);
   v2 = sub_5A6310();
   if ( (int)get_mouse_cursor_activity_state((struct _RTL_CRITICAL_SECTION *)v2) > 0 )
@@ -182172,7 +181989,7 @@ int __thiscall initialize_cursor_spec(int this, char *Str)
   LOBYTE(v21) = 3;
   if ( !v5 )
     v5 = (char *)Key;
-  sub_46B4E2(v12, v5, v20);
+  construct_registered_config_file(v12, v5, v20);
   LOBYTE(v21) = 5;
   std::string::_Tidy(1);
   if ( sub_46B663(v12, 1) )
@@ -184342,7 +184159,7 @@ char __thiscall serialize_key_binding_collection(_BYTE *this, const char *a2, _D
     v9 = *sub_4887D3((_DWORD **)v5, &a3);
     v10 = v5[1];
     a2 = 0;
-    sub_40442F(v37, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&a3 + 3);
     LOBYTE(v41) = 2;
     for ( i = v9; i != v10; ++a2 )
     {
@@ -184395,7 +184212,7 @@ char __thiscall serialize_key_binding_collection(_BYTE *this, const char *a2, _D
     v37[0] = HIBYTE(a3);
     std::string::_Tidy(0);
     LOBYTE(v41) = 8;
-    sub_40442F(v36, (_BYTE *)&i + 3);
+    initialize_std_string_storage(v36, (_BYTE *)&i + 3);
     LOBYTE(v41) = 9;
     if ( (int)a2 > 0 )
     {
@@ -185009,7 +184826,7 @@ _DWORD *__thiscall sub_489318(int this)
     sub_50E12D(*(void **)(*(_DWORD *)(game_engine_instance_address + 1092) + 112), 1);
     result = *(_DWORD **)(this + 224);
     if ( result )
-      return sub_5067E5((_BYTE *)this, (int)result, 1);
+      return insert_control_into_control_container((_BYTE *)this, (int)result, 1);
   }
   return result;
 }
@@ -186406,7 +186223,7 @@ int __thiscall populate_developer_control_menu(int this)
     v7 = 0;
   LOBYTE(v66) = 0;
   *(_DWORD *)(this + 320) = v7;
-  sub_5067E5((_BYTE *)this, v7, 1);
+  insert_control_into_control_container((_BYTE *)this, v7, 1);
   v8 = sub_4F9AC9(*(_BYTE **)(this + 320), "Construct", -1);
   v62 = (_DWORD *)sub_4F9D49(*(_DWORD **)(this + 320), v8);
   v9 = sub_4F9AC9(v62, "Commands", -1);
@@ -186605,7 +186422,7 @@ int __thiscall attach_developer_control_to_interface(_BYTE *this)
   int result; // eax
   _BYTE *v2; // ecx
 
-  sub_5067E5(this, *(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 112), 1);
+  insert_control_into_control_container(this, *(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 112), 1);
   result = *(_DWORD *)(game_engine_instance_address + 1092);
   v2 = *(_BYTE **)(result + 112);
   if ( !v2[24] )
@@ -188995,7 +188812,7 @@ _DWORD *__cdecl sub_48CF32(_DWORD *a1, int a2, int a3, _DWORD *a4)
   v4 = a2;
   for ( i = a4; a2 != a3; v4 = a2 )
   {
-    sub_41838F(i, (_BYTE *)(v4 + 12));
+    append_vector_element(i, (_BYTE *)(v4 + 12));
     sub_48D555(&a2);
   }
   result = a1;
@@ -190443,7 +190260,7 @@ int __thiscall sub_48E1F6(int *this, int *a2)
 {
   int result; // eax
 
-  if ( sub_5071E8(this, (int)a2, (int (__thiscall *)(int, int))sub_44D922, 0) )
+  if ( sub_5071E8(this, (int)a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0) )
     return 1;
   result = sub_479152((int)(this + 62), a2);
   if ( result )
@@ -190504,7 +190321,7 @@ int *__thiscall sub_48E315(_DWORD *this, int *a2)
   _DWORD v5[4]; // [esp+4h] [ebp-10h] BYREF
 
   v3 = sub_479581(this + 62, v5, a2);
-  return sub_476C91(this, v3);
+  return update_control_bounds(this, v3);
 }
 
 //----- (0048E340) --------------------------------------------------------
@@ -191342,7 +191159,7 @@ int *__thiscall sub_48F436(_DWORD *this)
     v4 -= 2;
     v5 += 2;
     v6 += 2;
-    return sub_476C91(this, &v3);
+    return update_control_bounds(this, &v3);
   }
   return result;
 }
@@ -191881,8 +191698,8 @@ bool __thiscall serialize_dialogue_key_field(int this, _BYTE *a2, int a3)
   bool v4; // bl
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
-  v4 = sub_4053DF(a2, "n", (int *)this, &dword_6A6460) != 0;
-  if ( !sub_4054E4(a2, "v", (int *)(this + 4), &dword_6A64B0) )
+  v4 = serialize_noun_field(a2, "n", (int *)this, &default_noun_id) != 0;
+  if ( !serialize_verb_field(a2, "v", (int *)(this + 4), &default_verb_id) )
     v4 = 0;
   if ( !sub_4052DA(a2, "c", (int *)(this + 8), &dword_6A64A4) )
     v4 = 0;
@@ -191892,9 +191709,9 @@ bool __thiscall serialize_dialogue_key_field(int this, _BYTE *a2, int a3)
   return v4;
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A64A4: using guessed type int dword_6A64A4;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A64B0: using guessed type int default_verb_id;
 
 //----- (0048FF77) --------------------------------------------------------
 bool __cdecl compare_played_dialogue_keys(int a1, int a2)
@@ -192130,13 +191947,13 @@ char __thiscall sub_490308(int this, _BYTE *a2, int a3)
     "mActor",
     this + 28,
     dword_762E38);
-  sub_4053DF(a2, "mNoun", (int *)(this + 32), &dword_6A6460);
+  serialize_noun_field(a2, "mNoun", (int *)(this + 32), &default_noun_id);
   serialize_boolean_field(a2, "mbDoFidgets", (char *)(this + 36), &byte_6A6454);
   serialize_event_reference((int *)(this + 40), a2, (int)"mExternalNotify");
   return sub_4095A1(a2, "mCaptionHandle", (int *)(this + 52), &dword_6A6E80);
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A6E80: using guessed type int dword_6A6E80;
 // 762E38: using guessed type _DWORD dword_762E38[15];
 
@@ -194844,7 +194661,7 @@ char __thiscall serialize_played_dialogue_index_field(_BYTE *this, const char *a
     v39 = v11;
     Concurrency::details::TaskStack::TaskStack((Concurrency::details::TaskStack *)v38);
     a2 = 0;
-    sub_40442F(v41, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v41, (_BYTE *)&a3 + 3);
     LOBYTE(v44) = 2;
     a4 = v12;
     if ( v12 != v11 )
@@ -197479,7 +197296,7 @@ int __thiscall sub_495490(int *this, _BYTE *a2, int a3)
 // 7652E8: using guessed type _DWORD dword_7652E8[15];
 
 //----- (00495548) --------------------------------------------------------
-int __thiscall sub_495548(int this)
+int __thiscall construct_driving_layer(int this)
 {
   size_t v2; // eax
   int v3; // eax
@@ -197936,7 +197753,7 @@ int __thiscall sub_495548(int this)
       v29 = Key;
     v30 = find_or_create_engine_string_resource((_DWORD *)game_engine_address, v49, v29, 0, 0);
     sub_56B3F0((_DWORD *)game_engine_address, *v30);
-    sub_5067E5((_BYTE *)this, (int)**v24, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)**v24, 1);
     LOBYTE(v53) = 8;
     std::string::_Tidy(1);
     ++v24;
@@ -197944,8 +197761,8 @@ int __thiscall sub_495548(int this)
   }
   while ( v50 );
   sub_497F2A((_DWORD **)this);
-  sub_5067E5((_BYTE *)this, this + 388, 0);
-  sub_5067E5((_BYTE *)this, this + 336, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 388, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 336, 0);
   v43 = 0;
   v31 = sub_447DAB();
   attach_control_to_service(this, v31, v43);
@@ -198018,7 +197835,7 @@ _WORD *__thiscall sub_495EFD(_WORD *this, int a2)
   v6 = 5;
   initialize_event_target_subobject(this + 160, v2);
   find_or_create_registry_entry(dword_765368, (unsigned int)this + dword_765364 + 332);
-  sub_4771A6((_DWORD *)this + 84, v2);
+  construct_color_control((_DWORD *)this + 84, v2);
   construct_registered_sprite_control((int)(this + 194), v2);
   sub_49AB60((_DWORD *)this + 123, (_BYTE *)&a2 + 3);
   sub_49ABF8((_DWORD *)this + 135, &v5);
@@ -198041,7 +197858,7 @@ _WORD *sub_495FCF()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_496005(796);
+  v0 = allocate_registered_driving_layer(796);
   result = 0;
   if ( v0 )
     return sub_495EFD(v0, 0);
@@ -198049,7 +197866,7 @@ _WORD *sub_495FCF()
 }
 
 //----- (00496005) --------------------------------------------------------
-_DWORD *__cdecl sub_496005(int a1)
+_DWORD *__cdecl allocate_registered_driving_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -198224,7 +198041,7 @@ _DWORD *__thiscall sub_4962E7(int this)
   v17 = 16;
   do
   {
-    sub_40442F(v13, &v18);
+    initialize_std_string_storage(v13, &v18);
     v3 = (_BYTE *)*v2;
     LOBYTE(v19) = 9;
     v4 = sub_49A7EB(v3, v12);
@@ -198987,16 +198804,16 @@ char __userpurge sub_49744D@<al>(double a1@<st0>, const char *a2, int *a3, int a
   v5 = strlen("wait StartDialogue(\"");
   std::string::assign((void *)"wait StartDialogue(\"", v5);
   v6 = (char *)strlen(a2);
-  sub_402BD8(&v15, a2, v6);
+  append_std_string_storage_bytes(&v15, a2, v6);
   v7 = (char *)strlen("\", ");
-  sub_402BD8(&v15, "\", ", v7);
+  append_std_string_storage_bytes(&v15, "\", ", v7);
   v8 = (_BYTE *)format_integer_string((int)v14, a4);
   LOBYTE(v17) = 1;
   sub_4043C8(&v15, v8);
   LOBYTE(v17) = 0;
   std::string::_Tidy(1);
   v9 = (char *)strlen(")");
-  sub_402BD8(&v15, ")", v9);
+  append_std_string_storage_bytes(&v15, ")", v9);
   v10 = v16;
   if ( !v16 )
     v10 = (char *)Key;
@@ -200556,7 +200373,7 @@ int __thiscall sub_4992A0(int this)
   *(_DWORD *)(this + 344) = 0;
   v3[0] = 0;
   v3[1] = 0;
-  sub_476C91((_DWORD *)this, v3);
+  update_control_bounds((_DWORD *)this, v3);
   if ( !*(_BYTE *)(this + 24) )
     (*(void (__thiscall **)(int, int))(*(_DWORD *)this + 176))(this, 1);
   return this;
@@ -202028,7 +201845,7 @@ _BYTE *__thiscall sub_49A7EB(_BYTE *this, _BYTE *a2)
   std::string::assign(v3, 0, -1);
   v8 = 1;
   v4 = (char *)strlen(off_6BF06C);
-  sub_402BD8(v6, off_6BF06C, v4);
+  append_std_string_storage_bytes(v6, off_6BF06C, v4);
   *a2 = v6[0];
   std::string::_Tidy(0);
   std::string::assign(v6, 0, -1);
@@ -213315,7 +213132,7 @@ int __thiscall sub_4A3980(int *this)
 }
 
 //----- (004A39C1) --------------------------------------------------------
-char __cdecl sub_4A39C1(int a1, int a2)
+char __cdecl record_file_system_activity(int a1, int a2)
 {
   char result; // al
   int v3; // [esp+Ch] [ebp-10h] BYREF
@@ -213903,7 +213720,7 @@ void __cdecl sub_4A4314(_DWORD *a1)
 // 765554: using guessed type int dword_765554;
 
 //----- (004A437B) --------------------------------------------------------
-BOOL __thiscall sub_4A437B(
+BOOL __thiscall open_tracked_file(
         _DWORD *this,
         CHAR *lpFileName,
         DWORD dwDesiredAccess,
@@ -213915,7 +213732,7 @@ BOOL __thiscall sub_4A437B(
   void *v8; // eax
   int v10; // [esp-20h] [ebp-24h]
 
-  sub_4A39C1(1, 1);
+  record_file_system_activity(1, 1);
   FileA = CreateFileA(lpFileName, dwDesiredAccess, dwShareMode, 0, dwCreationDisposition, dwFlagsAndAttributes, 0);
   this[1] = FileA;
   v10 = (int)FileA;
@@ -213925,12 +213742,12 @@ BOOL __thiscall sub_4A437B(
 }
 
 //----- (004A43D6) --------------------------------------------------------
-void __thiscall sub_4A43D6(HANDLE *this)
+void __thiscall close_tracked_file(HANDLE *this)
 {
   _DWORD *v2; // eax
   int v3; // [esp-4h] [ebp-8h]
 
-  sub_4A39C1(1, 1);
+  record_file_system_activity(1, 1);
   CloseHandle(this[1]);
   v3 = (int)this[1];
   v2 = (_DWORD *)sub_4A3C88();
@@ -213946,7 +213763,7 @@ BOOL __thiscall sub_4A4407(_DWORD *this, HANDLE hFile, DWORD flProtect, DWORD dw
   int v7; // eax
   int v9; // [esp-1Ch] [ebp-24h]
 
-  sub_4A39C1(1, 1);
+  record_file_system_activity(1, 1);
   FileMappingA = CreateFileMappingA(hFile, 0, flProtect, 0, dwMaximumSizeLow, lpName);
   this[1] = FileMappingA;
   v9 = (int)FileMappingA;
@@ -213961,7 +213778,7 @@ void __thiscall sub_4A445B(HANDLE *this)
   _DWORD *v2; // eax
   int v3; // [esp-4h] [ebp-8h]
 
-  sub_4A39C1(1, 1);
+  record_file_system_activity(1, 1);
   CloseHandle(this[1]);
   v3 = (int)this[1];
   v2 = (_DWORD *)sub_4A3C88();
@@ -213982,7 +213799,7 @@ BOOL __thiscall sub_4A448C(
   _DWORD *v7; // eax
   unsigned int v9; // [esp-18h] [ebp-1Ch]
 
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   v6 = MapViewOfFile(hFileMappingObject, dwDesiredAccess, 0, dwFileOffsetLow, (SIZE_T)dwNumberOfBytesToMap);
   this[1] = v6;
   v9 = (unsigned int)v6;
@@ -213997,7 +213814,7 @@ void __thiscall sub_4A44DC(LPCVOID *this)
   _DWORD *v2; // eax
   int v3; // [esp-4h] [ebp-8h]
 
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   UnmapViewOfFile(this[1]);
   v3 = (int)this[1];
   v2 = (_DWORD *)sub_4A3C88();
@@ -214042,7 +213859,7 @@ LABEL_5:
       break;
   }
   v17 = 1;
-  if ( sub_4A437B((_DWORD *)(this + 4), a2, v8, a4, 3u, a5)
+  if ( open_tracked_file((_DWORD *)(this + 4), a2, v8, a4, 3u, a5)
     && sub_4A4407((_DWORD *)(this + 12), *(HANDLE *)(this + 8), v7, 0, 0)
     && sub_4A448C((_DWORD *)(this + 20), *(HANDLE *)(this + 16), v9, 0, 0) )
   {
@@ -214079,7 +213896,7 @@ char __thiscall sub_4A45FE(int this)
   v2 = *(void **)(this + 8);
   if ( v2 )
   {
-    sub_4A39C1(3, 1);
+    record_file_system_activity(3, 1);
     if ( !FindNextFileA(v2, (LPWIN32_FIND_DATAA)(this + 12)) )
     {
       if ( !*(_DWORD *)(this + 8) )
@@ -214093,7 +213910,7 @@ LABEL_6:
   else
   {
     v3 = *(const CHAR **)(this + 4);
-    sub_4A39C1(3, 1);
+    record_file_system_activity(3, 1);
     FirstFileA = FindFirstFileA(v3, (LPWIN32_FIND_DATAA)(this + 12));
     *(_DWORD *)(this + 8) = FirstFileA;
     if ( FirstFileA == (HANDLE)-1 )
@@ -214684,7 +214501,7 @@ char __cdecl sub_4A504A(char *a1)
     if ( v11 )
     {
       v3 = (char *)strlen("\\");
-      sub_402BD8(v8, "\\", v3);
+      append_std_string_storage_bytes(v8, "\\", v3);
     }
     v4 = (const char *)*((_DWORD *)append_string_suffix(v7, (char *)v8, "*") + 1);
     if ( !v4 )
@@ -214738,7 +214555,7 @@ _BYTE *__cdecl sub_4A5175(_BYTE *a1, HMODULE hModule, int a3)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (004A51EC) --------------------------------------------------------
-_BYTE *__cdecl sub_4A51EC(_BYTE *a1, char *a2)
+_BYTE *__cdecl resolve_file_path(_BYTE *a1, char *a2)
 {
   size_t v2; // esi
   char *v3; // eax
@@ -214896,11 +214713,11 @@ _BYTE *__cdecl sub_4A54EF(_BYTE *a1, char *a2)
   v9[2] = 0;
   v9[0] = &off_6ABFB8;
   v19 = 1;
-  sub_40442F(v16, (_BYTE *)&a2 + 3);
+  initialize_std_string_storage(v16, (_BYTE *)&a2 + 3);
   LOBYTE(v19) = 2;
   if ( sub_43FE97((char *)v9, (int)v16) )
   {
-    sub_402BAA(v12, v2, &v18);
+    assign_std_string_storage_from_c_string(v12, v2, &v18);
     LOBYTE(v19) = 3;
     std::string::erase(v14 - v17, -1);
     GetCurrentDirectoryA(0x104u, Buffer);
@@ -215211,7 +215028,7 @@ LABEL_17:
     LOBYTE(v27) = 11;
     std::string::_Tidy(1);
     LOBYTE(v27) = 3;
-    sub_439FA8(v16);
+    destroy_file_path_context(v16);
   }
   *a1 = v23[0];
   std::string::_Tidy(0);
@@ -215307,12 +215124,12 @@ char __cdecl sub_4A5CEB(_BYTE *a1, int *a2)
   char *v18; // [esp+B4h] [ebp+Ch]
 
   v15 = 0;
-  sub_439D31(&v8);
+  construct_file_path_context(&v8);
   v16 = 0;
-  sub_439CF1(v11);
+  initialize_file_path_context_strings(v11);
   LOBYTE(v16) = 1;
-  v8 = &off_6AB594;
-  sub_4A7263(&v8, a1);
+  v8 = &file_path_context_vtable;
+  set_file_path_context_path(&v8, a1);
   v16 = 2;
   if ( v10 == 1 )
   {
@@ -215358,11 +215175,11 @@ LABEL_13:
     destroy_string_vector(v14);
   }
   v16 = -1;
-  sub_439FA8(&v8);
+  destroy_file_path_context(&v8);
   return v15;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6AB594: using guessed type _UNKNOWN *off_6AB594;
+// 6AB594: using guessed type _UNKNOWN *file_path_context_vtable;
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (004A5E42) --------------------------------------------------------
@@ -215603,7 +215420,7 @@ _BYTE *__thiscall format_executable_version_summary(void *this, _BYTE *a2)
     v7 = strlen(v6);
     std::string::assign(v6, v7);
     LOBYTE(v22) = 8;
-    v8 = sub_407455(v12, " (", v18);
+    v8 = combine_text_prefix_and_string_storage(v12, " (", v18);
     LOBYTE(v22) = 9;
     v9 = append_string_suffix(v13, v8, ")");
     LOBYTE(v22) = 10;
@@ -215953,7 +215770,7 @@ BOOL __thiscall sub_4A663E(int this, _BYTE *a2)
     LOBYTE(v13) = 1;
     if ( sub_56E810(v11, this + 16, 1) )
     {
-      v5 = sub_407455(v8, "\\\\", (_BYTE *)(this + 16));
+      v5 = combine_text_prefix_and_string_storage(v8, "\\\\", (_BYTE *)(this + 16));
       LOBYTE(v13) = 2;
       assign_std_string_storage((void *)(this + 16), v5);
       LOBYTE(v13) = 1;
@@ -216025,7 +215842,7 @@ BOOL __thiscall sub_4A67CA(int this, _DWORD *a2)
     LOBYTE(v20) = 1;
     if ( sub_56E810(v17, this + 16, 1) )
     {
-      v5 = sub_407455(v14, "\\\\", (_BYTE *)(this + 16));
+      v5 = combine_text_prefix_and_string_storage(v14, "\\\\", (_BYTE *)(this + 16));
       LOBYTE(v20) = 2;
       assign_std_string_storage((void *)(this + 16), v5);
       LOBYTE(v20) = 1;
@@ -216185,7 +216002,7 @@ _BYTE *__thiscall sub_4A6A83(_DWORD *this, _BYTE *a2)
       else
       {
         v5 = (char *)strlen("\\");
-        sub_402BD8(v7, "\\", v5);
+        append_std_string_storage_bytes(v7, "\\", v5);
       }
       sub_4043C8(v7, (_BYTE *)v4 + 8);
       v4 = (int *)*v4;
@@ -216274,7 +216091,7 @@ _BYTE *__thiscall sub_4A6C81(_DWORD *this, _BYTE *a2)
   v10 = 1;
   if ( !v4 )
   {
-    v5 = sub_407455(v7, ".", (_BYTE *)this + 16);
+    v5 = combine_text_prefix_and_string_storage(v7, ".", (_BYTE *)this + 16);
     LOBYTE(v10) = 2;
     sub_4043C8(v8, v5);
     LOBYTE(v10) = 1;
@@ -216442,7 +216259,7 @@ _BYTE *__thiscall sub_4A6F90(unsigned __int8 (__thiscall ***this)(void *), _BYTE
     LOBYTE(v13) = 1;
     if ( v11 )
     {
-      v4 = sub_407455(v9, "\\", v10);
+      v4 = combine_text_prefix_and_string_storage(v9, "\\", v10);
       LOBYTE(v13) = 2;
       sub_4043C8(v12, v4);
       LOBYTE(v13) = 1;
@@ -216451,7 +216268,7 @@ _BYTE *__thiscall sub_4A6F90(unsigned __int8 (__thiscall ***this)(void *), _BYTE
     if ( (_BYTE)a3 )
     {
       v5 = (char *)strlen("\\");
-      sub_402BD8(v12, "\\", v5);
+      append_std_string_storage_bytes(v12, "\\", v5);
     }
     *a2 = v12[0];
     std::string::_Tidy(0);
@@ -216555,7 +216372,7 @@ _BYTE *__thiscall sub_4A71EC(int this, _BYTE *a2)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (004A7263) --------------------------------------------------------
-int __thiscall sub_4A7263(_DWORD *this, _BYTE *a2)
+int __thiscall set_file_path_context_path(_DWORD *this, _BYTE *a2)
 {
   _DWORD v4[4]; // [esp+8h] [ebp-1Ch] BYREF
   int v5; // [esp+20h] [ebp-4h]
@@ -216576,7 +216393,7 @@ int __thiscall sub_4A7263(_DWORD *this, _BYTE *a2)
 int __thiscall sub_4A72D5(int this)
 {
   sub_45CA2B((_DWORD *)this, *(_BYTE **)(this + 4), *(_BYTE **)(this + 8));
-  return sub_45CA57((int *)this);
+  return destroy_byte_vector((int *)this);
 }
 
 //----- (004A72EC) --------------------------------------------------------
@@ -220120,7 +219937,7 @@ char *sub_4AA0D4()
   char *v0; // ecx
   char *result; // eax
 
-  v0 = (char *)sub_4AA10A(1752);
+  v0 = (char *)allocate_registered_fingerprint_layer(1752);
   result = 0;
   if ( v0 )
     return sub_4AA1C9(v0, 0);
@@ -220128,7 +219945,7 @@ char *sub_4AA0D4()
 }
 
 //----- (004AA10A) --------------------------------------------------------
-_DWORD *__cdecl sub_4AA10A(int a1)
+_DWORD *__cdecl allocate_registered_fingerprint_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -220220,10 +220037,10 @@ char *__thiscall sub_4AA1C9(char *this, int a2)
     (void (__thiscall *)(void *))destroy_registered_sprite_control);
   construct_sprite_control((float *)this + 267);
   sub_44F6B2((_WORD *)this + 570, a2);
-  sub_4771A6((_DWORD *)this + 324, a2);
-  sub_4771A6((_DWORD *)this + 337, a2);
-  sub_4771A6((_DWORD *)this + 350, a2);
-  sub_4771A6((_DWORD *)this + 363, a2);
+  construct_color_control((_DWORD *)this + 324, a2);
+  construct_color_control((_DWORD *)this + 337, a2);
+  construct_color_control((_DWORD *)this + 350, a2);
+  construct_color_control((_DWORD *)this + 363, a2);
   v3 = (float *)(this + 1528);
   v4 = 7;
   do
@@ -220315,7 +220132,7 @@ int __thiscall sub_4AA323(int this, _BYTE *a2, int a3)
 // 76D514: using guessed type int mini_console_integer_default;
 
 //----- (004AA587) --------------------------------------------------------
-int __thiscall sub_4AA587(int this)
+int __thiscall construct_fingerprint_layer(int this)
 {
   float *v2; // edi
   int v3; // eax
@@ -220417,7 +220234,7 @@ int __thiscall sub_4AA587(int this)
     *(_DWORD *)(this + 1340) = 0;
     (*(void (__thiscall **)(int))(v4 + 156))(this + 1296);
   }
-  sub_5067E5((_BYTE *)this, this + 1296, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1296, 1);
   (*(void (__thiscall **)(int, int *))(*(_DWORD *)(this + 1348) + 168))(this + 1348, &v36);
   if ( *(_DWORD *)(this + 1392) )
   {
@@ -220425,7 +220242,7 @@ int __thiscall sub_4AA587(int this)
     *(_DWORD *)(this + 1392) = 0;
     (*(void (__thiscall **)(int))(v5 + 156))(this + 1348);
   }
-  sub_5067E5((_BYTE *)this, this + 1348, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1348, 1);
   (*(void (__thiscall **)(int, int *))(*(_DWORD *)(this + 1400) + 168))(this + 1400, &v36);
   if ( *(_DWORD *)(this + 1444) )
   {
@@ -220433,7 +220250,7 @@ int __thiscall sub_4AA587(int this)
     *(_DWORD *)(this + 1444) = 0;
     (*(void (__thiscall **)(int))(v6 + 156))(this + 1400);
   }
-  sub_5067E5((_BYTE *)this, this + 1400, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1400, 1);
   v7 = this + 1452;
   (*(void (__thiscall **)(int, int *))(*(_DWORD *)(this + 1452) + 168))(this + 1452, &v36);
   if ( *(_DWORD *)(this + 1496) )
@@ -220442,7 +220259,7 @@ int __thiscall sub_4AA587(int this)
     *(_DWORD *)(this + 1496) = 0;
     (*(void (__thiscall **)(int))(v8 + 156))(this + 1452);
   }
-  sub_5067E5((_BYTE *)this, this + 1452, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1452, 1);
   if ( *(int *)(this + 340) > 0 )
   {
     v43 = *(_DWORD *)screen_width_address;
@@ -220479,7 +220296,7 @@ int __thiscall sub_4AA587(int this)
   v14 = find_or_create_engine_string_resource((_DWORD *)game_engine_address, &v44, "fp_base", 0, 0);
   (*(void (__thiscall **)(int, int, int))(*(_DWORD *)(this + 420) + 196))(this + 420, this + 340, *v14);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 420) + 176))(this + 420, 1);
-  sub_5067E5((_BYTE *)this, this + 420, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 420, 0);
   v15 = *(_DWORD **)(this + 1748);
   if ( v15 )
   {
@@ -221125,13 +220942,13 @@ int __thiscall sub_4AB4BF(int this, char *a2)
       v8 = strlen(a2);
       std::string::assign(a2, v8);
       v9 = (char *)strlen("_p1");
-      sub_402BD8(&v50, "_p1", v9);
+      append_std_string_storage_bytes(&v50, "_p1", v9);
       v10 = v51;
       if ( !v51 )
         v10 = Key;
       v56 = *find_or_create_engine_string_resource((_DWORD *)game_engine_address, &v43, v10, 0, 0);
       v11 = (char *)strlen("a");
-      sub_402BD8(&v50, "a", v11);
+      append_std_string_storage_bytes(&v50, "a", v11);
       v12 = v51;
       if ( !v51 )
         v12 = Key;
@@ -221162,9 +220979,9 @@ int __thiscall sub_4AB4BF(int this, char *a2)
       *(_DWORD *)(this + 1516) = 0;
       goto LABEL_52;
     case 8:
-      HIBYTE(a2) = sub_4AEFAE(166);
-      v61 = sub_4AEFAE(165);
-      v62 = sub_4AEFAE(167);
+      HIBYTE(a2) = is_global_flag_set(166);
+      v61 = is_global_flag_set(165);
+      v62 = is_global_flag_set(167);
       *(_DWORD *)(this + 1516) = 6;
       v18 = strlen("fp_bloman_p");
       std::string::assign((void *)"fp_bloman_p", v18);
@@ -221179,7 +220996,7 @@ int __thiscall sub_4AB4BF(int this, char *a2)
           v54 = v19 + 1;
           _itoa(v19 + 1, Buffer, 10);
           v21 = (char *)strlen(Buffer);
-          sub_402BD8(&v48, Buffer, v21);
+          append_std_string_storage_bytes(&v48, Buffer, v21);
           v22 = v49;
           if ( !v49 )
             v22 = Key;
@@ -221214,10 +221031,10 @@ int __thiscall sub_4AB4BF(int this, char *a2)
       }
       goto LABEL_52;
     case 9:
-      v62 = sub_4AEFAE(166);
-      v61 = sub_4AEFAE(165);
-      v57 = sub_4AEFAE(167);
-      v58 = sub_4AEFAE(163);
+      v62 = is_global_flag_set(166);
+      v61 = is_global_flag_set(165);
+      v57 = is_global_flag_set(167);
+      v58 = is_global_flag_set(163);
       HIBYTE(a2) = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 32) == 507;
       *(_DWORD *)(this + 1516) = 6;
       v28 = strlen("fp_bloman_p");
@@ -221243,7 +221060,7 @@ LABEL_52:
     v54 = v29 + 1;
     _itoa(v29 + 1, Buffer, 10);
     v30 = (char *)strlen(Buffer);
-    sub_402BD8(&v48, Buffer, v30);
+    append_std_string_storage_bytes(&v48, Buffer, v30);
     v31 = v49;
     if ( !v49 )
       v31 = Key;
@@ -221418,16 +221235,16 @@ char __userpurge sub_4ABD4A@<al>(double a1@<st0>, const char *a2, int *a3, int a
   v4 = strlen("wait StartDialogue(\"");
   std::string::assign((void *)"wait StartDialogue(\"", v4);
   v5 = (char *)strlen(a2);
-  sub_402BD8(&v14, a2, v5);
+  append_std_string_storage_bytes(&v14, a2, v5);
   v6 = (char *)strlen("\", ");
-  sub_402BD8(&v14, "\", ", v6);
+  append_std_string_storage_bytes(&v14, "\", ", v6);
   v7 = (_BYTE *)format_integer_string((int)v13, a4);
   LOBYTE(v16) = 1;
   sub_4043C8(&v14, v7);
   LOBYTE(v16) = 0;
   std::string::_Tidy(1);
   v8 = (char *)strlen(")");
-  sub_402BD8(&v14, ")", v8);
+  append_std_string_storage_bytes(&v14, ")", v8);
   v9 = v15;
   if ( !v15 )
     v9 = (char *)Key;
@@ -221599,13 +221416,13 @@ LABEL_51:
                   goto LABEL_52;
                 v16 = 181;
               }
-              if ( !sub_4AEFAE(v16) )
+              if ( !is_global_flag_set(v16) )
               {
                 sub_4AEFE9(v16);
                 sub_4ABD4A(v11, "1077H59291", 0, 1);
               }
             }
-            else if ( !sub_4AEFAE(179) )
+            else if ( !is_global_flag_set(179) )
             {
               sub_4AEFE9(179);
               sub_4ABD4A(v11, "1EP02593L1", 0, 1);
@@ -221707,7 +221524,7 @@ int __usercall sub_4AC196@<eax>(int a1@<ecx>, double a2@<st0>)
   char v80; // [esp+163h] [ebp-Dh]
   int v81; // [esp+16Ch] [ebp-4h]
 
-  sub_40442F(&v70, &v77);
+  initialize_std_string_storage(&v70, &v77);
   v81 = 0;
   v75[0] = 0;
   initialize_event_reference(v75);
@@ -221868,7 +221685,7 @@ LABEL_41:
               std::string::assign((void *)"UNKNOWN_PRINT_", v29);
               _itoa(*(_DWORD *)(a1 + 1520) + 1, Str, 10);
               v30 = (char *)strlen(Str);
-              sub_402BD8(&v72, Str, v30);
+              append_std_string_storage_bytes(&v72, Str, v30);
             }
             v32 = v73;
             if ( !v73 )
@@ -221908,28 +221725,28 @@ LABEL_41:
             }
             goto LABEL_59;
           }
-          if ( !sub_4AEFAE(163) )
+          if ( !is_global_flag_set(163) )
           {
             sub_4AEFE9(163);
             sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 255);
             goto LABEL_41;
           }
         }
-        else if ( !sub_4AEFAE(167) )
+        else if ( !is_global_flag_set(167) )
         {
           sub_4AEFE9(167);
           sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 328);
           goto LABEL_41;
         }
       }
-      else if ( !sub_4AEFAE(165) )
+      else if ( !is_global_flag_set(165) )
       {
         sub_4AEFE9(165);
         sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 327);
         goto LABEL_41;
       }
     }
-    else if ( !sub_4AEFAE(166) )
+    else if ( !is_global_flag_set(166) )
     {
       sub_4AEFE9(166);
       sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 326);
@@ -221989,7 +221806,7 @@ LABEL_59:
     std::string::assign((void *)"UNKNOWN_PRINT_", v44);
     _itoa(*(_DWORD *)(a1 + 1520) + 1, Str, 10);
     v45 = (char *)strlen(Str);
-    sub_402BD8(&v72, Str, v45);
+    append_std_string_storage_bytes(&v72, Str, v45);
     v46 = v73;
     if ( !v73 )
       v46 = (char *)Key;
@@ -222021,7 +221838,7 @@ LABEL_59:
       sub_4AEFE9(166);
       sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 326);
     }
-    if ( sub_4AEFAE(165) && sub_4AEFAE(166) && sub_4AEFAE(167) )
+    if ( is_global_flag_set(165) && is_global_flag_set(166) && is_global_flag_set(167) )
       v80 = 1;
     LOBYTE(v81) = 0;
     std::string::_Tidy(1);
@@ -222038,7 +221855,7 @@ LABEL_59:
     v54 = strlen(v53);
     std::string::assign(v53, v54);
     v55 = (char *)strlen("_G");
-    sub_402BD8(&v70, "_G", v55);
+    append_std_string_storage_bytes(&v70, "_G", v55);
     v56 = v71;
     if ( !v71 )
       v56 = (char *)Key;
@@ -222231,7 +222048,7 @@ int sub_4ACEED()
 //----- (004ACEFC) --------------------------------------------------------
 int __thiscall sub_4ACEFC(int *this, int a2, int a3)
 {
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 
 //----- (004ACF28) --------------------------------------------------------
@@ -222503,7 +222320,7 @@ int __cdecl sub_4AD1D5(int a1)
 }
 
 //----- (004AD1DA) --------------------------------------------------------
-char *__cdecl sub_4AD1DA(int a1)
+char *__cdecl get_inventory_item_name(int a1)
 {
   int v1; // eax
 
@@ -222585,8 +222402,8 @@ int __cdecl sub_4AD2B9(int a1, int *a2)
 //----- (004AD2DE) --------------------------------------------------------
 /* Extracted to gk3/flag_manager.c as serialize_flag_nvc_state. */
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 
 //----- (004AD353) --------------------------------------------------------
 int __thiscall construct_flag_manager(int this)
@@ -222594,8 +222411,8 @@ int __thiscall construct_flag_manager(int this)
 // 4AD386: variable 'v3' is possibly undefined
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 4ADBC5: using guessed type int __thiscall sub_4ADBC5(_DWORD);
-// 6C1340: using guessed type void *(__thiscall *off_6C1340)(void *, char);
-// 765704: using guessed type int dword_765704;
+// 6C1340: using guessed type void *(__thiscall *flag_manager_vtable)(void *, char);
+// 765704: using guessed type int flag_manager_registry_adjustment;
 // 765708: using guessed type _DWORD dword_765708[15];
 
 //----- (004AD3E1) --------------------------------------------------------
@@ -222606,8 +222423,8 @@ int __thiscall construct_registered_flag_manager(int object, int unused)
 /* Extracted to gk3/flag_manager.c as construct_registered_flag_manager. */
 // 4AD435: variable 'v4' is possibly undefined
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6C1340: using guessed type void *(__thiscall *off_6C1340)(void *, char);
-// 765704: using guessed type int dword_765704;
+// 6C1340: using guessed type void *(__thiscall *flag_manager_vtable)(void *, char);
+// 765704: using guessed type int flag_manager_registry_adjustment;
 // 765708: using guessed type _DWORD dword_765708[15];
 
 //----- (004AD48B) --------------------------------------------------------
@@ -222645,7 +222462,7 @@ void __cdecl sub_4AD550()
   if ( (byte_765700 & 1) == 0 )
   {
     byte_765700 |= 1u;
-    sub_566BE0(&unk_765708);
+    sub_566BE0(&flag_manager_type_descriptor);
     --dword_76D550;
   }
 }
@@ -222656,9 +222473,9 @@ void __cdecl sub_4AD550()
 //----- (004AD570) --------------------------------------------------------
 void sub_4AD570()
 {
-  dword_765704 = -4;
+  flag_manager_registry_adjustment = -4;
 }
-// 765704: using guessed type int dword_765704;
+// 765704: using guessed type int flag_manager_registry_adjustment;
 
 //----- (004AD57B) --------------------------------------------------------
 int __thiscall sub_4AD57B(_DWORD *this, _BYTE *a2, int a3)
@@ -222773,7 +222590,7 @@ int __thiscall sub_4AD57B(_DWORD *this, _BYTE *a2, int a3)
     {
       v12 = (_BYTE *)format_integer_string((int)v19, i);
       LOBYTE(v28) = 5;
-      v13 = (const char *)*((_DWORD *)sub_407455(v18, "location-", v12) + 1);
+      v13 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v18, "location-", v12) + 1);
       LOBYTE(v28) = 6;
       if ( !v13 )
         v13 = Key;
@@ -222788,7 +222605,7 @@ int __thiscall sub_4AD57B(_DWORD *this, _BYTE *a2, int a3)
       if ( sub_557B4F((int)v14, &v26) )
       {
         v15 = v26;
-        v16 = (const char *)*((_DWORD *)sub_407455(v20, "mEgoLocationCount-", v22) + 1);
+        v16 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v20, "mEgoLocationCount-", v22) + 1);
         LOBYTE(v28) = 7;
         if ( !v16 )
           v16 = Key;
@@ -222810,7 +222627,7 @@ int __thiscall sub_4AD57B(_DWORD *this, _BYTE *a2, int a3)
       std::string::assign(v6, v7);
       v8 = (_BYTE *)format_integer_string((int)v19, v26);
       LOBYTE(v28) = 1;
-      v9 = (const char *)*((_DWORD *)sub_407455(v20, "location-", v8) + 1);
+      v9 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v20, "location-", v8) + 1);
       LOBYTE(v28) = 2;
       v10 = Key;
       if ( v9 )
@@ -222824,7 +222641,7 @@ int __thiscall sub_4AD57B(_DWORD *this, _BYTE *a2, int a3)
       std::string::_Tidy(1);
       LOBYTE(v28) = 0;
       std::string::_Tidy(1);
-      v11 = (const char *)*((_DWORD *)sub_407455(v18, "mEgoLocationCount-", v22) + 1);
+      v11 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v18, "mEgoLocationCount-", v22) + 1);
       LOBYTE(v28) = 4;
       if ( !v11 )
         v11 = Key;
@@ -222927,7 +222744,7 @@ bool __stdcall sub_4ADF1B(int a1)
 /* Extracted to gk3/flag_manager.c as evaluate_compiled_sheep_case. */
 
 //----- (004AED9D) --------------------------------------------------------
-_BYTE *__stdcall sub_4AED9D(_BYTE *a1, int a2)
+_BYTE *__stdcall construct_sheep_case_signature(_BYTE *a1, int a2)
 {
   size_t v2; // eax
   char Str[32]; // [esp+4h] [ebp-24h] BYREF
@@ -222957,7 +222774,7 @@ _BYTE *__stdcall sub_4AED9D(_BYTE *a1, int a2)
 /* Extracted to gk3/flag_manager.c as set_selected_inventory_item_for_active_ego. */
 
 //----- (004AEFAE) --------------------------------------------------------
-BOOL __cdecl sub_4AEFAE(int a1)
+BOOL __cdecl is_global_flag_set(int a1)
 {
   return ((1 << (a1 % 32)) & *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56) + 4 * (a1 / 32) + 40)) != 0;
 }
@@ -222998,7 +222815,7 @@ bool __cdecl sub_4AF042(int a1, int a2)
 }
 
 //----- (004AF088) --------------------------------------------------------
-int __thiscall sub_4AF088(void *this, _DWORD *a2)
+int __thiscall get_map_entry_value_address(void *this, _DWORD *a2)
 {
   _DWORD v3[3]; // [esp+8h] [ebp-18h] BYREF
   char v4; // [esp+14h] [ebp-Ch]
@@ -223008,11 +222825,11 @@ int __thiscall sub_4AF088(void *this, _DWORD *a2)
   v3[1] = a2[1];
   v3[2] = a2[2];
   v4 = 0;
-  return *sub_4AF214((int)this, &v5, v3) + 24;
+  return *find_or_insert_map_entry((int)this, &v5, v3) + 24;
 }
 
 //----- (004AF0BD) --------------------------------------------------------
-void __thiscall sub_4AF0BD(_DWORD *this)
+void __thiscall destroy_tree_map(_DWORD *this)
 {
   int v2; // [esp+4h] [ebp-4h] BYREF
 
@@ -223083,7 +222900,7 @@ _DWORD *__thiscall sub_4AF115(_DWORD *this, _DWORD *a2, _DWORD *a3, _DWORD *a4)
 // 765744: using guessed type int dword_765744;
 
 //----- (004AF1BD) --------------------------------------------------------
-_DWORD *__thiscall sub_4AF1BD(int this)
+_DWORD *__thiscall clear_tree_map(int this)
 {
   int v2; // [esp+0h] [ebp-4h] BYREF
 
@@ -223092,7 +222909,7 @@ _DWORD *__thiscall sub_4AF1BD(int this)
 }
 
 //----- (004AF1D1) --------------------------------------------------------
-int *__thiscall sub_4AF1D1(_DWORD *this, int *a2, int a3)
+int *__thiscall find_map_entry_node(_DWORD *this, int *a2, int a3)
 {
   _DWORD *v4; // eax
   bool v5; // zf
@@ -223120,7 +222937,7 @@ int *__thiscall sub_4AF1D1(_DWORD *this, int *a2, int a3)
 }
 
 //----- (004AF214) --------------------------------------------------------
-_DWORD *__thiscall sub_4AF214(int this, _DWORD *a2, _DWORD *a3)
+_DWORD *__thiscall find_or_insert_map_entry(int this, _DWORD *a2, _DWORD *a3)
 {
   int *v4; // ebx
   int *v5; // esi
@@ -223830,7 +223647,7 @@ char __thiscall sub_4AFA5D(_BYTE *this, const char *a2, int a3, int a4)
     v41 = v10;
     initialize_flag_nvc_state((uint32_t *)v37);
     v49 = 0;
-    sub_40442F(v44, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v44, (_BYTE *)&a3 + 3);
     LOBYTE(v48) = 2;
     a4 = v11;
     if ( v11 != v10 )
@@ -223886,7 +223703,7 @@ char __thiscall sub_4AFA5D(_BYTE *this, const char *a2, int a3, int a4)
     std::string::_Tidy(1);
     if ( v21 )
       v47 = 0;
-    sub_4AF1BD(a3);
+    clear_tree_map(a3);
     v44[0] = HIBYTE(a3);
     std::string::_Tidy(0);
     LOBYTE(v48) = 8;
@@ -223926,7 +223743,7 @@ char __thiscall sub_4AFA5D(_BYTE *this, const char *a2, int a3, int a4)
         v42[1] = v36[1];
         v42[2] = v36[2];
         v43 = 0;
-        v28 = sub_4AF214(a3, &v40, v42);
+        v28 = find_or_insert_map_entry(a3, &v40, v42);
         ++v50;
         v29 = *v28;
         v38 = v28[1];
@@ -223999,7 +223816,7 @@ int __cdecl sub_4AFE51(
       (*(void (__thiscall **)(_BYTE *, const char *))(*(_DWORD *)v8 + 48))(v8, v11);
       v18 = -1;
       std::string::_Tidy(1);
-      sub_4053DF(v8, a5, &i, &dword_6A6460);
+      serialize_noun_field(v8, a5, &i, &default_noun_id);
       sub_4B0C17(v8, a6, (unsigned __int8 *)&a1 + 3, byte_6C15EC);
       (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)v8 + 52))(v8);
     }
@@ -224015,7 +223832,7 @@ int __cdecl sub_4AFE51(
       (*(void (__thiscall **)(_BYTE *, const char *))(*(_DWORD *)v8 + 48))(v8, v13);
       v18 = -1;
       std::string::_Tidy(1);
-      sub_4053DF(v8, a5, &a3, &dword_6A6460);
+      serialize_noun_field(v8, a5, &a3, &default_noun_id);
       sub_4B0C17(v8, a6, (unsigned __int8 *)&a2, byte_6C15EC);
       (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)v8 + 52))(v8);
       if ( sub_5027D2(a3) )
@@ -224025,7 +223842,7 @@ int __cdecl sub_4AFE51(
   return (*(int (__thiscall **)(_BYTE *))(*(_DWORD *)v8 + 44))(v8);
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6C15EC: using guessed type unsigned __int8 byte_6C15EC[4];
 
 //----- (004AFFD1) --------------------------------------------------------
@@ -224958,7 +224775,7 @@ char __thiscall sub_4B10B6(char *this, char *a2)
 
   v33 = this;
   sprintf(Buffer, "%s.txt", a2);
-  sub_46B4E2(v16, Buffer, a2);
+  construct_registered_config_file(v16, Buffer, a2);
   v2 = 1;
   v34 = 0;
   if ( sub_46B663(v16, 1) )
@@ -224989,7 +224806,7 @@ char __thiscall sub_4B10B6(char *this, char *a2)
             v4 = (char *)Key;
           sub_46C10A(v16, v25, v4, (char *)Str1);
           LOBYTE(v34) = 2;
-          sub_40442F(v24, &v32);
+          initialize_std_string_storage(v24, &v32);
           LOBYTE(v34) = 3;
           HIBYTE(a2) = 44;
           v6 = sub_402D99(v25, (char *)&a2 + 3, 0x100000000uLL);
@@ -225886,7 +225703,7 @@ _DWORD *__thiscall sub_4B1E42(char *this, char *Str)
   v11 = 0;
   if ( !v6 )
     v6 = (char *)Key;
-  sub_46B4E2(v8, v6, v10);
+  construct_registered_config_file(v8, v6, v10);
   LOBYTE(v11) = 2;
   std::string::_Tidy(1);
   if ( sub_46B663(v8, 1) )
@@ -227058,7 +226875,7 @@ char __thiscall sub_4B2FDB(char *this, char *a2)
 
   v20 = this;
   sprintf(Buffer, "%s.txt", a2);
-  sub_46B4E2(v9, Buffer, a2);
+  construct_registered_config_file(v9, Buffer, a2);
   v23 = 0;
   if ( sub_46B663(v9, 1) )
   {
@@ -229060,14 +228877,14 @@ int __cdecl write_exception_crash_report(int *exception_info)
     LOBYTE(v30) = 1;
     if ( v24 )
     {
-      sub_439D31(v16);
+      construct_file_path_context(v16);
       LOBYTE(v30) = 2;
-      sub_439CF1(v17);
+      initialize_file_path_context_strings(v17);
       LOBYTE(v30) = 3;
-      v16[0] = (unsigned __int8 (__thiscall **)(void *))&off_6AB594;
-      sub_4A7263(v16, v23);
+      v16[0] = (unsigned __int8 (__thiscall **)(void *))&file_path_context_vtable;
+      set_file_path_context_path(v16, v23);
       LOBYTE(v30) = 4;
-      v4 = sub_439E38(v16, v27);
+      v4 = get_file_path_context_resolved_path(v16, v27);
       LOBYTE(v30) = 5;
       v10 = append_string_suffix(v25, v4, ".crash");
       LOBYTE(v30) = 6;
@@ -229101,7 +228918,7 @@ int __cdecl write_exception_crash_report(int *exception_info)
           std::string::_Tidy(1);
           load_executable_version_info((int)v18, 0, 0);
           LOBYTE(v30) = 12;
-          sub_402BAA(v25, "\n", &v28);
+          assign_std_string_storage_from_c_string(v25, "\n", &v28);
           LOBYTE(v30) = 13;
           if ( LOBYTE(v18[0]) )
           {
@@ -229152,7 +228969,7 @@ int __cdecl write_exception_crash_report(int *exception_info)
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 46970D: using guessed type int __thiscall unknown_libname_60(_DWORD);
-// 6AB594: using guessed type _UNKNOWN *off_6AB594;
+// 6AB594: using guessed type _UNKNOWN *file_path_context_vtable;
 // 765A1C: using guessed type char byte_765A1C;
 
 //----- (004B4F38) --------------------------------------------------------
@@ -230038,7 +229855,7 @@ char __thiscall sub_4B68E5(int this, int a2, int a3)
   {
     v4 = (_BYTE *)format_integer_string((int)v11, a2);
     v14 = 0;
-    v5 = (char *)*((_DWORD *)sub_407455(v12, "Disc", v4) + 1);
+    v5 = (char *)*((_DWORD *)combine_text_prefix_and_string_storage(v12, "Disc", v4) + 1);
     LOBYTE(v14) = 1;
     if ( !v5 )
       v5 = (char *)Key;
@@ -230221,7 +230038,7 @@ void __stdcall sub_4B6BFC(_DWORD *a1)
   else
     v1 = 0;
   std::strstreambuf::freeze((std::strstreambuf *)v3, 1);
-  sub_52D1CF((int)v7, *v5, v1);
+  write_source_message_from_log_context((int)v7, *v5, v1);
   std::strstreambuf::freeze((std::strstreambuf *)v3, 0);
   LOBYTE(v8) = 0;
   sub_4B6DC6((int)&v2);
@@ -230770,7 +230587,7 @@ int __thiscall configure_engine_log_files(char *this)
   int v18; // [esp+68h] [ebp-4h]
 
   v16 = this;
-  sub_402BAA(v12, "errors-", &v17);
+  assign_std_string_storage_from_c_string(v12, "errors-", &v17);
   v18 = 0;
   v1 = append_string_suffix(v11, v12, (char *)system_profile_address);
   LOBYTE(v18) = 1;
@@ -231411,7 +231228,7 @@ int __thiscall sub_4B92C9(int this)
   char v74; // [esp+CBh] [ebp-Dh] BYREF
   int v75; // [esp+D4h] [ebp-4h]
 
-  sub_40442F(v53, &v66);
+  initialize_std_string_storage(v53, &v66);
   v75 = 0;
   sub_594D40((int)v53, (HMODULE)application_instance, 0x65u, word_776F34);
   v2 = *(_DWORD *)(this + 276);
@@ -231428,7 +231245,7 @@ int __thiscall sub_4B92C9(int this)
   std::string::_Tidy(1);
   if ( v74 )
   {
-    sub_40442F(&v71, &v74);
+    initialize_std_string_storage(&v71, &v74);
     LOBYTE(v75) = 3;
     sub_594D40((int)&v71, (HMODULE)application_instance, 0x1388u, word_776F34);
     v5 = v72;
@@ -231440,21 +231257,21 @@ int __thiscall sub_4B92C9(int this)
     std::string::_Tidy(1);
   }
   set_global_file_manager(*(_DWORD *)(this + 1188));
-  sub_40442F(v61, &v65);
+  initialize_std_string_storage(v61, &v65);
   LOBYTE(v75) = 5;
-  sub_40442F(v59, &v67);
+  initialize_std_string_storage(v59, &v67);
   LOBYTE(v75) = 6;
-  sub_40442F(&v62, &v73);
+  initialize_std_string_storage(&v62, &v73);
   LOBYTE(v75) = 7;
   sub_4B9C1C(&v62, 0, -1);
-  sub_402BAA(&v71, "#.", &v74);
+  assign_std_string_storage_from_c_string(&v71, "#.", &v74);
   LOBYTE(v75) = 8;
   sub_4B9169(&v62, &v71);
   LOBYTE(v75) = 7;
   std::string::_Tidy(1);
   v6 = sub_4A5175(v68, 0, 0);
   LOBYTE(v75) = 9;
-  v7 = sub_407455(&v71, "#", v6);
+  v7 = combine_text_prefix_and_string_storage(&v71, "#", v6);
   LOBYTE(v75) = 10;
   sub_4B9169(&v62, v7);
   LOBYTE(v75) = 9;
@@ -231832,7 +231649,7 @@ int __thiscall sub_4B9D49(int this)
   char v24; // [esp+63h] [ebp-Dh] BYREF
   int v25; // [esp+6Ch] [ebp-4h]
 
-  sub_402BAA(&v21, (char *)&dword_6C19B0, &v24);
+  assign_std_string_storage_from_c_string(&v21, (char *)&dword_6C19B0, &v24);
   v2 = 0;
   v25 = 0;
   std::string::_Freeze(&v21);
@@ -231840,7 +231657,7 @@ int __thiscall sub_4B9D49(int this)
   sub_4BA8B3(&v21, (int)v22, (char)v23);
   append_string_suffix(v16, (char *)&v21, ".txt");
   LOBYTE(v25) = 1;
-  v3 = sub_45A0F8(60);
+  v3 = allocate_registered_config_file(60);
   v23 = v3;
   LOBYTE(v25) = 2;
   if ( v3 )
@@ -231851,7 +231668,7 @@ int __thiscall sub_4B9D49(int this)
     v5 = v17;
     if ( !v17 )
       v5 = (char *)Key;
-    v6 = sub_46B4E2(v3, v5, v4);
+    v6 = construct_registered_config_file(v3, v5, v4);
   }
   else
   {
@@ -231882,7 +231699,7 @@ int __thiscall sub_4B9D49(int this)
       v9 = strlen(v8);
       std::string::assign(v8, v9);
       LOBYTE(v25) = 4;
-      v10 = sub_407455(v15, "V_", v18);
+      v10 = combine_text_prefix_and_string_storage(v15, "V_", v18);
       LOBYTE(v25) = 5;
       assign_std_string_storage(v19, v10);
       LOBYTE(v25) = 4;
@@ -232032,7 +231849,7 @@ char __stdcall sub_4BA0FB(char a1, _BYTE *a2, int a3, int a4)
       if ( *i == 59 )
         *i = 10;
     }
-    v8 = sub_407455(v11, "The following resource paths are invalid:\n\n", &a1);
+    v8 = combine_text_prefix_and_string_storage(v11, "The following resource paths are invalid:\n\n", &a1);
     LOBYTE(v14) = 1;
     append_string_suffix(v12, v8, "\n");
     LOBYTE(v14) = 3;
@@ -232057,7 +231874,7 @@ char __stdcall sub_4BA0FB(char a1, _BYTE *a2, int a3, int a4)
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (004BA1D4) --------------------------------------------------------
-int __thiscall sub_4BA1D4(int this, int a2, char a3, char a4)
+int __thiscall process_game_engine_frame(int this, int a2, char a3, char a4)
 {
   int v5; // eax
   int v6; // esi
@@ -232377,7 +232194,7 @@ _BYTE *__cdecl sub_4BA6C8(_BYTE *a1, unsigned int a2)
           std::string::append(1u, 124);
         v5 = (&off_753FC4)[sub_4BA6B3(v4)];
         v6 = (char *)strlen(v5);
-        sub_402BD8(v9, v5, v6);
+        append_std_string_storage_bytes(v9, v5, v6);
         v11 = a2 & ~(2 * v4 - 1);
         if ( v11 )
         {
@@ -232911,7 +232728,7 @@ _DWORD *sub_4BB4F1()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_4BB527(328);
+  v0 = allocate_registered_game_layer(328);
   result = 0;
   if ( v0 )
     return sub_4BB6C8(v0, 0);
@@ -232919,7 +232736,7 @@ _DWORD *sub_4BB4F1()
 }
 
 //----- (004BB527) --------------------------------------------------------
-_DWORD *__cdecl sub_4BB527(int a1)
+_DWORD *__cdecl allocate_registered_game_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -232989,7 +232806,7 @@ void sub_4BB5D1()
 // 765B44: using guessed type int dword_765B44;
 
 //----- (004BB5DC) --------------------------------------------------------
-_DWORD *__thiscall sub_4BB5DC(_DWORD *this)
+_DWORD *__thiscall construct_game_layer(_DWORD *this)
 {
   int v2; // eax
   int *v3; // eax
@@ -233067,7 +232884,7 @@ int __thiscall sub_4BB731(int *this, int a2, int a3)
   int v13; // [esp+34h] [ebp-8h]
   int v14; // [esp+38h] [ebp-4h]
 
-  v3 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  v3 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   if ( !v3 )
   {
     v4 = *(_DWORD *)(game_engine_instance_address + 1092);
@@ -233116,7 +232933,7 @@ _DWORD *__thiscall sub_4BB803(int this, int a2)
   result = (_DWORD *)a2;
   *v3 = a2;
   if ( a2 )
-    return sub_5067E5((_BYTE *)this, a2, 1);
+    return insert_control_into_control_container((_BYTE *)this, a2, 1);
   return result;
 }
 
@@ -233221,7 +233038,7 @@ int __thiscall sub_4BB97B(int this)
   *(_DWORD *)this = &off_6C2258;
   set_control_active((_BYTE *)this, 1);
   sub_4A2628((_BYTE *)this);
-  sub_476C91((_DWORD *)this, (_DWORD *)interface_layer_type_descriptor);
+  update_control_bounds((_DWORD *)this, (_DWORD *)interface_layer_type_descriptor);
   v3 = sub_483E63(v1);
   *(_DWORD *)(this + 80) = v3;
   attach_control_to_service(v3, this, 1);
@@ -233630,7 +233447,7 @@ int __thiscall sub_4BBFE9(int this)
   *(_DWORD *)this = &off_6C2394;
   set_control_active((_BYTE *)this, 1);
   sub_4A2628((_BYTE *)this);
-  sub_476C91((_DWORD *)this, (_DWORD *)interface_layer_type_descriptor);
+  update_control_bounds((_DWORD *)this, (_DWORD *)interface_layer_type_descriptor);
   v3 = sub_483E63(v1);
   *(_DWORD *)(this + 80) = v3;
   attach_control_to_service(v3, this, 1);
@@ -244055,7 +243872,7 @@ int __stdcall sub_4C6288(char *Str, int a2)
     LOBYTE(v15) = 2;
     std::string::_Tidy(1);
     v5 = sub_4A6D37(v11);
-    sub_407455(v12, ".", v5);
+    combine_text_prefix_and_string_storage(v12, ".", v5);
     v6 = v13;
     LOBYTE(v15) = 3;
     if ( !v13 )
@@ -244068,7 +243885,7 @@ int __stdcall sub_4C6288(char *Str, int a2)
     LOBYTE(v15) = 2;
     std::string::_Tidy(1);
     v15 = -1;
-    sub_439FA8(v10);
+    destroy_file_path_context(v10);
   }
   else
   {
@@ -244205,7 +244022,7 @@ int __thiscall sub_4C64B2(void *this, char *a2, char *Str)
   {
 LABEL_5:
     v9 = (char *)strlen(off_75FEA8);
-    sub_402BD8(&v17, off_75FEA8, v9);
+    append_std_string_storage_bytes(&v17, off_75FEA8, v9);
   }
   v20[0] = HIBYTE(a2);
   std::string::_Tidy(0);
@@ -247546,13 +247363,13 @@ bool __cdecl sub_4C9531(char *Str, char *a2)
 
   v37 = &v16;
   v36 = 0;
-  sub_402BAA(&v17, a2, &v34);
+  assign_std_string_storage_from_c_string(&v17, a2, &v34);
   v38 = 0;
   v2 = (char *)strlen("\\");
-  sub_402BD8(&v17, "\\", v2);
+  append_std_string_storage_bytes(&v17, "\\", v2);
   v3 = Str;
   v4 = (char *)strlen(Str);
-  sub_402BD8(&v17, Str, v4);
+  append_std_string_storage_bytes(&v17, Str, v4);
   if ( (byte_766050 & 1) != 0 )
   {
     v5 = dword_76604C;
@@ -247575,7 +247392,7 @@ bool __cdecl sub_4C9531(char *Str, char *a2)
     std::string::_Tidy(1);
     if ( v35 )
     {
-      sub_402BAA(v20, Str, (_BYTE *)&a2 + 3);
+      assign_std_string_storage_from_c_string(v20, Str, (_BYTE *)&a2 + 3);
       LOBYTE(v38) = 2;
       std::string::erase(&v22[-dword_76604C], -1);
       v8 = v21;
@@ -247649,7 +247466,7 @@ bool __cdecl sub_4C9531(char *Str, char *a2)
         LOBYTE(v38) = 7;
         if ( !v18 )
           v13 = (CHAR *)Key;
-        if ( sub_4A437B(&v22, v13, 0xC0000000, 0, 2u, 0x80u)
+        if ( open_tracked_file(&v22, v13, 0xC0000000, 0, 2u, 0x80u)
           && sub_4A4407(&v24, (HANDLE)v23, 4u, v12, 0)
           && sub_4A448C(&v26, v25, 2u, 0, 0) )
         {
@@ -247663,7 +247480,7 @@ bool __cdecl sub_4C9531(char *Str, char *a2)
             a2);
           LOBYTE(v38) = 8;
           v14 = (const void *)(*(int (__stdcall **)(int, _DWORD))(*(_DWORD *)file_manager_address + 52))(v33, 0);
-          sub_4A39C1(2, 1);
+          record_file_system_activity(2, 1);
           memcpy(v27, v14, v12);
           v36 = 1;
           v38 = 7;
@@ -247691,7 +247508,7 @@ bool __cdecl sub_4C9531(char *Str, char *a2)
         LOBYTE(v38) = 4;
         v22 = (char *)&off_6AB500;
         if ( v23 != -1 )
-          sub_4A43D6((HANDLE *)&v22);
+          close_tracked_file((HANDLE *)&v22);
       }
       else
       {
@@ -247795,9 +247612,9 @@ int __stdcall sub_4C98FF(char *a1, char *a2)
     v2 = "!!!Readme.txt";
   }
   v50 = 0;
-  sub_402BAA(&v46, v2, (_BYTE *)&a1 + 3);
+  assign_std_string_storage_from_c_string(&v46, v2, (_BYTE *)&a1 + 3);
   v51 = 0;
-  sub_402BAA(&v36, a2, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(&v36, a2, (_BYTE *)&a2 + 3);
   LOBYTE(v51) = 1;
   sub_595430((int)&v46);
   if ( v38 )
@@ -247926,7 +247743,7 @@ LABEL_23:
         std::string::_Tidy(0);
         std::string::assign(v39, 0, -1);
         LOBYTE(v51) = 10;
-        sub_41838F(&v25, &v42);
+        append_vector_element(&v25, &v42);
         LOBYTE(v51) = 9;
         std::string::_Tidy(1);
       }
@@ -248075,7 +247892,7 @@ BOOL __stdcall sub_4C9E55(char *a1)
   HANDLE hFile; // [esp+C4h] [ebp-10h]
   int v38; // [esp+D0h] [ebp-4h]
 
-  sub_402BAA(&v30, a1, &v35);
+  assign_std_string_storage_from_c_string(&v30, a1, &v35);
   v38 = 0;
   if ( !v32 )
   {
@@ -248102,7 +247919,7 @@ BOOL __stdcall sub_4C9E55(char *a1)
   LOBYTE(v38) = 3;
   if ( !v31 )
     v5 = (CHAR *)Key;
-  if ( sub_4A437B(&v36, v5, 0xC0000000, 0, 2u, 0x80u) )
+  if ( open_tracked_file(&v36, v5, 0xC0000000, 0, 2u, 0x80u) )
   {
     sub_5247AD(v11, 10);
     LOBYTE(v38) = 4;
@@ -248129,10 +247946,10 @@ BOOL __stdcall sub_4C9E55(char *a1)
         lpBuffer = Key;
         if ( v8 )
           lpBuffer = v8;
-        sub_4A39C1(0, v7);
+        record_file_system_activity(0, v7);
         if ( !WriteFile(hFile, lpBuffer, v7, &NumberOfBytesWritten, 0) )
           break;
-        sub_4A39C1(0, 2);
+        record_file_system_activity(0, 2);
         if ( !WriteFile(hFile, "\r\n", 2u, &v23, 0) )
           break;
         sub_4172B4(v27);
@@ -248166,7 +247983,7 @@ LABEL_17:
   LOBYTE(v38) = 0;
   v36 = &off_6AB500;
   if ( hFile != (HANDLE)-1 )
-    sub_4A43D6((HANDLE *)&v36);
+    close_tracked_file((HANDLE *)&v36);
   v38 = -1;
   std::string::_Tidy(1);
   return HIBYTE(a1) == 0;
@@ -248308,7 +248125,7 @@ int __stdcall sub_4CA344(char *a1, char *a2)
 }
 
 //----- (004CA356) --------------------------------------------------------
-int __stdcall sub_4CA356(void *a1)
+int __stdcall take_screenshot(void *a1)
 {
   int v1; // esi
   const char *v2; // eax
@@ -248900,7 +248717,7 @@ int __stdcall sub_4CADDE(float a1, float a2, int a3, int a4, int a5)
   *(float *)&v8 = a1 * 0.017453292;
   v6 = sub_457D4C(v10, v8, v9, v11, COERCE_INT(1.0), COERCE_INT(0.0), -1);
   v13 = 0;
-  sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v6, 0, 1);
+  cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v6, 0, 1);
   v13 = -1;
   sub_40EAEB(v10);
   sub_454218(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v12);
@@ -248925,7 +248742,7 @@ int __stdcall sub_4CAEA3(int *a1, char *a2)
     v4 = *v3;
     v7 = 0;
     (*(void (__thiscall **)(int *, _DWORD *))(v4 + 4))(v3, v6);
-    sub_45367B(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v6, a1, 0, COERCE_INT(0.0), 0);
+    glide_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v6, a1, 0, COERCE_INT(0.0), 0);
     v7 = -1;
     v2 = 0;
     sub_40EAEB(v6);
@@ -250064,9 +249881,9 @@ int __stdcall sub_4CC2E9(const char *a1)
           (*(int (__stdcall **)(int, char *, int))(i + 24))(v8, v5, 500);
           i = *(_DWORD *)file_manager_address )
     {
-      sub_52D1CF((int)v7, v5, 0xFFFFFFFF);
+      write_source_message_from_log_context((int)v7, v5, 0xFFFFFFFF);
     }
-    sub_52D1CF((int)v7, "\n\n", 0xFFFFFFFF);
+    write_source_message_from_log_context((int)v7, "\n\n", 0xFFFFFFFF);
     v2 = 0;
     LOBYTE(v9) = 0;
     end_interface_debug_log(v7);
@@ -250439,7 +250256,7 @@ BOOL __userpurge sub_4CC9F0@<eax>(double a1@<st0>, char *a2, char *a3)
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (004CCA17) --------------------------------------------------------
-int __thiscall sub_4CCA17(void *this)
+int __thiscall write_qa_report(void *this)
 {
   const char *v1; // eax
   const char *v2; // esi
@@ -250620,7 +250437,7 @@ int __thiscall sub_4CCA17(void *this)
   LOBYTE(v45) = 4;
   if ( v36 )
   {
-    v13 = sub_407455(v26, "QAReport() dump file [", v34);
+  v13 = combine_text_prefix_and_string_storage(v26, "QAReport() dump file [", v34);
     LOBYTE(v45) = 5;
     v14 = (char *)*((_DWORD *)append_string_suffix(v23, v13, "]") + 1);
     LOBYTE(v45) = 6;
@@ -250907,7 +250724,7 @@ int __stdcall sub_4CD196(const char *a1, char *a2, CHAR *a3)
     hFile = (HANDLE)-1;
     v13 = &off_6AB500;
     LOBYTE(v15) = 1;
-    if ( sub_4A437B(&v13, a3, 0xC0000000, 0, 2u, 0x80u) )
+    if ( open_tracked_file(&v13, a3, 0xC0000000, 0, 2u, 0x80u) )
     {
       sub_5AA170((int)v8, a2);
       v17 = 1;
@@ -250922,7 +250739,7 @@ int __stdcall sub_4CD196(const char *a1, char *a2, CHAR *a3)
         v16 = 1;
         v5 = strlen(v3);
         v6 = sub_5B65A0(v4, Buffer, v5);
-        sub_4A39C1(0, v6);
+        record_file_system_activity(0, v6);
         WriteFile(hFile, Buffer, v6, &NumberOfBytesWritten, 0);
       }
       if ( v16 )
@@ -250943,7 +250760,7 @@ int __stdcall sub_4CD196(const char *a1, char *a2, CHAR *a3)
     v13 = &off_6AB500;
     LOBYTE(v15) = 0;
     if ( hFile != (HANDLE)-1 )
-      sub_4A43D6((HANDLE *)&v13);
+      close_tracked_file((HANDLE *)&v13);
   }
   else
   {
@@ -251279,7 +251096,7 @@ int __stdcall sub_4CD839(char *a1)
     else
       v4 = 0;
     std::strstreambuf::freeze((std::strstreambuf *)v7, 1);
-    sub_52D1CF((int)v11, *v9, v4);
+    write_source_message_from_log_context((int)v11, *v9, v4);
     std::strstreambuf::freeze((std::strstreambuf *)v7, 0);
     LOBYTE(v12) = 0;
     v1 = 0;
@@ -251450,7 +251267,7 @@ int sub_4CDBED()
 
   begin_interface_debug_log(v1, (int)"Z:\\Proj\\GK3\\gk3app\\Source\\Generics.cpp", 4462, 7, 0);
   v2 = 0;
-  sub_52D1CF(
+  write_source_message_from_log_context(
     (int)v1,
     "** Help for using the console **\n"
     "\n"
@@ -252291,7 +252108,7 @@ int sub_4CE967()
   {
     if ( sub_4AD030(v0) && v0 != -1 )
     {
-      v1 = sub_4AEFAE(v0);
+      v1 = is_global_flag_set(v0);
       v4 = sub_55B63D(v1);
       v2 = sub_4AD04E(v0);
       log_interface_debug_message((int)v5, "flag \"%s\" is %s\n", v2, v4);
@@ -252466,7 +252283,7 @@ int __stdcall sub_4CEC7E(_DWORD *a1, const char *a2)
   v3 = sub_4D342B(a2);
   if ( v3 != -1 )
   {
-    if ( sub_4AEFAE(v3) )
+    if ( is_global_flag_set(v3) )
       *a1 = 1;
     return 0;
   }
@@ -252482,7 +252299,7 @@ int __stdcall sub_4CECAF(_DWORD *a1, int a2)
   v2 = 1;
   if ( sub_4AD030(a2) )
   {
-    if ( sub_4AEFAE(a2) )
+    if ( is_global_flag_set(a2) )
       *a1 = 1;
     return 0;
   }
@@ -254206,9 +254023,9 @@ float *__thiscall sub_4D09AE(float *this)
 
   *(_BYTE *)this = v3;
   std::string::_Tidy(0);
-  *((_DWORD *)this + 4) = dword_7647B0;
-  *((_DWORD *)this + 5) = dword_7647B4;
-  *((_DWORD *)this + 6) = dword_7647B8;
+  *((_DWORD *)this + 4) = unset_camera_position_x;
+  *((_DWORD *)this + 5) = unset_camera_position_y;
+  *((_DWORD *)this + 6) = unset_camera_position_z;
   this[7] = 0.0;
   *((_BYTE *)this + 32) = v3;
   std::string::_Tidy(0);
@@ -254216,9 +254033,9 @@ float *__thiscall sub_4D09AE(float *this)
 }
 // 4D09C5: variable 'v3' is possibly undefined
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 7647B0: using guessed type int dword_7647B0;
-// 7647B4: using guessed type int dword_7647B4;
-// 7647B8: using guessed type int dword_7647B8;
+// 7647B0: using guessed type int unset_camera_position_x;
+// 7647B4: using guessed type int unset_camera_position_y;
+// 7647B8: using guessed type int unset_camera_position_z;
 
 //----- (004D0A0B) --------------------------------------------------------
 int sub_4D0A0B()
@@ -257995,7 +257812,7 @@ _BYTE *__cdecl sub_4D40AA(_BYTE *a1, char *a2, const char *a3, char *Str, int a5
     if ( *(_BYTE *)(sub_4D193A(v20) - 1) != 92 )
     {
       v6 = (char *)strlen("\\");
-      sub_402BD8(v20, "\\", v6);
+      append_std_string_storage_bytes(v20, "\\", v6);
     }
   }
   else
@@ -258784,7 +258601,7 @@ int __thiscall sub_4D4C78(int this, char *a2, int a3)
 _DWORD *__thiscall sub_4D4D26(_DWORD *this)
 {
   sub_48E0CC((int)this);
-  sub_40ECE2(this + 10);
+  construct_camera_angle_base(this + 10);
   find_or_create_registry_entry(dword_76C0A0, (unsigned int)this + dword_76C09C + 68);
   this[16] = off_6C6D64;
   find_or_create_registry_entry(dword_766220, (unsigned int)this + dword_76621C + 69);
@@ -260272,7 +260089,7 @@ char __thiscall sub_4D6800(int this, _BYTE *a2, int a3)
     a2,
     "mCameraAngle",
     this + 144,
-    dword_7640F8);
+    camera_angle_type_registry);
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
@@ -260283,7 +260100,7 @@ char __thiscall sub_4D6800(int this, _BYTE *a2, int a3)
 }
 // 6A6454: using guessed type char byte_6A6454;
 // 6A6E80: using guessed type int dword_6A6E80;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 766160: using guessed type int dword_766160[15];
 // 766F60: using guessed type _DWORD dword_766F60[15];
 // 76D200: using guessed type int dword_76D200[15];
@@ -260355,7 +260172,7 @@ _BYTE *__thiscall sub_4D6A28(int this, _BYTE *a2, int a3)
   v4 = *(_DWORD *)(v3 + 52);
   v5 = append_string_suffix(v9, (char *)(this + 24), "\n");
   v12 = 1;
-  v6 = sub_475282(v4);
+  v6 = camera_type_name(v4);
   v7 = append_string_suffix(v10, v5, v6);
   LOBYTE(v12) = 2;
   append_string_suffix(a2, v7, " Camera Angle");
@@ -260386,7 +260203,7 @@ _BYTE *__thiscall sub_4D6AB2(int this, _BYTE *a2)
   v3 = *(_DWORD *)(v2 + 52);
   v4 = append_string_suffix(v8, (char *)(this + 24), " (");
   v11 = 1;
-  v5 = sub_475282(v3);
+  v5 = camera_type_name(v3);
   v6 = append_string_suffix(v9, v4, v5);
   LOBYTE(v11) = 2;
   append_string_suffix(a2, v6, ")");
@@ -260451,7 +260268,7 @@ _BYTE *__thiscall sub_4D6BE7(int *this, _BYTE *a2)
   v3 = this[36];
   v4 = *(_DWORD *)(v3 + 52);
   v16 = *(float *)(v3 + 44);
-  v5 = sub_475282(v4);
+  v5 = camera_type_name(v4);
   sprintf(Buffer, "Dist %.2f Type %s", v16, v5);
   v14[0] = HIBYTE(a2);
   std::string::_Tidy(0);
@@ -260557,10 +260374,10 @@ void __thiscall sub_4D6D4F(int this, int a2)
       std::string::_Tidy(1);
       break;
     case 4:
-      sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), *(_DWORD *)(this + 16), 0, 1);
+      cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), *(_DWORD *)(this + 16), 0, 1);
       break;
     case 5:
-      sub_45367B(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), *(_DWORD *)(this + 16), 0, 0, COERCE_INT(0.0), 1);
+      glide_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), *(_DWORD *)(this + 16), 0, 0, COERCE_INT(0.0), 1);
       break;
     case 6:
       v7 = *(_DWORD *)(this + 16);
@@ -260822,7 +260639,7 @@ void __thiscall sub_4D73DB(int this, char a2)
       v12 = v9;
       v13 = v10;
       v14 = v11;
-      v6 = (sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v12) == 0) + 1;
+      v6 = (is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v12) == 0) + 1;
     }
     if ( *(_DWORD *)(this + 200) != v6 )
     {
@@ -261504,7 +261321,7 @@ int __thiscall sub_4D7FB0(char *this, int a2)
     LOBYTE(v11) = 0;
     std::string::_Tidy(1);
     v5 = (void *)strlen("}");
-    sub_402BD8("}", v5);
+    append_std_string_storage_bytes("}", v5);
     v6 = v8;
     if ( !v8 )
       v6 = (char *)Key;
@@ -261526,7 +261343,7 @@ int __thiscall sub_4D7FB0(char *this, int a2)
   }
   return result;
 }
-// 402BD8: using guessed type _DWORD __stdcall sub_402BD8(_DWORD, void *Src);
+// 402BD8: using guessed type _DWORD __stdcall append_std_string_storage_bytes(_DWORD, void *Src);
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 4043C8: using guessed type _DWORD __stdcall sub_4043C8(_DWORD);
@@ -261619,7 +261436,7 @@ int __thiscall sub_4D8278(_DWORD *this)
   _DWORD *v4; // esi
 
   v1 = (_DWORD **)(this + 35);
-  result = sub_40EE23((float *)(this[35] + 116), (float *)(game_engine_address + 488));
+  result = vectors_are_approximately_equal((float *)(this[35] + 116), (float *)(game_engine_address + 488));
   if ( !(_BYTE)result )
   {
     v3 = *v1;
@@ -265580,7 +265397,7 @@ int __thiscall sub_4DB8B7(int this, char *a2, int a3, char *a4, int a5, char *a6
   LOBYTE(v26) = 3;
   sub_4DC3C2((_DWORD *)(this + 68), &v25);
   LOBYTE(v26) = 4;
-  sub_40442F((_BYTE *)(this + 84), &v24);
+  initialize_std_string_storage((_BYTE *)(this + 84), &v24);
   *(_DWORD *)(this + 104) = 0;
   *(_DWORD *)(this + 100) = &event_handle_vtable;
   *(_DWORD *)(this + 104) = CreateEventA(0, 0, 0, 0);
@@ -265596,14 +265413,14 @@ int __thiscall sub_4DB8B7(int this, char *a2, int a3, char *a4, int a5, char *a6
   LOBYTE(v26) = 7;
   if ( v23 )
   {
-    sub_439D31(v15);
+    construct_file_path_context(v15);
     LOBYTE(v26) = 8;
-    sub_439CF1(v16);
+    initialize_file_path_context_strings(v16);
     LOBYTE(v26) = 9;
-    v15[0] = &off_6AB594;
-    sub_4A7263(v15, v22);
+    v15[0] = &file_path_context_vtable;
+    set_file_path_context_path(v15, v22);
     LOBYTE(v26) = 10;
-    v11 = sub_439E38(v15, v19);
+    v11 = get_file_path_context_resolved_path(v15, v19);
     LOBYTE(v26) = 11;
     v12 = append_string_suffix(v17, v11, ".hang");
     LOBYTE(v26) = 12;
@@ -265637,7 +265454,7 @@ int __thiscall sub_4DB8B7(int this, char *a2, int a3, char *a4, int a5, char *a6
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 6A9CB0: using guessed type _UNKNOWN *event_handle_vtable;
 // 6A9CB4: using guessed type int (__stdcall *off_6A9CB4)(char);
-// 6AB594: using guessed type _UNKNOWN *off_6AB594;
+// 6AB594: using guessed type _UNKNOWN *file_path_context_vtable;
 // 6C7498: using guessed type int (__stdcall *off_6C7498)(char);
 
 //----- (004DBAD3) --------------------------------------------------------
@@ -267084,7 +266901,7 @@ char __thiscall sub_4DCD7A(char *this, int a2, int a3, _DWORD *a4, int a5)
   LOBYTE(v74) = 3;
   append_string_suffix(v62, v51, "TurnHeadDown");
   LOBYTE(v74) = 4;
-  sub_40442F(v64, &v68);
+  initialize_std_string_storage(v64, &v68);
   LOBYTE(v74) = 5;
   v8 = (const char *)*((_DWORD *)append_string_suffix(&v69, v60, off_75D7C4[0]) + 1);
   LOBYTE(v74) = 6;
@@ -267095,7 +266912,7 @@ char __thiscall sub_4DCD7A(char *this, int a2, int a3, _DWORD *a4, int a5)
   std::string::_Tidy(1);
   if ( v73 )
   {
-    v9 = sub_407455(v67, asc_788108, v60);
+    v9 = combine_text_prefix_and_string_storage(v67, asc_788108, v60);
     LOBYTE(v74) = 7;
     v10 = append_string_suffix(&v69, v9, off_75D7C4[0]);
     LOBYTE(v74) = 8;
@@ -267114,7 +266931,7 @@ char __thiscall sub_4DCD7A(char *this, int a2, int a3, _DWORD *a4, int a5)
   std::string::_Tidy(1);
   if ( v73 )
   {
-    v12 = sub_407455(&v69, asc_788108, v56);
+    v12 = combine_text_prefix_and_string_storage(&v69, asc_788108, v56);
     LOBYTE(v74) = 10;
     v13 = append_string_suffix(v67, v12, off_75D7C4[0]);
     LOBYTE(v74) = 11;
@@ -267133,7 +266950,7 @@ char __thiscall sub_4DCD7A(char *this, int a2, int a3, _DWORD *a4, int a5)
   std::string::_Tidy(1);
   if ( v73 )
   {
-    v15 = sub_407455(&v69, asc_788108, v58);
+    v15 = combine_text_prefix_and_string_storage(&v69, asc_788108, v58);
     LOBYTE(v74) = 13;
     v16 = append_string_suffix(v67, v15, off_75D7C4[0]);
     LOBYTE(v74) = 14;
@@ -267152,7 +266969,7 @@ char __thiscall sub_4DCD7A(char *this, int a2, int a3, _DWORD *a4, int a5)
   std::string::_Tidy(1);
   if ( v73 )
   {
-    v18 = sub_407455(v55, asc_788108, v62);
+    v18 = combine_text_prefix_and_string_storage(v55, asc_788108, v62);
     LOBYTE(v74) = 16;
     v19 = append_string_suffix(v67, v18, off_75D7C4[0]);
     LOBYTE(v74) = 17;
@@ -267491,7 +267308,7 @@ void __thiscall sub_4DD7B8(int this, _DWORD *a2, int *a3)
   v7[0] = *v5;
   v7[1] = v5[1];
   v7[2] = v5[2];
-  if ( !sub_40EE23((float *)(this + 160), v7) )
+  if ( !vectors_are_approximately_equal((float *)(this + 160), v7) )
   {
     *(_DWORD *)(this + 160) = dword_764790;
     *(_DWORD *)(this + 164) = dword_764794;
@@ -268075,7 +267892,7 @@ void __userpurge sub_4DE02E(int a1@<ecx>, double a2@<st0>, int a3)
       v14 = *v7;
       v15 = v7[1];
       v16 = v7[2];
-      if ( !sub_40EE23((float *)(a1 + 160), (float *)&v14) )
+      if ( !vectors_are_approximately_equal((float *)(a1 + 160), (float *)&v14) )
       {
         *(_BYTE *)(a1 + 84) = 1;
         *(_DWORD *)(a1 + 160) = v14;
@@ -270658,7 +270475,7 @@ int __thiscall sub_4E06EB(int this)
     v18 = (_DWORD *)v5;
     sub_4E0AB3(v14);
     sub_4E0B79((_DWORD *)(this + 208), &v18);
-    sub_5067E5((_BYTE *)this, (int)v18, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v18, 1);
   }
   v6 = *(_DWORD **)(this + 200);
   v11[0] = v6[18];
@@ -270681,7 +270498,7 @@ int __thiscall sub_4E06EB(int this)
     v17 = (_DWORD *)v10;
     sub_4E0AEA(v11);
     sub_4E0B79((_DWORD *)(this + 208), &v17);
-    sub_5067E5((_BYTE *)this, (int)v17, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v17, 1);
   }
   return result;
 }
@@ -270714,7 +270531,7 @@ int __thiscall sub_4E0800(int this)
   }
   v10 = -1;
   *(_DWORD *)(this + 204) = v3;
-  sub_5067E5((_BYTE *)this, v3, 1);
+  insert_control_into_control_container((_BYTE *)this, v3, 1);
   return (*(int (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 204) + 176))(*(_DWORD *)(this + 204), 1);
 }
 // 7646BC: using guessed type int dword_7646BC;
@@ -272247,7 +272064,7 @@ bool __thiscall sub_4E1C1C(void *this, char *Source)
     {
       if ( !sub_507C4B(v14) && !sub_507C6F(v14) )
       {
-        sub_402BAA(v24, v14, &v26);
+        assign_std_string_storage_from_c_string(v24, v14, &v26);
         LOBYTE(v28) = 1;
         v5 = sub_4E29A4(v15, &v21);
         assign_std_string_storage(v5, v24);
@@ -272259,17 +272076,17 @@ bool __thiscall sub_4E1C1C(void *this, char *Source)
     v6 = 0;
     sub_4E2CAF((int)v16, &v23, 0, &v26);
     LOBYTE(v28) = 2;
-    sub_402BAA(v24, "GENERAL", &v27);
+    assign_std_string_storage_from_c_string(v24, "GENERAL", &v27);
     LOBYTE(v28) = 3;
     *(_DWORD *)sub_4E2A94(v16, v24) = sub_4E1F21;
     LOBYTE(v28) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v24, "SPRITES", &v27);
+    assign_std_string_storage_from_c_string(v24, "SPRITES", &v27);
     LOBYTE(v28) = 4;
     *(_DWORD *)sub_4E2A94(v16, v24) = sub_4E20F0;
     LOBYTE(v28) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v24, "HOT_SPOTS", &v27);
+    assign_std_string_storage_from_c_string(v24, "HOT_SPOTS", &v27);
     LOBYTE(v28) = 5;
     *(_DWORD *)sub_4E2A94(v16, v24) = sub_4E25C9;
     LOBYTE(v28) = 2;
@@ -278221,11 +278038,11 @@ LABEL_37:
         sub_527FBF(*(void **)(game_engine_instance_address + 1192), (int)&v30);
         v33 = 4;
         v17 = (char *)strlen("\\");
-        sub_402BD8(&v30, "\\", v17);
+        append_std_string_storage_bytes(&v30, "\\", v17);
         v18 = (char *)strlen(off_7536F8);
-        sub_402BD8(&v30, off_7536F8, v18);
+        append_std_string_storage_bytes(&v30, off_7536F8, v18);
         v19 = (char *)strlen(off_7536FC);
-        sub_402BD8(&v30, off_7536FC, v19);
+        append_std_string_storage_bytes(&v30, off_7536FC, v19);
         v20 = v31;
         v21 = (char *)Key;
         if ( !v31 )
@@ -280338,7 +280155,7 @@ _DWORD *sub_4E9F6D()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_4E9FA3(648);
+  v0 = allocate_registered_inventory_layer(648);
   result = 0;
   if ( v0 )
     return sub_4EA442(v0, 0);
@@ -280346,7 +280163,7 @@ _DWORD *sub_4E9F6D()
 }
 
 //----- (004E9FA3) --------------------------------------------------------
-_DWORD *__cdecl sub_4E9FA3(int a1)
+_DWORD *__cdecl allocate_registered_inventory_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -280421,7 +280238,7 @@ void sub_4EA061()
 // 766594: using guessed type int dword_766594;
 
 //----- (004EA06C) --------------------------------------------------------
-int __thiscall sub_4EA06C(int this)
+int __thiscall construct_inventory_layer(int this)
 {
   int v2; // edi
   int *v3; // ebx
@@ -280476,13 +280293,13 @@ int __thiscall sub_4EA06C(int this)
   sub_4EB62F(v21);
   sub_44F8C2((_DWORD *)(this + 488), (int)&dword_6C85A8, this != 0 ? this + 328 : 0);
   (*(void (__thiscall **)(int, _DWORD *))(*(_DWORD *)(this + 488) + 172))(this + 488, v21);
-  sub_5067E5((_BYTE *)this, this + 488, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 488, 1);
   sub_476F8A((_DWORD *)(this + 488), "inventoryexit");
   *(_DWORD *)(this + 340) = 0;
   *(_DWORD *)(this + 644) = 0;
   v5 = sub_4EAEA1((int *)this);
   sub_4EB706((_DWORD *)(this + 428), (int (__thiscall ***)(_DWORD, int))v5);
-  sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 428), 1);
+  insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 428), 1);
   v25 = *find_or_create_engine_string_resource((_DWORD *)game_engine_address, &v25, "inv_Highlight", 0, 0);
   sub_56B490((_DWORD *)game_engine_address, v25, 1u);
   v6 = (float *)sub_4772E1(72);
@@ -280500,7 +280317,7 @@ int __thiscall sub_4EA06C(int this)
   (*(void (__thiscall **)(int, int *, int))(*(_DWORD *)v8 + 196))(v8, &v22, v25);
   attach_control_to_service(this, *v3, 1);
   select_settings_section(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100), "InventoryLayer");
-  *(_DWORD *)(this + 420) = sub_46C1FA(
+  *(_DWORD *)(this + 420) = read_string_setting_or_default(
                               *(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 100),
                               "Screenshot Fade Color",
                               (char *)&loc_646464);
@@ -280510,7 +280327,7 @@ int __thiscall sub_4EA06C(int this)
                              0.30000001);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v2 + 168))(this + 344, interface_layer_type_descriptor);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v2 + 176))(this + 344, 1);
-  sub_5067E5((_BYTE *)this, this + 344, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 344, 0);
   v19[0] = v26;
   std::string::_Tidy(0);
   v9 = strlen("InventorySprites");
@@ -280518,7 +280335,7 @@ int __thiscall sub_4EA06C(int this)
   LOBYTE(v27) = 12;
   append_string_suffix(v17, v19, ".txt");
   LOBYTE(v27) = 13;
-  v10 = (float *)sub_45A0F8(60);
+  v10 = (float *)allocate_registered_config_file(60);
   v23 = v10;
   LOBYTE(v27) = 14;
   if ( v10 )
@@ -280529,7 +280346,7 @@ int __thiscall sub_4EA06C(int this)
       v11 = (char *)Key;
     if ( v18 )
       v12 = v18;
-    v13 = sub_46B4E2(v10, v12, v11);
+    v13 = construct_registered_config_file(v10, v12, v11);
   }
   else
   {
@@ -280718,7 +280535,7 @@ void __thiscall sub_4EA73C(void *this, int a2, char *a3, _DWORD *a4)
     sub_4AD2A1(i, (int *)&v19);
     if ( v19 )
     {
-      v5 = sub_4AD1DA(i);
+      v5 = get_inventory_item_name(i);
       sub_502C9D(a3, v19, v5);
       v6 = &unk_6C84B4;
       while ( i != *v6 )
@@ -280743,49 +280560,49 @@ void __thiscall sub_4EA73C(void *this, int a2, char *a3, _DWORD *a4)
   while ( v7 != (int *)&unk_6C84B4 );
   sub_4151F2(v14, (_BYTE *)&a3 + 3);
   v21 = 0;
-  sub_402BAA(v17, "inv_all.nvc", &v20);
+  assign_std_string_storage_from_c_string(v17, "inv_all.nvc", &v20);
   LOBYTE(v21) = 1;
-  sub_41838F(v14, v17);
+  append_vector_element(v14, v17);
   LOBYTE(v21) = 0;
   std::string::_Tidy(1);
   v10 = a2;
   if ( sub_557AE0(a2) )
   {
-    sub_402BAA(v17, "inv_1all.nvc", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v17, "inv_1all.nvc", (_BYTE *)&a2 + 3);
     LOBYTE(v21) = 2;
-    sub_41838F(v14, v17);
+    append_vector_element(v14, v17);
     LOBYTE(v21) = 0;
     std::string::_Tidy(1);
   }
   if ( sub_557AF3(v10) )
   {
-    sub_402BAA(v17, "inv_23all.nvc", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v17, "inv_23all.nvc", (_BYTE *)&a2 + 3);
     LOBYTE(v21) = 3;
-    sub_41838F(v14, v17);
+    append_vector_element(v14, v17);
     LOBYTE(v21) = 0;
     std::string::_Tidy(1);
   }
   if ( sub_557B08(v10) )
   {
-    sub_402BAA(v17, "inv_23all.nvc", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v17, "inv_23all.nvc", (_BYTE *)&a2 + 3);
     LOBYTE(v21) = 4;
-    sub_41838F(v14, v17);
+    append_vector_element(v14, v17);
     LOBYTE(v21) = 0;
     std::string::_Tidy(1);
-    sub_402BAA(v17, "inv_3all.nvc", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v17, "inv_3all.nvc", (_BYTE *)&a2 + 3);
     LOBYTE(v21) = 5;
-    sub_41838F(v14, v17);
+    append_vector_element(v14, v17);
     LOBYTE(v21) = 0;
     std::string::_Tidy(1);
   }
   v11 = sub_557A8D(v10);
-  sub_402BAA(v17, v11, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v17, v11, (_BYTE *)&a2 + 3);
   LOBYTE(v21) = 6;
-  v12 = sub_407455(v15, "inv", v17);
+  v12 = combine_text_prefix_and_string_storage(v15, "inv", v17);
   LOBYTE(v21) = 7;
   v13 = append_string_suffix(v16, v12, ".nvc");
   LOBYTE(v21) = 8;
-  sub_41838F(v14, v13);
+    append_vector_element(v14, v13);
   LOBYTE(v21) = 7;
   std::string::_Tidy(1);
   LOBYTE(v21) = 6;
@@ -280799,7 +280616,7 @@ void __thiscall sub_4EA73C(void *this, int a2, char *a3, _DWORD *a4)
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 
 //----- (004EA988) --------------------------------------------------------
-int __thiscall sub_4EA988(_DWORD *this)
+int __thiscall select_inventory_item_control(_DWORD *this)
 {
   int v2; // eax
   int v4; // [esp+14h] [ebp-1Ch]
@@ -280840,7 +280657,7 @@ _BYTE *__thiscall sub_4EAA01(_DWORD *this, _BYTE *a2, int a3)
 
   v8 = 0;
   v3 = (_DWORD *)this[109];
-  v4 = sub_4AD1DA(a3);
+  v4 = get_inventory_item_name(a3);
   v5 = sub_46C10A(v3, v7, v4, "undefined");
   v9 = 1;
   append_string_suffix(a2, v5, "3");
@@ -280863,7 +280680,7 @@ _BYTE *__thiscall sub_4EAA6C(_DWORD *this, _BYTE *a2, int a3)
 
   v8 = 0;
   v3 = (_DWORD *)this[109];
-  v4 = sub_4AD1DA(a3);
+  v4 = get_inventory_item_name(a3);
   v5 = sub_46C10A(v3, v7, v4, "undefined");
   v9 = 1;
   append_string_suffix(a2, v5, "9");
@@ -280886,7 +280703,7 @@ _BYTE *__thiscall sub_4EAAD7(_DWORD *this, _BYTE *a2, int a3)
 
   v8 = 0;
   v3 = (_DWORD *)this[109];
-  v4 = sub_4AD1DA(a3);
+  v4 = get_inventory_item_name(a3);
   v5 = sub_46C10A(v3, v7, v4, "undefined");
   v9 = 1;
   append_string_suffix(a2, v5, "9_op");
@@ -280909,7 +280726,7 @@ _BYTE *__thiscall sub_4EAB42(_DWORD *this, _BYTE *a2, int a3)
 
   v8 = 0;
   v3 = (_DWORD *)this[109];
-  v4 = sub_4AD1DA(a3);
+  v4 = get_inventory_item_name(a3);
   v5 = sub_46C10A(v3, v7, v4, "undefined");
   v9 = 1;
   append_string_suffix(a2, v5, "6_alpha");
@@ -280982,7 +280799,7 @@ int __thiscall sub_4EACCB(int this, int a2)
 
   if ( a2 == 1037 )
   {
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 0);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 0);
     sub_5687D0((int *)(this + 416), "InventoryLayer", *(_DWORD *)dword_76472C, *(_DWORD *)(dword_76472C + 4), 0);
     sub_5688D0((_DWORD *)(this + 416), *(_DWORD *)(game_engine_address + 24), &zero_point_x, 0);
     sub_56B800((_DWORD *)game_engine_address, *(_DWORD *)(this + 416), *(_DWORD *)(this + 420), 0, *(float *)(this + 424));
@@ -281378,7 +281195,7 @@ int __stdcall sub_4EB355(int a1, _DWORD *a2, int a3)
     }
     v3 = dword_6C8524[2 * v4];
 LABEL_7:
-    sub_402BAA(v19, "SetEgoActiveInvItem(\"", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v19, "SetEgoActiveInvItem(\"", (_BYTE *)&a3 + 3);
     LOBYTE(v20) = 1;
     v6 = get_action_vocabulary_string(v3);
     v7 = append_string_suffix(v17, v19, v6);
@@ -281395,7 +281212,7 @@ LABEL_7:
     v16[20] = 1;
     sub_402825(a2, a1, 170, 687, (int)v15, 0);
   }
-  sub_402BAA(v19, "InventoryInspect(\"", (_BYTE *)&a3 + 3);
+  assign_std_string_storage_from_c_string(v19, "InventoryInspect(\"", (_BYTE *)&a3 + 3);
   LOBYTE(v20) = 4;
   v9 = get_action_vocabulary_string(a1);
   v10 = append_string_suffix(v18, v19, v9);
@@ -281412,7 +281229,7 @@ LABEL_7:
   sub_402825(a2, a1, 108, 991, (int)v15, 0);
   if ( *(int *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20) >= 6 )
   {
-    sub_402BAA(v19, "wait CallSheep(\"inv_all\",\"Scanner_Gabe$\");", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v19, "wait CallSheep(\"inv_all\",\"Scanner_Gabe$\");", (_BYTE *)&a3 + 3);
     LOBYTE(v20) = 7;
     assign_std_string_storage(v16, v19);
     LOBYTE(v20) = 0;
@@ -281745,9 +281562,9 @@ _DWORD *__thiscall sub_4EBA2E(_DWORD *this)
   *this = 0;
   this[1] = 0;
   this[13] = 0;
-  this[2] = dword_7647B0;
-  this[3] = dword_7647B4;
-  this[4] = dword_7647B8;
+  this[2] = unset_camera_position_x;
+  this[3] = unset_camera_position_y;
+  this[4] = unset_camera_position_z;
   this[8] = 0;
   this[9] = 0;
   this[10] = 0;
@@ -281755,9 +281572,9 @@ _DWORD *__thiscall sub_4EBA2E(_DWORD *this)
   this[12] = 0;
   return this;
 }
-// 7647B0: using guessed type int dword_7647B0;
-// 7647B4: using guessed type int dword_7647B4;
-// 7647B8: using guessed type int dword_7647B8;
+// 7647B0: using guessed type int unset_camera_position_x;
+// 7647B4: using guessed type int unset_camera_position_y;
+// 7647B8: using guessed type int unset_camera_position_z;
 
 //----- (004EBA52) --------------------------------------------------------
 bool __thiscall sub_4EBA52(int this, _BYTE *a2, int a3)
@@ -282224,7 +282041,7 @@ LABEL_32:
     qmemcpy(v43, Buf2, sizeof(v43));
     v29 = (int)v47;
     HIDWORD(v40) = 0;
-    sub_575F80(v43, *(float *)(v22 + 4 * (v52 + *((_DWORD *)v47 + 100)) + 380));
+    rotate_matrix_about_y(v43, *(float *)(v22 + 4 * (v52 + *((_DWORD *)v47 + 100)) + 380));
     v30 = *(float *)(v29 + 376);
     v31 = *(float *)(v29 + 372);
     v32 = v43[9] + *(float *)(v29 + 368);
@@ -282305,8 +282122,8 @@ void __thiscall sub_4EC406(int this, int a2)
   if ( *(int *)(this + 676) >= 0 )
   {
     qmemcpy(v15, Buf2, sizeof(v15));
-    sub_575F80(v15, *(float *)(this + 688));
-    sub_40D73E(v15, (float *)(56 * *(_DWORD *)(this + 676) + this + 368));
+    rotate_matrix_about_y(v15, *(float *)(this + 688));
+  add_vector_to_matrix_translation(v15, (float *)(56 * *(_DWORD *)(this + 676) + this + 368));
     sub_57C8E0((_DWORD *)game_engine_address, *(_DWORD *)(56 * *(_DWORD *)(this + 676) + this + 352), v15, -1);
     v4 = *(_DWORD *)(this + 680);
     *((float *)&v17 + 1) = 0.0;
@@ -282412,8 +282229,8 @@ void __thiscall sub_4EC62F(int this, int a2)
     if ( v3 >= 0 )
     {
       qmemcpy(v4, Buf2, sizeof(v4));
-      sub_575F80(v4, *(float *)(this + 4 * (14 * v3 + *(_DWORD *)(56 * v3 + this + 64)) + 44));
-      sub_40D73E(v4, (float *)(56 * *(_DWORD *)(this + 340) + this + 32));
+      rotate_matrix_about_y(v4, *(float *)(this + 4 * (14 * v3 + *(_DWORD *)(56 * v3 + this + 64)) + 44));
+      add_vector_to_matrix_translation(v4, (float *)(56 * *(_DWORD *)(this + 340) + this + 32));
       sub_57C8E0((_DWORD *)game_engine_address, *(_DWORD *)(56 * *(_DWORD *)(this + 340) + this + 16), v4, -1);
       *(_DWORD *)(this + 340) = -1;
     }
@@ -282743,10 +282560,10 @@ int __thiscall sub_4ECBC1(int this, int a2)
   else
     v3 = *(float *)(this + 4 * (14 * a2 + *(_DWORD *)(56 * a2 + this + 400)) + 380);
   v13 = v3;
-  sub_575F80(v20, v13);
+  rotate_matrix_about_y(v20, v13);
   v4 = 56 * a2 + this;
   v23 = v4;
-  sub_40D73E(v20, (float *)(v4 + 356));
+  add_vector_to_matrix_translation(v20, (float *)(v4 + 356));
   v22[0] = v20[9];
   v22[1] = v20[10];
   v22[2] = v20[11];
@@ -282792,13 +282609,13 @@ int __thiscall sub_4ECBC1(int this, int a2)
   sub_575EA0(v15, 0.2, 0.2, v13);
   if ( a2 == *(_DWORD *)(this + 676) )
   {
-    sub_575F80(v15, *(float *)(this + 688));
+    rotate_matrix_about_y(v15, *(float *)(this + 688));
     v8 = v23;
   }
   else
   {
     v8 = v23;
-    sub_575F80(v15, *(float *)(this + 4 * (14 * a2 + *(_DWORD *)(v23 + 400)) + 380));
+    rotate_matrix_about_y(v15, *(float *)(this + 4 * (14 * a2 + *(_DWORD *)(v23 + 400)) + 380));
   }
   v9 = sub_40DCA7(v18, v22, (float *)(v8 + 356));
   v25 = *v9;
@@ -282808,8 +282625,8 @@ int __thiscall sub_4ECBC1(int this, int a2)
   v25 = v25 * 3.0;
   v26 = v26 * 3.0;
   v27 = v27 * 3.0;
-  sub_40D73E(v15, (float *)(v8 + 356));
-  sub_40D73E(v15, &v25);
+    add_vector_to_matrix_translation(v15, (float *)(v8 + 356));
+    add_vector_to_matrix_translation(v15, &v25);
   return sub_57C8E0((_DWORD *)game_engine_address, *(_DWORD *)(v8 + 348), v15, -1);
 }
 // 7715D4: using guessed type int game_engine_address;
@@ -283824,7 +283641,7 @@ int __usercall sub_4EE009@<eax>(_DWORD *a1@<ecx>, int a2@<ebp>)
 /* Extracted to gk3/layer_manager.c as get_game_layer_slot. */
 
 //----- (004EE4F9) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE4F9(int a1)
+_DWORD *__cdecl allocate_registered_game_help_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283835,7 +283652,7 @@ _DWORD *__cdecl sub_4EE4F9(int a1)
 // 76C4E8: using guessed type int dword_76C4E8[15];
 
 //----- (004EE51C) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE51C(int a1)
+_DWORD *__cdecl allocate_registered_config_controls_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283846,7 +283663,7 @@ _DWORD *__cdecl sub_4EE51C(int a1)
 // 76C4A8: using guessed type int dword_76C4A8[15];
 
 //----- (004EE53F) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE53F(int a1)
+_DWORD *__cdecl allocate_registered_load_save_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283857,7 +283674,7 @@ _DWORD *__cdecl sub_4EE53F(int a1)
 // 766958: using guessed type _DWORD dword_766958[15];
 
 //----- (004EE562) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE562(int a1)
+_DWORD *__cdecl allocate_registered_save_game_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283868,7 +283685,7 @@ _DWORD *__cdecl sub_4EE562(int a1)
 // 7668D8: using guessed type int dword_7668D8[15];
 
 //----- (004EE585) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE585(int a1)
+_DWORD *__cdecl allocate_registered_lsr_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283879,7 +283696,7 @@ _DWORD *__cdecl sub_4EE585(int a1)
 // 766A00: using guessed type int dword_766A00[15];
 
 //----- (004EE5A8) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE5A8(int a1)
+_DWORD *__cdecl allocate_registered_pause_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283890,7 +283707,7 @@ _DWORD *__cdecl sub_4EE5A8(int a1)
 // 766BE0: using guessed type _DWORD dword_766BE0[15];
 
 //----- (004EE5CB) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE5CB(int a1)
+_DWORD *__cdecl allocate_registered_confirm_quit_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283901,7 +283718,7 @@ _DWORD *__cdecl sub_4EE5CB(int a1)
 // 766BA0: using guessed type int dword_766BA0[15];
 
 //----- (004EE5EE) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE5EE(int a1)
+_DWORD *__cdecl allocate_registered_modal_message_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283912,7 +283729,7 @@ _DWORD *__cdecl sub_4EE5EE(int a1)
 // 766B60: using guessed type int dword_766B60[15];
 
 //----- (004EE611) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE611(int a1)
+_DWORD *__cdecl allocate_registered_time_block_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283923,7 +283740,7 @@ _DWORD *__cdecl sub_4EE611(int a1)
 // 766B20: using guessed type int dword_766B20[15];
 
 //----- (004EE634) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE634(int a1)
+_DWORD *__cdecl allocate_registered_death_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283934,7 +283751,7 @@ _DWORD *__cdecl sub_4EE634(int a1)
 // 766AE0: using guessed type int dword_766AE0[15];
 
 //----- (004EE657) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE657(int a1)
+_DWORD *__cdecl allocate_registered_finished_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283945,7 +283762,7 @@ _DWORD *__cdecl sub_4EE657(int a1)
 // 766AA0: using guessed type _DWORD dword_766AA0[15];
 
 //----- (004EE67A) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE67A(int a1)
+_DWORD *__cdecl allocate_registered_movie_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283956,7 +283773,7 @@ _DWORD *__cdecl sub_4EE67A(int a1)
 // 766CF8: using guessed type _DWORD dword_766CF8[15];
 
 //----- (004EE69D) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE69D(int a1)
+_DWORD *__cdecl allocate_registered_private_bottom_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -283967,7 +283784,7 @@ _DWORD *__cdecl sub_4EE69D(int a1)
 // 78FD10: using guessed type int dword_78FD10[15];
 
 //----- (004EE6C0) --------------------------------------------------------
-_DWORD *__cdecl sub_4EE6C0(int a1)
+_DWORD *__cdecl allocate_registered_title_layer(int a1)
 {
   _DWORD *v1; // esi
 
@@ -284202,7 +284019,7 @@ int __thiscall sub_4EE938(int this)
   std::string::assign((void *)"sid_text_14_grn", v3);
   v4 = strlen("sid_text_14_ul");
   std::string::assign((void *)"sid_text_14_ul", v4);
-  sub_476C91((_DWORD *)this, &v8);
+  update_control_bounds((_DWORD *)this, &v8);
   dword_7541E4 = v11 - v9;
   dword_75421C = v11 - v9;
   dword_7541E0 = dword_7541E8;
@@ -284219,7 +284036,7 @@ int __thiscall sub_4EE938(int this)
   *(_DWORD *)(this + 220) = v6;
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v6 + 176))(v6, 1);
   attach_control_to_service(this, *(_DWORD *)(this + 220), 1);
-  sub_5067E5((_BYTE *)this, this + 264, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 264, 1);
   *(_DWORD *)(this + 336) = 0;
   *(_BYTE *)(this + 456) = 1;
   *(_DWORD *)(this + 216) = 0;
@@ -284301,7 +284118,7 @@ int __thiscall sub_4EEBBA(int this, _DWORD *a2)
   std::string::assign((void *)"sid_text_14_ul", v6);
   v7 = strlen("List Box");
   std::string::assign((void *)"List Box", v7);
-  sub_476C91((_DWORD *)this, a2);
+  update_control_bounds((_DWORD *)this, a2);
   dword_7541E0 = dword_7541E8;
   dword_7541E4 = a2[3] - a2[1];
   dword_75421C = a2[3] - a2[1];
@@ -284318,7 +284135,7 @@ int __thiscall sub_4EEBBA(int this, _DWORD *a2)
   *(_DWORD *)(this + 220) = v11;
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v11 + 176))(v11, 1);
   attach_control_to_service(this, *(_DWORD *)(this + 220), 1);
-  sub_5067E5((_BYTE *)this, this + 264, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 264, 1);
   *(_DWORD *)(this + 336) = 0;
   *(_DWORD *)(this + 216) = 0;
   *(_BYTE *)(this + 456) = 1;
@@ -284581,7 +284398,7 @@ void __thiscall sub_4EF2CA(int this, int a2, char a3, char *Str, int a5)
     v17 = *(_DWORD *)(this + 216);
     v14 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), v12);
     sub_4F0DBB(*(_DWORD **)(this + 244), v13, &v18, v14, this, a5, v17);
-    sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 244), 1);
+    insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 244), 1);
     v15 = *(_DWORD **)(this + 220);
     v16 = v15[8];
     v22[0] = v15[7];
@@ -286113,7 +285930,7 @@ int __thiscall sub_4F0C04(int this, int a2)
   construct_control_container_base((char *)this, a2);
   initialize_event_target_subobject((_WORD *)(this + 196), a2);
   find_or_create_registry_entry(dword_766720, dword_766718 + this + 208);
-  sub_4771A6((_DWORD *)(this + 216), a2);
+  construct_color_control((_DWORD *)(this + 216), a2);
   sub_44F6B2((_WORD *)(this + 268), a2);
   sub_4F05F9(this + 424, a2);
   *(_DWORD *)(this + 196) = off_6C9390;
@@ -286209,7 +286026,7 @@ int __thiscall sub_4F0DBB(_DWORD *this, char *a2, int *a3, int a4, int a5, int a
   v11 = 1;
   v12 = 1;
   sub_44F8C2(this + 67, (int)v10, this != 0 ? (unsigned int)(this + 49) : 0);
-  sub_5067E5(this, (int)(this + 67), 1);
+  insert_control_into_control_container(this, (int)(this + 67), 1);
   v8 = this[10] - this[8] - (this[77] - this[75]);
   v14 = dword_7541CC + this[7];
   v15 = this[8] + v8 / 2;
@@ -287583,7 +287400,7 @@ int __thiscall sub_4F207B(int this, int a2)
   *(_DWORD *)(this + 328) = &off_6C9664;
   sub_44F8C2((_DWORD *)(this + 340), (int)&unk_6C9550, this != 0 ? this + 328 : 0);
   *(_BYTE *)(this + 485) = 1;
-  sub_5067E5((_BYTE *)this, this + 340, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 340, 1);
   sub_476F8A((_DWORD *)(this + 340), "exitloadsave");
   v15 = this != 0 ? this + 328 : 0;
   if ( *(_DWORD *)(this + 652) )
@@ -287597,7 +287414,7 @@ int __thiscall sub_4F207B(int this, int a2)
     sub_476F8A((_DWORD *)(this + 496), "loadgame");
   }
   *(_BYTE *)(this + 640) = 1;
-  sub_5067E5((_BYTE *)this, this + 496, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 496, 1);
   sub_4F2997((_DWORD *)this);
   v4 = sub_4EAF8E(608);
   LOBYTE(v17) = 9;
@@ -287613,7 +287430,7 @@ int __thiscall sub_4F207B(int this, int a2)
   LOBYTE(v17) = 8;
   *(_DWORD *)(v6 + 596) = 100;
   (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 704) + 176))(*(_DWORD *)(this + 704), 1);
-  sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 704), 1);
+  insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 704), 1);
   v7 = (int *)(this + 728);
   v18 = 3;
   do
@@ -287641,11 +287458,11 @@ int __thiscall sub_4F207B(int this, int a2)
       *(float *)(v12 + 48) = 0.5;
       (*(void (**)(void))(v13 + 156))();
     }
-    sub_5067E5((_BYTE *)this, *v7++, 1);
+    insert_control_into_control_container((_BYTE *)this, *v7++, 1);
     --v18;
   }
   while ( v18 );
-  sub_5067E5((_BYTE *)this, this + 744, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 744, 1);
   *(_DWORD *)(this + 832) = -1;
   sub_4F2779((int *)this);
   set_control_active((_BYTE *)this, 1);
@@ -287948,7 +287765,7 @@ int __thiscall sub_4F28E1(_BYTE *this, _DWORD *a2)
   }
   v7 = -1;
   v6 = v4;
-  sub_5067E5(this, v4, 1);
+  insert_control_into_control_container(this, v4, 1);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v6 + 176))(v6, 1);
   return sub_4F4C3E((int)(this + 816), &v6);
 }
@@ -288054,13 +287871,13 @@ char sub_4F2A84()
   sub_527FBF(*(void **)(game_engine_instance_address + 1192), (int)v13);
   v15 = 0;
   v0 = (char *)strlen("\\");
-  sub_402BD8(v13, "\\", v0);
+  append_std_string_storage_bytes(v13, "\\", v0);
   sub_402B80(&v11, v13);
   LOBYTE(v15) = 1;
   v1 = (char *)strlen("*");
-  sub_402BD8(&v11, "*", v1);
+  append_std_string_storage_bytes(&v11, "*", v1);
   v2 = (char *)strlen(off_7536FC);
-  sub_402BD8(&v11, off_7536FC, v2);
+  append_std_string_storage_bytes(&v11, off_7536FC, v2);
   v14[0] = v14[19];
   std::string::_Tidy(0);
   LOBYTE(v15) = 2;
@@ -288231,13 +288048,13 @@ int __userpurge sub_4F2C49@<eax>(int a1@<ecx>, int a2@<edi>, int a3, int a4)
     std::string::_Tidy(0);
     LOBYTE(v100) = 2;
     v7 = (char *)strlen("\\");
-    sub_402BD8(v76, "\\", v7);
+    append_std_string_storage_bytes(v76, "\\", v7);
     sub_402B80(&v77, v76);
     LOBYTE(v100) = 3;
     v8 = (char *)strlen("*");
-    sub_402BD8(&v77, "*", v8);
+    append_std_string_storage_bytes(&v77, "*", v8);
     v9 = (char *)strlen(off_7536FC);
-    sub_402BD8(&v77, off_7536FC, v9);
+    append_std_string_storage_bytes(&v77, off_7536FC, v9);
     v10 = v78;
     if ( !v78 )
       v10 = Key;
@@ -288254,10 +288071,10 @@ int __userpurge sub_4F2C49@<eax>(int a1@<ecx>, int a2@<edi>, int a3, int a4)
     LOBYTE(v100) = 4;
     std::string::_Tidy(1);
     *(_DWORD *)(a1 + 740) = *(_DWORD *)(v12 + 72);
-    sub_402BAA(&v69, off_7536F8, (_BYTE *)&a4 + 3);
+    assign_std_string_storage_from_c_string(&v69, off_7536F8, (_BYTE *)&a4 + 3);
     LOBYTE(v100) = 6;
     v13 = (char *)strlen(off_7536FC);
-    sub_402BD8(&v69, off_7536FC, v13);
+    append_std_string_storage_bytes(&v69, off_7536FC, v13);
     sub_4F59BB((int)v57);
     LOBYTE(v100) = 7;
     v73[0] = HIBYTE(a4);
@@ -288314,7 +288131,7 @@ int __userpurge sub_4F2C49@<eax>(int a1@<ecx>, int a2@<edi>, int a3, int a4)
           v98 &= ~1u;
           std::string::_Tidy(1);
         }
-        sub_5067E5((_BYTE *)a1, (int)v84, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v84, 1);
         v94[0] = HIBYTE(a4);
         std::string::_Tidy(0);
         v22 = strlen("day");
@@ -288349,7 +288166,7 @@ int __userpurge sub_4F2C49@<eax>(int a1@<ecx>, int a2@<edi>, int a3, int a4)
         if ( !v86 )
           v29 = (char *)Key;
         sub_51B4AD(v28, v29, v96, *(_DWORD *)(a1 + 680) - *(_DWORD *)(a1 + 672), a3);
-        sub_5067E5((_BYTE *)a1, (int)v87, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v87, 1);
         v88 = v60;
         v30 = sub_4F3518(96);
         v99 = v30;
@@ -288362,7 +288179,7 @@ int __userpurge sub_4F2C49@<eax>(int a1@<ecx>, int a2@<edi>, int a3, int a4)
         LOBYTE(v100) = 9;
         sprintf(Buffer, "%03d/%03d", v88, v61);
         sub_51B4AD(v89, Buffer, v96, *(_DWORD *)(a1 + 696) - *(_DWORD *)(a1 + 688), a3);
-        sub_5067E5((_BYTE *)a1, (int)v89, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v89, 1);
         sprintf(v65, "(LoadSaveThumb%04d)", *(_DWORD *)(a1 + 724) + 1);
         v90 = *sub_56B2C0((_DWORD *)game_engine_address, (int *)&v95, v65, 160, 120, 0);
         v32 = (int *)get_engine_object_by_id((_DWORD *)game_engine_address, v90);
@@ -288426,7 +288243,7 @@ LABEL_45:
         if ( !v82 )
           v39 = (char *)Key;
         sub_51B4AD(v38, v39, v96, *(_DWORD *)(a1 + 664) - *(_DWORD *)(a1 + 656), a3);
-        sub_5067E5((_BYTE *)a1, (int)v84, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v84, 1);
         v40 = strlen(Str1);
         std::string::assign((void *)Str1, v40);
         v41 = sub_4F3518(96);
@@ -288442,7 +288259,7 @@ LABEL_45:
         if ( !v86 )
           v43 = (char *)Key;
         sub_51B4AD(v42, v43, v96, *(_DWORD *)(a1 + 680) - *(_DWORD *)(a1 + 672), a3);
-        sub_5067E5((_BYTE *)a1, (int)v87, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v87, 1);
         v88 = 0;
         v44 = sub_4F3518(96);
         v95 = v44;
@@ -288456,7 +288273,7 @@ LABEL_45:
         v89 = v45;
         Buffer[0] = 0;
         sub_51B4AD(v45, Buffer, v96, v46, a3);
-        sub_5067E5((_BYTE *)a1, (int)v89, 1);
+        insert_control_into_control_container((_BYTE *)a1, (int)v89, 1);
         v90 = 0;
         sub_4F4BFE((int *)(a1 + 708), (int)v80);
         ++*(_DWORD *)(a1 + 724);
@@ -288785,7 +288602,7 @@ int __thiscall sub_4F3A11(int this, int a2, int a3)
 
   v4 = get_engine_input_state((_DWORD *)game_engine_instance_address, 0);
   if ( !*(_BYTE *)(this + 844) || (v4 & 0x38) != 0 )
-    return sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+    return sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   v5 = 1;
   switch ( a2 )
   {
@@ -288833,7 +288650,7 @@ LABEL_12:
       goto LABEL_19;
   }
   if ( a2 != 40 )
-    return sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+    return sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   v6 = *(_DWORD *)(this + 832);
   if ( v6 < *(_DWORD *)(this + 724) - 1 )
   {
@@ -288954,7 +288771,7 @@ _DWORD *sub_4F3CA5()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_4EE53F(852);
+  v0 = allocate_registered_load_save_layer(852);
   result = 0;
   if ( v0 )
     return sub_4F3E04(v0, 0);
@@ -289023,7 +288840,7 @@ void sub_4F3D62()
 // 766954: using guessed type int dword_766954;
 
 //----- (004F3D6D) --------------------------------------------------------
-_DWORD *__thiscall sub_4F3D6D(_DWORD *this)
+_DWORD *__thiscall construct_load_save_layer(_DWORD *this)
 {
   size_t v2; // eax
 
@@ -289102,7 +288919,7 @@ int sub_4F3F63()
   _DWORD *v0; // ecx
   int result; // eax
 
-  v0 = sub_4EE562(1012);
+  v0 = allocate_registered_save_game_layer(1012);
   result = 0;
   if ( v0 )
     return sub_4F416B((int)v0, 0);
@@ -289171,7 +288988,7 @@ void sub_4F4020()
 // 7668D0: using guessed type int dword_7668D0;
 
 //----- (004F402B) --------------------------------------------------------
-_BYTE *__thiscall sub_4F402B(_BYTE *this)
+_BYTE *__thiscall construct_save_game_layer(_BYTE *this)
 {
   size_t v2; // eax
   char *v3; // eax
@@ -289317,7 +289134,7 @@ int __thiscall sub_4F4317(_DWORD *this)
 
   if ( *(_BYTE *)(*(_DWORD *)(76 * this[208] + this[178] + 32) + 24) )
   {
-    sub_402BAA(v16, (char *)Str1, &v19);
+    assign_std_string_storage_from_c_string(v16, (char *)Str1, &v19);
     v2 = this[181];
     v20 = 0;
     v3 = this[208];
@@ -289434,7 +289251,7 @@ int __thiscall sub_4F45B3(int this, char *Str)
   if ( *(_BYTE *)(*sub_4D1952(v20, &v23) - 1) != 92 )
   {
     v3 = (char *)strlen("\\");
-    sub_402BD8(v20, "\\", v3);
+    append_std_string_storage_bytes(v20, "\\", v3);
   }
   v4 = *(_DWORD *)(this + 832);
   if ( v4 != *(_DWORD *)(this + 724) - 1
@@ -289450,7 +289267,7 @@ int __thiscall sub_4F45B3(int this, char *Str)
   else
   {
     v28 = 0;
-    sub_40442F(v21, &v27);
+    initialize_std_string_storage(v21, &v27);
     v26 = 0;
     LOBYTE(v29) = 1;
     while ( 1 )
@@ -289459,13 +289276,13 @@ int __thiscall sub_4F45B3(int this, char *Str)
       v6 = strlen("save");
       std::string::assign((void *)"save", v6);
       v7 = (char *)strlen(Buffer);
-      sub_402BD8((_DWORD *)(*(_DWORD *)(this + 712) + 76 * *(_DWORD *)(this + 832)), Buffer, v7);
+      append_std_string_storage_bytes((_DWORD *)(*(_DWORD *)(this + 712) + 76 * *(_DWORD *)(this + 832)), Buffer, v7);
       v8 = 76 * *(_DWORD *)(this + 832);
       v9 = *(_DWORD *)(this + 712);
       v23 = off_7536FC;
       v10 = (_DWORD *)(v9 + v8);
       v11 = (char *)strlen(off_7536FC);
-      sub_402BD8(v10, off_7536FC, v11);
+      append_std_string_storage_bytes(v10, off_7536FC, v11);
       v12 = append_string_storage(v19, (char *)v20, (_BYTE *)(*(_DWORD *)(this + 712) + 76 * *(_DWORD *)(this + 832)));
       LOBYTE(v29) = 2;
       assign_std_string_storage(v21, v12);
@@ -289525,8 +289342,8 @@ _DWORD *__thiscall sub_4F489E(int this, int a2)
   {
     if ( *(_BYTE *)(this + 680) )
     {
-      sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
-      sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+      process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
+      process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
       v4 = *(char **)(this + 668);
       if ( !v4 )
         v4 = (char *)Key;
@@ -290443,7 +290260,7 @@ _BYTE *__cdecl sub_4F55D0(_BYTE *a1, char a2, int a3, int a4)
     if ( sub_402D99(&a2, ".", v8) == -1 )
     {
       v4 = (char *)strlen(off_7536FC);
-      sub_402BD8(&a2, off_7536FC, v4);
+      append_std_string_storage_bytes(&a2, off_7536FC, v4);
     }
     v5 = strlen("\\:");
     if ( sub_46C681(&a2, (void *)"\\:", 0, v5) == -1 )
@@ -290767,7 +290584,7 @@ LABEL_4:
     return 0;
   }
   v2 = v8[2];
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   v3 = v8[6];
   FileSize = GetFileSize(v2, 0);
   v9[1] = (int)v3;
@@ -290950,7 +290767,7 @@ int __thiscall sub_4F5EDF(int this, _BYTE *a2, int pExceptionObject)
     v25 = -1;
     v8 = &v21;
   }
-  sub_45CA57(v8);
+  destroy_byte_vector(v8);
   (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)v3 + 36))(v3);
   return (*(int (__thiscall **)(_BYTE *))(*(_DWORD *)v3 + 28))(v3);
 }
@@ -291107,8 +290924,8 @@ void __thiscall sub_4F637A(int this, const char *a2, int a3)
     v6 = *(char **)(this + 20);
     if ( !v6 )
       v6 = (char *)Key;
-    sub_52D1CF((int)v13, v6, 0xFFFFFFFF);
-    sub_52D1CF((int)v13, "\n", 0xFFFFFFFF);
+    write_source_message_from_log_context((int)v13, v6, 0xFFFFFFFF);
+    write_source_message_from_log_context((int)v13, "\n", 0xFFFFFFFF);
     if ( *(_BYTE *)(this + 8) )
     {
       v14[0] = HIBYTE(a3);
@@ -291181,9 +290998,9 @@ _DWORD *__thiscall sub_4F65CB(_DWORD *this, char *Str)
   ++this[3];
   v2 = this + 4;
   v3 = (char *)strlen(Str);
-  sub_402BD8(v2, Str, v3);
+  append_std_string_storage_bytes(v2, Str, v3);
   v4 = (char *)strlen("\n");
-  return sub_402BD8(v2, "\n", v4);
+  return append_std_string_storage_bytes(v2, "\n", v4);
 }
 
 //----- (004F6603) --------------------------------------------------------
@@ -291712,7 +291529,7 @@ char __thiscall sub_4F6D88(_DWORD **this, DWORD a2, char *a3)
   LOBYTE(v80) = 6;
   sub_56B980(v9, 0, 0.0);
   v68 = v46;
-  sub_402BAA(v46, a3, &v76);
+  assign_std_string_storage_from_c_string(v46, a3, &v76);
   sub_4F55D0(v51, v46[0], v47, v48);
   LOBYTE(v80) = 7;
   sub_595590((char *)a2, (int)v51, 260);
@@ -291878,7 +291695,7 @@ LABEL_47:
     LOBYTE(v80) = 8;
     Concurrency::details::_AutoDeleter<Concurrency::details::_TaskProcHandle>::~_AutoDeleter<Concurrency::details::_TaskProcHandle>(&v71);
     LOBYTE(v80) = 7;
-    sub_45CA57(&v53);
+    destroy_byte_vector(&v53);
     LOBYTE(v80) = 6;
     std::string::_Tidy(1);
     LOBYTE(v80) = 4;
@@ -291942,7 +291759,7 @@ LABEL_47:
   LOBYTE(v80) = 8;
   Concurrency::details::_AutoDeleter<Concurrency::details::_TaskProcHandle>::~_AutoDeleter<Concurrency::details::_TaskProcHandle>(&v71);
   LOBYTE(v80) = 7;
-  sub_45CA57(&v53);
+  destroy_byte_vector(&v53);
   LOBYTE(v80) = 6;
   std::string::_Tidy(1);
   LOBYTE(v80) = 4;
@@ -292627,7 +292444,7 @@ _WORD *sub_4F7E7B()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE585(672);
+  v0 = allocate_registered_lsr_layer(672);
   result = 0;
   if ( v0 )
     return sub_4F8110(v0, 0);
@@ -292697,7 +292514,7 @@ void sub_4F7F42()
 // 7669FC: using guessed type int dword_7669FC;
 
 //----- (004F7F4D) --------------------------------------------------------
-int __thiscall sub_4F7F4D(int this)
+int __thiscall construct_lsr_layer(int this)
 {
   int v2; // ebx
   size_t v3; // eax
@@ -292738,7 +292555,7 @@ int __thiscall sub_4F7F4D(int this)
   sub_4F83C4(v7);
   sub_44F8C2((_DWORD *)(this + 464), (int)&dword_6C9F78, this != 0 ? this + 320 : 0);
   (*(void (__thiscall **)(int, _DWORD *))(*(_DWORD *)(this + 464) + 172))(this + 464, v7);
-  sub_5067E5((_BYTE *)this, this + 464, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 464, 1);
   sub_476F8A((_DWORD *)(this + 464), "lsrexit");
   set_control_active((_BYTE *)this, 1);
   return this;
@@ -292771,7 +292588,7 @@ _WORD *__thiscall sub_4F8110(_WORD *this, int a2)
   sub_4ED3E5((int)this, a2);
   initialize_event_target_subobject(this + 160, v2);
   find_or_create_registry_entry(dword_766A00, (unsigned int)this + dword_7669FC + 332);
-  sub_4771A6((_DWORD *)this + 85, v2);
+  construct_color_control((_DWORD *)this + 85, v2);
   construct_registered_sprite_control((int)(this + 196), v2);
   sub_44F6B2(this + 232, v2);
   sub_4E0B34((_DWORD *)this + 156, (_BYTE *)&a2 + 3);
@@ -293121,7 +292938,7 @@ int __thiscall sub_4F87BD(int *this, int a2, int a3)
 {
   int v4; // edi
 
-  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  v4 = sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   if ( !v4 )
   {
     if ( a2 == 37 )
@@ -293220,15 +293037,15 @@ _DWORD *__thiscall sub_4F8822(int this, int a2)
   v14 = *(int **)(this + 636);
   v15 = *(_DWORD *)(this + 640);
   sub_4E1092(&v12, v18);
-  sub_5067E5((_BYTE *)this, *v14, 1);
+  insert_control_into_control_container((_BYTE *)this, *v14, 1);
   v12 = *(_DWORD *)(this + 628);
   v13 = *(_DWORD *)(this + 632);
   v14 = *(int **)(this + 636);
   v15 = *(_DWORD *)(this + 640);
   sub_4E1092(&v12, v17);
-  sub_5067E5((_BYTE *)this, *v14, 1);
-  sub_5067E5((_BYTE *)this, this + 392, 1);
-  return sub_5067E5((_BYTE *)this, this + 340, 1);
+  insert_control_into_control_container((_BYTE *)this, *v14, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 392, 1);
+  return insert_control_into_control_container((_BYTE *)this, this + 340, 1);
 }
 // 7543D0: using guessed type int dword_7543D0[];
 // 7543D4: using guessed type int dword_7543D4[11];
@@ -293821,7 +293638,7 @@ int __thiscall sub_4F92D0(int this, int *a2, int a3, int a4, char a5)
   *(_DWORD *)(this + 424) = *(_DWORD *)(this + 268);
   *(_DWORD *)(this + 428) = v14;
   sub_43862C((int *)(this + 356));
-  sub_5067E5((_BYTE *)this, this + 356, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 356, 1);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 356) + 176))(this + 356, 1);
   sub_4FB17D(this + 200);
   v15 = find_or_create_cursor_spec(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 48), 0, 1);
@@ -294148,7 +293965,7 @@ int __thiscall sub_4F9B60(int this, char *a2, int a3, int a4)
   char v14[16]; // [esp+40h] [ebp-1Ch] BYREF
   int v15; // [esp+58h] [ebp-4h]
 
-  sub_5067E5((_BYTE *)this, a3, 1);
+  insert_control_into_control_container((_BYTE *)this, a3, 1);
   *(_BYTE *)(a3 + 608) = 1;
   *(_DWORD *)(a3 + 604) = this;
   sub_4F8F72(v12);
@@ -294555,7 +294372,7 @@ int __thiscall sub_4FA20D(int this, unsigned int a2, int a3)
 
   if ( !*(_BYTE *)(this + 24) )
     return 0;
-  if ( sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0) )
+  if ( sub_50767B((int *)this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0) )
     return 1;
   v18 = *(_DWORD *)(this + 588);
   v16 = 3;
@@ -294711,7 +294528,7 @@ int __thiscall sub_4FA438(int this, _DWORD *a2)
 {
   if ( !*(_BYTE *)(this + 24) )
     return 0;
-  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))sub_44D922, 0) )
+  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0) )
     return 1;
   if ( *(_BYTE *)(this + 24) )
     return sub_4FA4F5(this, a2);
@@ -294724,7 +294541,7 @@ int __thiscall sub_4FA477(int this, _DWORD *a2)
 {
   if ( !*(_BYTE *)(this + 24) )
     return 0;
-  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))sub_44D92C, 0) )
+  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))interface_target_pointer_button_2_press, 0) )
     return 1;
   if ( *(_BYTE *)(this + 24) )
     return sub_4FA4F5(this, a2);
@@ -294737,7 +294554,7 @@ int __thiscall sub_4FA4B6(int this, _DWORD *a2)
 {
   if ( !*(_BYTE *)(this + 24) )
     return 0;
-  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))sub_44D93B, 0) )
+  if ( sub_5071E8((int *)this, (int)a2, (int (__thiscall *)(int, int))interface_target_pointer_button_3_press, 0) )
     return 1;
   if ( *(_BYTE *)(this + 24) )
     return sub_4FA4F5(this, a2);
@@ -297333,7 +297150,7 @@ _DWORD *sub_4FCADC()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_4EE5A8(328);
+  v0 = allocate_registered_pause_layer(328);
   result = 0;
   if ( v0 )
     return sub_4FCC6A(v0, 0);
@@ -297400,7 +297217,7 @@ void sub_4FCB99()
 // 766BDC: using guessed type int dword_766BDC;
 
 //----- (004FCBA4) --------------------------------------------------------
-_DWORD *__thiscall sub_4FCBA4(_DWORD *this)
+_DWORD *__thiscall construct_pause_layer(_DWORD *this)
 {
   int *v2; // eax
   size_t v3; // eax
@@ -297477,7 +297294,7 @@ _DWORD *__thiscall sub_4FCCD3(int *this)
 //----- (004FCD39) --------------------------------------------------------
 int __thiscall sub_4FCD39(int *this, int a2, int a3)
 {
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 
 //----- (004FCD52) --------------------------------------------------------
@@ -297508,7 +297325,7 @@ _WORD *sub_4FCDAA()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE5CB(804);
+  v0 = allocate_registered_confirm_quit_layer(804);
   result = 0;
   if ( v0 )
     return sub_4FD07C(v0, 0);
@@ -297578,7 +297395,7 @@ void sub_4FCE71()
 // 766B9C: using guessed type int dword_766B9C;
 
 //----- (004FCE7C) --------------------------------------------------------
-int __thiscall sub_4FCE7C(int this)
+int __thiscall construct_confirm_quit_layer(int this)
 {
   int *v2; // eax
   size_t v3; // eax
@@ -297608,10 +297425,10 @@ int __thiscall sub_4FCE7C(int this)
   v4 = this != 0 ? this + 320 : 0;
   sub_44F8C2((_DWORD *)(this + 336), (int)&unk_6CA450, v4);
   *(_BYTE *)(this + 480) = 1;
-  sub_5067E5((_BYTE *)this, this + 336, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 336, 1);
   sub_44F8C2((_DWORD *)(this + 492), (int)&unk_6CA480, v4);
   *(_BYTE *)(this + 637) = 1;
-  sub_5067E5((_BYTE *)this, this + 492, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 492, 1);
   sub_476C1B((_DWORD *)this, (_DWORD *)interface_layer_type_descriptor);
   set_control_active((_BYTE *)this, 1);
   return this;
@@ -297753,7 +297570,7 @@ _WORD *sub_4FD253()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE5EE(428);
+  v0 = allocate_registered_modal_message_layer(428);
   result = 0;
   if ( v0 )
     return sub_4FD552(v0, 0);
@@ -297823,7 +297640,7 @@ void sub_4FD31A()
 // 766B5C: using guessed type int dword_766B5C;
 
 //----- (004FD325) --------------------------------------------------------
-int __thiscall sub_4FD325(int this)
+int __thiscall construct_modal_message_layer(int this)
 {
   size_t v2; // eax
   char v4; // [esp+13h] [ebp-Dh]
@@ -298098,13 +297915,13 @@ _DWORD *__thiscall sub_4FD7A7(int this)
   _DWORD *v71; // [esp+100h] [ebp-10h] BYREF
   int v72; // [esp+10Ch] [ebp-4h]
 
-  sub_402BAA(v48, "msgbox", &v55);
+  assign_std_string_storage_from_c_string(v48, "msgbox", &v55);
   v72 = 0;
   v2 = (char *)*((_DWORD *)append_string_suffix(v47, v48, ".txt") + 1);
   LOBYTE(v72) = 1;
   if ( !v2 )
     v2 = (char *)Key;
-  sub_46B4E2(v51, v2, "msgbox");
+  construct_registered_config_file(v51, v2, "msgbox");
   LOBYTE(v72) = 4;
   std::string::_Tidy(1);
   LOBYTE(v72) = 3;
@@ -298159,7 +297976,7 @@ _DWORD *__thiscall sub_4FD7A7(int this)
   std::string::_Tidy(1);
   LOBYTE(v72) = 3;
   std::string::_Tidy(1);
-  v9 = sub_46C1FA(v51, "backgroundColor", 0);
+  v9 = read_string_setting_or_default(v51, "backgroundColor", 0);
   sub_479FFC((_DWORD *)(this + 356), (int)v9, COERCE_INT(1.0));
   v10 = *(_DWORD *)(this + 408);
   v71 = 0;
@@ -298222,7 +298039,7 @@ _DWORD *__thiscall sub_4FD7A7(int this)
     dword_754460 = 1297305419;
   }
   sub_44F8C2(v71, (int)&unk_754438, this != 0 ? this + 320 : 0);
-  sub_5067E5((_BYTE *)this, (int)v71, 1);
+  insert_control_into_control_container((_BYTE *)this, (int)v71, 1);
   sub_4FFDB2(this + 340, &v71);
 LABEL_40:
   v21 = sub_46C248(v51, &v59, "minSize", (char **)&dword_76D3D0);
@@ -298344,7 +298161,7 @@ LABEL_40:
       v69 = &v40[-(v71[10] - v71[8])] - v65;
       (*(void (__thiscall **)(_DWORD *, int *))(*v71 + 164))(v71, &v68);
       (*(void (__thiscall **)(_DWORD *, int))(*v71 + 176))(v71, 1);
-      sub_5067E5((_BYTE *)this, (int)v71, 1);
+      insert_control_into_control_container((_BYTE *)this, (int)v71, 1);
       sub_4FFDB2(this + 340, &v71);
     }
   }
@@ -298390,7 +298207,7 @@ void __thiscall sub_4FE079(int this, int a2)
 }
 
 //----- (004FE08D) --------------------------------------------------------
-int __thiscall sub_4FE08D(int this)
+int __thiscall construct_time_block_layer(int this)
 {
   size_t v2; // eax
   int *v3; // edi
@@ -298514,10 +298331,10 @@ _WORD *__thiscall sub_4FE35F(_WORD *this, int a2)
   sub_44F6B2(this + 244, a2);
   sub_557CE1((_DWORD *)this + 161, a2);
   sub_48683D((_DWORD *)this + 174, a2);
-  sub_4771A6((_DWORD *)this + 192, a2);
-  sub_4771A6((_DWORD *)this + 205, a2);
-  sub_4771A6((_DWORD *)this + 218, a2);
-  sub_4771A6((_DWORD *)this + 231, a2);
+  construct_color_control((_DWORD *)this + 192, a2);
+  construct_color_control((_DWORD *)this + 205, a2);
+  construct_color_control((_DWORD *)this + 218, a2);
+  construct_color_control((_DWORD *)this + 231, a2);
   *((_DWORD *)this + 245) = a2;
   *((_DWORD *)this + 248) = 0;
   *(_DWORD *)this = &off_6CABBC;
@@ -298536,7 +298353,7 @@ _WORD *sub_4FE454()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE611(996);
+  v0 = allocate_registered_time_block_layer(996);
   result = 0;
   if ( v0 )
     return sub_4FE35F(v0, 0);
@@ -299000,7 +298817,7 @@ char *__thiscall sub_4FEC3C(_DWORD *this, int a2)
     v20[0] = *(this != 0 ? this + 82 : (_DWORD *)8);
     if ( !v3 )
       return (char *)queue_engine_event((int *)game_engine_address, v20);
-    sub_402BAA(v15, v3, &v23);
+    assign_std_string_storage_from_c_string(v15, v3, &v23);
     v24 = 0;
     v6 = append_string_suffix(v13, v15, v21);
     LOBYTE(v24) = 1;
@@ -299009,7 +298826,7 @@ char *__thiscall sub_4FEC3C(_DWORD *this, int a2)
     std::string::_Tidy(1);
     LOBYTE(v24) = 3;
     std::string::_Tidy(1);
-    sub_402BAA(v14, v3, &v22);
+    assign_std_string_storage_from_c_string(v14, v3, &v22);
     LOBYTE(v24) = 5;
     v7 = append_string_suffix(v12, v14, v21);
     LOBYTE(v24) = 6;
@@ -299216,9 +299033,9 @@ _DWORD *__thiscall sub_4FF038(_DWORD *this)
   int v27; // [esp+B0h] [ebp-4h]
 
   v21 = sub_557A8D(this[247]);
-  sub_402BAA(v16, v21, &v24);
+  assign_std_string_storage_from_c_string(v16, v21, &v24);
   v27 = 0;
-  sub_402BAA(v17, (char *)off_6CAD18, &v23);
+  assign_std_string_storage_from_c_string(v17, (char *)off_6CAD18, &v23);
   LOBYTE(v27) = 1;
   v2 = (const char *)*((_DWORD *)append_string_storage(v15, v17, v16) + 1);
   LOBYTE(v27) = 2;
@@ -299234,11 +299051,11 @@ _DWORD *__thiscall sub_4FF038(_DWORD *this)
   v19 = this[7];
   v20 = this[8];
   (*(void (__thiscall **)(_DWORD *, int *, int))(*this + 196))(this, &v19, v3);
-  sub_402BAA(v18, ".seq", &v23);
+  assign_std_string_storage_from_c_string(v18, ".seq", &v23);
   v27 = 3;
-  sub_402BAA(v17, v21, &v24);
+  assign_std_string_storage_from_c_string(v17, v21, &v24);
   LOBYTE(v27) = 4;
-  sub_402BAA(v16, "d", &v22);
+  assign_std_string_storage_from_c_string(v16, "d", &v22);
   LOBYTE(v27) = 5;
   v4 = append_string_storage(v14, v16, v17);
   LOBYTE(v27) = 6;
@@ -299246,7 +299063,7 @@ _DWORD *__thiscall sub_4FF038(_DWORD *this)
   LOBYTE(v27) = 7;
   if ( !v5 )
     v5 = (char *)Key;
-  sub_46B4E2(v13, v5, 0);
+  construct_registered_config_file(v13, v5, 0);
   LOBYTE(v27) = 13;
   std::string::_Tidy(1);
   LOBYTE(v27) = 12;
@@ -299313,7 +299130,7 @@ _WORD *sub_4FF2E1()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE634(800);
+  v0 = allocate_registered_death_layer(800);
   result = 0;
   if ( v0 )
     return sub_4FF505(v0, 0);
@@ -299383,7 +299200,7 @@ void sub_4FF3A8()
 // 766ADC: using guessed type int dword_766ADC;
 
 //----- (004FF3B3) --------------------------------------------------------
-int __thiscall sub_4FF3B3(int this)
+int __thiscall construct_death_layer(int this)
 {
   size_t v2; // eax
 
@@ -299402,9 +299219,9 @@ int __thiscall sub_4FF3B3(int this)
   sub_44F8C2((_DWORD *)(this + 488), (int)&dword_6CA550, this != 0 ? this + 320 : 0);
   sub_44F8C2((_DWORD *)(this + 644), (int)&dword_6CA580, this != 0 ? this + 320 : 0);
   *(_BYTE *)(this + 789) = 1;
-  sub_5067E5((_BYTE *)this, this + 332, 1);
-  sub_5067E5((_BYTE *)this, this + 488, 1);
-  sub_5067E5((_BYTE *)this, this + 644, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 332, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 488, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 644, 1);
   sub_4FF889((_DWORD *)this);
   sub_4FF941((_DWORD *)this);
   set_control_active((_BYTE *)this, 1);
@@ -299708,7 +299525,7 @@ _DWORD *sub_4FFA32()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_4EE657(324);
+  v0 = allocate_registered_finished_layer(324);
   result = 0;
   if ( v0 )
     return sub_4FFB91(v0, 0);
@@ -299775,7 +299592,7 @@ void sub_4FFAEF()
 // 766A98: using guessed type int dword_766A98;
 
 //----- (004FFAFA) --------------------------------------------------------
-_DWORD *__thiscall sub_4FFAFA(_DWORD *this)
+_DWORD *__thiscall construct_finished_layer(_DWORD *this)
 {
   size_t v2; // eax
 
@@ -300433,12 +300250,12 @@ int __thiscall sub_5003DC(float this, int a2, float a3, int a4)
   std::string::_Tidy(0);
   *(_BYTE *)(LODWORD(this) + 32) = HIBYTE(a4);
   std::string::_Tidy(0);
-  sub_447754((void *)(LODWORD(this) + 48));
+  construct_camera_angle_state_data((void *)(LODWORD(this) + 48));
   *(_DWORD *)(LODWORD(this) + 80) = 0;
   LOBYTE(v25) = 3;
   *(_DWORD *)LODWORD(this) = &off_6CB03C;
   set_camera_angle_target_position((float *)(uintptr_t)(LODWORD(this) + 48),
-                                   (float *)&dword_7647B0);
+                                   (float *)&unset_camera_position_x);
   v6 = a2;
   assign_std_string_storage((void *)(LODWORD(this) + 4), (_BYTE *)a2);
   *(_DWORD *)(LODWORD(this) + 20) = *(_DWORD *)(a2 + 20);
@@ -300554,7 +300371,7 @@ int __thiscall sub_5003DC(float this, int a2, float a3, int a4)
 // 5004F0: variable 'v11' is possibly undefined
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 6CB03C: using guessed type int (__stdcall *off_6CB03C)(char);
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 765A2C: using guessed type int game_engine_instance_address;
 // 766C50: using guessed type int dword_766C50;
 // 766C54: using guessed type int dword_766C54;
@@ -300607,7 +300424,7 @@ char __thiscall sub_50079D(int this, _BYTE *a2, int a3)
 {
   serialize_dialogue_string_field((int)a2, (int)"mName", (void *)(this + 4));
   sub_501041(a2, "mType", (int *)(this + 20), &dword_6CB0A8);
-  sub_4053DF(a2, "mNoun", (int *)(this + 24), &dword_6A6460);
+  serialize_noun_field(a2, "mNoun", (int *)(this + 24), &default_noun_id);
   serialize_boolean_field(a2, "mbInitHidden", (char *)(this + 28), &byte_6A6454);
   serialize_dialogue_string_field((int)a2, (int)"mInitAnim", (void *)(this + 32));
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
@@ -300617,11 +300434,11 @@ char __thiscall sub_50079D(int this, _BYTE *a2, int a3)
     dword_766C60[0]);
   sub_44F409(a2, "mHandle", (int *)(this + 80), &dword_7868B4);
   serialize_boolean_field(a2, "mbHitTest", (char *)(this + 84), &byte_6A6454);
-  return sub_4054E4(a2, "mDefVerb", (int *)(this + 88), &dword_6A64B0);
+  return serialize_verb_field(a2, "mDefVerb", (int *)(this + 88), &default_verb_id);
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 6CB0A8: using guessed type int dword_6CB0A8;
 // 764138: using guessed type int dword_764138[15];
 // 766C60: using guessed type int dword_766C60[16];
@@ -300769,7 +300586,7 @@ void *__thiscall sub_500A80(const char **this, void *Src)
   v6[0] = *(float *)v7;
   v6[1] = *(float *)&v7[1];
   v6[2] = *(float *)&v7[2];
-  if ( !sub_40EE23(v6, (float *)&dword_7647B0) )
+  if ( !vectors_are_approximately_equal(v6, (float *)&unset_camera_position_x) )
   {
     v4 = this[2];
     if ( !v4 )
@@ -300784,7 +300601,7 @@ void *__thiscall sub_500A80(const char **this, void *Src)
   }
   return memcpy(v3, Src, 0x20u);
 }
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 
 //----- (00500AF7) --------------------------------------------------------
 bool __thiscall sub_500AF7(_DWORD *this)
@@ -300865,7 +300682,7 @@ char __thiscall sub_500B75(int this, int a2)
   v3 = (void *)(this + 48);
   calculate_camera_angle_view_position((float *)(this + 48), v24);
   sub_40E7AB(v26, v24);
-  if ( !sub_40EE23(v26, (float *)&dword_7647B0) )
+  if ( !vectors_are_approximately_equal(v26, (float *)&unset_camera_position_x) )
   {
     v4 = sub_40EC72(v23, v3);
     v42 = 0;
@@ -300964,7 +300781,7 @@ char __thiscall sub_500B75(int this, int a2)
       v28[0] = v32[0];
       v28[1] = v32[1];
       v28[2] = v32[2];
-      LOBYTE(v5) = sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v28);
+      LOBYTE(v5) = is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v28);
       if ( (_BYTE)v5 )
         return v5;
       if ( v40 == 4 )
@@ -301000,7 +300817,7 @@ LABEL_34:
   }
   return v5;
 }
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 765A2C: using guessed type int game_engine_instance_address;
 // 766C4C: using guessed type int dword_766C4C;
 // 76C884: using guessed type int active_scene_controller_address;
@@ -301667,7 +301484,7 @@ _WORD *sub_5019C2()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE67A(380);
+  v0 = allocate_registered_movie_layer(380);
   result = 0;
   if ( v0 )
     return sub_501B9C(v0, 0);
@@ -301736,7 +301553,7 @@ void sub_501A89()
 // 766CF4: using guessed type int dword_766CF4;
 
 //----- (00501A94) --------------------------------------------------------
-int __thiscall sub_501A94(int this)
+int __thiscall construct_movie_layer(int this)
 {
   size_t v2; // eax
   char v4; // [esp+13h] [ebp-Dh]
@@ -301904,7 +301721,7 @@ int __thiscall sub_501DB1(_DWORD *this, char *a2, int *a3, int a4, int a5, char 
     *((_BYTE *)this + 356) = a5;
     if ( active_scene_controller_address )
     {
-      sub_402BAA(&v20, a2, (_BYTE *)&a5 + 3);
+      assign_std_string_storage_from_c_string(&v20, a2, (_BYTE *)&a5 + 3);
       v23 = 0;
       HIBYTE(a4) = 46;
       v9 = sub_402D99(&v20, (char *)&a4 + 3, 0x100000000uLL);
@@ -301913,7 +301730,7 @@ int __thiscall sub_501DB1(_DWORD *this, char *a2, int *a3, int a4, int a5, char 
       sub_402B80(&v17, &v20);
       LOBYTE(v23) = 1;
       v10 = (char *)strlen(off_754044);
-      sub_402BD8(&v17, off_754044, v10);
+      append_std_string_storage_bytes(&v17, off_754044, v10);
       v11 = v18;
       if ( !v18 )
         v11 = Key;
@@ -302313,7 +302130,7 @@ int __thiscall sub_502517(_BYTE *this, _DWORD *a2)
   }
   v7 = -1;
   v6 = v4;
-  sub_5067E5(this, v4, 1);
+  insert_control_into_control_container(this, v4, 1);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v6 + 176))(v6, 1);
   return sub_4F4C3E((int)(this + 364), &v6);
 }
@@ -304461,11 +304278,11 @@ char __thiscall sub_5041BB(int *this, _BYTE *a2, int a3)
     this,
     dword_766F18);
   serialize_dialogue_string_field((int)a2, (int)"mName", this + 1);
-  sub_4053DF(a2, "mNoun", this + 5, &dword_6A6460);
-  return sub_4054E4(a2, "mDefaultVerb", this + 6, &dword_6A64B0);
+  serialize_noun_field(a2, "mNoun", this + 5, &default_noun_id);
+  return serialize_verb_field(a2, "mDefaultVerb", this + 6, &default_verb_id);
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 766F18: using guessed type _DWORD dword_766F18[16];
 
 //----- (00504216) --------------------------------------------------------
@@ -305125,7 +304942,7 @@ void *__thiscall sub_504AA8(void *this, int a2)
 //----- (00504AC3) --------------------------------------------------------
 char __thiscall sub_504AC3(int *this, _BYTE *a2, int a3)
 {
-  sub_4053DF(a2, "mNoun", this, &dword_6A6460);
+  serialize_noun_field(a2, "mNoun", this, &default_noun_id);
   (*(void (__thiscall **)(_BYTE *, const char *, int *, _DWORD *))(*(_DWORD *)a2 + 68))(
     a2,
     "mpVerbList",
@@ -305136,10 +304953,10 @@ char __thiscall sub_504AC3(int *this, _BYTE *a2, int a3)
     "mpNext",
     this + 2,
     dword_766F18);
-  return sub_4054E4(a2, "mLatestVerb", this + 3, &dword_6A64B0);
+  return serialize_verb_field(a2, "mLatestVerb", this + 3, &default_verb_id);
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 766ED8: using guessed type _DWORD dword_766ED8[15];
 // 766F18: using guessed type _DWORD dword_766F18[16];
 
@@ -305382,7 +305199,7 @@ void *__thiscall sub_504E7E(_DWORD *this, _DWORD *a2, void *a3)
         if ( v7 == v6 )
         {
 LABEL_10:
-          sub_40442F(v21, &v25);
+          initialize_std_string_storage(v21, &v25);
           v20[0] = *(_DWORD *)(j + 4);
           v20[1] = *(_DWORD *)(j + 8);
           v26 = 0;
@@ -305570,8 +305387,8 @@ void *__thiscall sub_5051AD(void *this, int a2)
 //----- (005051C8) --------------------------------------------------------
 int __thiscall sub_5051C8(int *this, _BYTE *a2, int a3)
 {
-  sub_4053DF(a2, "mNoun", this, &dword_6A6460);
-  sub_4054E4(a2, "mVerb", this + 1, &dword_6A64B0);
+  serialize_noun_field(a2, "mNoun", this, &default_noun_id);
+  serialize_verb_field(a2, "mVerb", this + 1, &default_verb_id);
   (*(void (__thiscall **)(_BYTE *, const char *, int *, _DWORD *))(*(_DWORD *)a2 + 68))(
     a2,
     "mpCaseList",
@@ -305583,8 +305400,8 @@ int __thiscall sub_5051C8(int *this, _BYTE *a2, int a3)
            this + 3,
            dword_766ED8);
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 766E98: using guessed type _DWORD dword_766E98[15];
 // 766ED8: using guessed type _DWORD dword_766ED8[15];
 
@@ -305870,8 +305687,8 @@ _DWORD *__thiscall sub_5055FE(_DWORD *this, int a2)
 //----- (0050563E) --------------------------------------------------------
 int __thiscall sub_50563E(int *this, _BYTE *a2, int a3)
 {
-  sub_4053DF(a2, "mNoun", this, &dword_6A6460);
-  sub_4054E4(a2, "mVerb", this + 1, &dword_6A64B0);
+  serialize_noun_field(a2, "mNoun", this, &default_noun_id);
+  serialize_verb_field(a2, "mVerb", this + 1, &default_verb_id);
   sub_4052DA(a2, "mCase", this + 2, &dword_6A64A4);
   sub_401202(this + 3, a2, (int)"mAct");
   serialize_integer_value_field(a2, "mPri", this + 14, &serialized_value_default);
@@ -305881,9 +305698,9 @@ int __thiscall sub_50563E(int *this, _BYTE *a2, int a3)
            this + 15,
            dword_766E98);
 }
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A64A4: using guessed type int dword_6A64A4;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A64B0: using guessed type int default_verb_id;
 // 6A6E88: using guessed type int serialized_value_default;
 // 766E98: using guessed type _DWORD dword_766E98[15];
 
@@ -307056,7 +306873,7 @@ _DWORD *__thiscall attach_control_to_service(int this, int a2, char a3)
 /* Extracted to engine/active_objects.c as insert_object_pointer_collection_entry. */
 
 //----- (005067E5) --------------------------------------------------------
-_DWORD *__thiscall sub_5067E5(_BYTE *this, int a2, char a3)
+_DWORD *__thiscall insert_control_into_control_container(_BYTE *this, int a2, char a3)
 {
   _DWORD *result; // eax
 
@@ -308865,7 +308682,7 @@ int *__thiscall sub_50846F(void *this, int *a2, int a3, int a4)
   v6 = 0;
   if ( sub_508FB0((int)this, a3, a4, &v6, 0, -1) )
   {
-    sub_4A39C1(1, 1);
+    record_file_system_activity(1, 1);
     v4 = v6;
   }
   else
@@ -308880,21 +308697,21 @@ int *__thiscall sub_50846F(void *this, int *a2, int a3, int a4)
 //----- (005084A9) --------------------------------------------------------
 int __thiscall sub_5084A9(void *this, int a2)
 {
-  sub_4A39C1(1, 1);
+  record_file_system_activity(1, 1);
   return sub_596390((int)this, a2);
 }
 
 //----- (005084C6) --------------------------------------------------------
 int __thiscall sub_5084C6(void *this, int a2, char *a3, unsigned int a4, unsigned int a5)
 {
-  sub_4A39C1(0, a5 * a4);
+  record_file_system_activity(0, a5 * a4);
   return sub_596460((int)this, a2, a3, a4, a5);
 }
 
 //----- (005084F5) --------------------------------------------------------
 DWORD __thiscall sub_5084F5(void *this, int a2, const void *a3, unsigned int a4, int a5)
 {
-  sub_4A39C1(0, a5 * a4);
+  record_file_system_activity(0, a5 * a4);
   return sub_5965F0((int)this, a2, a3, a4, a5);
 }
 
@@ -308907,7 +308724,7 @@ int __thiscall sub_508524(void *this, int a2, _BYTE *a3, int a4)
   v4 = sub_5966D0((int)this, a2, a3, a4);
   v5 = v4;
   if ( v4 > 0 )
-    sub_4A39C1(0, v4);
+    record_file_system_activity(0, v4);
   return v5;
 }
 
@@ -308917,7 +308734,7 @@ int *__thiscall sub_50854C(void *this, int *a2, int a3, int a4, int a5)
   int v6; // ecx
   int *result; // eax
 
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   v6 = *sub_596A90((int)this, &a5, a3, a4, a5);
   result = a2;
   *a2 = v6;
@@ -308927,14 +308744,14 @@ int *__thiscall sub_50854C(void *this, int *a2, int a3, int a4, int a5)
 //----- (0050857D) --------------------------------------------------------
 int __thiscall sub_50857D(void *this, int a2)
 {
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   return sub_596C40((int)this, a2);
 }
 
 //----- (0050859A) --------------------------------------------------------
 int __thiscall sub_50859A(void *this, int a2, _DWORD *a3)
 {
-  sub_4A39C1(2, 1);
+  record_file_system_activity(2, 1);
   return sub_596D20((int)this, a2, a3);
 }
 
@@ -309300,7 +309117,7 @@ LABEL_32:
           else
           {
             v13 = (char *)strlen(";");
-            sub_402BD8(v18, ";", v13);
+            append_std_string_storage_bytes(v18, ";", v13);
           }
           sub_4043C8(v18, &v19);
         }
@@ -309358,7 +309175,7 @@ char __thiscall sub_508D8B(int this, _DWORD *a2, char *lpPathName, int a4, int a
   LOBYTE(v24) = 1;
   if ( SetCurrentDirectoryA(lpPathName) )
   {
-    sub_402BAA(v19, lpPathName, (_BYTE *)&lpPathName + 3);
+    assign_std_string_storage_from_c_string(v19, lpPathName, (_BYTE *)&lpPathName + 3);
     LOBYTE(v24) = 2;
     sub_595390((int)v19);
     v10 = *(const void ****)(this + 72);
@@ -309826,10 +309643,10 @@ void *__thiscall sub_509416(int this)
   v31 = v36;
   if ( v36 == 1 )
     v31 = 0;
-  sub_402BAA(&v24, (char *)Src, &v43);
+  assign_std_string_storage_from_c_string(&v24, (char *)Src, &v43);
   LOBYTE(v44) = 2;
   v7 = (char *)strlen("\\*");
-  sub_402BD8(&v24, "\\*", v7);
+  append_std_string_storage_bytes(&v24, "\\*", v7);
   v8 = v25;
   if ( !v25 )
     v8 = Key;
@@ -312627,12 +312444,12 @@ char __thiscall sub_50BDB4(void *this, int a2, unsigned int *a3, char **a4)
     v8 = "UNREGISTERED";
 LABEL_6:
     v13 = (char *)strlen(v8);
-    sub_402BD8(v16, v8, v13);
+    append_std_string_storage_bytes(v16, v8, v13);
     goto LABEL_7;
   }
   sprintf(Buffer, "%d (0x%08X)", *(_DWORD *)(v7 + 4), *a3);
   v12 = (char *)strlen(Buffer);
-  sub_402BD8(v16, Buffer, v12);
+  append_std_string_storage_bytes(v16, Buffer, v12);
 LABEL_7:
   v9 = (*(int (__thiscall **)(void *, int, _DWORD *, _DWORD))(*(_DWORD *)this + 4))(this, a2, v16, 0);
   v17 = -1;
@@ -312650,7 +312467,7 @@ int __thiscall sub_50BEAA(_DWORD *this, char *a2, int a3, int a4)
 
   v4 = this[1];
   if ( v4 )
-    sub_52D1CF(v4, a2, a4 * a3);
+    write_source_message_from_log_context(v4, a2, a4 * a3);
   else
     write_source_message("Z:\\Proj\\GK3\\gk3app\\Source\\Persist.cpp", 58, 7, 0, a2, a4 * a3);
   return a4;
@@ -312757,16 +312574,16 @@ bool __thiscall sub_50C095(int *this, _BYTE *a2)
   v3 = serialize_dialogue_string_field((int)a2, (int)"name", this) != 0;
   if ( !serialize_dialogue_string_field((int)a2, (int)"alpha", this + 4) )
     v3 = 0;
-  if ( !sub_4053DF(a2, "noun", this + 8, &dword_6A6460) )
+  if ( !serialize_noun_field(a2, "noun", this + 8, &default_noun_id) )
     v3 = 0;
-  if ( !sub_4054E4(a2, "verb", this + 9, &dword_6A64B0) )
+  if ( !serialize_verb_field(a2, "verb", this + 9, &default_verb_id) )
     v3 = 0;
   if ( !sub_50C8E1(a2, "type", this + 10, &dword_6D0B88) )
     return 0;
   return v3;
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 6D0B88: using guessed type int dword_6D0B88;
 
 //----- (0050C126) --------------------------------------------------------
@@ -313041,7 +312858,7 @@ int __thiscall sub_50C584(int this, int a2)
   *(_BYTE *)(this + 72) = HIBYTE(a2);
   std::string::_Tidy(0);
   *(_DWORD *)this = &off_6D0BE4;
-  sub_476C91((_DWORD *)this, (_DWORD *)(a2 + 48));
+  update_control_bounds((_DWORD *)this, (_DWORD *)(a2 + 48));
   if ( !*(_BYTE *)(a2 + 44) )
     set_control_active((_BYTE *)this, 1);
   sub_50C87A((_DWORD *)this, a2);
@@ -313071,12 +312888,12 @@ int __thiscall sub_50C607(int this, int a2)
 char __thiscall sub_50C664(int *this, _BYTE *a2, int a3)
 {
   serialize_dialogue_string_field((int)a2, (int)"mName", this + 18);
-  sub_4053DF(a2, "mNoun", this + 22, &dword_6A6460);
-  sub_4054E4(a2, "mDefVerb", this + 23, &dword_6A64B0);
+  serialize_noun_field(a2, "mNoun", this + 22, &default_noun_id);
+  serialize_verb_field(a2, "mDefVerb", this + 23, &default_verb_id);
   return sub_50C8E1(a2, "mType", this + 24, &dword_6D0B88);
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 6D0B88: using guessed type int dword_6D0B88;
 
 //----- (0050C6C2) --------------------------------------------------------
@@ -313329,7 +313146,7 @@ int __thiscall sub_50CAEC(int this, _DWORD *a2, int a3, char *Str)
   char *v5; // ebx
   size_t v6; // eax
 
-  sub_40ECE2((_DWORD *)this);
+  construct_camera_angle_base((_DWORD *)this);
   find_or_create_registry_entry(dword_76C018, dword_76C014 + this + 21);
   v5 = Str;
   *(_DWORD *)(this + 24) = *a2;
@@ -313365,7 +313182,7 @@ _DWORD *__thiscall sub_50CB9C(_DWORD *this)
 //----- (0050CBF4) --------------------------------------------------------
 int __thiscall sub_50CBF4(int this, int a2)
 {
-  sub_40ECE2((_DWORD *)this);
+  construct_camera_angle_base((_DWORD *)this);
   find_or_create_registry_entry(dword_76C018, dword_76C014 + this + 21);
   *(_DWORD *)(this + 24) = *(_DWORD *)(a2 + 16);
   *(_DWORD *)(this + 28) = *(_DWORD *)(a2 + 20);
@@ -314081,9 +313898,9 @@ int __thiscall sub_50D98D(int this, char a2)
   sub_50D8E9((_DWORD *)this);
   qmemcpy(v5, Buf2, sizeof(v5));
   sub_575EA0(v5, *(float *)(this + 140), *(float *)(this + 144), *(float *)(this + 148));
-  sub_575F20(v5, *(float *)(this + 128));
+  rotate_matrix_about_x(v5, *(float *)(this + 128));
   sub_575FF0(v5, *(float *)(this + 136));
-  sub_575F80(v5, *(float *)(this + 132));
+  rotate_matrix_about_y(v5, *(float *)(this + 132));
   v5[9] = *(float *)(this + 116);
   v5[10] = *(float *)(this + 120);
   v4 = *(_DWORD *)(this + 108);
@@ -314993,7 +314810,7 @@ int __thiscall sub_50E98D(int *this, int a2, int a3, int a4)
 int __thiscall sub_50E9CA(int *this, int a2)
 {
   this[56] = this[55];
-  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+  return sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
 }
 
 //----- (0050E9EB) --------------------------------------------------------
@@ -317107,7 +316924,7 @@ int __thiscall sub_51050D(int this, void **a2)
       v14 = v28;
       LOBYTE(v31) = 5;
       *v28 = (int)v13;
-      sub_5067E5((_BYTE *)this, (int)v13, 1);
+      insert_control_into_control_container((_BYTE *)this, (int)v13, 1);
       sub_55FB05(*v14, 3);
       sub_55FB19(*v14, 2, 2);
       v15 = *v14;
@@ -317377,8 +317194,8 @@ void __thiscall sub_510B49(_DWORD *this, int a2)
     v8 = v11[0];
     v9 = v11[1];
     v10 = v11[2];
-    if ( sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v8) )
-      sub_453A7E(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v5, 0, 0);
+    if ( is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v8) )
+      cut_camera_to_angle(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), (int)v5, 0, 0);
     v12 = -1;
     sub_40EAEB(v5);
   }
@@ -317541,7 +317358,7 @@ int __thiscall sub_510D98(int this, int a2, int a3, int a4, int a5, _DWORD *a6)
     *(float *)(this + 356) = 0.5;
     (*(void (__thiscall **)(int))(v11 + 156))(this + 308);
   }
-  sub_5067E5((_BYTE *)this, this + 308, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 308, 1);
   v12 = sub_447D88(56);
   a6 = v12;
   LOBYTE(v19) = 7;
@@ -317594,7 +317411,7 @@ int __thiscall sub_510FAF(int this, int a2)
   LOBYTE(v6) = 3;
   sub_51F563((_DWORD *)(this + 256), &v4);
   LOBYTE(v6) = 4;
-  sub_4771A6((_DWORD *)(this + 308), a2);
+  construct_color_control((_DWORD *)(this + 308), a2);
   *(_DWORD *)(this + 364) = 0;
   *(_DWORD *)(this + 368) = 0;
   LOBYTE(v6) = 5;
@@ -317836,7 +317653,7 @@ int __thiscall sub_51124A(int *this, int a2)
   (*(void (__thiscall **)(int *, int))(*v42 + 176))(v42, 1);
   sub_51F6CD(this + 52, a2);
   sub_51F5A8(this + 64, &v42);
-  sub_5067E5(this, (int)v42, 1);
+  insert_control_into_control_container(this, (int)v42, 1);
   v15 = this[10] - this[8];
   v39 = this[9] - this[7];
   v16 = this[76];
@@ -318130,7 +317947,7 @@ int __thiscall sub_5117A9(int this, int a2)
     sub_476E64((int)v29, v9);
     sub_51F465((_DWORD *)(this + 212), &v29);
     (*(void (__thiscall **)(char *, int))(*(_DWORD *)v29 + 176))(v29, 1);
-    sub_5067E5((_BYTE *)this, (int)v29, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v29, 1);
   }
   *(_DWORD *)(this + 268) = this;
   *(_BYTE *)(this + 272) = 0;
@@ -318201,7 +318018,7 @@ int __thiscall sub_5117A9(int this, int a2)
     std::string::assign(v18, v19);
     notify_control_tooltip_text_changed(v30);
     append_dynamic_array_element((_DWORD *)(this + 284), (int)v30);
-    sub_5067E5((_BYTE *)this, (int)v30, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v30, 1);
     v29 += 44;
   }
   while ( v29 != v28 + 176 );
@@ -318913,7 +318730,7 @@ int __thiscall sub_512578(int this, int a2)
   v74 = *(_DWORD *)(this + 28);
   v75 = *(_DWORD *)(this + 32);
   LOBYTE(v78) = 10;
-  sub_5067E5((_BYTE *)this, this + 296, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 296, 1);
   v5 = find_or_create_cursor_spec(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 48), off_753714[0], 0);
   sub_476E64(this + 296, v5);
   v6 = *(_DWORD *)(a2 + 4);
@@ -318998,7 +318815,7 @@ LABEL_26:
     v56[0] += v74;
     v56[1] += v75;
     sub_44FA05(v76, (int)v56, (int)v73);
-    sub_402BAA(v62, "tb_", &v69);
+    assign_std_string_storage_from_c_string(v62, "tb_", &v69);
     LOBYTE(v78) = 15;
     v17 = &off_755D94[((int)v64 - v68) / 44];
     v18 = (char *)*((_DWORD *)append_string_suffix(v55, v62, *v17) + 1);
@@ -319016,7 +318833,7 @@ LABEL_26:
     std::string::assign(v19, v20);
     notify_control_tooltip_text_changed(v76);
     append_dynamic_array_element((_DWORD *)(this + 212), (int)v76);
-    sub_5067E5((_BYTE *)this, (int)v76, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v76, 1);
     v64 += 11;
   }
   while ( v64 != (int *)(v68 + 220) );
@@ -319065,7 +318882,7 @@ LABEL_26:
   }
   sub_51F465((_DWORD *)(this + 248), &v77);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v77 + 176))(v77, 1);
-  sub_5067E5((_BYTE *)this, v77, 1);
+  insert_control_into_control_container((_BYTE *)this, v77, 1);
   if ( v21 && *(_BYTE *)(v21 + 44) )
   {
     v73 = sub_4772E1(72);
@@ -319110,7 +318927,7 @@ LABEL_26:
   }
   sub_51F465((_DWORD *)(this + 248), &v77);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v77 + 176))(v77, 1);
-  sub_5067E5((_BYTE *)this, v77, 1);
+  insert_control_into_control_container((_BYTE *)this, v77, 1);
   v73 = sub_4772E1(72);
   LOBYTE(v78) = 21;
   if ( v73 )
@@ -319129,7 +318946,7 @@ LABEL_26:
   LOBYTE(v78) = 10;
   sub_51F465((_DWORD *)(this + 248), &v77);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v77 + 176))(v77, 1);
-  sub_5067E5((_BYTE *)this, v77, 1);
+  insert_control_into_control_container((_BYTE *)this, v77, 1);
   v73 = sub_4772E1(72);
   LOBYTE(v78) = 22;
   if ( v73 )
@@ -319148,8 +318965,8 @@ LABEL_26:
   LOBYTE(v78) = 10;
   sub_51F465((_DWORD *)(this + 248), &v77);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v77 + 176))(v77, 1);
-  sub_5067E5((_BYTE *)this, v77, 1);
-  sub_5067E5((_BYTE *)this, this + 388, 1);
+  insert_control_into_control_container((_BYTE *)this, v77, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 388, 1);
   v42 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), "f_arial_t8");
   sub_477863((_DWORD *)(this + 388), v42);
   std::_Lockit::_Lockit((std::_Lockit *)&v73);
@@ -319211,7 +319028,7 @@ LABEL_69:
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 388) + 176))(this + 388, 1);
   if ( sub_52A3EC(*(_DWORD ***)(game_engine_instance_address + 1192)) )
     sub_4503CF(*(_DWORD *)(this + 240));
-  sub_5067E5((_BYTE *)this, this + 476, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 476, 1);
   v49 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), "f_arial_t8");
   sub_477863((_DWORD *)(this + 476), v49);
   std::_Lockit::_Lockit((std::_Lockit *)&v73);
@@ -319953,7 +319770,7 @@ void __thiscall sub_513D7C(int this)
       v5 = 0;
     v19 = -1;
     *(_DWORD *)(this + 564) = v5;
-    sub_40442F(v10, &v18);
+    initialize_std_string_storage(v10, &v18);
     v19 = 1;
     unknown_libname_6(&v11);
     v19 = 2;
@@ -319968,7 +319785,7 @@ void __thiscall sub_513D7C(int this)
     v11 = *(_DWORD *)(this != 0 ? this + 196 + 8 : 8);
     v12 = 100;
     sub_51124A(*(int **)(this + 564), (int)v10);
-    sub_40442F(v14, &v17);
+    initialize_std_string_storage(v14, &v17);
     LOBYTE(v19) = 5;
     sub_594D40((int)v14, (HMODULE)application_instance, 0x5A3Fu, word_776F34);
     LOBYTE(v19) = 6;
@@ -319978,7 +319795,7 @@ void __thiscall sub_513D7C(int this)
     v11 = *(_DWORD *)(this != 0 ? this + 196 + 8 : 8);
     v12 = 101;
     sub_51124A(*(int **)(this + 564), (int)v10);
-    sub_40442F(v14, &v17);
+    initialize_std_string_storage(v14, &v17);
     LOBYTE(v19) = 7;
     sub_594D40((int)v14, (HMODULE)application_instance, 0x5A40u, word_776F34);
     LOBYTE(v19) = 8;
@@ -320055,7 +319872,7 @@ void __thiscall sub_513FD8(int this)
       v5 = 0;
     v19 = -1;
     *(_DWORD *)(this + 564) = v5;
-    sub_40442F(v10, &v18);
+    initialize_std_string_storage(v10, &v18);
     unknown_libname_6(&v11);
     v19 = 1;
     v14[0] = v18;
@@ -320069,7 +319886,7 @@ void __thiscall sub_513FD8(int this)
     v11 = *(_DWORD *)(this != 0 ? this + 196 + 8 : 8);
     v12 = 103;
     sub_51124A(*(int **)(this + 564), (int)v10);
-    sub_40442F(v14, &v17);
+    initialize_std_string_storage(v14, &v17);
     LOBYTE(v19) = 4;
     sub_594D40((int)v14, (HMODULE)application_instance, 0x5A42u, word_776F34);
     LOBYTE(v19) = 5;
@@ -320079,7 +319896,7 @@ void __thiscall sub_513FD8(int this)
     v11 = *(_DWORD *)(this != 0 ? this + 196 + 8 : 8);
     v12 = 104;
     sub_51124A(*(int **)(this + 564), (int)v10);
-    sub_40442F(v14, &v17);
+    initialize_std_string_storage(v14, &v17);
     LOBYTE(v19) = 6;
     sub_594D40((int)v14, (HMODULE)application_instance, 0x5A43u, word_776F34);
     LOBYTE(v19) = 7;
@@ -320342,7 +320159,7 @@ int __thiscall sub_5143F8(int this, int a2)
     LOBYTE(v36) = 1;
     LOBYTE(v51) = 10;
     *(_DWORD *)(this + 880) = v13;
-    sub_5067E5((_BYTE *)this, (int)v13, v36);
+    insert_control_into_control_container((_BYTE *)this, (int)v13, v36);
     v14 = find_or_create_cursor_spec(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 48), off_753714[0], 0);
     sub_476E64(*(_DWORD *)(this + 880), v14);
     v15 = *(_DWORD *)(a2 + 4);
@@ -320383,10 +320200,10 @@ int __thiscall sub_5143F8(int this, int a2)
     v46 = v11;
     (*(void (__thiscall **)(float *, int *, _DWORD))(*(_DWORD *)v49 + 196))(v49, &v46, *((_DWORD *)v48 + 92));
     (*(void (__thiscall **)(_DWORD, int))(**(_DWORD **)(this + 884) + 176))(*(_DWORD *)(this + 884), 1);
-    sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 884), 1);
+    insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 884), 1);
     *(_DWORD *)(this + 880) = 0;
   }
-  sub_5067E5((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
   *(_DWORD *)(this + 892) = this;
   *(_BYTE *)(this + 896) = 0;
   v48 = (float *)(*(_DWORD *)(a2 + 4) + 1448);
@@ -320443,7 +320260,7 @@ int __thiscall sub_5143F8(int this, int a2)
     std::string::assign(v27, v28);
     notify_control_tooltip_text_changed(v50);
     append_dynamic_array_element((_DWORD *)(this + 780), (int)v50);
-    sub_5067E5((_BYTE *)this, (int)v50, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v50, 1);
     v49 += 11;
   }
   while ( v49 != v48 + 44 );
@@ -320468,8 +320285,8 @@ int __thiscall sub_5143F8(int this, int a2)
     sub_44FA83(*(_DWORD **)(this + 804), 0);
   }
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v32 + 176))(v32, 1);
-  sub_5067E5((_BYTE *)this, v32, 1);
-  sub_5067E5((_BYTE *)this, this + 908, 1);
+  insert_control_into_control_container((_BYTE *)this, v32, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 908, 1);
   v33 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), "f_arial_t8");
   sub_477863((_DWORD *)(this + 908), v33);
   v38 = *(_DWORD *)(game_engine_address + 236);
@@ -320482,7 +320299,7 @@ int __thiscall sub_5143F8(int this, int a2)
     *(_DWORD *)(v40 + 32 * v38 + 8),
     *(_DWORD *)(v40 + 32 * v38 + 12));
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 908) + 176))(this + 908, 1);
-  sub_5067E5((_BYTE *)this, this + 996, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 996, 1);
   v34 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), "f_arial_t8");
   sub_477863((_DWORD *)(this + 996), v34);
   sub_515636((int *)this, *(_DWORD *)dword_76472C, *(_DWORD *)(dword_76472C + 4));
@@ -321194,7 +321011,7 @@ void __thiscall sub_515711(_DWORD *this)
       v6 = 0;
     v23 = -1;
     this[271] = v6;
-    sub_40442F(v12, &v22);
+    initialize_std_string_storage(v12, &v22);
     unknown_libname_6(v13);
     v23 = 1;
     v13[2] = *(_DWORD *)(game_engine_address + 236);
@@ -321318,7 +321135,7 @@ void __thiscall sub_515936(int this)
       v5 = 0;
     v22 = -1;
     *(_DWORD *)(this + 1084) = v5;
-    sub_40442F(v12, &v21);
+    initialize_std_string_storage(v12, &v21);
     unknown_libname_6(v13);
     v22 = 1;
     sub_51F25D(&v16, game_engine_address + 256);
@@ -321595,7 +321412,7 @@ int __thiscall sub_515CB4(int this, int a2)
     std::string::assign(v12, v13);
     notify_control_tooltip_text_changed(v24);
     append_dynamic_array_element((_DWORD *)(this + 212), (int)v24);
-    sub_5067E5((_BYTE *)this, (int)v24, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v24, 1);
     v23 += 11;
   }
   while ( v23 != (_DWORD *)(v22 + 132) );
@@ -321928,9 +321745,9 @@ int __thiscall sub_5163D0(int this, int a2)
   LOBYTE(v23) = 8;
   *(_DWORD *)(this + 1888) = 1;
   sub_5168CE((_DWORD *)this, v12[0]);
-  sub_5067E5((_BYTE *)this, this + 208, 1);
-  sub_5067E5((_BYTE *)this, this + 532, 1);
-  sub_5067E5((_BYTE *)this, this + 1620, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 532, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1620, 1);
   v16 = *(_DWORD *)(this + 28);
   v17 = *(_DWORD *)(this + 32);
   v20 = *(_DWORD *)(a2 + 4) + 1316;
@@ -321971,7 +321788,7 @@ int __thiscall sub_5163D0(int this, int a2)
     std::string::assign(Str, v10);
     notify_control_tooltip_text_changed(v6);
     append_dynamic_array_element((_DWORD *)(this + 1868), (int)v6);
-    sub_5067E5((_BYTE *)this, (int)v6, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v6, 1);
     v22 += 44;
   }
   while ( v22 != (char *)(v20 + 132) );
@@ -322371,7 +322188,7 @@ int __thiscall sub_516CDA(int this, int a2)
   v24 = v5;
   v25 = *(_DWORD *)(this + 32);
   LOBYTE(v32) = 8;
-  sub_5067E5((_BYTE *)this, this + 2132, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2132, 1);
   v6 = find_or_create_cursor_spec(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 48), off_753714[0], 0);
   sub_476E64(this + 2132, v6);
   v7 = *(_DWORD *)(a2 + 4);
@@ -322388,7 +322205,7 @@ int __thiscall sub_516CDA(int this, int a2)
   (*(void (__thiscall **)(int, int *))(*(_DWORD *)(this + 2132) + 164))(this + 2132, &v27);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 2132) + 176))(this + 2132, 1);
   sub_517263((_DWORD *)this, this + 28);
-  sub_5067E5((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
   *(_DWORD *)(this + 2208) = this;
   *(_BYTE *)(this + 2212) = 0;
   v29 = *(_DWORD *)(a2 + 4) + 964;
@@ -322431,7 +322248,7 @@ int __thiscall sub_516CDA(int this, int a2)
     std::string::assign(Str, v18);
     notify_control_tooltip_text_changed(v14);
     append_dynamic_array_element((_DWORD *)(this + 2104), (int)v14);
-    sub_5067E5((_BYTE *)this, (int)v14, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v14, 1);
     v31 += 44;
   }
   while ( v31 != (char *)(v29 + 176) );
@@ -323306,7 +323123,7 @@ _DWORD *__thiscall sub_517B0D(char **this)
   LOBYTE(v148) = 1;
   if ( !v3 )
     v3 = (char *)Key;
-  sub_46B4E2(v137, v3, "rc_layout");
+  construct_registered_config_file(v137, v3, "rc_layout");
   LOBYTE(v148) = 4;
   std::string::_Tidy(1);
   LOBYTE(v148) = 3;
@@ -323826,9 +323643,9 @@ int __thiscall sub_518B6D(void *this, _DWORD *a2, char **a3, char **a4, int a5)
     sub_518F43(dword_76C138, *v8, v8[1], v35, v36, v37, v38, v39, v40, v41, v42, (char)v43, (int)v44);
     atexit(nullsub_179);
   }
-  sub_40442F(v62, &v65);
+  initialize_std_string_storage(v62, &v65);
   v68 = 0;
-  sub_40442F(v60, &v66);
+  initialize_std_string_storage(v60, &v66);
   v9 = a3;
   LOBYTE(v68) = 1;
   v10 = a3;
@@ -324189,13 +324006,13 @@ int __thiscall sub_519089(int this, int a2, _DWORD *a3)
   sub_519DE5(this);
   sub_51A19C((_DWORD *)this);
   sub_51A4F4(this);
-  sub_5067E5((_BYTE *)this, this + 2916, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2916, 1);
   (*(void (__thiscall **)(int, _DWORD *))(*(_DWORD *)(this + 2988) + 164))(this + 2988, v24);
-  sub_5067E5((_BYTE *)this, this + 2988, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2988, 1);
   v15 = *(_DWORD *)(this + 208);
   *(_BYTE *)(this + 3276) = 1;
   (*(void (__thiscall **)(int, _DWORD *))(v15 + 164))(this + 208, v24);
-  sub_5067E5((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
   sub_4790DC((_DWORD *)(this + 3284), 256);
   sub_4790E6((_DWORD *)(this + 3284), 0);
   *(_DWORD *)(this + 3288) = this;
@@ -324691,9 +324508,9 @@ int __thiscall sub_519DE5(int this)
   int v2; // edi
 
   v2 = this + 2444;
-  sub_5067E5((_BYTE *)this, this + 2444, 1);
-  sub_5067E5((_BYTE *)this, this + 2532, 1);
-  sub_5067E5((_BYTE *)this, this + 2620, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2444, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2532, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 2620, 1);
   sub_519E4A((int *)this);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v2 + 176))(v2, 1);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 2532) + 176))(this + 2532, 1);
@@ -324768,7 +324585,7 @@ int __thiscall sub_519E4A(int *this)
   (*(void (__thiscall **)(int *, _DWORD *))(v3 + 168))(this + 611, v34);
   sub_477890((int)(this + 611), 1, 2);
   v4 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20);
-  sub_402BAA(v34, "day", &v42);
+  assign_std_string_storage_from_c_string(v34, "day", &v42);
   v43 = 0;
   v5 = sub_557A8D(v4);
   append_string_suffix(v25, (char *)v34, v5);
@@ -324787,7 +324604,7 @@ int __thiscall sub_519E4A(int *this)
   v35[0] = v42;
   std::string::_Tidy(0);
   LOBYTE(v43) = 5;
-  sub_40442F(v27, &v42);
+  initialize_std_string_storage(v27, &v42);
   LOBYTE(v43) = 6;
   sub_56E810(v33, (int)v35, 1);
   sub_56E810(v33, (int)v27, 1);
@@ -325044,9 +324861,9 @@ int __thiscall sub_51A4F4(int this)
     if ( result != 4 && result != 5 )
     {
       v3 = (_BYTE *)(this + 2760);
-      sub_5067E5((_BYTE *)this, this + 2760, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 2760, 1);
       v16 = v21;
-      v4 = (_DWORD *)sub_463CF3();
+      v4 = (_DWORD *)get_inventory_layer_instance();
       v5 = (const char *)*((_DWORD *)sub_4EAA01(v4, v17, (int)v16) + 1);
       v22 = 0;
       if ( !v5 )
@@ -325147,7 +324964,7 @@ int __thiscall sub_51A64F(int this, int a2, char *Str)
   std::string::assign(Stra, v12);
   notify_control_tooltip_text_changed(v9);
   append_dynamic_array_element((_DWORD *)(this + 2708), (int)v9);
-  sub_5067E5((_BYTE *)this, (int)v9, 1);
+  insert_control_into_control_container((_BYTE *)this, (int)v9, 1);
   result = a2;
   switch ( a2 )
   {
@@ -325189,7 +325006,7 @@ int __thiscall sub_51A81F(int *this, int *a2)
 {
   int result; // eax
 
-  result = sub_5071E8(this, (int)a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+  result = sub_5071E8(this, (int)a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
   if ( !result )
     return sub_479152((int)(this + 821), a2);
   return result;
@@ -325255,7 +325072,7 @@ int *__thiscall sub_51A924(_DWORD *this, int *a2)
 int *__thiscall sub_51A95C(_DWORD *this, _DWORD *a2)
 {
   (*(void (__thiscall **)(_DWORD *, int, int))(*this + 208))(this, *a2 - this[7], a2[1] - this[8]);
-  return sub_476C91(this, a2);
+  return update_control_bounds(this, a2);
 }
 
 //----- (0051A988) --------------------------------------------------------
@@ -326001,7 +325818,7 @@ _WORD *sub_51B6CE()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE4F9(1008);
+  v0 = allocate_registered_game_help_layer(1008);
   result = 0;
   if ( v0 )
     return sub_51CA0D(v0, 0);
@@ -326071,7 +325888,7 @@ void sub_51B795()
 // 76C4E4: using guessed type int dword_76C4E4;
 
 //----- (0051B7A0) --------------------------------------------------------
-int __thiscall sub_51B7A0(int this)
+int __thiscall construct_game_help_layer(int this)
 {
   _DWORD *v2; // edi
   char *v3; // eax
@@ -326142,18 +325959,18 @@ int __thiscall sub_51B7A0(int this)
   LOBYTE(v46) = 11;
   *(_DWORD *)this = &off_6D2874;
   *(_DWORD *)(this + 320) = &off_6D286C;
-  v44 = (char *)sub_45A0F8(60);
+  v44 = (char *)allocate_registered_config_file(60);
   LOBYTE(v46) = 12;
   if ( v44 )
   {
-    sub_402BAA(v38, "HelpScreen", &v43);
+    assign_std_string_storage_from_c_string(v38, "HelpScreen", &v43);
     LOBYTE(v46) = 13;
     v45 = 3;
     v3 = (char *)*((_DWORD *)append_string_suffix(v37, v38, ".txt") + 1);
     v46 = 14;
     if ( !v3 )
       v3 = (char *)Key;
-    v4 = sub_46B4E2(v44, v3, "HelpScreen");
+    v4 = construct_registered_config_file(v44, v3, "HelpScreen");
   }
   else
   {
@@ -326175,11 +325992,11 @@ int __thiscall sub_51B7A0(int this)
   }
   if ( (*(unsigned __int8 (__thiscall **)(_DWORD, int))(*(_DWORD *)*v2 + 4))(*v2, 1) )
   {
-    v44 = (char *)sub_45A0F8(60);
+    v44 = (char *)allocate_registered_config_file(60);
     LOBYTE(v46) = 17;
     if ( v44 )
     {
-      sub_402BAA(v38, "Keyboard", &v43);
+      assign_std_string_storage_from_c_string(v38, "Keyboard", &v43);
       v45 |= 4u;
       v45 |= 8u;
       LOBYTE(v46) = 18;
@@ -326187,7 +326004,7 @@ int __thiscall sub_51B7A0(int this)
       v46 = 19;
       if ( !v5 )
         v5 = (char *)Key;
-      v6 = sub_46B4E2(v44, v5, "Keyboard");
+      v6 = construct_registered_config_file(v44, v5, "Keyboard");
     }
     else
     {
@@ -326266,7 +326083,7 @@ int __thiscall sub_51B7A0(int this)
       std::string::_Tidy(1);
       v16 = (_DWORD *)*v2;
       *(float *)&v31 = sub_46C1DB((_DWORD *)*v2, "Alpha", 0.5);
-      v17 = sub_46C1FA(v16, "BackColor", 0);
+      v17 = read_string_setting_or_default(v16, "BackColor", 0);
       sub_479FFC(*(_DWORD **)(this + 332), (int)v17, v31);
       v18 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)*v2, v42, "TitleFont", "f_arial_t12") + 1);
       LOBYTE(v46) = 29;
@@ -326275,7 +326092,7 @@ int __thiscall sub_51B7A0(int this)
       v44 = (char *)sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), v18);
       LOBYTE(v46) = 11;
       std::string::_Tidy(1);
-      sub_5067E5((_BYTE *)this, this + 432, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 432, 1);
       sub_477863((_DWORD *)(this + 432), (int)v44);
       (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 432) + 168))(this + 432, interface_layer_type_descriptor);
       (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 432) + 176))(this + 432, 1);
@@ -326297,7 +326114,7 @@ int __thiscall sub_51B7A0(int this)
       dword_755DD0 = 0;
       v44 = this != 0 ? (char *)(this + 320) : 0;
       sub_44F8C2((_DWORD *)(this + 536), (int)&unk_755DA8, (int)v44);
-      sub_5067E5((_BYTE *)this, this + 536, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 536, 1);
       sub_476F8A((_DWORD *)(this + 536), "nextgamehelp");
       v22 = *((_DWORD *)sub_46C10A((_DWORD *)*v2, v42, "PrevBtnUp", (char *)Str1) + 1);
       dword_755DB0 = (int)Key;
@@ -326316,7 +326133,7 @@ int __thiscall sub_51B7A0(int this)
       std::string::_Tidy(1);
       dword_755DD0 = 1;
       sub_44F8C2((_DWORD *)(this + 692), (int)&unk_755DA8, (int)v44);
-      sub_5067E5((_BYTE *)this, this + 692, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 692, 1);
       sub_476F8A((_DWORD *)(this + 692), "prevgamehelp");
       v25 = *((_DWORD *)sub_46C10A((_DWORD *)*v2, v42, "ExitBtnUp", (char *)Str1) + 1);
       dword_755DB0 = (int)Key;
@@ -326335,7 +326152,7 @@ int __thiscall sub_51B7A0(int this)
       std::string::_Tidy(1);
       dword_755DD0 = 2;
       sub_44F8C2((_DWORD *)(this + 848), (int)&unk_755DA8, (int)v44);
-      sub_5067E5((_BYTE *)this, this + 848, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 848, 1);
       sub_476F8A((_DWORD *)(this + 848), "exitgamehelp");
       (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 848) + 176))(this + 848, 1);
       *(_DWORD *)(this + 520) = read_integer_setting_or_default((_DWORD *)*v2, "NumPages", 0);
@@ -326345,7 +326162,7 @@ int __thiscall sub_51B7A0(int this)
       v36[0] = v29 - 1;
       v36[1] = v28 - 1;
       v36[2] = v29 + 1;
-      sub_476C91((_DWORD *)this, v36);
+      update_control_bounds((_DWORD *)this, v36);
       *(_DWORD *)(this + 524) = 0;
       set_control_active((_BYTE *)this, 1);
     }
@@ -326497,7 +326314,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   v4 = (_DWORD *)*((_DWORD *)this + 132);
   v104 = 0;
   select_settings_section(v4, (char *)Str1);
-  sub_407455(v96, "Size", v86);
+  combine_text_prefix_and_string_storage(v96, "Size", v86);
   v5 = v97;
   LOBYTE(v104) = 1;
   if ( !v97 )
@@ -326516,7 +326333,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   v66[1] = (*(_DWORD *)caption_manager_saved_state_pointer - (int)v103) / 2;
   v66[0] = (v11 - (int)v102) / 2;
   (*(void (__thiscall **)(_BYTE *, _DWORD *))(*(_DWORD *)this + 172))(this, v66);
-  v12 = sub_407455(v90, "ExitBtnPos", v86);
+  v12 = combine_text_prefix_and_string_storage(v90, "ExitBtnPos", v86);
   LOBYTE(v104) = 2;
   assign_std_string_storage(v96, v12);
   LOBYTE(v104) = 1;
@@ -326538,7 +326355,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   }
   else
   {
-    v18 = sub_407455(v90, "NextBtnPos", v86);
+    v18 = combine_text_prefix_and_string_storage(v90, "NextBtnPos", v86);
     LOBYTE(v104) = 3;
     assign_std_string_storage(v96, v18);
     LOBYTE(v104) = 1;
@@ -326562,7 +326379,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   }
   else
   {
-    v23 = sub_407455(v90, "PrevBtnPos", v86);
+    v23 = combine_text_prefix_and_string_storage(v90, "PrevBtnPos", v86);
     LOBYTE(v104) = 4;
     assign_std_string_storage(v96, v23);
     LOBYTE(v104) = 1;
@@ -326601,7 +326418,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   a2 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), v31);
   LOBYTE(v104) = 1;
   std::string::_Tidy(1);
-  v32 = sub_407455(v81, "Title", v86);
+  v32 = combine_text_prefix_and_string_storage(v81, "Title", v86);
   LOBYTE(v104) = 8;
   assign_std_string_storage(v96, v32);
   LOBYTE(v104) = 1;
@@ -326626,7 +326443,7 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
   v80 = v78 + *(_DWORD *)(a2 + 56) + *(_DWORD *)(a2 + 72);
   (*(void (__thiscall **)(_BYTE *, int *))(*((_DWORD *)this + 108) + 168))(this + 432, &v77);
   sub_477890((int)(this + 432), 1, 1);
-  v35 = sub_407455(v90, "PageSections", v86);
+  v35 = combine_text_prefix_and_string_storage(v90, "PageSections", v86);
   LOBYTE(v104) = 10;
   assign_std_string_storage(v96, v35);
   LOBYTE(v104) = 1;
@@ -326689,9 +326506,9 @@ int __thiscall sub_51BF7A(_BYTE *this, int a2)
     *((_DWORD *)this + 102),
     *((_DWORD **)this + 103),
     *((_DWORD *)this + 104));
-  sub_40442F(v87, (_BYTE *)&a2 + 3);
+  initialize_std_string_storage(v87, (_BYTE *)&a2 + 3);
   LOBYTE(v104) = 13;
-  sub_40442F(v83, &v95);
+  initialize_std_string_storage(v83, &v95);
   LOBYTE(v104) = 14;
   v99 = strtok(String, Delimiter);
   if ( !v99 )
@@ -326845,7 +326662,7 @@ LABEL_52:
     (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)v92 + 176))(v92, 1);
     v60 = (int)v92;
 LABEL_64:
-    sub_5067E5(this, v60, 1);
+    insert_control_into_control_container(this, v60, 1);
     v99 = strtok(0, Delimiter);
     if ( !v99 )
       goto LABEL_70;
@@ -327071,7 +326888,7 @@ int __thiscall sub_51CE01(int *this, int a2, int a3)
   int v6; // eax
   int v7; // eax
 
-  sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
   v4 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 68) + 108);
   if ( a2 == *(_DWORD *)(v4 + 236) || a2 == *(_DWORD *)(v4 + 240) )
     return 1;
@@ -327210,7 +327027,7 @@ _WORD *sub_51D034()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE51C(616);
+  v0 = allocate_registered_config_controls_layer(616);
   result = 0;
   if ( v0 )
     return sub_51DC53(v0, 0);
@@ -327280,7 +327097,7 @@ void sub_51D0FB()
 // 76C4A4: using guessed type int dword_76C4A4;
 
 //----- (0051D106) --------------------------------------------------------
-int __thiscall sub_51D106(int this)
+int __thiscall construct_config_controls_layer(int this)
 {
   _DWORD *v2; // esi
   char *v3; // eax
@@ -327356,18 +327173,18 @@ int __thiscall sub_51D106(int this)
   LOBYTE(v52) = 9;
   *(_DWORD *)this = &off_6D2B58;
   *(_DWORD *)(this + 320) = &off_6D2B50;
-  v48 = (char *)sub_45A0F8(60);
+  v48 = (char *)allocate_registered_config_file(60);
   LOBYTE(v52) = 10;
   if ( v48 )
   {
-    sub_402BAA(v44, "ConfigScreen", &v50);
+    assign_std_string_storage_from_c_string(v44, "ConfigScreen", &v50);
     LOBYTE(v52) = 11;
     v51 = 3;
     v3 = (char *)*((_DWORD *)append_string_suffix(v37, v44, ".txt") + 1);
     v52 = 12;
     if ( !v3 )
       v3 = (char *)Key;
-    v4 = sub_46B4E2(v48, v3, "ConfigScreen");
+    v4 = construct_registered_config_file(v48, v3, "ConfigScreen");
   }
   else
   {
@@ -327389,11 +327206,11 @@ int __thiscall sub_51D106(int this)
   }
   if ( (*(unsigned __int8 (__thiscall **)(_DWORD, int))(*(_DWORD *)*v2 + 4))(*v2, 1) )
   {
-    v48 = (char *)sub_45A0F8(60);
+    v48 = (char *)allocate_registered_config_file(60);
     LOBYTE(v52) = 15;
     if ( v48 )
     {
-      sub_402BAA(v44, "Keyboard", &v50);
+      assign_std_string_storage_from_c_string(v44, "Keyboard", &v50);
       v51 |= 4u;
       v51 |= 8u;
       LOBYTE(v52) = 16;
@@ -327401,7 +327218,7 @@ int __thiscall sub_51D106(int this)
       v52 = 17;
       if ( !v5 )
         v5 = (char *)Key;
-      v6 = sub_46B4E2(v48, v5, "Keyboard");
+      v6 = construct_registered_config_file(v48, v5, "Keyboard");
     }
     else
     {
@@ -327474,7 +327291,7 @@ int __thiscall sub_51D106(int this)
       std::string::_Tidy(1);
       v16 = (_DWORD *)*v2;
       *(float *)&v28 = sub_46C1DB((_DWORD *)*v2, "Alpha", 0.5);
-      v17 = sub_46C1FA(v16, "BackColor", 0);
+      v17 = read_string_setting_or_default(v16, "BackColor", 0);
       sub_479FFC(*(_DWORD **)(this + 332), (int)v17, v28);
       v18 = sub_46C248((_DWORD *)*v2, &v38, "Size", (char **)&dword_76C128);
       v19 = *v18;
@@ -327500,7 +327317,7 @@ int __thiscall sub_51D106(int this)
       *(_DWORD *)(this + 484) = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), v22);
       LOBYTE(v52) = 9;
       std::string::_Tidy(1);
-      sub_5067E5((_BYTE *)this, this + 488, 1);
+      insert_control_into_control_container((_BYTE *)this, this + 488, 1);
       sub_477863((_DWORD *)(this + 488), *(_DWORD *)(this + 484));
       v23 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)*v2, v36, "Title", "ConfigScreen") + 1);
       LOBYTE(v52) = 29;
@@ -327663,7 +327480,7 @@ int __thiscall sub_51D74B(int this)
   std::string::_Tidy(1);
   sub_51F3CD((_DWORD *)(this + 336), &v63);
   (*(void (__thiscall **)(_DWORD *, int))(*v63 + 176))(v63, 1);
-  sub_5067E5((_BYTE *)this, (int)v63, 1);
+  insert_control_into_control_container((_BYTE *)this, (int)v63, 1);
   LOBYTE(v56) = v68;
   v57 = 0;
   v58 = 0;
@@ -327716,7 +327533,7 @@ int __thiscall sub_51D74B(int this)
         std::string::_Tidy(1);
         sub_51F3CD((_DWORD *)(this + 336), &v62);
         (*(void (__thiscall **)(_DWORD *, int))(*v62 + 176))(v62, 1);
-        sub_5067E5((_BYTE *)this, (int)v62, 1);
+        insert_control_into_control_container((_BYTE *)this, (int)v62, 1);
         v21 = sub_46C10A(*(_DWORD **)(this + 608), v45, "KeyCode", (char *)Str1);
         LOBYTE(v69) = 7;
         assign_std_string_storage(v51, v21);
@@ -327785,8 +327602,8 @@ int __thiscall sub_51D74B(int this)
         sub_477890((int)v66, 1, 2);
         (*(void (__thiscall **)(int *, int))(*v66 + 176))(v66, 1);
         sub_51F5A8((_DWORD *)(this + 432), &v66);
-        sub_5067E5((_BYTE *)this, (int)v66, 1);
-        sub_5067E5((_BYTE *)this, (int)v61, 1);
+        insert_control_into_control_container((_BYTE *)this, (int)v66, 1);
+        insert_control_into_control_container((_BYTE *)this, (int)v61, 1);
         LOBYTE(v69) = 3;
         std::string::_Tidy(1);
         LOBYTE(v69) = 2;
@@ -328012,7 +327829,7 @@ void __thiscall sub_51E051(int this, int a2, _DWORD *a3)
 int __thiscall sub_51E080(int *this, int a2)
 {
   if ( this[144] == -1 )
-    return sub_5071E8(this, a2, (int (__thiscall *)(int, int))sub_44D922, 0);
+    return sub_5071E8(this, a2, (int (__thiscall *)(int, int))interface_target_pointer_button_1_press, 0);
   else
     return 1;
 }
@@ -328106,16 +327923,16 @@ int __thiscall sub_51E143(int this, _UNKNOWN **C, int a3)
     }
     else
     {
-      return sub_50767B((int *)this, (int)C, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+      return sub_50767B((int *)this, (int)C, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
     }
   }
   else
   {
     if ( sub_51E57E((_DWORD *)this, (unsigned int)C) )
     {
-      sub_40442F(v32, (_BYTE *)&a3 + 3);
+      initialize_std_string_storage(v32, (_BYTE *)&a3 + 3);
       v46 = 0;
-      sub_40442F(v34, &v44);
+      initialize_std_string_storage(v34, &v44);
       LOBYTE(v46) = 1;
       if ( isalpha((int)C) && isupper((int)C) || isdigit((int)C) )
       {
@@ -328777,18 +328594,18 @@ int __thiscall sub_51EBFD(_DWORD *this)
       sprintf(Buffer, v8, v42, v7);
       std::string::_Tidy(1);
       v9 = sub_557A8D(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20));
-      sub_402BAA(v36, v9, &v43);
+      assign_std_string_storage_from_c_string(v36, v9, &v43);
       v44 = 0;
-      sub_407455(v31, "day", v36);
+      combine_text_prefix_and_string_storage(v31, "day", v36);
       LOBYTE(v44) = 2;
       std::string::_Tidy(1);
       v10 = (char *)sub_557B2B(*(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 16));
-      sub_402BAA(v39, v10, &v43);
+      assign_std_string_storage_from_c_string(v39, v10, &v43);
       LOBYTE(v44) = 3;
-      sub_407455(v34, "loc_", v39);
+      combine_text_prefix_and_string_storage(v34, "loc_", v39);
       LOBYTE(v44) = 5;
       std::string::_Tidy(1);
-      sub_402BAA(v33, Buffer, &v41);
+      assign_std_string_storage_from_c_string(v33, Buffer, &v41);
       v11 = v32;
       LOBYTE(v44) = 6;
       if ( !v32 )
@@ -337379,10 +337196,10 @@ char __thiscall sub_525E61(_BYTE *this, int i, _DWORD *a3, int a4)
       v45 = 0;
     v9 = *sub_52627F((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v41, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v41, (_BYTE *)&a3 + 3);
     v43 = 0;
     LOBYTE(v46) = 2;
-    sub_40442F(v42, (_BYTE *)&a4 + 3);
+    initialize_std_string_storage(v42, (_BYTE *)&a4 + 3);
     LOBYTE(v46) = 3;
     for ( i = v9; i != v10; ++v43 )
     {
@@ -338033,17 +337850,17 @@ char __stdcall sub_526A27(PHKEY phkResult, const char *a2, HKEY hKey)
   std::string::assign((void *)"Software", v4);
   v15 = 0;
   v5 = (char *)strlen("\\");
-  sub_402BD8(&v13, "\\", v5);
+  append_std_string_storage_bytes(&v13, "\\", v5);
   v6 = (char *)strlen("Sierra On-Line");
-  sub_402BD8(&v13, "Sierra On-Line", v6);
+  append_std_string_storage_bytes(&v13, "Sierra On-Line", v6);
   v7 = (char *)strlen("\\");
-  sub_402BD8(&v13, "\\", v7);
+  append_std_string_storage_bytes(&v13, "\\", v7);
   v8 = (char *)strlen("Gabriel Knight 3");
-  sub_402BD8(&v13, "Gabriel Knight 3", v8);
+  append_std_string_storage_bytes(&v13, "Gabriel Knight 3", v8);
   v9 = (char *)strlen("\\");
-  sub_402BD8(&v13, "\\", v9);
+  append_std_string_storage_bytes(&v13, "\\", v9);
   v10 = (char *)strlen(a2);
-  sub_402BD8(&v13, a2, v10);
+  append_std_string_storage_bytes(&v13, a2, v10);
   v11 = lpSubKey;
   if ( !lpSubKey )
     v11 = Key;
@@ -338152,8 +337969,8 @@ _DWORD *__thiscall sub_526C8E(_DWORD *this)
   if ( *(v9 != 0 ? &v9[v10 - 1] : (char *)-1) != 92 )
     std::string::append(1u, 92);
   v2 = (char *)strlen("gk3.ini");
-  sub_402BD8(&v8, "gk3.ini", v2);
-  v3 = sub_45A0F8(60);
+  append_std_string_storage_bytes(&v8, "gk3.ini", v2);
+  v3 = allocate_registered_config_file(60);
   v11 = v3;
   LOBYTE(v12) = 1;
   if ( v3 )
@@ -338161,7 +337978,7 @@ _DWORD *__thiscall sub_526C8E(_DWORD *this)
     v4 = v9;
     if ( !v9 )
       v4 = (char *)Key;
-    v5 = sub_46B4E2(v3, v4, 0);
+    v5 = construct_registered_config_file(v3, v4, 0);
   }
   else
   {
@@ -339296,19 +339113,19 @@ int __thiscall sub_527FBF(void *this, int a2)
 
   v26 = this;
   v25 = 0;
-  sub_40442F(&v30);
+  initialize_std_string_storage(&v30);
   v31 = 1;
   sub_594D40((HMODULE)application_instance, 10002, word_776F34);
   v31 = 2;
-  sub_40442F(&v29);
+  initialize_std_string_storage(&v29);
   LOBYTE(v31) = 3;
   sub_594D40((HMODULE)application_instance, 22070, word_776F34);
   LOBYTE(v31) = 4;
-  sub_40442F(&v28);
+  initialize_std_string_storage(&v28);
   LOBYTE(v31) = 5;
   v2 = sub_5BE8E0();
   future_error_what = (char *)std::_Get_future_error_what(v2);
-  sub_402BAA(future_error_what, &v27);
+  assign_std_string_storage_from_c_string(future_error_what, &v27);
   LOBYTE(v31) = 6;
   v4 = append_string_suffix(v15, v18, asc_788108);
   LOBYTE(v31) = 7;
@@ -339355,7 +339172,7 @@ LABEL_18:
     if ( *(_BYTE *)(*(_DWORD *)sub_4D1952(&v26) - 1) != 58 && *(_BYTE *)(*(_DWORD *)sub_4D1952(&v26) - 1) != 92 )
     {
       v13 = (void *)strlen("\\");
-      sub_402BD8("\\", v13);
+      append_std_string_storage_bytes("\\", v13);
     }
   }
   sub_402B80(v22);
@@ -339373,11 +339190,11 @@ LABEL_18:
 // 40157E: using guessed type _DWORD __cdecl append_string_suffix(_DWORD, _DWORD, char *Str);
 // 401C18: using guessed type _DWORD __stdcall assign_std_string_storage(_DWORD);
 // 402B80: using guessed type _DWORD __stdcall sub_402B80(_DWORD);
-// 402BAA: using guessed type _DWORD __stdcall sub_402BAA(char *Str, _DWORD);
-// 402BD8: using guessed type _DWORD __stdcall sub_402BD8(_DWORD, void *Src);
+// 402BAA: using guessed type _DWORD __stdcall assign_std_string_storage_from_c_string(char *Str, _DWORD);
+// 402BD8: using guessed type _DWORD __stdcall append_std_string_storage_bytes(_DWORD, void *Src);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 404349: using guessed type _DWORD __cdecl append_string_storage(_DWORD, _DWORD, _DWORD);
-// 40442F: using guessed type _DWORD __stdcall sub_40442F(_DWORD);
+// 40442F: using guessed type _DWORD __stdcall initialize_std_string_storage(_DWORD);
 // 4A504A: using guessed type _DWORD __cdecl sub_4A504A(__int16);
 // 4A596D: using guessed type _DWORD __cdecl resolve_profile_directory(_DWORD, _DWORD);
 // 4B9C1C: using guessed type _DWORD __stdcall sub_4B9C1C(_DWORD, _DWORD);
@@ -339441,7 +339258,7 @@ _BYTE *__thiscall sub_528237(_DWORD **this, _BYTE *a2)
       if ( *(_BYTE *)(v12 != 0 ? v12 + v13 - 1 : -1) != 92 )
       {
         v4 = (char *)strlen("\\");
-        sub_402BD8(&v11, "\\", v4);
+        append_std_string_storage_bytes(&v11, "\\", v4);
       }
     }
   }
@@ -339918,11 +339735,11 @@ static void *__thiscall load_display_options_from_settings_legacy(
   initialize_display_options(v21);
   if ( game_engine_address )
     qmemcpy(v21, (const void *)(game_engine_address + 112), sizeof(v21));
-  sub_40442F(v29, &v36);
+  initialize_std_string_storage(v29, &v36);
   v37 = 0;
   sub_594D40((int)v29, (HMODULE)application_instance, 0x2713u, word_776F34);
   v37 = 1;
-  sub_40442F(v24, &v35);
+  initialize_std_string_storage(v24, &v35);
   LOBYTE(v37) = 2;
   sub_594D40((int)v24, (HMODULE)application_instance, 0x59E2u, word_776F34);
   v2 = v25;
@@ -339940,7 +339757,7 @@ static void *__thiscall load_display_options_from_settings_legacy(
   if ( !v23 )
     v5 = (char *)Key;
   parse_display_mode_name(v5, (char **)v21);
-  sub_40442F(v26, &v35);
+  initialize_std_string_storage(v26, &v35);
   LOBYTE(v37) = 6;
   sub_594D40((int)v26, (HMODULE)application_instance, 0x5A28u, word_776F34);
   v6 = v27;
@@ -339953,7 +339770,7 @@ static void *__thiscall load_display_options_from_settings_legacy(
   v8 = read_dword_setting(v34, v7, v6, 0);
   LOBYTE(v37) = 5;
   std::string::_Tidy(1);
-  sub_40442F(v26, &v35);
+  initialize_std_string_storage(v26, &v35);
   LOBYTE(v37) = 8;
   sub_594D40((int)v26, (HMODULE)application_instance, 0x5A32u, word_776F34);
   v9 = v27;
@@ -339969,7 +339786,7 @@ static void *__thiscall load_display_options_from_settings_legacy(
   v12 = resolve_display_dimensions(&v33, v8 != 0, (int)v8, v11 != 0, (int)v11);
   *(_DWORD *)&v21[4] = *v12;
   *(_DWORD *)&v21[8] = v12[1];
-  sub_40442F(v26, &v35);
+  initialize_std_string_storage(v26, &v35);
   LOBYTE(v37) = 10;
   sub_594D40((int)v26, (HMODULE)application_instance, 0x5A1Eu, word_776F34);
   v13 = v27;
@@ -340082,7 +339899,7 @@ static int *__thiscall load_window_position_from_settings_legacy(
   v16[0] = HIBYTE(a2);
   std::string::_Tidy(0);
   v22 = 0;
-  sub_40442F(v12, &v21);
+  initialize_std_string_storage(v12, &v21);
   LOBYTE(v22) = 1;
   sub_594D40((int)v12, (HMODULE)application_instance, 0x5A64u, word_776F34);
   LOBYTE(v22) = 2;
@@ -340783,12 +340600,12 @@ _BYTE *__stdcall sub_52A032(_BYTE *a1, char a2, int a3, int a4, int a5)
   std::string::_Tidy(0);
   std::string::assign(&a2, 0, -1);
   v5 = (char *)strlen("\\");
-  sub_402BD8(v9, "\\", v5);
+  append_std_string_storage_bytes(v9, "\\", v5);
   v6 = "Software";
   if ( !*(_BYTE *)(game_engine_address + 108) )
     v6 = "Hardware";
   v7 = (char *)strlen(v6);
-  sub_402BD8(v9, v6, v7);
+  append_std_string_storage_bytes(v9, v6, v7);
   *a1 = v9[0];
   std::string::_Tidy(0);
   std::string::assign(v9, 0, -1);
@@ -341495,7 +341312,7 @@ int __stdcall sub_52AB59(char *a1)
   }
   if ( a1 == (char *)2 )
   {
-    sub_40442F(v14, (_BYTE *)&a1 + 3);
+    initialize_std_string_storage(v14, (_BYTE *)&a1 + 3);
     LOBYTE(v19) = 5;
     sub_594D40((int)v14, (HMODULE)application_instance, 0x5A40u, word_776F34);
     LOBYTE(v19) = 6;
@@ -342439,7 +342256,7 @@ LABEL_13:
     _BitScanReverse(&v4, i);
     v5 = (&off_755E28)[v4];
     v6 = (char *)strlen(v5);
-    sub_402BD8(v11, v5, v6);
+    append_std_string_storage_bytes(v11, v5, v6);
     i = a2 & ~(2 * v3 - 1);
     if ( i )
     {
@@ -342583,7 +342400,7 @@ LABEL_13:
     _BitScanReverse(&v4, i);
     v5 = (&off_755E3C)[v4];
     v6 = (char *)strlen(v5);
-    sub_402BD8(v11, v5, v6);
+    append_std_string_storage_bytes(v11, v5, v6);
     i = a2 & ~(2 * v3 - 1);
     if ( i )
     {
@@ -342703,7 +342520,7 @@ int sub_52C4D5()
 int *sub_52C4DF()
 {
   return sub_566840(
-           dword_76C688,
+           report_entry_registry,
            (int)"ReportStream",
            (_DWORD *)1,
            84,
@@ -342715,7 +342532,7 @@ int *sub_52C4DF()
            0);
 }
 // 52C46D: using guessed type int unknown_libname_167();
-// 76C688: using guessed type _DWORD dword_76C688[16];
+// 76C688: using guessed type _DWORD report_entry_registry[16];
 
 //----- (0052C513) --------------------------------------------------------
 void __cdecl sub_52C513()
@@ -342745,7 +342562,7 @@ char *__thiscall construct_report_entry(char *this, char *a2)
   size_t v4; // eax
 
   v3 = this + 4;
-  find_or_create_registry_entry(dword_76C688, (unsigned int)&this[dword_76C684 + 4]);
+  find_or_create_registry_entry(report_entry_registry, (unsigned int)&this[dword_76C684 + 4]);
   *v3 = HIBYTE(a2);
   std::string::_Tidy(0);
   v4 = strlen(a2);
@@ -342771,7 +342588,7 @@ char *__thiscall construct_report_entry(char *this, char *a2)
 // 6AB500: using guessed type _UNKNOWN *off_6AB500;
 // 6D3140: using guessed type int (__stdcall *off_6D3140)(char);
 // 76C684: using guessed type int dword_76C684;
-// 76C688: using guessed type _DWORD dword_76C688[16];
+// 76C688: using guessed type _DWORD report_entry_registry[16];
 
 //----- (0052C5F2) --------------------------------------------------------
 void *__thiscall sub_52C5F2(void *this, char a2)
@@ -342792,16 +342609,16 @@ _DWORD *__thiscall sub_52C60E(void *this)
   v2 = *((_DWORD *)this + 13) == -1;
   *((_DWORD *)this + 12) = &off_6AB500;
   if ( !v2 )
-    sub_4A43D6((HANDLE *)this + 12);
+    close_tracked_file((HANDLE *)this + 12);
   std::string::_Tidy(1);
   std::string::_Tidy(1);
-  return erase_map_entry_impl(dword_76C688, dword_76C684 + (this != 0 ? (unsigned int)this + 4 : 0));
+  return erase_map_entry_impl(report_entry_registry, dword_76C684 + (this != 0 ? (unsigned int)this + 4 : 0));
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 6AB500: using guessed type _UNKNOWN *off_6AB500;
 // 6D3140: using guessed type int (__stdcall *off_6D3140)(char);
 // 76C684: using guessed type int dword_76C684;
-// 76C688: using guessed type _DWORD dword_76C688[16];
+// 76C688: using guessed type _DWORD report_entry_registry[16];
 
 //----- (0052C696) --------------------------------------------------------
 char *__thiscall sub_52C696(char *this, int a2)
@@ -342810,7 +342627,7 @@ char *__thiscall sub_52C696(char *this, int a2)
   char v5; // [esp+Fh] [ebp-Dh]
 
   v3 = this + 4;
-  find_or_create_registry_entry(dword_76C688, (unsigned int)&this[dword_76C684 + 4]);
+  find_or_create_registry_entry(report_entry_registry, (unsigned int)&this[dword_76C684 + 4]);
   *v3 = v5;
   std::string::_Tidy(0);
   this[32] = v5;
@@ -342827,7 +342644,7 @@ char *__thiscall sub_52C696(char *this, int a2)
 // 6AB500: using guessed type _UNKNOWN *off_6AB500;
 // 6D3140: using guessed type int (__stdcall *off_6D3140)(char);
 // 76C684: using guessed type int dword_76C684;
-// 76C688: using guessed type _DWORD dword_76C688[16];
+// 76C688: using guessed type _DWORD report_entry_registry[16];
 
 //----- (0052C719) --------------------------------------------------------
 char __thiscall sub_52C719(int this, _BYTE *a2, int a3)
@@ -342862,7 +342679,7 @@ void __thiscall set_report_entry_output_flags(HANDLE *this, HANDLE a2)
     {
       v4 = this + 12;
       if ( this[13] != (HANDLE)-1 )
-        sub_4A43D6(v4);
+        close_tracked_file(v4);
     }
     this[6] = a2;
   }
@@ -342882,7 +342699,7 @@ char __thiscall set_report_entry_filename(int this, char *Str)
   if ( result )
   {
     if ( *(_DWORD *)(this + 52) != -1 )
-      sub_4A43D6((HANDLE *)(this + 48));
+      close_tracked_file((HANDLE *)(this + 48));
     v5 = strlen(Str);
     return std::string::assign(Str, v5);
   }
@@ -343047,7 +342864,7 @@ void __thiscall sub_52D1B1(int this, char *a2, va_list a3)
 }
 
 //----- (0052D1CF) --------------------------------------------------------
-void __thiscall sub_52D1CF(int this, char *a2, size_t a3)
+void __thiscall write_source_message_from_log_context(int this, char *a2, size_t a3)
 {
   write_source_message(*(const char **)(this + 8), *(_DWORD *)(this + 12), *(_DWORD *)(this + 4), *(_DWORD *)this, a2, a3);
 }
@@ -343332,7 +343149,7 @@ _DWORD *__thiscall construct_report_indicator(
   this[11] = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), a2);
   this[12] = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), a3);
   this[13] = this[11];
-  sub_52D7F1(this, a4);
+  set_control_bounds(this, a4);
   this[14] = 0;
   this[15] = 0;
   this[16] = 0;
@@ -343389,7 +343206,7 @@ _DWORD *__thiscall sub_52D77D(_DWORD *this)
 // 76C7A8: using guessed type _DWORD dword_76C7A8[15];
 
 //----- (0052D7F1) --------------------------------------------------------
-int __thiscall sub_52D7F1(_DWORD *this, int a2)
+int __thiscall set_control_bounds(_DWORD *this, int a2)
 {
   _DWORD *v2; // edx
   _DWORD v4[2]; // [esp+4h] [ebp-10h] BYREF
@@ -343753,7 +343570,7 @@ int *__thiscall sub_52DCAE(_DWORD *this, int *a2)
   _DWORD v5[4]; // [esp+4h] [ebp-10h] BYREF
 
   v3 = sub_479581(this + 18, v5, a2);
-  return sub_476C91(this, v3);
+  return update_control_bounds(this, v3);
 }
 
 //----- (0052DCD3) --------------------------------------------------------
@@ -344033,7 +343850,7 @@ _DWORD *sub_52E291()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_52E2C7(288);
+  v0 = allocate_registered_frame_delay_graph(288);
   result = 0;
   if ( v0 )
     return sub_52E4AD(v0, 0);
@@ -344041,7 +343858,7 @@ _DWORD *sub_52E291()
 }
 
 //----- (0052E2C7) --------------------------------------------------------
-_DWORD *__cdecl sub_52E2C7(int a1)
+_DWORD *__cdecl allocate_registered_frame_delay_graph(int a1)
 {
   _DWORD *v1; // esi
 
@@ -344112,7 +343929,7 @@ void sub_52E371()
 // 76C710: using guessed type int dword_76C710;
 
 //----- (0052E37C) --------------------------------------------------------
-_DWORD *__thiscall sub_52E37C(_DWORD *this, _DWORD *a2, int a3)
+_DWORD *__thiscall construct_frame_delay_graph(_DWORD *this, _DWORD *a2, int a3)
 {
   sub_52DB73((int)this, a2, 1973790, 61440, 255);
   find_or_create_registry_entry(dword_76C718, (unsigned int)this + dword_76C710 + 249);
@@ -344243,7 +344060,7 @@ _DWORD *sub_52E633()
   _DWORD *v0; // ecx
   _DWORD *result; // eax
 
-  v0 = sub_52E669(260);
+  v0 = allocate_registered_page_fault_graph(260);
   result = 0;
   if ( v0 )
     return sub_52E849(v0, 0);
@@ -344251,7 +344068,7 @@ _DWORD *sub_52E633()
 }
 
 //----- (0052E669) --------------------------------------------------------
-_DWORD *__cdecl sub_52E669(int a1)
+_DWORD *__cdecl allocate_registered_page_fault_graph(int a1)
 {
   _DWORD *v1; // esi
 
@@ -344322,7 +344139,7 @@ void sub_52E713()
 // 76C6CC: using guessed type int dword_76C6CC;
 
 //----- (0052E71E) --------------------------------------------------------
-_DWORD *__thiscall sub_52E71E(_DWORD *this, _DWORD *a2, int a3)
+_DWORD *__thiscall construct_page_fault_graph(_DWORD *this, _DWORD *a2, int a3)
 {
   sub_52DB73((int)this, a2, 1973790, 240, 255);
   find_or_create_registry_entry(dword_76C6D0, (unsigned int)this + dword_76C6CC + 249);
@@ -344411,10 +344228,10 @@ int __thiscall sub_52E901(_DWORD *this)
   _BYTE v5[4]; // [esp+4h] [ebp-28h] BYREF
   int v6; // [esp+8h] [ebp-24h]
 
-  result = sub_52FA3F();
+  result = is_psapi_available();
   if ( result )
   {
-    v3 = sub_52FA3F();
+    v3 = is_psapi_available();
     CurrentProcess = GetCurrentProcess();
     (*(void (__stdcall **)(HANDLE, _BYTE *, int))(v3 + 8))(CurrentProcess, v5, 40);
     sub_52DF4F(this, v6 - this[64]);
@@ -344492,17 +344309,17 @@ void __cdecl sub_52EA0C()
 //----- (0052EA2C) --------------------------------------------------------
 void sub_52EA2C()
 {
-  dword_76C7E4 = -197;
+  report_manager_registry_offset = -197;
 }
-// 76C7E4: using guessed type int dword_76C7E4;
+// 76C7E4: using guessed type int report_manager_registry_offset;
 
 //----- (0052EA37) --------------------------------------------------------
 int __thiscall construct_report_manager(int this)
 /* Extracted to gk3/report_manager.c as construct_report_manager. */
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6D3920: using guessed type int (__stdcall *off_6D3920)(char);
-// 76C688: using guessed type _DWORD dword_76C688[16];
-// 76C7E4: using guessed type int dword_76C7E4;
+// 6D3920: using guessed type int (__stdcall *report_manager_vtable)(char);
+// 76C688: using guessed type _DWORD report_entry_registry[16];
+// 76C7E4: using guessed type int report_manager_registry_offset;
 // 76C7E8: using guessed type _DWORD dword_76C7E8[15];
 // 7715DC: using guessed type int system_profile_address;
 
@@ -344512,8 +344329,8 @@ int __thiscall construct_report_manager(int this)
 //----- (0052EECD) --------------------------------------------------------
 int __thiscall construct_registered_report_manager(int object, int mode)
 /* Extracted to gk3/report_manager.c as construct_registered_report_manager. */
-// 6D3920: using guessed type int (__stdcall *off_6D3920)(char);
-// 76C7E4: using guessed type int dword_76C7E4;
+// 6D3920: using guessed type int (__stdcall *report_manager_vtable)(char);
+// 76C7E4: using guessed type int report_manager_registry_offset;
 // 76C7E8: using guessed type _DWORD dword_76C7E8[15];
 
 //----- (0052EF43) --------------------------------------------------------
@@ -344536,16 +344353,16 @@ char __thiscall sub_52EF43(void *this, _BYTE *a2, int a3)
 
 //----- (0052EFA9) --------------------------------------------------------
 /* Extracted to gk3/report_manager.c as destroy_report_manager. */
-// 6D3920: using guessed type int (__stdcall *off_6D3920)(char);
-// 76C7E4: using guessed type int dword_76C7E4;
+// 6D3920: using guessed type int (__stdcall *report_manager_vtable)(char);
+// 76C7E4: using guessed type int report_manager_registry_offset;
 // 76C7E8: using guessed type _DWORD dword_76C7E8[15];
 
 //----- (0052F01C) --------------------------------------------------------
 int __thiscall initialize_application_log_manager(int this)
 /* Extracted to gk3/report_manager.c as initialize_application_log_manager. */
-// 755E74: using guessed type char *off_755E74[388];
-// 755E78: using guessed type char *off_755E78[387];
-// 755E7C: using guessed type char *off_755E7C[386];
+// 755E74: using guessed type char *warning_indicator_resource_name_table[388];
+// 755E78: using guessed type char *error_indicator_icon_resource_name_table[387];
+// 755E7C: using guessed type char *error_indicator_label_resource_name_table[386];
 // 764788: using guessed type int interface_layer_type_descriptor;
 // 765A2C: using guessed type int game_engine_instance_address;
 
@@ -344580,7 +344397,7 @@ int __stdcall sub_52F30C(int a1, int a2, int a3)
 
 //----- (0052F38C) --------------------------------------------------------
 /* Extracted to gk3/report_manager.c as find_or_create_report_entry_index. */
-// 52C4A0: using guessed type _DWORD __cdecl sub_52C4A0(_DWORD);
+// 52C4A0: using guessed type _DWORD __cdecl allocate_registered_report_entry(_DWORD);
 
 //----- (0052F470) --------------------------------------------------------
 /* Extracted to gk3/report_manager.c as refresh_report_manager_display. */
@@ -344591,13 +344408,13 @@ int __stdcall get_report_indicator_resource_ids(int *a1, int *a2)
 {
   int result; // eax
 
-  *a1 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), off_755E74[0]);
-  result = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), off_755E78[0]);
+  *a1 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), warning_indicator_resource_name_table[0]);
+  result = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), error_indicator_icon_resource_name_table[0]);
   *a2 = result;
   return result;
 }
-// 755E74: using guessed type char *off_755E74[388];
-// 755E78: using guessed type char *off_755E78[387];
+// 755E74: using guessed type char *warning_indicator_resource_name_table[388];
+// 755E78: using guessed type char *error_indicator_icon_resource_name_table[387];
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (0052F4CA) --------------------------------------------------------
@@ -344607,7 +344424,7 @@ int __thiscall resize_report_indicators(_DWORD **this)
   int v4; // [esp+8h] [ebp-4h] BYREF
 
   get_report_indicator_resource_ids(&v3, &v4);
-  sub_52D7F1(
+  set_control_bounds(
     this[54],
     *(_DWORD *)(default_stacked_hook_control + 12)
   - *(_DWORD *)(v3 + 72)
@@ -344615,12 +344432,12 @@ int __thiscall resize_report_indicators(_DWORD **this)
   - *(_DWORD *)(v3 + 56)
   - *(_DWORD *)(v4 + 56)
   - 14);
-  return sub_52D7F1(this[55], *(_DWORD *)(default_stacked_hook_control + 12) - *(_DWORD *)(v4 + 72) - *(_DWORD *)(v4 + 56) - 12);
+  return set_control_bounds(this[55], *(_DWORD *)(default_stacked_hook_control + 12) - *(_DWORD *)(v4 + 72) - *(_DWORD *)(v4 + 56) - 12);
 }
 // 7646C8: using guessed type int default_stacked_hook_control;
 
 //----- (0052F543) --------------------------------------------------------
-int __thiscall sub_52F543(int this, _DWORD *a2)
+int __thiscall append_pointer_array_element(int this, _DWORD *a2)
 {
   return sub_52F86F((int *)this, *(_DWORD **)(this + 8), 1, a2);
 }
@@ -344670,7 +344487,7 @@ int __thiscall insert_pointer_array_element(
 }
 
 //----- (0052F62D) --------------------------------------------------------
-int __thiscall sub_52F62D(int *this)
+int __thiscall destroy_report_entry_pointer_array(int *this)
 {
   int result; // eax
 
@@ -344877,7 +344694,7 @@ _DWORD *__thiscall sub_52F81D(_DWORD *this, _DWORD *a2, int *a3)
 }
 
 //----- (0052F84F) --------------------------------------------------------
-int __thiscall sub_52F84F(int *this)
+int __thiscall destroy_report_auxiliary_pointer_array(int *this)
 {
   int result; // eax
 
@@ -345065,7 +344882,7 @@ int __thiscall sub_52F86F(int *this, _DWORD *a2, int a3, _DWORD *a4)
 }
 
 //----- (0052FA3F) --------------------------------------------------------
-int sub_52FA3F()
+int is_psapi_available(void)
 {
   if ( (byte_78689D & 1) == 0 )
   {
@@ -345254,7 +345071,7 @@ char __thiscall sub_52FD16(void *this, int a2, int a3)
            this,
            v5,
            v3,
-           dword_76C688) == 0;
+           report_entry_registry) == 0;
     v11 = -1;
     std::string::_Tidy(1);
     if ( v6 )
@@ -345264,7 +345081,7 @@ char __thiscall sub_52FD16(void *this, int a2, int a3)
   return i;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 76C688: using guessed type _DWORD dword_76C688[16];
+// 76C688: using guessed type _DWORD report_entry_registry[16];
 
 //----- (0052FD9E) --------------------------------------------------------
 char __thiscall sub_52FD9E(_BYTE *this, unsigned int a2, char *a3)
@@ -345599,7 +345416,7 @@ char __thiscall sub_5302AB(int this, _BYTE *a2, int a3)
   sub_438948(a2, "mLastCursorUpdate", (int *)(this + 100));
   sub_5641B0(a2, (int)"mLastBoundaryBox", (int *)(this + 108));
   sub_41F830(a2, "mBoundaryBoxInvalid", (char *)(this + 132));
-  sub_4053DF(a2, "mSelectNoun", (int *)(this + 136), &dword_6A6460);
+  serialize_noun_field(a2, "mSelectNoun", (int *)(this + 136), &default_noun_id);
   sub_41F830(a2, "mFirstSelectCursor", (char *)(this + 140));
   sub_438963(a2, "mLeftBorder", (int *)(this + 144), (int *)dword_76D50C);
   sub_438963(a2, "mTopBorder", (int *)(this + 160), (int *)dword_76D50C);
@@ -345618,7 +345435,7 @@ char __thiscall sub_5302AB(int this, _BYTE *a2, int a3)
   return serialize_boolean_field(a2, "mIsDragMode", (char *)(this + 332), &byte_6A6454);
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 762E38: using guessed type _DWORD dword_762E38[15];
 // 764A90: using guessed type int dword_764A90[15];
 // 764AD0: using guessed type int dword_764AD0[15];
@@ -346018,7 +345835,7 @@ int __thiscall sub_530AFA(int this)
 {
   char v3; // [esp+Bh] [ebp-Dh]
 
-  sub_40ECE2((_DWORD *)this);
+  construct_camera_angle_base((_DWORD *)this);
   find_or_create_registry_entry(dword_76C018, dword_76C014 + this + 21);
   *(_BYTE *)(this + 40) = v3;
   std::string::_Tidy(0);
@@ -346126,7 +345943,7 @@ char __thiscall sub_530CA6(_DWORD *this, char *a2, unsigned __int8 a3)
 
   v23 = 0;
   v21 = this;
-  sub_402BAA(v16, a2, &v22);
+  assign_std_string_storage_from_c_string(v16, a2, &v22);
   v4 = this[21];
   v24 = 0;
   v5 = (_DWORD *)*sub_531CDD((_DWORD *)(v4 + 332), &v20, (int)v16);
@@ -346915,7 +346732,7 @@ char __userpurge sub_531870@<al>(int a1@<ecx>, double a2@<st0>, _DWORD *a3, char
         v36[0] = v37[0];
         v36[1] = v37[1];
         v36[2] = v37[2];
-        v18 = sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v36) != 0;
+        v18 = is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v36) != 0;
       }
       v21 = *(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40);
       if ( *(_BYTE *)(v21 + 533) || v41 || !v18 )
@@ -351327,7 +351144,7 @@ char __thiscall sub_535874(_DWORD *this, _BYTE *a2, char a3)
     }
     sub_402F45(v9);
   }
-  sub_41838F(this, a2);
+  append_vector_element(this, a2);
   return v12;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
@@ -351544,10 +351361,10 @@ char __thiscall sub_535BB8(_BYTE *this, int i, _DWORD *a3, int j)
       v40 = 0;
     v9 = *sub_535FF1((_DWORD **)v5, &a3);
     v10 = v5[1];
-    sub_40442F(v36, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v36, (_BYTE *)&a3 + 3);
     v38 = 0;
     LOBYTE(v41) = 2;
-    sub_40442F(v37, (_BYTE *)&j + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&j + 3);
     LOBYTE(v41) = 3;
     for ( i = v9; i != v10; ++v38 )
     {
@@ -351754,9 +351571,9 @@ char __thiscall sub_536083(_BYTE *this, const char *a2, _DWORD *a3, int i)
       v39 = 0;
     v8 = *sub_534B47((_DWORD **)v5, &a3);
     v9 = v5[1];
-    sub_40442F(v35, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v35, (_BYTE *)&a3 + 3);
     a2 = 0;
-    sub_40442F(v36, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v36, (_BYTE *)&a3 + 3);
     LOBYTE(v40) = 3;
     for ( i = v8; i != v9; ++a2 )
     {
@@ -353597,7 +353414,7 @@ _DWORD *__cdecl sub_537AA1(
   v11 = a8;
   while ( a4 != v11 )
   {
-    sub_41838F(v10, a4);
+    append_vector_element(v10, a4);
     sub_402F45(&a2);
   }
   result = a1;
@@ -355687,7 +355504,7 @@ int __thiscall sub_539A01(int this, int *a2, int *a3)
     sub_438202(v23, *v24, &mini_console_coordinate_default_a, 0, 1, 0x7FFFFFFF);
   }
   (*(void (__thiscall **)(int, int))(*(_DWORD *)*v21 + 176))(*v21, 1);
-  sub_5067E5((_BYTE *)this, *v21, 1);
+  insert_control_into_control_container((_BYTE *)this, *v21, 1);
   return this;
 }
 // 6D79FC: using guessed type int (__stdcall *off_6D79FC)(char);
@@ -356542,7 +356359,7 @@ char __thiscall sub_53AA54(_DWORD *this, _BYTE *a2, int a3)
       v7 = strlen("_Background$");
       if ( sub_46C618(v13, "_Background$", 0xFFFFFFFF, v7) != -1 )
       {
-        sub_40442F(v10, &v22);
+        initialize_std_string_storage(v10, &v22);
         LOBYTE(v23) = 2;
         sub_425338(v11);
         LOBYTE(v23) = 3;
@@ -358493,14 +358310,14 @@ int __cdecl sub_53C9BA(char *a1, char *a2)
 //----- (0053C9D6) --------------------------------------------------------
 int sub_53C9D6()
 {
-  return sub_4CA356(0);
+  return take_screenshot(0);
 }
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (0053C9EC) --------------------------------------------------------
 int sub_53C9EC()
 {
-  return sub_4CA356((void *)1);
+  return take_screenshot((void *)1);
 }
 // 765A2C: using guessed type int game_engine_instance_address;
 
@@ -359165,7 +358982,7 @@ BOOL __usercall sub_53D2F6@<eax>(double a1@<st0>, char *a2, char *a3)
 //----- (0053D312) --------------------------------------------------------
 int sub_53D312()
 {
-  return sub_4CCA17(*(void **)(*(_DWORD *)(game_engine_instance_address + 1092) + 64));
+  return write_qa_report(*(void **)(*(_DWORD *)(game_engine_instance_address + 1092) + 64));
 }
 // 765A2C: using guessed type int game_engine_instance_address;
 
@@ -360187,7 +360004,7 @@ int sub_53E10D()
   char *v1; // eax
 
   v0 = get_selected_inventory_item_for_active_ego(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 56));
-  v1 = sub_4AD1DA(v0);
+  v1 = get_inventory_item_name(v0);
   log_source_message((int)"Z:\\Proj\\GK3\\gk3app\\Source\\Generics.cpp", 5934, 7, 0, "Ego active inventory item is '%s'\n", v1);
   return 0;
 }
@@ -361006,7 +360823,7 @@ int __cdecl sub_53EC34(CHAR *a1)
   {
     v1 = 0;
   }
-  sub_4A437B(v1, a1, 0xC0000000, 0, 3u, 0x80u);
+  open_tracked_file(v1, a1, 0xC0000000, 0, 3u, 0x80u);
   return 0;
 }
 // 6AB500: using guessed type _UNKNOWN *off_6AB500;
@@ -362766,7 +362583,7 @@ bool __thiscall sub_53FF82(int this, _BYTE *a2, int a3)
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
   v4 = serialize_dialogue_string_field((int)a2, (int)"model", (void *)this) != 0;
-  if ( !sub_4053DF(a2, "noun", (int *)(this + 16), &dword_6A6460) )
+  if ( !serialize_noun_field(a2, "noun", (int *)(this + 16), &default_noun_id) )
     v4 = 0;
   if ( !serialize_dialogue_string_field((int)a2, (int)"posLabel", (void *)(this + 20)) )
     v4 = 0;
@@ -362798,7 +362615,7 @@ bool __thiscall sub_53FF82(int this, _BYTE *a2, int a3)
   return v4;
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A6E7C: using guessed type int dword_6A6E7C;
 // 76D504: using guessed type int dword_76D504;
 
@@ -363021,11 +362838,11 @@ bool __thiscall sub_54051C(int this, _BYTE *a2, int a3)
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
   v4 = serialize_dialogue_string_field((int)a2, (int)"model", (void *)this) != 0;
-  if ( !sub_4053DF(a2, "noun", (int *)(this + 16), &dword_6A6460) )
+  if ( !serialize_noun_field(a2, "noun", (int *)(this + 16), &default_noun_id) )
     v4 = 0;
   if ( !sub_501041(a2, "type", (int *)(this + 20), &dword_6CB0A8) )
     v4 = 0;
-  if ( !sub_4054E4(a2, "verb", (int *)(this + 24), &dword_6A64B0) )
+  if ( !serialize_verb_field(a2, "verb", (int *)(this + 24), &default_verb_id) )
     v4 = 0;
   if ( !sub_41F830(a2, "hidden", (char *)(this + 28)) )
     v4 = 0;
@@ -363049,8 +362866,8 @@ bool __thiscall sub_54051C(int this, _BYTE *a2, int a3)
   return v4;
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 6A6E7C: using guessed type int dword_6A6E7C;
 // 6CB0A8: using guessed type int dword_6CB0A8;
 // 76D504: using guessed type int dword_76D504;
@@ -363245,13 +363062,13 @@ bool __thiscall sub_540A48(int *this, _BYTE *a2, int a3)
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
   sub_5408E0((int)this, a2);
-  v4 = sub_4053DF(a2, "noun", this + 10, &dword_6A6460) != 0;
+  v4 = serialize_noun_field(a2, "noun", this + 10, &default_noun_id) != 0;
   if ( !serialize_dialogue_string_field((int)a2, (int)"model", this + 11) )
     v4 = 0;
   (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)a2 + 52))(a2);
   return v4;
 }
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 
 //----- (00540AA8) --------------------------------------------------------
 bool __thiscall sub_540AA8(_DWORD *this, int a2)
@@ -363339,7 +363156,7 @@ _BYTE *__thiscall sub_540C3F(_BYTE *this, _BYTE *a2)
   int v6; // [esp+28h] [ebp-4h]
 
   v5 = 0;
-  v2 = sub_407455(v4, "PositionSpec ", this);
+  v2 = combine_text_prefix_and_string_storage(v4, "PositionSpec ", this);
   *a2 = *v2;
   v6 = 1;
   std::string::_Tidy(0);
@@ -363424,13 +363241,13 @@ bool __thiscall sub_540DC7(int *this, _BYTE *a2, int a3)
   bool v4; // bl
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
-  v4 = sub_4053DF(a2, "noun", this, &dword_6A6460) != 0;
+  v4 = serialize_noun_field(a2, "noun", this, &default_noun_id) != 0;
   if ( !sub_41F8AB(a2, "rect", (int)(this + 1), (_DWORD *)dword_76D500) )
     v4 = 0;
   (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)a2 + 52))(a2);
   return v4;
 }
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 76D500: using guessed type int dword_76D500;
 
 //----- (00540E22) --------------------------------------------------------
@@ -363494,7 +363311,7 @@ bool __thiscall sub_540F27(int *this, _BYTE *a2, int a3)
 
   (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)a2 + 48))(a2, a3);
   v4 = serialize_dialogue_string_field((int)a2, (int)"dialogue", this) != 0;
-  if ( !sub_4053DF(a2, "actor", this + 4, &dword_6A6460) )
+  if ( !serialize_noun_field(a2, "actor", this + 4, &default_noun_id) )
     v4 = 0;
   if ( !serialize_dialogue_string_field((int)a2, (int)"talk", this + 5) )
     v4 = 0;
@@ -363507,7 +363324,7 @@ bool __thiscall sub_540F27(int *this, _BYTE *a2, int a3)
   (*(void (__thiscall **)(_BYTE *))(*(_DWORD *)a2 + 52))(a2);
   return v4;
 }
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 
 //----- (00540FDC) --------------------------------------------------------
 BOOL __thiscall sub_540FDC(_DWORD *this, int a2)
@@ -363776,7 +363593,7 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
   LOBYTE(v76) = 11;
   sub_54697D((_DWORD *)(this + 600), &v75);
   LOBYTE(v76) = 12;
-  sub_40442F((_BYTE *)(this + 648), &v74);
+  initialize_std_string_storage((_BYTE *)(this + 648), &v74);
   LOBYTE(v76) = 13;
   sub_54697D((_DWORD *)(this + 664), &v75);
   LOBYTE(v76) = 14;
@@ -363813,7 +363630,7 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
   *(_DWORD *)(this + 308) = 0;
   *(float *)(this + 304) = 60.0 * 0.017453292;
   v8 = (char *)sub_557B2B(v24);
-  sub_402BAA(v52, v8, (_BYTE *)&a4 + 3);
+  assign_std_string_storage_from_c_string(v52, v8, (_BYTE *)&a4 + 3);
   LOBYTE(v76) = 26;
   append_string_suffix(v54, v52, ".sif");
   LOBYTE(v76) = 28;
@@ -363823,7 +363640,7 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
     v9 = (char *)Key;
   sub_541FC6((void *)this, v9, 1);
   v10 = (char *)sub_557B2B((int)a2);
-  sub_402BAA(v58, v10, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v58, v10, (_BYTE *)&a2 + 3);
   LOBYTE(v76) = 29;
   v11 = sub_557A8D(a3);
   v12 = append_string_suffix(v33, v58, v11);
@@ -363837,15 +363654,15 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
   if ( !v57 )
     v13 = (char *)Key;
   sub_541FC6((void *)this, v13, 0);
-  sub_402BAA(&v69, "glb_all.nvc", (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(&v69, "glb_all.nvc", (_BYTE *)&a2 + 3);
   LOBYTE(v76) = 34;
   sub_535874((_DWORD *)(this + 952), &v69, 0);
   LOBYTE(v76) = 32;
   std::string::_Tidy(1);
   v14 = sub_557A8D(a3);
-  sub_402BAA(v51, v14, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v51, v14, (_BYTE *)&a2 + 3);
   LOBYTE(v76) = 35;
-  sub_402BAA(v53, "glb", (_BYTE *)&a4 + 3);
+  assign_std_string_storage_from_c_string(v53, "glb", (_BYTE *)&a4 + 3);
   LOBYTE(v76) = 36;
   v15 = append_string_storage(v38, v53, v51);
   LOBYTE(v76) = 37;
@@ -363869,7 +363686,7 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
   }
   if ( sub_557AF3(a3) || sub_557B08(a3) )
   {
-    sub_402BAA(&v69, "glb_23all.nvc", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(&v69, "glb_23all.nvc", (_BYTE *)&a2 + 3);
     LOBYTE(v76) = 42;
     sub_535874((_DWORD *)(this + 952), &v69, 1);
     LOBYTE(v76) = 39;
@@ -363877,7 +363694,7 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
   }
   if ( sub_557B08(a3) )
   {
-    sub_402BAA(&v69, "glb_3all.nvc", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(&v69, "glb_3all.nvc", (_BYTE *)&a3 + 3);
     LOBYTE(v76) = 43;
     sub_535874((_DWORD *)(this + 952), &v69, 1);
     LOBYTE(v76) = 39;
@@ -363922,13 +363739,13 @@ int __thiscall sub_54126E(int this, const char *a2, int a3, int a4, int a5)
     sub_4011B0(v39);
     LOBYTE(v76) = 46;
     v40[20] = 1;
-    sub_402BAA(&v69, "InspectObject()", (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(&v69, "InspectObject()", (_BYTE *)&a2 + 3);
     LOBYTE(v76) = 47;
     assign_std_string_storage(v40, &v69);
     LOBYTE(v76) = 46;
     std::string::_Tidy(1);
     sub_402825(*(_DWORD **)(this + 4), v73, 108, 83, (int)v39, 0);
-    sub_402BAA(v67, "UnInspect()", (_BYTE *)&a4 + 3);
+    assign_std_string_storage_from_c_string(v67, "UnInspect()", (_BYTE *)&a4 + 3);
     LOBYTE(v76) = 48;
     assign_std_string_storage(v40, v67);
     LOBYTE(v76) = 46;
@@ -364234,7 +364051,7 @@ bool __thiscall sub_541FC6(void *this, char *Source, int a3)
     {
       if ( !sub_507C4B(v23) && !sub_507C6F(v23) )
       {
-        sub_402BAA(v47, v23, (_BYTE *)&a3 + 3);
+        assign_std_string_storage_from_c_string(v47, v23, (_BYTE *)&a3 + 3);
         LOBYTE(v49) = 1;
         v5 = sub_4E29A4(&v29, &v43);
         assign_std_string_storage(v5, v47);
@@ -364246,82 +364063,82 @@ bool __thiscall sub_541FC6(void *this, char *Source, int a3)
     v48 = 0;
     sub_546AB9((int)v44, &v38, 0, &v36);
     LOBYTE(v49) = 2;
-    sub_402BAA(v47, "GENERAL", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "GENERAL", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 3;
     *(_DWORD *)sub_546819(v44, v47) = sub_54283B;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "ACTORS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "ACTORS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 4;
     *(_DWORD *)sub_546819(v44, v47) = sub_543169;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "MODELS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "MODELS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 5;
     *(_DWORD *)sub_546819(v44, v47) = sub_543A2B;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "INSPECT_CAMERAS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "INSPECT_CAMERAS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 6;
     *(_DWORD *)sub_546819(v44, v47) = sub_544449;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "ROOM_CAMERAS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "ROOM_CAMERAS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 7;
     *(_DWORD *)sub_546819(v44, v47) = sub_5448F6;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "CINEMATIC_CAMERAS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "CINEMATIC_CAMERAS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 8;
     *(_DWORD *)sub_546819(v44, v47) = sub_544CA8;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "DIALOGUE_CAMERAS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "DIALOGUE_CAMERAS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 9;
     *(_DWORD *)sub_546819(v44, v47) = sub_544FCE;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "POSITIONS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "POSITIONS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 10;
     *(_DWORD *)sub_546819(v44, v47) = sub_54542A;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "REGIONS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "REGIONS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 11;
     *(_DWORD *)sub_546819(v44, v47) = sub_5457D7;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "TRIGGERS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "TRIGGERS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 12;
     *(_DWORD *)sub_546819(v44, v47) = sub_545A14;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "LISTENERS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "LISTENERS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 13;
     *(_DWORD *)sub_546819(v44, v47) = sub_545C63;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "AMBIENT", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "AMBIENT", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 14;
     *(_DWORD *)sub_546819(v44, v47) = sub_546018;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "ACTIONS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "ACTIONS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 15;
     *(_DWORD *)sub_546819(v44, v47) = sub_5460AD;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "INSETS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "INSETS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 16;
     *(_DWORD *)sub_546819(v44, v47) = sub_546140;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "CAMERA_TRANSITIONS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "CAMERA_TRANSITIONS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 17;
     *(_DWORD *)sub_546819(v44, v47) = sub_5461D3;
     LOBYTE(v49) = 2;
     std::string::_Tidy(1);
-    sub_402BAA(v47, "GROUPS", (_BYTE *)&a3 + 3);
+    assign_std_string_storage_from_c_string(v47, "GROUPS", (_BYTE *)&a3 + 3);
     LOBYTE(v49) = 18;
     *(_DWORD *)sub_546819(v44, v47) = sub_5441C7;
     LOBYTE(v49) = 2;
@@ -364339,7 +364156,7 @@ bool __thiscall sub_541FC6(void *this, char *Source, int a3)
       sub_50822E(Source, v7, &v24, v8, 600, 0xFFFFFFFF);
       if ( v24 == 91 )
       {
-        sub_40442F(v47, &v40);
+        initialize_std_string_storage(v47, &v40);
         LOBYTE(v49) = 19;
         v46 = 0;
         if ( strchr(Str, 59) )
@@ -364348,7 +364165,7 @@ bool __thiscall sub_541FC6(void *this, char *Source, int a3)
           v10 = strlen(v9);
           std::string::assign(v9, v10);
           v11 = strtok(0, "]");
-          sub_402BAA(v26, v11, &v35);
+          assign_std_string_storage_from_c_string(v26, v11, &v35);
           v12 = v27;
           LOBYTE(v49) = 20;
           if ( !v27 )
@@ -364363,7 +364180,7 @@ bool __thiscall sub_541FC6(void *this, char *Source, int a3)
           v14 = strlen(v13);
           std::string::assign(v13, v14);
           v15 = strtok(0, "]");
-          sub_402BAA(&v31, v15, &v41);
+          assign_std_string_storage_from_c_string(&v31, v15, &v41);
           LOBYTE(v49) = 21;
           if ( *sub_460776(&v31, 0) == 123 && *(_BYTE *)(*sub_4D1952(&v31, &v34) - 1) == 125 )
           {
@@ -364613,7 +364430,7 @@ LABEL_5:
       if ( *(_DWORD *)(this + 16) )
       {
         v6 = (char *)strlen(";");
-        sub_402BD8((_DWORD *)(this + 8), ";", v6);
+        append_std_string_storage_bytes((_DWORD *)(this + 8), ";", v6);
       }
       v22[0] = HIBYTE(a2);
       std::string::_Tidy(0);
@@ -364784,7 +364601,7 @@ LABEL_55:
       v14 = strlen(Str);
       std::string::assign(Str, v14);
       v25 = 4;
-      sub_41838F((_DWORD *)(this + 96), v22);
+      append_vector_element((_DWORD *)(this + 96), v22);
       v25 = -1;
       std::string::_Tidy(1);
       HIBYTE(a2) = 0;
@@ -366055,7 +365872,7 @@ LABEL_33:
       dword_755CD4,
       byte_76BE94);
   }
-  if ( sub_40EE23(v20, (float *)&dword_7647B0) )
+  if ( vectors_are_approximately_equal(v20, (float *)&unset_camera_position_x) )
   {
     v31 = 1;
     log_source_message(
@@ -366114,7 +365931,7 @@ LABEL_33:
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 755CD4: using guessed type int dword_755CD4;
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 7647D0: using guessed type int dword_7647D0;
 
 //----- (005448F6) --------------------------------------------------------
@@ -366258,7 +366075,7 @@ LABEL_25:
       dword_755CD4,
       byte_76BE94);
   }
-  if ( sub_40EE23(v17, (float *)&dword_7647B0) )
+  if ( vectors_are_approximately_equal(v17, (float *)&unset_camera_position_x) )
   {
     v22 = 1;
     log_source_message(
@@ -366336,7 +366153,7 @@ LABEL_25:
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 755CD4: using guessed type int dword_755CD4;
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 7647D0: using guessed type int dword_7647D0;
 
 //----- (00544CA8) --------------------------------------------------------
@@ -366469,7 +366286,7 @@ LABEL_20:
       dword_755CD4,
       byte_76BE94);
   }
-  if ( sub_40EE23(v16, (float *)&dword_7647B0) )
+  if ( vectors_are_approximately_equal(v16, (float *)&unset_camera_position_x) )
   {
     v22 = 1;
     log_source_message(
@@ -366524,7 +366341,7 @@ LABEL_20:
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 755CD4: using guessed type int dword_755CD4;
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 7647D0: using guessed type int dword_7647D0;
 
 //----- (00544FCE) --------------------------------------------------------
@@ -366708,7 +366525,7 @@ LABEL_32:
       dword_755CD4,
       byte_76BE94);
   }
-  if ( sub_40EE23(v16, (float *)&dword_7647B0) )
+  if ( vectors_are_approximately_equal(v16, (float *)&unset_camera_position_x) )
   {
     v26 = 1;
     log_source_message(
@@ -366775,7 +366592,7 @@ LABEL_32:
 // 402CFD: using guessed type _DWORD __stdcall std::string::assign(void *Src, size_t Size);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 755CD4: using guessed type int dword_755CD4;
-// 7647B0: using guessed type int dword_7647B0;
+// 7647B0: using guessed type int unset_camera_position_x;
 // 7647D0: using guessed type int dword_7647D0;
 
 //----- (0054542A) --------------------------------------------------------
@@ -369459,7 +369276,7 @@ char __thiscall sub_547AD3(_DWORD *this, _BYTE *a2)
       return 0;
     sub_402F45(v5);
   }
-  sub_41838F(this, a2);
+  append_vector_element(this, a2);
   return v8;
 }
 
@@ -380638,7 +380455,7 @@ int __thiscall sub_551FEE(int this, const char *a2, int a3)
   v15 = (int **)(this + 4);
   v37 = *(_DWORD **)(this + 4);
   v36 = *(char **)this;
-  v16 = (void *)sub_463CF3();
+  v16 = (void *)get_inventory_layer_instance();
   sub_4EA73C(v16, a3, v36, v37);
   sub_40181B(*(_DWORD **)(this + 4), (_DWORD *)(*(_DWORD *)(this + 12) + 952));
   v17 = (int **)sub_50455F(4);
@@ -382671,7 +382488,7 @@ _DWORD *sub_553F30()
 
   sub_486166(v5, 0);
   v9 = 0;
-  sub_4BA1D4(game_engine_instance_address, 0, 0, 0);
+  process_game_engine_frame(game_engine_instance_address, 0, 0, 0);
   v4 = *(_DWORD *)caption_manager_saved_state_pointer;
   v3 = *(_DWORD *)screen_width_address;
   v8 = 0;
@@ -382870,11 +382687,11 @@ char __cdecl sub_554248(_BYTE *a1)
 char __thiscall sub_554295(int this, _BYTE *a2, int a3)
 {
   sub_46A769(a2, "mSerial", (unsigned __int16 *)(this + 52), (unsigned __int16 *)&word_6B9DC8);
-  sub_4053DF(a2, "mNoun", (int *)(this + 56), &dword_6A6460);
-  return sub_4054E4(a2, "mVerb", (int *)(this + 60), &dword_6A64B0);
+  serialize_noun_field(a2, "mNoun", (int *)(this + 56), &default_noun_id);
+  return serialize_verb_field(a2, "mVerb", (int *)(this + 60), &default_verb_id);
 }
-// 6A6460: using guessed type int dword_6A6460;
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A6460: using guessed type int default_noun_id;
+// 6A64B0: using guessed type int default_verb_id;
 // 6B9DC8: using guessed type __int16 word_6B9DC8;
 
 //----- (005542E3) --------------------------------------------------------
@@ -383029,7 +382846,7 @@ void sub_554716()
 //----- (00554721) --------------------------------------------------------
 /* Extracted to gk3/stage_manager.c as serialize_stage_manager. */
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 // 6A6E88: using guessed type int serialized_value_default;
 // 6A9EA4: using guessed type int dword_6A9EA4;
 // 6C1358: using guessed type int dword_6C1358;
@@ -385394,7 +385211,7 @@ void __cdecl sub_557366(int a1, int a2, int a3, size_t a4, char *Format, va_list
   else
   {
     _vsnprintf(Buffer, 0x1770u, Format, ArgList);
-    sub_570B20(game_engine_address, Buffer);
+    report_engine_error(game_engine_address, Buffer);
   }
 }
 // 765A2C: using guessed type int game_engine_instance_address;
@@ -385420,7 +385237,7 @@ void __cdecl write_source_message(const char *a1, int a2, int a3, int a4, char *
   {
     memcpy(v6, Src, Size);
     v6[5999] = 0;
-    sub_570B20(game_engine_address, v6);
+    report_engine_error(game_engine_address, v6);
   }
 }
 // 765A2C: using guessed type int game_engine_instance_address;
@@ -385611,7 +385428,7 @@ int __thiscall sub_5576D6(void *this)
       if ( v8 != 1 )
       {
 LABEL_7:
-        if ( !sub_40EE23((float *)this + 8, (float *)&dword_764790) )
+        if ( !vectors_are_approximately_equal((float *)this + 8, (float *)&dword_764790) )
         {
           v25 = *((float *)this + 8);
           v26 = *((float *)this + 9);
@@ -385623,7 +385440,7 @@ LABEL_7:
             LODWORD(v20[9]) = dword_764790;
             LODWORD(v20[10]) = dword_764794;
             LODWORD(v20[11]) = dword_764798;
-            sub_578B90(v20, &v25, &v25, 1, 12);
+            transform_vector_array(v20, &v25, &v25, 1, 12);
           }
           v28 = v28 + v25;
           v29 = v26 + v29;
@@ -385674,7 +385491,7 @@ LABEL_7:
     v18 = (float *)sub_57A2C0(v32, -1);
     sub_576140(v20, v18);
   }
-  sub_578B90(v20, &v28, &v28, 1, 12);
+  transform_vector_array(v20, &v28, &v28, 1, 12);
   return (*(int (__thiscall **)(void *, float *))(*(_DWORD *)this + 12))(this, &v28);
 }
 // 764790: using guessed type int dword_764790;
@@ -386280,7 +386097,7 @@ _WORD *sub_5580EB()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE6C0(388);
+  v0 = allocate_registered_title_layer(388);
   result = 0;
   if ( v0 )
     return sub_5583D4(v0, 0);
@@ -386349,7 +386166,7 @@ void sub_5581B2()
 // 76D244: using guessed type int dword_76D244;
 
 //----- (005581BD) --------------------------------------------------------
-int __thiscall sub_5581BD(int this)
+int __thiscall construct_title_layer(int this)
 {
   size_t v2; // eax
   int v3; // edi
@@ -386395,7 +386212,7 @@ int __thiscall sub_5581BD(int this)
     LOBYTE(v16) = 4;
     sub_51F510((_DWORD *)(this + 340), &v14);
     sub_44F8C2(v14, (int)v13, this != 0 ? this + 320 : 0);
-    sub_5067E5((_BYTE *)this, (int)v14, 1);
+    insert_control_into_control_container((_BYTE *)this, (int)v14, 1);
     v13 += 44;
     --v3;
   }
@@ -386592,7 +386409,7 @@ void __userpurge sub_558632(int a1@<ecx>, double a2@<st0>, int a3)
     switch ( a3 )
     {
       case 1:
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         set_active_cd_volume((_DWORD *)game_engine_instance_address, 1, 0);
         v10 = 0;
         initialize_event_reference(&v10);
@@ -386706,7 +386523,7 @@ void __userpurge sub_558794(int *a1@<ecx>, double a2@<st0>, int a3, int a4)
       if ( a1[83] == 1 )
       {
         (*(void (__thiscall **)(int *))(*a1 + 152))(a1);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         set_active_cd_volume((_DWORD *)game_engine_instance_address, 1, 0);
         v16[1] = 5;
         v16[0] = *(a1 != 0 ? a1 + 82 : (int *)8);
@@ -387351,7 +387168,7 @@ LABEL_5:
     LOBYTE(v38) = 3;
     if ( !v8 )
       v8 = (char *)Key;
-    sub_46B4E2(v24, v8, v37);
+    construct_registered_config_file(v24, v8, v37);
     LOBYTE(v38) = 5;
     std::string::_Tidy(1);
     if ( sub_46B663(v24, 1) )
@@ -388109,12 +387926,12 @@ void sub_55A25D()
 //----- (0055A268) --------------------------------------------------------
 char __thiscall sub_55A268(int this, _BYTE *a2, int a3)
 {
-  sub_4053DF(a2, "mNoun", (int *)(this + 12), &dword_6A6460);
+  serialize_noun_field(a2, "mNoun", (int *)(this + 12), &default_noun_id);
   sub_564390(a2, "mRects", this + 16);
   return serialize_boolean_field(a2, "mEnable", (char *)(this + 32), &byte_6A6454);
 }
 // 6A6454: using guessed type char byte_6A6454;
-// 6A6460: using guessed type int dword_6A6460;
+// 6A6460: using guessed type int default_noun_id;
 
 //----- (0055A2B0) --------------------------------------------------------
 char __thiscall sub_55A2B0(int this, float *a2)
@@ -390853,7 +390670,7 @@ int __thiscall sub_55CC8B(int this, int a2, int a3)
   v11 = strlen(Str);
   std::string::assign(Str, v11);
   v28 = 1;
-  sub_407455(v19, "v_", v21);
+  combine_text_prefix_and_string_storage(v19, "v_", v21);
   LOBYTE(v28) = 3;
   std::string::_Tidy(1);
   v12 = v20;
@@ -390874,7 +390691,7 @@ int __thiscall sub_55CC8B(int this, int a2, int a3)
   v17 = v27;
   *(_DWORD *)(this + 248) += v15;
   append_dynamic_array_element((_DWORD *)(this + 272), (int)v17);
-  sub_5067E5((_BYTE *)this, (int)v17, 1);
+  insert_control_into_control_container((_BYTE *)this, (int)v17, 1);
   if ( !v17[24] )
     (*(void (__thiscall **)(_BYTE *, int))(*(_DWORD *)v17 + 176))(v17, 1);
   if ( (_BYTE)a3 )
@@ -390989,7 +390806,7 @@ int __thiscall sub_55CEDA(int this)
     v34 = v30[0];
     v35 = v30[1];
     v36 = v30[2];
-    if ( !sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v34) )
+    if ( !is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), &v34) )
       v37 = 0;
   }
   while ( sub_504300(*(_DWORD ***)(this + 224), &v28) )
@@ -391334,7 +391151,7 @@ LABEL_12:
               v11[0] = v12[0];
               v11[1] = v12[1];
               v11[2] = v12[2];
-              if ( sub_454F29(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v11) )
+              if ( is_camera_position_within_bounds(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 40), v11) )
                 sub_44FA83((_DWORD *)this[66], 1);
               v14 = -1;
               return sub_40EAEB(v9);
@@ -392259,7 +392076,7 @@ char __thiscall sub_55E26B(_BYTE *this, const char *a2, _DWORD *a3, int i)
     v9 = *sub_55E621((_DWORD **)v5, &a3);
     v10 = v5[1];
     a2 = 0;
-    sub_40442F(v37, (_BYTE *)&a3 + 3);
+    initialize_std_string_storage(v37, (_BYTE *)&a3 + 3);
     LOBYTE(v40) = 2;
     for ( i = v9; i != v10; ++a2 )
     {
@@ -392276,7 +392093,7 @@ char __thiscall sub_55E26B(_BYTE *this, const char *a2, _DWORD *a3, int i)
       LOBYTE(v40) = 5;
       if ( !v13 )
         v13 = Key;
-      v14 = sub_4054E4(v38, v13, &v35, &dword_6A64B0) == 0;
+      v14 = serialize_verb_field(v38, v13, &v35, &default_verb_id) == 0;
       LOBYTE(v40) = 2;
       std::string::_Tidy(1);
       if ( v14 )
@@ -392329,7 +392146,7 @@ char __thiscall sub_55E26B(_BYTE *this, const char *a2, _DWORD *a3, int i)
         LOBYTE(v40) = 12;
         if ( !v23 )
           v23 = Key;
-        v24 = sub_4054E4(v38, v23, (int *)&a2, &dword_6A64B0) == 0;
+        v24 = serialize_verb_field(v38, v23, (int *)&a2, &default_verb_id) == 0;
         LOBYTE(v40) = 9;
         std::string::_Tidy(1);
         if ( v24 )
@@ -392358,7 +392175,7 @@ char __thiscall sub_55E26B(_BYTE *this, const char *a2, _DWORD *a3, int i)
   return v39;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
-// 6A64B0: using guessed type int dword_6A64B0;
+// 6A64B0: using guessed type int default_verb_id;
 // 6A6524: using guessed type int dword_6A6524;
 
 //----- (0055E621) --------------------------------------------------------
@@ -392728,7 +392545,7 @@ int *__thiscall sub_55EB2E(int *this, int *a2, _DWORD *a3)
     }
     while ( v8 );
   }
-  sub_476C91(this, a3);
+  update_control_bounds(this, a3);
   set_control_active(this, 1);
   return this;
 }
@@ -393282,7 +393099,7 @@ char __thiscall sub_55F9F0(int this, _BYTE *a2, int a3)
   (*(void (**)(_BYTE *, const char *, ...))(*(_DWORD *)a2 + 56))(
     a2,
     "member: type=%s, owner type=%s",
-    dword_7640F8[0],
+    camera_angle_type_registry[0],
     dword_76D478[0]);
   sub_568730((int *)(this + 120), a2, "mViewport");
   result = sub_568730((int *)(this + 124), a2, "mBackingStore");
@@ -393291,7 +393108,7 @@ char __thiscall sub_55F9F0(int this, _BYTE *a2, int a3)
   return result;
 }
 // 6A6E80: using guessed type int dword_6A6E80;
-// 7640F8: using guessed type int dword_7640F8[15];
+// 7640F8: using guessed type int camera_angle_type_registry[15];
 // 76D478: using guessed type int dword_76D478[15];
 // 76D514: using guessed type int mini_console_integer_default;
 
@@ -398340,7 +398157,7 @@ char __cdecl sub_564D10(_BYTE *a1, int a2, char **a3)
       v25 = v9[3];
     }
   }
-  sub_402BAA(v18, (char *)Str1, (_BYTE *)&a2 + 3);
+  assign_std_string_storage_from_c_string(v18, (char *)Str1, (_BYTE *)&a2 + 3);
   LOBYTE(v27) = 1;
   v28 = sub_5644C0((int)a1, (int)"movieName", &v19, v18);
   LOBYTE(v27) = 0;
@@ -400808,7 +400625,7 @@ LABEL_17:
       }
     }
   }
-  result = sub_570B20(game_engine_address, "Error reading %s, line %d", v3, v19);
+  result = report_engine_error(game_engine_address, "Error reading %s, line %d", v3, v19);
   v20 = -1;
   if ( v4 )
     return (*(int (__thiscall **)(int, int))(*(_DWORD *)file_manager_address + 12))(file_manager_address, v4);
@@ -401534,7 +401351,7 @@ int __cdecl sub_569D90(CHAR *lpText)
   if ( !game_engine_address )
     return MessageBoxA(0, lpText, "Unhandled exception", 0);
   dword_77367C = 1;
-  return sub_570B20(game_engine_address, lpText);
+  return report_engine_error(game_engine_address, lpText);
 }
 // 7715D4: using guessed type int game_engine_address;
 // 77367C: using guessed type int dword_77367C;
@@ -405083,7 +404900,7 @@ _BYTE *__cdecl sub_56EDD0(_BYTE *a1, int a2)
     }
     v3 = (_BYTE *)format_integer_string((int)v11, *(_DWORD *)(a2 + 160));
     LOBYTE(v21) = 1;
-    v4 = sub_407455(v14, "/", v3);
+    v4 = combine_text_prefix_and_string_storage(v14, "/", v3);
     LOBYTE(v21) = 2;
     sub_402B80(v13, v4);
     LOBYTE(v21) = 3;
@@ -405169,7 +404986,7 @@ _BYTE *__cdecl sub_56EF70(_BYTE *a1, int a2)
     }
     v3 = (_BYTE *)format_integer_string((int)v11, *(_DWORD *)(a2 + 80));
     LOBYTE(v21) = 1;
-    v4 = sub_407455(v14, "/", v3);
+    v4 = combine_text_prefix_and_string_storage(v14, "/", v3);
     LOBYTE(v21) = 2;
     sub_402B80(v13, v4);
     LOBYTE(v21) = 3;
@@ -405640,7 +405457,7 @@ char __thiscall sub_570030(int this, _BYTE *a2, int a3)
   v3 = a2;
   if ( a2[5] && a2[4] )
   {
-    sub_402BAA(v17, off_75E274[0], (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v17, off_75E274[0], (_BYTE *)&a2 + 3);
     v5 = *(_DWORD *)v3;
     v19 = 0;
     (*(void (__thiscall **)(_BYTE *, const char *, _BYTE *, _DWORD))(v5 + 4))(v3, "GEngine Version", v17, 0);
@@ -405823,11 +405640,11 @@ int __thiscall sub_570AA0(void *this, const char *a2)
     && (*(int (__thiscall **)(int, const char *, char *, int))(*(_DWORD *)file_manager_address + 72))(file_manager_address, a2, v4, 300)
     && v4[0] )
   {
-    return sub_570B20((int)this, "Error reading %s", v4);
+    return report_engine_error((int)this, "Error reading %s", v4);
   }
   else
   {
-    return sub_570B20((int)this, "Error reading %s", a2);
+    return report_engine_error((int)this, "Error reading %s", a2);
   }
 }
 // 7715D8: using guessed type int file_manager_address;
@@ -405835,11 +405652,11 @@ int __thiscall sub_570AA0(void *this, const char *a2)
 //----- (00570B00) --------------------------------------------------------
 int __thiscall sub_570B00(void *this, const char *a2)
 {
-  return sub_570B20((int)this, "Error opening %s", a2);
+  return report_engine_error((int)this, "Error opening %s", a2);
 }
 
 //----- (00570B20) --------------------------------------------------------
-int sub_570B20(int a1, char *Format, ...)
+int report_engine_error(int a1, char *Format, ...)
 {
   char Buffer[6000]; // [esp+0h] [ebp-1770h] BYREF
   va_list va; // [esp+1780h] [ebp+10h] BYREF
@@ -406296,9 +406113,9 @@ int __cdecl serialize_sprite_collection(_DWORD *i, _DWORD *a2, int a3, int a4, c
   v5 = i;
   if ( !(_BYTE)a4 )
   {
-    sub_402BAA(v22, "sprite", (_BYTE *)&i + 3);
+    assign_std_string_storage_from_c_string(v22, "sprite", (_BYTE *)&i + 3);
     v31 = 0;
-    v6 = (const char *)*((_DWORD *)sub_407455(v21, "GEngine ", v22) + 1);
+    v6 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v21, "GEngine ", v22) + 1);
     LOBYTE(v31) = 1;
     if ( !v6 )
       v6 = Key;
@@ -406483,9 +406300,9 @@ int __cdecl serialize_texture_collection(_DWORD *i, _DWORD *a2, int a3, int a4, 
   v5 = i;
   if ( !(_BYTE)a4 )
   {
-    sub_402BAA(v22, "texture", (_BYTE *)&i + 3);
+    assign_std_string_storage_from_c_string(v22, "texture", (_BYTE *)&i + 3);
     v31 = 0;
-    v6 = (const char *)*((_DWORD *)sub_407455(v21, "GEngine ", v22) + 1);
+    v6 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v21, "GEngine ", v22) + 1);
     LOBYTE(v31) = 1;
     if ( !v6 )
       v6 = Key;
@@ -406670,9 +406487,9 @@ int __cdecl serialize_bitmap8_collection(_DWORD *i, _DWORD *a2, int a3, int a4, 
   v5 = i;
   if ( !(_BYTE)a4 )
   {
-    sub_402BAA(v22, "bitmap8", (_BYTE *)&i + 3);
+    assign_std_string_storage_from_c_string(v22, "bitmap8", (_BYTE *)&i + 3);
     v31 = 0;
-    v6 = (const char *)*((_DWORD *)sub_407455(v21, "GEngine ", v22) + 1);
+    v6 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v21, "GEngine ", v22) + 1);
     LOBYTE(v31) = 1;
     if ( !v6 )
       v6 = Key;
@@ -406858,9 +406675,9 @@ int __cdecl serialize_model_collection(_BYTE *a1, _DWORD *a2, int a3, int a4, in
   v6 = a1;
   if ( !(_BYTE)a5 )
   {
-    sub_402BAA(v25, "model", (_BYTE *)&a1 + 3);
+    assign_std_string_storage_from_c_string(v25, "model", (_BYTE *)&a1 + 3);
     v33 = 0;
-    v7 = (const char *)*((_DWORD *)sub_407455(v24, "GEngine ", v25) + 1);
+    v7 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v24, "GEngine ", v25) + 1);
     LOBYTE(v33) = 1;
     if ( !v7 )
       v7 = Key;
@@ -407045,9 +406862,9 @@ int __cdecl serialize_animation_collection(_BYTE *a1, _DWORD *a2, int a3, int a4
   v6 = a1;
   if ( !(_BYTE)a5 )
   {
-    sub_402BAA(v25, "animation", (_BYTE *)&a1 + 3);
+    assign_std_string_storage_from_c_string(v25, "animation", (_BYTE *)&a1 + 3);
     v33 = 0;
-    v7 = (const char *)*((_DWORD *)sub_407455(v24, "GEngine ", v25) + 1);
+    v7 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v24, "GEngine ", v25) + 1);
     LOBYTE(v33) = 1;
     if ( !v7 )
       v7 = Key;
@@ -407231,9 +407048,9 @@ int __cdecl serialize_scene_collection(_DWORD *i, _DWORD *a2, int a3, int a4, ch
   v5 = i;
   if ( !(_BYTE)a4 )
   {
-    sub_402BAA(v22, "scene", (_BYTE *)&i + 3);
+    assign_std_string_storage_from_c_string(v22, "scene", (_BYTE *)&i + 3);
     v31 = 0;
-    v6 = (const char *)*((_DWORD *)sub_407455(v21, "GEngine ", v22) + 1);
+    v6 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v21, "GEngine ", v22) + 1);
     LOBYTE(v31) = 1;
     if ( !v6 )
       v6 = Key;
@@ -407418,9 +407235,9 @@ int __cdecl sub_573120(_DWORD *i, _DWORD *a2, int a3, int a4, char a5)
   v5 = i;
   if ( !(_BYTE)a4 )
   {
-    sub_402BAA(v22, "scene", (_BYTE *)&i + 3);
+    assign_std_string_storage_from_c_string(v22, "scene", (_BYTE *)&i + 3);
     v31 = 0;
-    v6 = (const char *)*((_DWORD *)sub_407455(v21, "GEngine ", v22) + 1);
+    v6 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(v21, "GEngine ", v22) + 1);
     LOBYTE(v31) = 1;
     if ( !v6 )
       v6 = Key;
@@ -409797,7 +409614,7 @@ void __thiscall sub_575EA0(float *this, float a2, float a3, float a4)
 }
 
 //----- (00575F20) --------------------------------------------------------
-void __thiscall sub_575F20(float *this, float a2)
+void __thiscall rotate_matrix_about_x(float *this, float a2)
 {
   long double v2; // st7
   float v3[12]; // [esp+0h] [ebp-30h] BYREF
@@ -409815,7 +409632,7 @@ void __thiscall sub_575F20(float *this, float a2)
 }
 
 //----- (00575F80) --------------------------------------------------------
-void __thiscall sub_575F80(float *this, float a2)
+void __thiscall rotate_matrix_about_y(float *this, float a2)
 {
   long double v2; // st7
   float v3[12]; // [esp+0h] [ebp-30h] BYREF
@@ -410808,8 +410625,8 @@ void __cdecl sub_578070(_DWORD *a1, float *a2, float *a3)
   *a3 = flt_776E50 * *a2 / flt_776E4C;
   a3[1] = flt_776E50 * a2[1] / flt_776E4C;
   a3[2] = flt_776E50;
-  sub_578B90(v3, a2, a2, 1, 12);
-  sub_578B90(v3, a3, a3, 1, 12);
+  transform_vector_array(v3, a2, a2, 1, 12);
+  transform_vector_array(v3, a3, a3, 1, 12);
 }
 // 7715D4: using guessed type int game_engine_address;
 // 776E4C: using guessed type float flt_776E4C;
@@ -411143,7 +410960,7 @@ void __fastcall sub_578B40(float *a1, int a2)
 // 776EFC: using guessed type float flt_776EFC;
 
 //----- (00578B90) --------------------------------------------------------
-void __thiscall sub_578B90(float *this, float *a2, float *a3, int a4, int a5)
+void __thiscall transform_vector_array(float *this, float *a2, float *a3, int a4, int a5)
 {
   double v9; // st6
   double v10; // st7
@@ -412446,7 +412263,7 @@ float *__thiscall sub_57A300(float *this)
         }
         else
         {
-          sub_578B90(v48, &v49, &v49, 8, 12);
+          transform_vector_array(v48, &v49, &v49, 8, 12);
           v28 = v87;
           v29 = (float *)v50;
           v86 = 8;
@@ -412811,7 +412628,7 @@ LABEL_7:
       break;
     default:
       if ( v25 != 265 )
-        sub_570B20(
+        report_engine_error(
           game_engine_address,
           "Model %s uses an unrecognized file version %d.%02d.  Expected: %d.%02d",
           (const char *)(this + 8),
@@ -412867,7 +412684,7 @@ LABEL_7:
     v38 = -1;
     *(_DWORD *)(v19 + 4 * i) = v18;
     if ( !sub_58ED50(*(_DWORD *)(*(_DWORD *)(this + 152) + 4 * i), a2) )
-      sub_570B20(game_engine_address, "Error reading %s, mesh %d", a3, i);
+      report_engine_error(game_engine_address, "Error reading %s, mesh %d", a3, i);
   }
   LOBYTE(v20) = *(_BYTE *)(game_engine_address + 109);
   if ( (_BYTE)v20 )
@@ -412960,7 +412777,7 @@ __int64 __thiscall sub_57AEC0(int this)
   v14[9] = v14[9] - v20;
   v14[10] = v18 + v14[10];
   v14[11] = v19 + v14[11];
-  sub_575F80(v14, *(float *)(*(_DWORD *)(game_engine_address + 456) + 16));
+          rotate_matrix_about_y(v14, *(float *)(*(_DWORD *)(game_engine_address + 456) + 16));
   result = (unsigned int)(this + 92);
   v14[9] = v20 + v14[9];
   v14[10] = v21 + v14[10];
@@ -414995,7 +414812,7 @@ int __thiscall sub_57D330(_DWORD *this, unsigned __int16 a2, int a3)
   int v4; // eax
 
   if ( !dword_776F18 )
-    sub_570B20((int)this, "Attempt to render without calling StartRender");
+    report_engine_error((int)this, "Attempt to render without calling StartRender");
   v4 = sub_57D1A0(this, a2);
   return (*(int (__thiscall **)(int, int))(*(_DWORD *)v4 + 52))(v4, a3);
 }
@@ -415726,7 +415543,7 @@ unsigned __int8 __thiscall sub_57E070(_WORD *this, char *a2, char *a3, int a4, i
   *((_DWORD *)v5 + 11) = frame_number;
   v10 = *((_DWORD *)v5 + 30);
   if ( v10 <= 0 )
-    return sub_570B20(game_engine_address, "Action %s not found in animation %s", a3, (const char *)v5 + 8);
+    return report_engine_error(game_engine_address, "Action %s not found in animation %s", a3, (const char *)v5 + 8);
   while ( 1 )
   {
     v7 = *(_DWORD *)vector_element_address((_DWORD *)v5 + 28, v6);
@@ -415734,7 +415551,7 @@ unsigned __int8 __thiscall sub_57E070(_WORD *this, char *a2, char *a3, int a4, i
       break;
 LABEL_7:
     if ( ++v6 >= v10 )
-      return sub_570B20(game_engine_address, "Action %s not found in animation %s", a3, (const char *)v5 + 8);
+      return report_engine_error(game_engine_address, "Action %s not found in animation %s", a3, (const char *)v5 + 8);
   }
   v8 = *(_DWORD *)(v7 + 16);
   if ( !sub_567D90((char *)(v8 + 4), a3) )
@@ -417220,7 +417037,7 @@ LABEL_16:
     if ( v4 == 2 )
       return sub_570DB0(game_engine_address, (int)"Error reading %s, line %d", a3, v11);
   }
-  return sub_570B20(game_engine_address, "Error reading %s, line %d", a3, v11);
+  return report_engine_error(game_engine_address, "Error reading %s, line %d", a3, v11);
 }
 // 75D7F9: using guessed type char byte_75D7F9;
 // 75D804: using guessed type int dword_75D804[];
@@ -417675,7 +417492,7 @@ int __thiscall sub_580120(_DWORD *this, int a2, _DWORD *a3)
             v19[10] = v21 + v19[10];
             v19[11] = v19[11] - v13;
             v16 = v22 * 0.017453292 - v23 * 0.017453292;
-            sub_575F80(v19, v16);
+            rotate_matrix_about_y(v19, v16);
             v3 = v24;
             v6 = 1;
             LOBYTE(v33) = 1;
@@ -417762,7 +417579,7 @@ LABEL_16:
           sub_570DB0(game_engine_address, (int)"Error reading %s, line %d", v7, v11);
         else
 LABEL_20:
-          sub_570B20(game_engine_address, "Error reading %s, line %d", v7, v11);
+          report_engine_error(game_engine_address, "Error reading %s, line %d", v7, v11);
       }
     }
   }
@@ -422744,7 +422561,7 @@ int __thiscall sub_587030(_DWORD *this, int a2, const char *a3)
   }
   else
   {
-    result = sub_570B20(game_engine_address, "%s is not a recognized multi image (MUL) file type", a3);
+    result = report_engine_error(game_engine_address, "%s is not a recognized multi image (MUL) file type", a3);
   }
   v17 = -1;
   if ( v4 )
@@ -422875,7 +422692,7 @@ int __thiscall sub_587380(_DWORD *this, int a2, const char *a3)
 
   v4 = *(_DWORD *)(a2 + 4);
   if ( v4 < 1 )
-    sub_570B20(game_engine_address, "%s is not a valid multi image (MUL) file", a3);
+    report_engine_error(game_engine_address, "%s is not a valid multi image (MUL) file", a3);
   (*(void (__thiscall **)(_DWORD *))(*this + 12))(this);
   sub_586F20(this, v4);
   for ( i = 0; i < this[15]; ++i )
@@ -423772,7 +423589,7 @@ void __thiscall sub_587FC0(int this)
                 v32 = v53;
                 *(_DWORD *)(*(_DWORD *)(this + 176) + 4 * v29) = v27;
                 *(_DWORD *)(*(_DWORD *)(this + 180) + 4 * v29) = v32;
-                sub_578B90(
+                transform_vector_array(
                   v44,
                   *(float **)(*(_DWORD *)(this + 168) + 4 * v29),
                   *(float **)(*(_DWORD *)(this + 164) + 4 * v29),
@@ -423847,7 +423664,7 @@ void __thiscall sub_587FC0(int this)
             qmemcpy(v44, (const void *)(*(_DWORD *)(v40 + 4 * v39) + 4), sizeof(v44));
             sub_576140(v44, v43);
             v41 = v60;
-            sub_578B90(
+            transform_vector_array(
               v44,
               *(float **)(*(_DWORD *)(this + 172) + 4 * v60),
               *(float **)(*(_DWORD *)(this + 164) + 4 * v60),
@@ -424100,7 +423917,7 @@ int __thiscall sub_588710(_DWORD *this)
           v13 = HIDWORD(v32);
         }
         v25 = *(float **)(this[41] + 4 * i);
-        sub_578B90((float *)(this[40] + 48 * *(_DWORD *)(this[45] + 4 * i)), v25, v25, v13, 12);
+        transform_vector_array((float *)(this[40] + 48 * *(_DWORD *)(this[45] + 4 * i)), v25, v25, v13, 12);
       }
     }
     else
@@ -424115,7 +423932,7 @@ int __thiscall sub_588710(_DWORD *this)
           v6 = *(const void **)(this[43] + 4 * HIDWORD(v2));
           v33 = *(_DWORD *)(this[44] + 4 * HIDWORD(v2));
           qmemcpy((void *)v2, v6, 4 * ((unsigned int)(12 * v33) >> 2));
-          sub_578B90(
+          transform_vector_array(
             (float *)(this[40] + 48 * *(_DWORD *)(this[45] + 4 * LODWORD(v36))),
             (float *)v2,
             (float *)v2,
@@ -426751,7 +426568,7 @@ int __thiscall sub_58B840(int this, char *a2, int a3, int a4)
     }
 LABEL_10:
     if ( --a3 < 0 )
-      return sub_570B20(game_engine_address, "Mesh %d not found in action %s", a4, (const char *)(this + 4));
+      return report_engine_error(game_engine_address, "Mesh %d not found in action %s", a4, (const char *)(this + 4));
   }
   while ( 1 )
   {
@@ -426785,7 +426602,7 @@ int __thiscall sub_58B8E0(_DWORD *this, _DWORD *a2)
   const char *v14; // eax
 
   v3 = a2;
-  sub_402BD8(a2, off_75D7C0[0], (char *)strlen(off_75D7C0[0]));
+  append_std_string_storage_bytes(a2, off_75D7C0[0], (char *)strlen(off_75D7C0[0]));
   v4 = (const char *)v3[1];
   if ( !v4 )
     v4 = Key;
@@ -426874,7 +426691,7 @@ int __thiscall sub_58BA40(int this, int a2)
                                           v4);
   }
   if ( !*(_DWORD *)(this + 60) )
-    sub_570B20(
+    report_engine_error(
       game_engine_address,
       "GModelAction::GetFrameData(%d) '%s' has a NULL m_FrameMemHandle\nLast Mapped Frame(%d)",
       v3,
@@ -426922,7 +426739,7 @@ int __thiscall sub_58BAE0(int this, _DWORD *a2)
     }
     v6 = *(_DWORD *)(v4 + 4);
     if ( v6 != 258 )
-      sub_570B20(
+      report_engine_error(
         game_engine_address,
         "Action %s uses an unrecognized file version %d.%02d.  Expected: %d.%02d",
         (const char *)(this + 4),
@@ -427056,7 +426873,7 @@ void __thiscall sub_58BC70(int this)
     v11 = v20;
     if ( !v20 )
       v11 = Key;
-    sub_570B20(
+    report_engine_error(
       game_engine_address,
       "Action %s does not match model (or is corrupt).  Please see error log for more info.",
       v11);
@@ -428492,7 +428309,7 @@ int __thiscall sub_58D550(_WORD **this, float *a2, float *a3, float *a4, float *
   v38 = (float *)this[3];
   v37 = (float *)this[4];
   v51 = 0;
-  sub_578B90(a6, v37, v38, v7, 12);
+  transform_vector_array(a6, v37, v38, v7, 12);
   v8 = 0;
   v9 = *((_WORD *)this + 23) == 0;
   v52 = 0;
@@ -428862,7 +428679,7 @@ int __thiscall sub_58DBB0(int this, int *a2, float *a3)
       LOWORD(v13) = *v7;
       v16[4] = *(_DWORD *)(v11 + 8 * *v7);
       v16[5] = *(_DWORD *)(v11 + 8 * (unsigned __int16)v13 + 4);
-      sub_578B90(a3, v15, v15, 3, 12);
+      transform_vector_array(a3, v15, v15, 3, 12);
       sub_5A8790(a2, v15, v16, *(_DWORD *)this, 3);
       v14 = *(_WORD *)(this + 46);
       result = ++v17;
@@ -429309,7 +429126,7 @@ char __thiscall sub_58E440(unsigned __int16 *this, float *a2)
   {
     if ( *(_BYTE *)(game_engine_address + 108) )
     {
-      sub_578B90(a2, *((float **)this + 4), *((float **)this + 3), this[22], 12);
+      transform_vector_array(a2, *((float **)this + 4), *((float **)this + 3), this[22], 12);
       v7 = *((_DWORD *)this + 8);
       v6 = v7 + 8 * this[23];
       for ( i = v6; v7 < i; v7 += 8 )
@@ -429714,7 +429531,7 @@ void __thiscall sub_58EB90(_DWORD *this, int a2, void *a3, int a4, int a5, int a
     qmemcpy(v8, v9, sizeof(v8));
     qmemcpy(v9, this + 1, sizeof(v9));
     sub_576140(v9, v8);
-    sub_578B90(v9, (float *)a3, (float *)a3, a5, 12);
+    transform_vector_array(v9, (float *)a3, (float *)a3, a5, 12);
   }
 }
 
@@ -429961,7 +429778,7 @@ int **__thiscall sub_58F010(int this, _BYTE *a2, char *a3, int a4)
   _BYTE *v34; // [esp+9Ch] [ebp+10h]
 
   v29 = this;
-  sub_402BAA(v22, "mesh ", &v32);
+  assign_std_string_storage_from_c_string(v22, "mesh ", &v32);
   v33 = 0;
   v5 = (const char *)*((_DWORD *)append_string_suffix(v21, v22, a3) + 1);
   LOBYTE(v33) = 1;
@@ -430432,7 +430249,7 @@ int __thiscall sub_58F920(_DWORD *this)
   for ( i = 0; i < result; ++i )
   {
     v5 = *(_DWORD *)(this[14] + 4 * i);
-    sub_578B90(v7, *(float **)(v5 + 16), *(float **)(v5 + 12), *(unsigned __int16 *)(v5 + 44), 12);
+    transform_vector_array(v7, *(float **)(v5 + 16), *(float **)(v5 + 12), *(unsigned __int16 *)(v5 + 44), 12);
     result = this[15];
   }
   return result;
@@ -431893,7 +431710,7 @@ LABEL_27:
   *(float *)&v38[16] = v50;
   *(float *)&v38[19] = v50;
   *(float *)&v38[21] = v49;
-  sub_578B90(dword_776EB8, v37, v37, 8, 12);
+  transform_vector_array(dword_776EB8, v37, v37, 8, 12);
   if ( sub_590400(v37, 8, 12) == 255 )
   {
     dword_776F28 = 0;
@@ -432120,7 +431937,7 @@ int __thiscall sub_591840(int this, float *a2, float *a3)
   v30 = *((_DWORD *)v4 + 4);
   v31 = *((_DWORD *)v4 + 5);
   v31 = *((_DWORD *)v4 + 2);
-  sub_578B90(v9, v12, v12, 8, 12);
+  transform_vector_array(v9, v12, v12, 8, 12);
   if ( (*(_DWORD *)(game_engine_address + 528) & 0x80000) != 0 )
     sub_590A10(v12, NAN);
   result = sub_590400(v12, 8, 12);
@@ -432145,7 +431962,7 @@ int __thiscall sub_591840(int this, float *a2, float *a3)
         v32 = 0;
         v33 = 0;
         memset(&v11[9], 0, 12);
-        sub_578B90(v11, (float *)&dword_776E60, (float *)&dword_776E60, 1, 12);
+        transform_vector_array(v11, (float *)&dword_776E60, (float *)&dword_776E60, 1, 12);
         v6 = v35;
       }
     }
@@ -432321,7 +432138,7 @@ void __thiscall sub_591A80(int this, float *a2, int a3)
         v21 = *(unsigned __int16 *)v72;
       else
         v21 = v20;
-      sub_578B90(a2, v19, (float *)(*(_DWORD *)(v73 + 12) + 12 * v21), 1, 12);
+      transform_vector_array(a2, v19, (float *)(*(_DWORD *)(v73 + 12) + 12 * v21), 1, 12);
       ++v20;
       v19 += 9;
       v22 = *(_DWORD *)(v73 + 28);
@@ -441694,7 +441511,7 @@ void __thiscall sub_59D630(int this)
   *(_DWORD *)(this + 276) = v94;
   LOBYTE(v15) = 0;
   if ( v15 > 0x200 )
-    sub_570B20(
+    report_engine_error(
       game_engine_address,
       "Scene %s uses an unrecognized file version %d.%02d.  Expected: %d.%02d",
       (const char *)(this + 8),
@@ -442394,7 +442211,7 @@ void __thiscall sub_59E540(int *this, _BYTE *a2)
     v15 = &v14[16 * v2[76]];
     for ( LOBYTE(v79) = 5; v14 != v15; v14 += 16 )
     {
-      sub_402BAA(v41, (char *)(*(_DWORD *)v14 + 8), &v71);
+      assign_std_string_storage_from_c_string(v41, (char *)(*(_DWORD *)v14 + 8), &v71);
       v16 = v14[12];
       v17 = v77[21];
       LOBYTE(v79) = 6;
@@ -442927,7 +442744,7 @@ void __thiscall sub_59EF30(int this, int a2, int a3)
   v59 = *(_BYTE *)(game_engine_address + 109) != 0;
   if ( a3 )
   {
-    sub_402BAA(v45, (char *)a3, (_BYTE *)&a2 + 3);
+    assign_std_string_storage_from_c_string(v45, (char *)a3, (_BYTE *)&a2 + 3);
     v11 = *(_WORD *)(this + 6) == 0;
     v61 = 0;
     if ( v11 )
@@ -448355,7 +448172,7 @@ char __thiscall sub_5A4730(void *this, int a2, int a3, int a4, int a5, int a6, i
       LOBYTE(v38) = 1;
       std::string::_Tidy(1);
       v39 = v15 != 0;
-      sub_402BAA(v22, (char *)Str1, &v36);
+      assign_std_string_storage_from_c_string(v22, (char *)Str1, &v36);
       LOBYTE(v38) = 3;
       v16 = sub_5644C0((int)this, (int)"second", (void *)(v11 + 16), v22);
       LOBYTE(v38) = 1;
@@ -449737,7 +449554,7 @@ void __thiscall sub_5A5D40(int this, _DWORD *a2, int a3)
     }
     else
     {
-      sub_40442F(v16, (_BYTE *)&a2 + 3);
+      initialize_std_string_storage(v16, (_BYTE *)&a2 + 3);
       v12 = *(_DWORD *)v5;
       LOBYTE(v19) = 2;
       if ( (*(unsigned __int8 (__thiscall **)(_BYTE *, const char *, _BYTE *, _DWORD))(v12 + 4))(v5, "mHotSpot", v16, 0) )
@@ -451126,7 +450943,7 @@ void __thiscall set_engine_viewport_rectangle(_DWORD *this, _DWORD *a2, float a3
 
   sub_5CEC70(this[114], &v10, &v9, 0, 0, 0);
   if ( this[14] > *a2 || this[15] > a2[1] || a2[2] > this[16] || a2[3] > this[17] )
-    sub_570B20((int)this, "Viewport rectangle is outside screen boundaries.");
+    report_engine_error((int)this, "Viewport rectangle is outside screen boundaries.");
   v7 = a2[2] - *a2;
   v8 = v10 != v7 || v9 != a2[3] - a2[1];
   sub_5CEBE0(this[114], v7, a2[3] - a2[1], a3, a4, a5);
@@ -452354,7 +452171,7 @@ void __cdecl sub_5A8D80(float *a1, float *a2, float a3, _DWORD *a4, _DWORD *a5)
             break;
         }
       }
-      if ( sub_40EE23(&v52, v11) )
+      if ( vectors_are_approximately_equal(&v52, v11) )
       {
         v52 = *v11;
         v53 = v11[1];
@@ -457602,11 +457419,11 @@ void __thiscall sub_5AEF70(int this)
   write_engine_log_message(this, (int)"Detected DirectX version %d", v2);
   if ( !v2 )
   {
-    sub_570B20(
+    report_engine_error(
       this,
       "DirectX is either not installed or is corrupted. Please install DirectX before running this product.");
 LABEL_4:
-    sub_570B20(
+    report_engine_error(
       this,
       "This product requires a minimum of DirectX version 3.0 to run. Install DirectX before running this product.");
     goto LABEL_5;
@@ -457776,7 +457593,7 @@ LABEL_5:
 LABEL_42:
       if ( (int)v19 <= 0 )
       {
-        sub_570B20(
+        report_engine_error(
           this,
           "No DirectDraw drivers detected. Make sure DirectX is installed properly.\n"
           "\n"
@@ -458060,7 +457877,7 @@ LABEL_98:
     default:
       break;
   }
-  v53 = (const char *)*((_DWORD *)sub_407455(&v228, "Using ", (_BYTE *)(this + 220)) + 1);
+  v53 = (const char *)*((_DWORD *)combine_text_prefix_and_string_storage(&v228, "Using ", (_BYTE *)(this + 220)) + 1);
   LOBYTE(v242) = 4;
   if ( !v53 )
     v53 = Key;
@@ -458491,7 +458308,7 @@ LABEL_151:
   v107 = (*(int (__stdcall **)(int, _DWORD *))(*(_DWORD *)direct_draw_address + 48))(direct_draw_address, v208);
   report_directx_call_failure(v107, "Z:\\Proj\\GK3\\GEngine\\ginit.cpp", 1659, 1);
   if ( v208[21] != 16 )
-    sub_570B20(this, "Sorry, this program requires support for 16-bit color mode.");
+    report_engine_error(this, "Sorry, this program requires support for 16-bit color mode.");
   v219 = 0;
   v210 = 0x4000;
   (*(void (__stdcall **)(int, int *, unsigned int *, _DWORD))(*(_DWORD *)direct_draw_address + 92))(
@@ -458737,7 +458554,7 @@ LABEL_274:
         }
         break;
       default:
-        sub_570B20(this, "Unrecognized rasterizer specified.");
+        report_engine_error(this, "Unrecognized rasterizer specified.");
         break;
     }
     memset(dword_777348, 0, sizeof(dword_777348));
@@ -461168,15 +460985,15 @@ char *__cdecl sub_5B32A0(const char *a1)
   char v29; // [esp+5Bh] [ebp-Dh] BYREF
   int v30; // [esp+64h] [ebp-4h]
 
-  sub_40442F(v20, &v29);
+  initialize_std_string_storage(v20, &v29);
   v30 = 0;
-  sub_40442F(v24, &v28);
+  initialize_std_string_storage(v24, &v28);
   v1 = a1;
   LOBYTE(v30) = 1;
   sub_5B30A0(a1, (int)v20);
   if ( !v26 )
   {
-    sub_40442F(v22, (_BYTE *)&a1 + 3);
+    initialize_std_string_storage(v22, (_BYTE *)&a1 + 3);
     LOBYTE(v30) = 2;
     v2 = append_string_suffix(v18, v20, ".bik");
     LOBYTE(v30) = 3;
@@ -463329,7 +463146,7 @@ char __thiscall sub_5B5320(int this, char *a2, _DWORD *a3, unsigned int a4)
       HIBYTE(a4) = 0;
       if ( v10 == 34 )
         ++v9;
-      sub_402BD8(v7, v9, (char *)strlen(v9));
+      append_std_string_storage_bytes(v7, v9, (char *)strlen(v9));
       std::string::_Freeze(v7);
       v11 = v7[1];
       if ( v11 )
@@ -463956,7 +463773,7 @@ char __thiscall sub_5B5DB0(int this, char *i, int *a3, int a4, int *a5)
       return result;
     if ( *(_BYTE *)(this + 20) )
     {
-      sub_402BAA(v36, i, (_BYTE *)&a5 + 3);
+      assign_std_string_storage_from_c_string(v36, i, (_BYTE *)&a5 + 3);
       v39 = 1;
       v21 = *sub_40F02E((_DWORD *)(this + 456), (int *)&i, (int)v36);
       v39 = -1;
@@ -470847,7 +470664,7 @@ void __cdecl report_directx_call_failure(int a1, const char *a2, int a3, char a4
     v4 = sub_5BC8E0(a1, a2, a3);
     sub_570CC0((const char *)game_engine_address, v4);
     if ( a4 )
-      sub_570B20(game_engine_address, "DirectX call failure: '%s' (0x%08X)", v4, a1);
+      report_engine_error(game_engine_address, "DirectX call failure: '%s' (0x%08X)", v4, a1);
   }
 }
 // 7715D4: using guessed type int game_engine_address;
@@ -470864,11 +470681,11 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   int v9; // [esp+4Ch] [ebp-4h]
 
   v6 = 0;
-  sub_402BAA(v5, (char *)Str1, &v8);
+  assign_std_string_storage_from_c_string(v5, (char *)Str1, &v8);
   v9 = 1;
   if ( (a2 & 1) != 0 )
   {
-    sub_402BD8(v5, "ZERO ", (char *)strlen("ZERO "));
+    append_std_string_storage_bytes(v5, "ZERO ", (char *)strlen("ZERO "));
   }
   else
   {
@@ -470884,7 +470701,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 2) != 0 )
   {
-    sub_402BD8(v5, "ONE ", (char *)strlen("ONE "));
+    append_std_string_storage_bytes(v5, "ONE ", (char *)strlen("ONE "));
   }
   else
   {
@@ -470900,7 +470717,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 0x40) != 0 )
   {
-    sub_402BD8(v5, "DESTALPHA ", (char *)strlen("DESTALPHA "));
+    append_std_string_storage_bytes(v5, "DESTALPHA ", (char *)strlen("DESTALPHA "));
   }
   else
   {
@@ -470928,11 +470745,11 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   else
   {
-    sub_402BD8(v5, "INVDESTALPHA ", (char *)strlen("INVDESTALPHA "));
+    append_std_string_storage_bytes(v5, "INVDESTALPHA ", (char *)strlen("INVDESTALPHA "));
   }
   if ( (a2 & 0x100) != 0 )
   {
-    sub_402BD8(v5, "DESTCOLOR ", (char *)strlen("DESTCOLOR "));
+    append_std_string_storage_bytes(v5, "DESTCOLOR ", (char *)strlen("DESTCOLOR "));
   }
   else
   {
@@ -470948,7 +470765,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 0x200) != 0 )
   {
-    sub_402BD8(v5, "INVDESTCOLOR ", (char *)strlen("INVDESTCOLOR "));
+    append_std_string_storage_bytes(v5, "INVDESTCOLOR ", (char *)strlen("INVDESTCOLOR "));
   }
   else
   {
@@ -470964,7 +470781,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 0x10) != 0 )
   {
-    sub_402BD8(v5, "SRCALPHA ", (char *)strlen("SRCALPHA "));
+    append_std_string_storage_bytes(v5, "SRCALPHA ", (char *)strlen("SRCALPHA "));
   }
   else
   {
@@ -470980,7 +470797,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 0x20) != 0 )
   {
-    sub_402BD8(v5, "INVSRCALPHA ", (char *)strlen("INVSRCALPHA "));
+    append_std_string_storage_bytes(v5, "INVSRCALPHA ", (char *)strlen("INVSRCALPHA "));
   }
   else
   {
@@ -470996,7 +470813,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 4) != 0 )
   {
-    sub_402BD8(v5, "SRCCOLOR ", (char *)strlen("SRCCOLOR "));
+    append_std_string_storage_bytes(v5, "SRCCOLOR ", (char *)strlen("SRCCOLOR "));
   }
   else
   {
@@ -471012,7 +470829,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 8) != 0 )
   {
-    sub_402BD8(v5, "INVSRCCOLOR ", (char *)strlen("INVSRCCOLOR "));
+    append_std_string_storage_bytes(v5, "INVSRCCOLOR ", (char *)strlen("INVSRCCOLOR "));
   }
   else
   {
@@ -471028,7 +470845,7 @@ _BYTE *__cdecl sub_5BCAA0(_BYTE *a1, int a2)
   }
   if ( (a2 & 0x400) != 0 )
   {
-    sub_402BD8(v5, "SRCALPHASAT ", (char *)strlen("SRCALPHASAT "));
+    append_std_string_storage_bytes(v5, "SRCALPHASAT ", (char *)strlen("SRCALPHASAT "));
   }
   else
   {
@@ -472761,9 +472578,9 @@ void __thiscall sub_5BF340(int this, _DWORD *a2)
   v4 = *(_DWORD *)(this + 8);
   v90 = *v3;
   v95 = v4;
-  sub_40442F(v65, &v88);
+  initialize_std_string_storage(v65, &v88);
   v103 = 0;
-  sub_40442F(v75, &v89);
+  initialize_std_string_storage(v75, &v89);
   v5 = a2;
   LOBYTE(v103) = 2;
   v79 = &off_6F6A84;
@@ -473075,7 +472892,7 @@ LABEL_100:
           }
           else
           {
-            sub_40442F(v68, (_BYTE *)&a2 + 3);
+            initialize_std_string_storage(v68, (_BYTE *)&a2 + 3);
             v47 = *(_DWORD *)v5;
             LOBYTE(v103) = 14;
             if ( (*(unsigned __int8 (__thiscall **)(_BYTE *, const char *, char *, _DWORD))(v47 + 4))(v5, v44, v68, 0) )
@@ -473680,7 +473497,7 @@ char __thiscall sub_5C02F0(int this, _DWORD *a2)
     }
     while ( v5 );
   }
-  sub_40442F(v60, &v87);
+  initialize_std_string_storage(v60, &v87);
   v7 = *(_DWORD *)v4;
   LOBYTE(v99) = 3;
   HIBYTE(a2) = 1;
@@ -482386,7 +482203,7 @@ _DWORD *__thiscall sub_5C8740(_DWORD *this, void *a2, unsigned int a3)
 //----- (005C8790) --------------------------------------------------------
 int __thiscall sub_5C8790(const char *this, const char *a2)
 {
-  return sub_570B20(game_engine_address, "Error occurred while processing PNG '%s' (error is '%s')", this + 20, a2);
+  return report_engine_error(game_engine_address, "Error occurred while processing PNG '%s' (error is '%s')", this + 20, a2);
 }
 // 7715D4: using guessed type int game_engine_address;
 
@@ -482442,7 +482259,7 @@ _DWORD *__thiscall sub_5C8860(_DWORD *this, int a2, int a3, const char *a4)
   this[4] = 0;
   *this = &off_6F6EB8;
   if ( *(_DWORD *)(a2 + 14) != 40 || *(_WORD *)(a2 + 26) != 1 || *(_DWORD *)(a2 + 30) || *(_WORD *)(a2 + 28) != 24 )
-    sub_570B20(game_engine_address, "%s is not a valid 24-bit BMP file", a4);
+    report_engine_error(game_engine_address, "%s is not a valid 24-bit BMP file", a4);
   v5 = *(_DWORD *)(a2 + 22);
   v6 = *(_WORD *)(a2 + 28);
   this[1] = *(_DWORD *)(a2 + 18);
@@ -482505,7 +482322,7 @@ _DWORD *__thiscall sub_5C89B0(_DWORD *this, int a2, int a3, const char *a4)
   this[4] = 0;
   *this = &off_6F6EE4;
   if ( *(_DWORD *)(a2 + 14) != 40 || *(_WORD *)(a2 + 26) != 1 || *(_DWORD *)(a2 + 30) || *(_WORD *)(a2 + 28) != 8 )
-    sub_570B20(game_engine_address, "%s is not a valid 8-bit BMP file", a4);
+    report_engine_error(game_engine_address, "%s is not a valid 8-bit BMP file", a4);
   v5 = *(_DWORD *)(a2 + 22);
   v6 = *(_WORD *)(a2 + 28);
   this[1] = *(_DWORD *)(a2 + 18);
@@ -482777,7 +482594,7 @@ _DWORD *__thiscall sub_5C8D80(_DWORD *this, _WORD *a2, unsigned int a3, const ch
     {
       if ( *(_DWORD *)a2 != 1299067444 )
       {
-        sub_570B20(game_engine_address, "%s is not a recognized bitmap file type", a4);
+        report_engine_error(game_engine_address, "%s is not a recognized bitmap file type", a4);
         goto LABEL_18;
       }
       v9 = allocate_tracked_memory(32);
@@ -484991,7 +484808,7 @@ __int16 __thiscall sub_5CB920(_DWORD *this, int a2, unsigned int a3)
       if ( a3 )
       {
         v11 = (float *)(v5 + v4[67]);
-        sub_578B90(dword_776EB8, v36, v11, 1, 12);
+        transform_vector_array(dword_776EB8, v36, v11, 1, 12);
         v3 = sub_590610(v36, v11[3], a3);
         a3 = v3;
         if ( v3 == 255 )
@@ -485423,7 +485240,7 @@ void __thiscall sub_5CBE90(int this)
     v241 = 3 * v7;
     v237 = *(_WORD **)v243;
     dword_7715E8 += v7;
-    sub_578B90(dword_776EB8, v229, v236, 1, 12);
+    transform_vector_array(dword_776EB8, v229, v236, 1, 12);
     v239 = sub_590610(v229, v6[3], 0x3Fu);
     if ( v239 == 255 )
       goto LABEL_168;
@@ -485455,7 +485272,7 @@ void __thiscall sub_5CBE90(int this)
         if ( !*v15 )
         {
           *v15 = 1;
-          sub_578B90(
+          transform_vector_array(
             dword_776EB8,
             (float *)(v14[59] + 12 * *(unsigned __int16 *)v12),
             (float *)(12 * *(unsigned __int16 *)v12 + v14[58]),
@@ -486280,7 +486097,7 @@ LABEL_168:
       v245 = v168;
       dword_7715E8 += v167;
       v244 = 3 * v167;
-      sub_578B90(dword_776EB8, v229, (float *)v243, 1, 12);
+      transform_vector_array(dword_776EB8, v229, (float *)v243, 1, 12);
       v235 = sub_590610(v229, *(float *)(v166 + 12), 0x3Fu);
       if ( v235 == 255 )
         goto LABEL_264;
@@ -486304,7 +486121,7 @@ LABEL_198:
         v240 = (float *)v245;
         do
         {
-          sub_578B90(dword_776EB8, v175 - 6, (float *)(v246[58] + 12 * *(unsigned __int16 *)v174), 1, 12);
+          transform_vector_array(dword_776EB8, v175 - 6, (float *)(v246[58] + 12 * *(unsigned __int16 *)v174), 1, 12);
           v176 = v246;
           v177 = *(_WORD *)v174;
           v175 += 9;
@@ -487188,8 +487005,8 @@ void __thiscall sub_5CE7D0(int this)
   v3 = -*(float *)(this + 24);
   qmemcpy(v18, Buf2, sizeof(v18));
   v18[11] = v3 + v18[11];
-  sub_575F20(v18, v2);
-  sub_575F80(v18, *(float *)(this + 16));
+  rotate_matrix_about_x(v18, v2);
+  rotate_matrix_about_y(v18, *(float *)(this + 16));
   v18[9] = *(float *)(this + 4) + v18[9];
   v18[10] = *(float *)(this + 8) + v18[10];
   v4 = *(float *)(this + 12) + v18[11];
@@ -487197,7 +487014,7 @@ void __thiscall sub_5CE7D0(int this)
   *(_DWORD *)(this + 32) = 0;
   *(_DWORD *)(this + 36) = 0;
   v18[11] = v4;
-  sub_578B90(v18, (float *)(this + 28), (float *)(this + 28), 1, 12);
+  transform_vector_array(v18, (float *)(this + 28), (float *)(this + 28), 1, 12);
   v22 = *(float *)(this + 4) - *(float *)(this + 28);
   v23 = *(float *)(this + 8) - *(float *)(this + 32);
   v24 = *(float *)(this + 12) - *(float *)(this + 36);
@@ -487282,9 +487099,9 @@ float *__thiscall sub_5CE9E0(float *this, float *a2)
   qmemcpy(a2, Buf2, 0x30u);
   a2[11] = a2[11] - this[6];
   v30 = this;
-  sub_575F20(a2, this[5]);
+  rotate_matrix_about_x(a2, this[5]);
   v2 = v30;
-  sub_575F80(a2, v30[4]);
+  rotate_matrix_about_y(a2, v30[4]);
   v3 = v30[3];
   v4 = v30[2];
   v5 = v30 + 7;
@@ -487294,7 +487111,7 @@ float *__thiscall sub_5CE9E0(float *this, float *a2)
   v2[7] = 0.0;
   v2[8] = 0.0;
   v2[9] = 0.0;
-  sub_578B90(a2, v2 + 7, v2 + 7, 1, 12);
+  transform_vector_array(a2, v2 + 7, v2 + 7, 1, 12);
   v21 = v2[1] - *v5;
   v22 = v2[2] - v2[8];
   v23 = v2[3] - v2[9];
@@ -490719,7 +490536,7 @@ void __thiscall sub_5D2C40(_DWORD *this, float a2, int a3, int a4)
     v13 = *((_WORD *)v4 + 22);
     v78 = 0;
     qmemcpy(v11, v12, 12 * v13);
-    sub_578B90((float *)a4, (float *)v11, (float *)v11, *((unsigned __int16 *)v4 + 22), 12);
+    transform_vector_array((float *)a4, (float *)v11, (float *)v11, *((unsigned __int16 *)v4 + 22), 12);
     sub_5D1FC0(&v59, v77, *((unsigned __int16 *)v4 + 22), v4[8], *((unsigned __int16 *)v4 + 23));
     LOBYTE(v78) = 1;
     sub_5D2410(&v59);
@@ -492464,7 +492281,7 @@ LABEL_42:
   v108 = v138;
   v68[3] = -(*(float *)&dword_776E90 / *(float *)&dword_776E94);
   v68[5] = -(*(float *)&dword_776E98 / *(float *)&dword_776E94);
-  sub_578B90(v68, &v85, &v85, 8, 12);
+  transform_vector_array(v68, &v85, &v85, 8, 12);
   v18 = sub_4211CF(&v117, 2147483600.0);
   v121 = *v18;
   v122 = v18[1];
@@ -492522,10 +492339,10 @@ LABEL_42:
   v94 = v24;
   v100 = v121;
   v108 = v123;
-  sub_578B90(dword_776EB8, &v85, &v85, 8, 12);
+  transform_vector_array(dword_776EB8, &v85, &v85, 8, 12);
   if ( sub_590400(&v85, 8, 12) == 255 )
     return;
-  sub_575F20(v68, -1.5707964);
+  rotate_matrix_about_x(v68, -1.5707964);
   if ( memcmp(v120 + 46, Buf2, 0x30u) )
   {
     qmemcpy(v74, v68, sizeof(v74));
@@ -492886,7 +492703,7 @@ void __cdecl sub_5D5530(float *a1, float *a2)
   int v35; // [esp+134h] [ebp+8h]
   int v36; // [esp+138h] [ebp+Ch]
 
-  sub_578B90(dword_776EB8, v22, a1, 1, 12);
+  transform_vector_array(dword_776EB8, v22, a1, 1, 12);
   v2 = *a2;
   v32 = a1[1];
   v3 = a1[2];
@@ -492894,8 +492711,8 @@ void __cdecl sub_5D5530(float *a1, float *a2)
   v33 = v3;
   v27 = v2;
   v29 = v33;
-  sub_578B90(dword_776EB8, v23, &v27, 1, 12);
-  sub_578B90(dword_776EB8, v24, a2, 1, 12);
+  transform_vector_array(dword_776EB8, v23, &v27, 1, 12);
+  transform_vector_array(dword_776EB8, v24, a2, 1, 12);
   v31 = *a1;
   v32 = a2[1];
   v27 = v31;
@@ -492903,7 +492720,7 @@ void __cdecl sub_5D5530(float *a1, float *a2)
   v28 = v32;
   v33 = v4;
   v29 = v33;
-  sub_578B90(dword_776EB8, v25, &v27, 1, 12);
+  transform_vector_array(dword_776EB8, v25, &v27, 1, 12);
   v22[5] = flt_77947C;
   v22[6] = flt_77947C;
   v23[5] = flt_779478;
@@ -493068,7 +492885,7 @@ int __thiscall sub_5D58F0(int this, float *a2, _DWORD *a3, int a4, int *a5, _DWO
       v24 = v9;
       do
       {
-        sub_578B90(a2, (float *)&v19, (float *)(v17 + *(_DWORD *)(this + 12)), 1, 12);
+        transform_vector_array(a2, (float *)&v19, (float *)(v17 + *(_DWORD *)(this + 12)), 1, 12);
         v18 = v20;
         *a3 = v19;
         a3[1] = v18;
@@ -493090,7 +492907,7 @@ LABEL_26:
   v23 = v9;
   do
   {
-    sub_578B90(a2, (float *)&v19, (float *)(*(_DWORD *)(this + 12) + 12 * *v7), 1, 12);
+    transform_vector_array(a2, (float *)&v19, (float *)(*(_DWORD *)(this + 12) + 12 * *v7), 1, 12);
     v16 = v19;
     a3[1] = v20;
     *a3 = v16;
@@ -494882,8 +494699,8 @@ int __thiscall sub_5D7990(char *this)
   qmemcpy(v96, Buf2, sizeof(v96));
   v65 = *((float *)this + 56) * 0.017453292;
   v149 = v4;
-  sub_575F80(v96, v65);
-  sub_578B90(v96, v95, &flt_785B90, 8, 12);
+  rotate_matrix_about_y(v96, v65);
+  transform_vector_array(v96, v95, &flt_785B90, 8, 12);
   v5 = v95;
   v6 = 8;
   do
@@ -494902,7 +494719,7 @@ int __thiscall sub_5D7990(char *this)
     v8[2] = v9;
   }
   while ( v6 );
-  sub_578B90(dword_776EB8, v106, v95, 8, 12);
+  transform_vector_array(dword_776EB8, v106, v95, 8, 12);
   v10 = 0;
   v11 = (int *)&unk_6F775C;
   v146 = this + 152;
@@ -495207,8 +495024,8 @@ int __thiscall sub_5D8470(float *this, float *a2, char *a3, signed int a4, unsig
   v29 = this;
   qmemcpy(v22, Buf2, sizeof(v22));
   v21 = this[56] * -0.017453292;
-  sub_575F80(v22, v21);
-  sub_578B90(v22, &v23, a2, 1, 12);
+  rotate_matrix_about_y(v22, v21);
+  transform_vector_array(v22, &v23, a2, 1, 12);
   v7 = fabs(v23);
   v26 = fabs(v24);
   v8 = 0;
@@ -495744,7 +495561,7 @@ void __thiscall sub_5D8E60(_DWORD *this, void *a2)
         if ( v18 )
         {
           sub_436048(v2, &v19, (int)v17);
-          sub_40442F(v14, (_BYTE *)&a2 + 3);
+          initialize_std_string_storage(v14, (_BYTE *)&a2 + 3);
           LOBYTE(v24) = 4;
           v7 = sub_5DA370(v10, v17, (int)v14);
           LOBYTE(v24) = 5;
@@ -496676,7 +496493,7 @@ void sub_5D9E40()
   sub_5D9D60(&v29);
   std::string::assign((void *)Str1, strlen(Str1));
   sub_5D9D60(&v29);
-  sub_40442F(&v23, &v27);
+  initialize_std_string_storage(&v23, &v27);
   LOBYTE(v31) = 1;
   v0 = format_integer_string((int)v15, 1);
   LOBYTE(v31) = 2;
@@ -496685,7 +496502,7 @@ void sub_5D9E40()
   std::string::_Tidy(1);
   LOBYTE(v31) = 3;
   sub_5D9D60(&v23);
-  sub_40442F(v21, &v28);
+  initialize_std_string_storage(v21, &v28);
   LOBYTE(v31) = 4;
   v1 = format_integer_string((int)v13, -1);
   LOBYTE(v31) = 5;
@@ -512046,7 +511863,7 @@ int __userpurge sub_5EB34F@<eax>(_DWORD *a1@<ecx>, int a2@<edi>, char *a3, char 
   v23 = sub_5EBBED(a1, a3);
   if ( v23 == -1 )
   {
-    sub_402BAA(&v19, a3, &v26);
+    assign_std_string_storage_from_c_string(&v19, a3, &v26);
     v27 = 0;
     if ( v21 < 3 )
       goto LABEL_6;
@@ -512063,7 +511880,7 @@ int __userpurge sub_5EB34F@<eax>(_DWORD *a1@<ecx>, int a2@<edi>, char *a3, char 
     {
 LABEL_6:
       v9 = (char *)strlen(off_75FEA8);
-      sub_402BD8(&v19, off_75FEA8, v9);
+      append_std_string_storage_bytes(&v19, off_75FEA8, v9);
     }
     v24 = 0;
     v10 = v20;
@@ -513765,7 +513582,7 @@ void __thiscall sub_5ECE66(_DWORD *this, int a2, _DWORD *a3)
   log_interface_debug_message((int)a3, "%s\n", *(const char **)(*(_DWORD *)(4 * a2 + *this) + 4));
   ++*a3;
   sub_5ECEB3(*(_DWORD *)(4 * a2 + *this), (int)a3);
-  sub_52D1CF((int)a3, "\n", 0xFFFFFFFF);
+  write_source_message_from_log_context((int)a3, "\n", 0xFFFFFFFF);
   --*a3;
 }
 
@@ -513776,7 +513593,7 @@ void __stdcall sub_5ECEB3(int a1, int a2)
     log_interface_debug_message(a2, "[DEBUG] ");
   if ( (*(_BYTE *)(a1 + 20) & 1) != 0 )
     log_interface_debug_message(a2, "(wait) ");
-  sub_52D1CF(a2, *(char **)(a1 + 8), 0xFFFFFFFF);
+  write_source_message_from_log_context(a2, *(char **)(a1 + 8), 0xFFFFFFFF);
 }
 
 //----- (005ECEF6) --------------------------------------------------------
@@ -516101,11 +515918,11 @@ void __thiscall sub_5EF074(_DWORD *this, _DWORD *a2)
     v3 = *(char **)(sub_5EEF8F(this) + 4);
     if ( !v3 )
       v3 = (char *)Key;
-    sub_52D1CF((int)v6, v3, 0xFFFFFFFF);
+    write_source_message_from_log_context((int)v6, v3, 0xFFFFFFFF);
   }
   else
   {
-    sub_52D1CF((int)v6, "<no object data>", 0xFFFFFFFF);
+    write_source_message_from_log_context((int)v6, "<no object data>", 0xFFFFFFFF);
   }
   v4 = (*(int (__thiscall **)(int, _DWORD))(*(_DWORD *)game_engine_address + 28))(game_engine_address, this[3]);
   log_interface_debug_message((int)v6, ", last used %d ms ago, ref count = %d", v4 - this[2], v5);
@@ -522706,7 +522523,7 @@ int __thiscall sub_5F54F0(int *this)
   int result; // eax
 
   *this = (int)&off_6F9AC8;
-  result = sub_45CA57(this + 4);
+  result = destroy_byte_vector(this + 4);
   *this = (int)&off_6F9AA4;
   return result;
 }
@@ -522837,7 +522654,7 @@ _DWORD *__thiscall sub_5F56A2(int *this)
   this[4] = (int)&off_6F9A70;
   sub_5F55BD(this + 78);
   this[70] = (int)&off_6F9AC8;
-  sub_45CA57(this + 74);
+  destroy_byte_vector(this + 74);
   this[70] = (int)&off_6F9AA4;
   this[61] = (int)&off_6F9BC4;
   sub_5F63A0(this + 65);
@@ -526720,7 +526537,7 @@ LABEL_41:
               else
               {
                 v119 = (char *)strlen(&Str);
-                sub_402BD8(&v141, &Str, v119);
+                append_std_string_storage_bytes(&v141, &Str, v119);
                 v148 = 0;
                 p_Str = &Str;
                 v151 = 1;
@@ -526737,7 +526554,7 @@ LABEL_41:
             if ( v151 )
             {
               v120 = (char *)strlen(&Str);
-              sub_402BD8(&v141, &Str, v120);
+              append_std_string_storage_bytes(&v141, &Str, v120);
               v121 = v142;
               if ( !v142 )
                 v121 = (char *)Key;
@@ -526796,7 +526613,7 @@ LABEL_41:
               else
               {
                 v129 = (char *)strlen(&v138);
-                sub_402BD8(&v143, &v138, v129);
+                append_std_string_storage_bytes(&v143, &v138, v129);
                 v127 = &v138;
                 v148 = 0;
                 v151 = 1;
@@ -526827,7 +526644,7 @@ LABEL_41:
             if ( v151 )
             {
               v130 = (char *)strlen(&v138);
-              sub_402BD8(&v143, &v138, v130);
+              append_std_string_storage_bytes(&v143, &v138, v130);
               v131 = v144;
               if ( !v144 )
                 v131 = (char *)Key;
@@ -528639,16 +528456,16 @@ void __thiscall sub_5FABE7(_DWORD *this, int a2, int a3, int a4)
   if ( this[21] )
   {
     qmemcpy(v6, Buf2, sizeof(v6));
-    sub_575F20(v6, *(float *)&a4);
-    sub_575F80(v6, *(float *)&a3);
+    rotate_matrix_about_x(v6, *(float *)&a4);
+    rotate_matrix_about_y(v6, *(float *)&a3);
     v7 = 0.0;
     v8 = 0.0;
     v9 = 1.0;
     v10 = 0.0;
     v11 = 1.0;
     v12 = 0.0;
-    sub_578B90(v6, &v7, &v7, 1, 12);
-    sub_578B90(v6, &v10, &v10, 1, 12);
+    transform_vector_array(v6, &v7, &v7, 1, 12);
+    transform_vector_array(v6, &v10, &v10, 1, 12);
     v5 = v13;
     (*(void (__stdcall **)(_DWORD, _DWORD, _DWORD, _DWORD, int))(*(_DWORD *)v13[21] + 56))(
       v13[21],
@@ -549921,32 +549738,32 @@ _BYTE *__thiscall sub_65B01E(int this, _BYTE *a2, char a3, int a4, int a5, int a
   if ( !v7 )
   {
     v8 = (char *)strlen(aI);
-    sub_402BD8(&a3, aI, v8);
+    append_std_string_storage_bytes(&a3, aI, v8);
   }
   if ( *(_BYTE *)(this + 109) )
   {
     v9 = (char *)strlen(aB);
-    sub_402BD8(&a3, aB, v9);
+    append_std_string_storage_bytes(&a3, aB, v9);
   }
   v10 = *(_DWORD *)(this + 136);
   if ( v10 && (unsigned int)((*(_DWORD *)(this + 140) - v10) >> 4) > 1 )
   {
     v11 = (char *)strlen(asc_78852C);
-    sub_402BD8(&a3, asc_78852C, v11);
+    append_std_string_storage_bytes(&a3, asc_78852C, v11);
   }
   else if ( *(_BYTE *)(this + 110) )
   {
     v12 = (char *)strlen(aU);
-    sub_402BD8(&a3, aU, v12);
+    append_std_string_storage_bytes(&a3, aU, v12);
   }
   v13 = *(_DWORD *)(this + 112);
   if ( v13 > 0 )
   {
     _itoa(v13, Str, 10);
     v14 = (char *)strlen(Str);
-    sub_402BD8(&a3, Str, v14);
+    append_std_string_storage_bytes(&a3, Str, v14);
     v15 = (char *)strlen("_2");
-    sub_402BD8(&a3, "_2", v15);
+    append_std_string_storage_bytes(&a3, "_2", v15);
   }
   *a2 = a3;
   std::string::_Tidy(0);
@@ -550906,7 +550723,7 @@ LABEL_44:
                     else
                     {
                       v25 = (char *)strlen(&Str);
-                      sub_402BD8(&v41, &Str, v25);
+                      append_std_string_storage_bytes(&v41, &Str, v25);
                       p_Str = &Str;
                       v47 = 1;
                       v48 = 1;
@@ -550923,7 +550740,7 @@ LABEL_44:
                   else
                   {
                     v27 = (char *)strlen(&Str);
-                    sub_402BD8(&v41, &Str, v27);
+                    append_std_string_storage_bytes(&v41, &Str, v27);
                     v28 = Source;
                     if ( !Source )
                       v28 = (char *)Key;
@@ -550943,7 +550760,7 @@ LABEL_44:
                   v49 = 1;
                   v47 = 1;
                   v32 = (char *)strlen(v30);
-                  sub_402BD8(&v43, v30, v32);
+                  append_std_string_storage_bytes(&v43, v30, v32);
                   while ( 1 )
                   {
                     v33 = sub_65B14F((_DWORD *)dword_78C000);
@@ -550959,7 +550776,7 @@ LABEL_44:
                     else
                     {
                       v34 = (char *)strlen(v38);
-                      sub_402BD8(&v43, v38, v34);
+                      append_std_string_storage_bytes(&v43, v38, v34);
                       v31 = v38;
                       v47 = 1;
                     }
@@ -550969,7 +550786,7 @@ LABEL_44:
                   if ( v38[0] )
                   {
                     v35 = (char *)strlen(v38);
-                    sub_402BD8(&v43, v38, v35);
+                    append_std_string_storage_bytes(&v43, v38, v35);
                   }
                   v36 = v44;
                   if ( !v44 )
@@ -551836,7 +551653,7 @@ LABEL_68:
             v61 = **(const void ***)(this + 40);
             v48 = (_DWORD *)(this + 56);
 LABEL_63:
-            sub_402BD8(v48, v61, v69);
+            append_std_string_storage_bytes(v48, v61, v69);
             break;
           case 0x4C:
             v52 = *(_BYTE *)(this + 56);
@@ -552041,10 +551858,10 @@ int __thiscall sub_65CF28(int this)
     "s_box_side",
     "s_box_top");
   sub_479FFC((_DWORD *)(this + 812), 0, COERCE_INT(1.0));
-  sub_5067E5((_BYTE *)this, this + 284, 1);
-  sub_5067E5((_BYTE *)this, this + 372, 1);
-  sub_5067E5((_BYTE *)this, this + 460, 1);
-  sub_5067E5((_BYTE *)this, this + 548, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 284, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 372, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 460, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 548, 1);
   return this;
 }
 // 65CF6D: variable 'v4' is possibly undefined
@@ -552372,7 +552189,7 @@ LABEL_26:
         v6 = (__int64)((double)rand() * 0.000030518509 * -2.0);
         _itoa(1 - v6, Buffer, 10);
         v7 = (char *)strlen(Buffer);
-        sub_402BD8(&v24, Buffer, v7);
+        append_std_string_storage_bytes(&v24, Buffer, v7);
         v8 = v25;
         if ( !v25 )
           v8 = (char *)Key;
@@ -552414,7 +552231,7 @@ LABEL_26:
     v28 = -1;
     std::string::_Tidy(1);
     v14 = (char *)strlen("_");
-    sub_402BD8((_DWORD *)(a1 + 776), "_", v14);
+    append_std_string_storage_bytes((_DWORD *)(a1 + 776), "_", v14);
     v15 = *(char **)(a1 + 780);
     if ( !v15 )
       v15 = (char *)Key;
@@ -552428,7 +552245,7 @@ LABEL_26:
     *(_DWORD *)Buffer = rand();
     _itoa(1 - (__int64)((double)*(int *)Buffer * 0.000030518509 * -4.0), Str, 10);
     v17 = (char *)strlen(Str);
-    sub_402BD8(&v22, Str, v17);
+    append_std_string_storage_bytes(&v22, Str, v17);
     v18 = v23;
     if ( !v23 )
       v18 = (char *)Key;
@@ -552576,7 +552393,7 @@ int __thiscall sub_65DC22(int this, _BYTE *a2)
     std::string::assign(v8, v9);
     v58 = 0;
     v10 = (char *)strlen("9");
-    sub_402BD8(&v54, "9", v10);
+    append_std_string_storage_bytes(&v54, "9", v10);
     v11 = (char *)*((_DWORD *)sub_53EF87(a2, &v50) + 1);
     LOBYTE(v58) = 1;
     v12 = Key;
@@ -552620,7 +552437,7 @@ LABEL_18:
         std::string::assign(v27, v28);
         v58 = 2;
         v29 = (char *)strlen("9");
-        sub_402BD8(&v54, "9", v29);
+        append_std_string_storage_bytes(&v54, "9", v29);
         v30 = (char *)*((_DWORD *)sub_53EF87(a2, v44) + 1);
         LOBYTE(v58) = 3;
         v31 = Key;
@@ -552659,7 +552476,7 @@ LABEL_18:
         sub_684C9B((char *)(this + 936), v18);
         v58 = -1;
         std::string::_Tidy(1);
-        if ( sub_4AEFAE(118) )
+        if ( is_global_flag_set(118) )
         {
           v19 = (char *)*((_DWORD *)sub_46C10A(*(_DWORD **)(this + 6948), v43, aArcadiatext, (char *)Str1) + 1);
           v58 = 5;
@@ -552756,7 +552573,7 @@ LABEL_56:
     std::string::assign(v34, v35);
     v58 = 7;
     v36 = (char *)strlen("9");
-    sub_402BD8(&v50, "9", v36);
+    append_std_string_storage_bytes(&v50, "9", v36);
     v37 = (char *)*((_DWORD *)sub_53EF87(a2, v42) + 1);
     LOBYTE(v58) = 8;
     v38 = Key;
@@ -553043,7 +552860,7 @@ LABEL_33:
     sub_684C9B((char *)(this + 936), v14);
     v48 = -1;
     std::string::_Tidy(1);
-    v15 = sub_4AEFAE(118);
+    v15 = is_global_flag_set(118);
     v27 = (int)Str1;
     if ( v15 )
     {
@@ -553748,7 +553565,7 @@ char __thiscall sub_65F486(int this, int a2)
     v13 = 1;
     sub_46C10A(v6, &v9, aParch2french, (char *)Str1);
     sub_68AA10(*(_DWORD *)(this + 6944), v9, v10, v11, v12, (int *)v13, v14, v15);
-    LOBYTE(v5) = sub_4AEFAE(126);
+    LOBYTE(v5) = is_global_flag_set(126);
     if ( !(_BYTE)v5 )
     {
       sub_4AEFE9(126);
@@ -553796,7 +553613,7 @@ LABEL_10:
     v13 = 0;
     sub_46C10A(v7, &v9, aParch1french, (char *)Str1);
     sub_68AA10(*(_DWORD *)(this + 6944), v9, v10, v11, v12, (int *)v13, v14, v15);
-    LOBYTE(v5) = sub_4AEFAE(127);
+    LOBYTE(v5) = is_global_flag_set(127);
     if ( !(_BYTE)v5 )
     {
       sub_4AEFE9(127);
@@ -553932,13 +553749,13 @@ int __thiscall sub_65F7B3(int this)
   *(_BYTE *)(this + 1136) = 0;
   *(_DWORD *)(this + 1140) = 10;
   *(_DWORD *)(this + 1144) = 10;
-  sub_5067E5((_BYTE *)this, this + 208, 1);
-  sub_5067E5((_BYTE *)this, this + 280, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 280, 1);
   v3[0] = 0;
   v3[1] = 0;
   v3[2] = 5;
   v3[3] = 5;
-  sub_476C91((_DWORD *)this, v3);
+  update_control_bounds((_DWORD *)this, v3);
   *(_DWORD *)(this + 1160) = 0;
   *(_DWORD *)(this + 1152) = 0;
   *(_DWORD *)(this + 1156) = 0;
@@ -554088,7 +553905,7 @@ int __thiscall sub_65FC0C(int this, const char *a2, int a3)
   v11 = 40;
   v12 = 3;
   sub_67F9D5(this + 452, (int)v9, a2);
-  sub_5067E5((_BYTE *)this, this + 452, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 452, 1);
   v6 = sub_46C10A(*(_DWORD **)(this + 1160), v13, aNobutton, (char *)Str1);
   LOBYTE(v14) = 2;
   assign_std_string_storage(v10, v6);
@@ -554097,7 +553914,7 @@ int __thiscall sub_65FC0C(int this, const char *a2, int a3)
   v11 = 40;
   v12 = 4;
   sub_67F9D5(this + 680, (int)v9, a2);
-  sub_5067E5((_BYTE *)this, this + 680, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 680, 1);
   v7 = sub_46C10A(*(_DWORD **)(this + 1160), v13, aOkbutton, (char *)Str1);
   LOBYTE(v14) = 3;
   assign_std_string_storage(v10, v7);
@@ -554106,7 +553923,7 @@ int __thiscall sub_65FC0C(int this, const char *a2, int a3)
   v11 = 40;
   v12 = 5;
   sub_67F9D5(this + 908, (int)v9, a2);
-  sub_5067E5((_BYTE *)this, this + 908, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 908, 1);
   v14 = -1;
   *(_DWORD *)(this + 1156) = a3;
   return sub_65D6A5();
@@ -554422,7 +554239,7 @@ int __thiscall sub_660262(int this)
     "s_box_side",
     "s_box_top");
   sub_479FFC((_DWORD *)(this + 1104), 0, COERCE_INT(1.0));
-  sub_5067E5((_BYTE *)this, this + 892, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 892, 1);
   *(_DWORD *)(this + 1100) = 0;
   *(_DWORD *)(this + 1080) = 10;
   *(_DWORD *)(this + 1084) = 8;
@@ -554580,7 +554397,7 @@ int __thiscall sub_660695(int this, const char *a2, int a3)
   v16 = 60;
   v17 = 29;
   sub_67F9D5(this + 208, (int)v14, a2);
-  sub_5067E5((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
   v6 = sub_46C10A(*(_DWORD **)(this + 1100), v18, aEnglish, (char *)Str1);
   LOBYTE(v19) = 2;
   assign_std_string_storage(v15, v6);
@@ -554589,7 +554406,7 @@ int __thiscall sub_660695(int this, const char *a2, int a3)
   v16 = 60;
   v17 = 30;
   sub_67F9D5(this + 436, (int)v14, a2);
-  sub_5067E5((_BYTE *)this, this + 436, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 436, 1);
   v7 = sub_46C10A(*(_DWORD **)(this + 1100), v18, aLatin, (char *)Str1);
   LOBYTE(v19) = 3;
   assign_std_string_storage(v15, v7);
@@ -554598,7 +554415,7 @@ int __thiscall sub_660695(int this, const char *a2, int a3)
   v16 = 60;
   v17 = 31;
   sub_67F9D5(this + 664, (int)v14, a2);
-  sub_5067E5((_BYTE *)this, this + 664, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 664, 1);
   v10 = (unsigned int)&v10 >> 24;
   std::string::_Tidy(0);
   v8 = strlen(aDefaultLanguag);
@@ -554893,7 +554710,7 @@ int __thiscall sub_660C23(int this)
   v4[1] = 50;
   v5 = 640;
   v6 = 480;
-  sub_476C91((_DWORD *)this, v4);
+  update_control_bounds((_DWORD *)this, v4);
   return this;
 }
 // 6EA9E0: using guessed type int (__stdcall *off_6EA9E0)(char);
@@ -556676,7 +556493,7 @@ int __usercall sub_6630F0@<eax>(int a1@<ecx>, int a2@<edi>)
   int j; // [esp+164h] [ebp-10h]
   int v80; // [esp+170h] [ebp-4h]
 
-  v3 = sub_4AEFAE(118);
+  v3 = is_global_flag_set(118);
   v4 = *(_DWORD **)(a1 + 5072);
   if ( v3 )
   {
@@ -557365,7 +557182,7 @@ int __thiscall sub_66408E(int this, int a2)
   char v22; // [esp+53h] [ebp-Dh] BYREF
   int v23; // [esp+5Ch] [ebp-4h]
 
-  sub_402BAA(&v15, asc_788108, &v22);
+  assign_std_string_storage_from_c_string(&v15, asc_788108, &v22);
   v23 = 0;
   while ( *sub_460776(&v15, 0) == 32 )
   {
@@ -557463,9 +557280,9 @@ int __thiscall sub_664266(int this, int a2)
   char v20; // [esp+63h] [ebp-Dh] BYREF
   int v21; // [esp+6Ch] [ebp-4h]
 
-  sub_402BAA(v12, asc_788108, &v20);
+  assign_std_string_storage_from_c_string(v12, asc_788108, &v20);
   v21 = 0;
-  sub_402BAA(v7, aIesu, &v19);
+  assign_std_string_storage_from_c_string(v7, aIesu, &v19);
   LOBYTE(v21) = 1;
   v18 = (char *)rand();
   LOBYTE(v18) = *sub_460776(v7, (__int64)((double)(int)v18 * 0.000030518509 * 4.0));
@@ -558197,9 +558014,9 @@ int __thiscall sub_664FC8(int this)
   v27 = *(char **)(this + 5028);
   v7 = sub_6666EB(&v24, v16, v15);
   sub_557FC0(*(_DWORD *)v7[2]);
-  sub_402BAA(v17, aIesu, &v30);
+  assign_std_string_storage_from_c_string(v17, aIesu, &v30);
   v31 = 0;
-  sub_402BAA(&v22, asc_788108, &v29);
+  assign_std_string_storage_from_c_string(&v22, asc_788108, &v29);
   v8 = *(_DWORD *)(this + 3336);
   LOBYTE(v31) = 1;
   v9 = (char *)sub_460776(&v22, 0);
@@ -561466,7 +561283,7 @@ int __thiscall sub_668222(
   int v26; // [esp+3Ch] [ebp-4h]
 
   v26 = 1;
-  sub_40442F(v23, &v25);
+  initialize_std_string_storage(v23, &v25);
   v19 = a6;
   LOBYTE(v26) = 2;
   assign_std_string_storage(v23, &a7);
@@ -561625,7 +561442,7 @@ size_t __thiscall sub_66832D(int *this)
       v9 = Key;
     if ( strcmp(v9, Str1) )
     {
-      sub_40442F(v52, &v79);
+      initialize_std_string_storage(v52, &v79);
       v80 = 0;
       v60 = v5;
       v61 = 0;
@@ -561683,7 +561500,7 @@ size_t __thiscall sub_66832D(int *this)
               v19 = Key;
             if ( strcmp(v19, Str1) )
             {
-              sub_40442F(v54, &v74);
+              initialize_std_string_storage(v54, &v74);
               v60 = v5;
               v62 = 0;
               v63 = 0;
@@ -563343,7 +563160,7 @@ int __thiscall sub_669D1F(int this, int a2)
   find_or_create_registry_entry(&dword_78F140, dword_76CAD0 + this + 205);
   sub_65B384((_DWORD *)(this + 224), (_BYTE *)&a2 + 3);
   sub_47765E(this + 276, v2);
-  sub_4771A6((_DWORD *)(this + 364), v2);
+  construct_color_control((_DWORD *)(this + 364), v2);
   *(_DWORD *)(this + 200) = &off_6EAED8;
   *(_DWORD *)this = &off_6EAEDC;
   return this;
@@ -563509,7 +563326,7 @@ int __thiscall sub_669FFA(_BYTE *this, _DWORD *a2, int a3)
     *((_DWORD *)this + 102) = 0;
     (*(void (__thiscall **)(_BYTE *))(v10 + 156))(this + 364);
   }
-  sub_5067E5(this, (int)(this + 364), 1);
+  insert_control_into_control_container(this, (int)(this + 364), 1);
   return sub_66A12B(this, (int)off_78F258);
 }
 // 78F208: using guessed type int dword_78F208;
@@ -565076,7 +564893,7 @@ int __thiscall sub_66B565(int this)
   v5 = strlen(aEsidneyemail);
   std::string::assign(aEsidneyemail, v5);
   LOBYTE(v23) = 14;
-  v20 = sub_45A0F8(60);
+  v20 = allocate_registered_config_file(60);
   LOBYTE(v23) = 15;
   if ( v20 )
   {
@@ -565088,7 +564905,7 @@ int __thiscall sub_66B565(int this)
     LOBYTE(v23) = 16;
     if ( !v7 )
       v7 = (char *)Key;
-    v8 = sub_46B4E2(v20, v7, v6);
+    v8 = construct_registered_config_file(v20, v7, v6);
   }
   else
   {
@@ -565113,7 +564930,7 @@ int __thiscall sub_66B565(int this)
     v19 = 0;
     (*(void (__thiscall **)(int, int *, int))(v11 + 196))(this + 280, &v19, v13);
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 280) + 176))(this + 280, 1);
-    sub_5067E5((_BYTE *)this, this + 280, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 280, 1);
     sub_506D94((void *)this, dword_78FC88);
   }
   else
@@ -565476,7 +565293,7 @@ LABEL_7:
     sub_4AEFE9(146);
     sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 311);
   }
-  if ( *(_DWORD *)(this + 3916) == 42 && !sub_4AEFAE(147) )
+  if ( *(_DWORD *)(this + 3916) == 42 && !is_global_flag_set(147) )
   {
     sub_4AEFE9(147);
     sub_53860E(*(_DWORD **)(*(_DWORD *)(game_engine_instance_address + 1092) + 84), 364);
@@ -565716,11 +565533,11 @@ int __thiscall sub_66C419(int this)
   sub_66C97D((float *)(this + 200));
   sub_66DA20((_DWORD *)(this + 1620));
   *(_DWORD *)this = &off_6EB0B0;
-  sub_5067E5((_BYTE *)this, this + 200, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 200, 1);
   *(_DWORD *)(this + 1616) = 0;
   *(_DWORD *)(this + 3244) = 0;
   *(_DWORD *)(this + 3248) = 0;
-  sub_5067E5((_BYTE *)this, this + 1620, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1620, 1);
   return this;
 }
 // 6EB0B0: using guessed type int (__stdcall *off_6EB0B0)(char);
@@ -566195,7 +566012,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 13;
   (*(void (__thiscall **)(int *, int *, int))(v4 + 196))(this + 50, &v28, v24);
   (*(void (__thiscall **)(int *, int))(this[50] + 176))(this + 50, 1);
-  sub_5067E5(this, (int)(this + 50), 1);
+  insert_control_into_control_container(this, (int)(this + 50), 1);
   sub_47786D(this + 68, aSidText14_3);
   v5 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)this[341], &v26, aFrom, (char *)Str1) + 1);
   v30 = 0;
@@ -566209,7 +566026,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 11;
   (*(void (__thiscall **)(int *, int *))(v6 + 164))(this + 68, &v28);
   (*(void (__thiscall **)(int *, int))(this[68] + 176))(this + 68, 1);
-  sub_5067E5(this, (int)(this + 68), 1);
+  insert_control_into_control_container(this, (int)(this + 68), 1);
   sub_47786D(this + 90, aSidText14_3);
   v7 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)this[341], &v26, aTo, (char *)Str1) + 1);
   v30 = 1;
@@ -566223,7 +566040,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 30;
   (*(void (__thiscall **)(int *, int *))(v8 + 164))(this + 90, &v28);
   (*(void (__thiscall **)(int *, int))(this[90] + 176))(this + 90, 1);
-  sub_5067E5(this, (int)(this + 90), 1);
+  insert_control_into_control_container(this, (int)(this + 90), 1);
   sub_47786D(this + 112, aSidText14_3);
   v9 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)this[341], &v26, aCc, (char *)Str1) + 1);
   v30 = 2;
@@ -566237,7 +566054,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 49;
   (*(void (__thiscall **)(int *, int *))(v10 + 164))(this + 112, &v28);
   (*(void (__thiscall **)(int *, int))(this[112] + 176))(this + 112, 1);
-  sub_5067E5(this, (int)(this + 112), 1);
+  insert_control_into_control_container(this, (int)(this + 112), 1);
   sub_47786D(this + 134, aSidText14_3);
   v11 = (char *)*((_DWORD *)sub_46C10A((_DWORD *)this[341], &v26, "Subject", (char *)Str1) + 1);
   v30 = 3;
@@ -566251,7 +566068,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 78;
   (*(void (__thiscall **)(int *, int *))(v12 + 164))(this + 134, &v28);
   (*(void (__thiscall **)(int *, int))(this[134] + 176))(this + 134, 1);
-  sub_5067E5(this, (int)(this + 134), 1);
+  insert_control_into_control_container(this, (int)(this + 134), 1);
   sub_47786D(this + 156, aSidText14_3);
   sub_683DA6(this + 156, 8);
   sub_683DB0((int)(this + 156), 1, 0, 1, 2);
@@ -566266,7 +566083,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 9;
   (*(void (__thiscall **)(int *, int *))(v14 + 164))(this + 156, &v28);
   (*(void (__thiscall **)(int *, int))(this[156] + 176))(this + 156, 1);
-  sub_5067E5(this, (int)(this + 156), 1);
+  insert_control_into_control_container(this, (int)(this + 156), 1);
   sub_47786D(this + 230, aSidText14_3);
   sub_683DA6(this + 230, 8);
   sub_683DB0((int)(this + 230), 1, 0, 1, 2);
@@ -566281,7 +566098,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 47;
   (*(void (__thiscall **)(int *, int *))(v16 + 164))(this + 230, &v28);
   (*(void (__thiscall **)(int *, int))(this[230] + 176))(this + 230, 1);
-  sub_5067E5(this, (int)(this + 230), 1);
+  insert_control_into_control_container(this, (int)(this + 230), 1);
   sub_47786D(this + 193, aSidText14_3);
   sub_683DA6(this + 193, 8);
   sub_683DB0((int)(this + 193), 1, 0, 1, 2);
@@ -566296,7 +566113,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 28;
   (*(void (__thiscall **)(int *, int *))(v18 + 164))(this + 193, &v28);
   (*(void (__thiscall **)(int *, int))(this[193] + 176))(this + 193, 1);
-  sub_5067E5(this, (int)(this + 193), 1);
+  insert_control_into_control_container(this, (int)(this + 193), 1);
   sub_47786D(this + 267, aSidText14_3);
   sub_683DA6(this + 267, 8);
   sub_683DB0((int)(this + 267), 1, 0, 1, 2);
@@ -566311,7 +566128,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v29 = 76;
   (*(void (__thiscall **)(int *, int *))(v20 + 164))(this + 267, &v28);
   (*(void (__thiscall **)(int *, int))(this[267] + 176))(this + 267, 1);
-  sub_5067E5(this, (int)(this + 267), 1);
+  insert_control_into_control_container(this, (int)(this + 267), 1);
   sub_47786D(this + 304, aSidText14_3);
   sub_683DB0((int)(this + 304), 1, 1, 1, 2);
   v21 = this[304];
@@ -566325,7 +566142,7 @@ _DWORD *__thiscall sub_66CDDA(int *this)
   v25[1] = 28;
   (*(void (__thiscall **)(int *, _DWORD *))(v22 + 164))(this + 304, v25);
   (*(void (__thiscall **)(int *, int))(this[304] + 176))(this + 304, 1);
-  return sub_5067E5(this, (int)(this + 304), 1);
+  return insert_control_into_control_container(this, (int)(this + 304), 1);
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 7715D4: using guessed type int game_engine_address;
@@ -566883,7 +566700,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v6 = 0;
   sub_67F9D5((int)(this + 50), (int)&v28, v6);
-  sub_5067E5(this, (int)(this + 50), 1);
+  insert_control_into_control_container(this, (int)(this + 50), 1);
   v7 = (_DWORD *)this[393];
   v28 = 141;
   v29 = 8;
@@ -566900,7 +566717,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v10 = 0;
   sub_67F9D5((int)(this + 107), (int)&v28, v10);
-  sub_5067E5(this, (int)(this + 107), 1);
+  insert_control_into_control_container(this, (int)(this + 107), 1);
   v11 = (_DWORD *)this[393];
   v28 = 219;
   v29 = 8;
@@ -566917,7 +566734,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v14 = 0;
   sub_67F9D5((int)(this + 164), (int)&v28, v14);
-  sub_5067E5(this, (int)(this + 164), 1);
+  insert_control_into_control_container(this, (int)(this + 164), 1);
   v15 = (_DWORD *)this[393];
   v28 = 297;
   v29 = 8;
@@ -566934,7 +566751,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v18 = 0;
   sub_67F9D5((int)(this + 221), (int)&v28, v18);
-  sub_5067E5(this, (int)(this + 221), 1);
+  insert_control_into_control_container(this, (int)(this + 221), 1);
   v19 = (_DWORD *)this[393];
   v28 = 375;
   v29 = 8;
@@ -566951,7 +566768,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v22 = 0;
   sub_67F9D5((int)(this + 278), (int)&v28, v22);
-  sub_5067E5(this, (int)(this + 278), 1);
+  insert_control_into_control_container(this, (int)(this + 278), 1);
   v23 = (_DWORD *)this[393];
   v28 = 469;
   v29 = 8;
@@ -566968,7 +566785,7 @@ int __thiscall sub_66DD8F(int *this)
   else
     v26 = 0;
   sub_67F9D5((int)(this + 335), (int)&v28, v26);
-  sub_5067E5(this, (int)(this + 335), 1);
+  insert_control_into_control_container(this, (int)(this + 335), 1);
   v33[1] = 329;
   v33[0] = 0;
   (*(void (__thiscall **)(int *, _DWORD *))(*this + 164))(this, v33);
@@ -567118,19 +566935,19 @@ int __thiscall sub_66E2A5(int this)
   sub_6837FB((_DWORD *)(this + 1516));
   *(_DWORD *)(this + 1608) = 0;
   *(_DWORD *)this = &off_6EB41C;
-  sub_5067E5((_BYTE *)this, this + 200, 1);
-  sub_5067E5((_BYTE *)this, this + 288, 1);
-  sub_5067E5((_BYTE *)this, this + 376, 1);
-  sub_5067E5((_BYTE *)this, this + 464, 1);
-  sub_5067E5((_BYTE *)this, this + 636, 1);
-  sub_5067E5((_BYTE *)this, this + 724, 1);
-  sub_5067E5((_BYTE *)this, this + 812, 1);
-  sub_5067E5((_BYTE *)this, this + 984, 1);
-  sub_5067E5((_BYTE *)this, this + 1072, 1);
-  sub_5067E5((_BYTE *)this, this + 1160, 1);
-  sub_5067E5((_BYTE *)this, this + 1332, 1);
-  sub_5067E5((_BYTE *)this, this + 1424, 1);
-  sub_5067E5((_BYTE *)this, this + 1516, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 200, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 288, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 376, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 464, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 636, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 724, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 812, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 984, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1072, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1160, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1332, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1424, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1516, 1);
   return this;
 }
 // 6EB41C: using guessed type int (__stdcall *off_6EB41C)(char);
@@ -567661,19 +567478,19 @@ int __thiscall sub_66F22E(int this)
   sub_4708B1((_BYTE *)(this + 1192));
   *(_DWORD *)(this + 1280) = 0;
   *(_DWORD *)this = &off_6EB4F4;
-  sub_5067E5((_BYTE *)this, this + 200, 1);
-  sub_5067E5((_BYTE *)this, this + 288, 1);
-  sub_5067E5((_BYTE *)this, this + 376, 1);
-  sub_5067E5((_BYTE *)this, this + 448, 1);
-  sub_5067E5((_BYTE *)this, this + 520, 1);
-  sub_5067E5((_BYTE *)this, this + 592, 1);
-  sub_5067E5((_BYTE *)this, this + 664, 1);
-  sub_5067E5((_BYTE *)this, this + 752, 1);
-  sub_5067E5((_BYTE *)this, this + 840, 1);
-  sub_5067E5((_BYTE *)this, this + 928, 1);
-  sub_5067E5((_BYTE *)this, this + 1016, 1);
-  sub_5067E5((_BYTE *)this, this + 1104, 1);
-  sub_5067E5((_BYTE *)this, this + 1192, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 200, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 288, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 376, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 448, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 520, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 592, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 664, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 752, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 840, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 928, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1016, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1104, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1192, 1);
   return this;
 }
 // 6EB4F4: using guessed type int (__stdcall *off_6EB4F4)(char);
@@ -568218,7 +568035,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F498 = (int)aBSearchH;
   dword_78F49C = (int)aBSearchX;
   sub_44F8C2((_DWORD *)(this + 908), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 908, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 908, 1);
   v5 = (char *)(*(_DWORD *)(this + 944) - *(_DWORD *)(this + 936));
   dword_78F490 = (int)aBEmailU;
   dword_78F494 = (int)aBEmailD;
@@ -568231,7 +568048,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F48C = 24;
   dword_78F4B0 = 7;
   sub_44F8C2((_DWORD *)(this + 596), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 596, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 596, 1);
   v34 += (int)v33;
   dword_78F488 = v34;
   dword_78F48C = 24;
@@ -568241,7 +568058,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBFilesX;
   dword_78F4B0 = 8;
   sub_44F8C2((_DWORD *)(this + 1376), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 1376, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1376, 1);
   sub_67F14C(v23);
   LOBYTE(v36) = 15;
   v6 = strlen(aSidText18Ul);
@@ -568265,7 +568082,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBAnalyzeX;
   dword_78F4B0 = 2;
   sub_44F8C2((_DWORD *)(this + 440), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 440, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 440, 1);
   v34 += (int)v33;
   dword_78F488 = v34;
   dword_78F48C = v35;
@@ -568275,7 +568092,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBTranslX;
   dword_78F4B0 = 3;
   sub_44F8C2((_DWORD *)(this + 1220), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 1220, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1220, 1);
   v34 += (int)v33;
   dword_78F488 = v34;
   dword_78F48C = v35;
@@ -568285,7 +568102,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBAddataX;
   dword_78F4B0 = 6;
   sub_44F8C2((_DWORD *)(this + 284), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 284, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 284, 1);
   v34 += (int)v33;
   dword_78F488 = v34;
   dword_78F48C = v35;
@@ -568295,7 +568112,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBMakeidX;
   dword_78F4B0 = 4;
   sub_44F8C2((_DWORD *)(this + 752), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 752, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 752, 1);
   v34 += (int)v33;
   dword_78F488 = v34;
   dword_78F48C = v35;
@@ -568305,7 +568122,7 @@ int __thiscall sub_6700DF(int this)
   dword_78F49C = (int)aBSusptX;
   dword_78F4B0 = 5;
   sub_44F8C2((_DWORD *)(this + 1064), (int)&dword_78F488, (int)v4);
-  sub_5067E5((_BYTE *)this, this + 1064, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1064, 1);
   v12 = sub_46C10A(*(_DWORD **)(this + 3068), v30, aMenuitem9, (char *)Str1);
   LOBYTE(v36) = 16;
   assign_std_string_storage(v24, v12);
@@ -568313,7 +568130,7 @@ int __thiscall sub_6700DF(int this)
   std::string::_Tidy(1);
   v25 = 9;
   sub_67F9D5(this + 1532, (int)v23, v4);
-  sub_5067E5((_BYTE *)this, this + 1532, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1532, 1);
   v13 = *(_DWORD *)(this + 1572) - *(_DWORD *)(this + 1564);
   v34 = dword_78AA48 - (*(_DWORD *)(this + 1568) - *(_DWORD *)(this + 1560)) - 10;
   v35 = dword_78AA4C - v13 - 10;
@@ -568361,7 +568178,7 @@ int __thiscall sub_6700DF(int this)
   v35 = 0;
   (*(void (__thiscall **)(int, int *, int))(v20 + 196))(this + 208, &v34, v19);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 208) + 176))(this + 208, 1);
-  sub_5067E5((_BYTE *)this, this + 208, 0);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 0);
   v21 = *(_DWORD *)(this + 3064);
   v31 = *(_DWORD *)(v21 + 352);
   v32 = *(char **)(v21 + 356);
@@ -569250,7 +569067,7 @@ _DWORD *__thiscall sub_6719A6(_DWORD *this)
   LOBYTE(v41) = *(_BYTE *)(v2 + 332);
   std::string::_Tidy(0);
   std::string::assign(v3, 0, -1);
-  v44 = sub_45A0F8(60);
+  v44 = allocate_registered_config_file(60);
   LOBYTE(v47) = 23;
   if ( v44 )
   {
@@ -569262,7 +569079,7 @@ _DWORD *__thiscall sub_6719A6(_DWORD *this)
     LOBYTE(v47) = 24;
     if ( !v5 )
       v5 = Key;
-    v6 = sub_46B4E2(v5, v4);
+    v6 = construct_registered_config_file(v5, v4);
   }
   else
   {
@@ -569502,14 +569319,14 @@ _DWORD *__thiscall sub_6719A6(_DWORD *this)
     sub_673C8B(this);
     sub_673208(this + 52);
     (*(void (__thiscall **)(_DWORD *, int))(this[52] + 176))(this + 52, 1);
-    sub_5067E5(this + 52, 1);
+    insert_control_into_control_container(this + 52, 1);
     v31 = *(_DWORD *)find_or_create_engine_string_resource(&v44, aSBkgnd, 0, 0);
     v44 = 0;
     v29 = this[1139];
     v43 = 0;
     (*(void (__thiscall **)(_DWORD *, int *, int))(v29 + 196))(this + 1139, &v43, v31);
     (*(void (__thiscall **)(_DWORD *, int))(this[1139] + 176))(this + 1139, 1);
-    sub_5067E5(this + 1139, 1);
+    insert_control_into_control_container(this + 1139, 1);
     sub_506D94(dword_78FC88);
     LOBYTE(v47) = 39;
     `eh vector destructor iterator'(v35, 0xA8u, 2, (void (__thiscall *)(void *))sub_65D6A5);
@@ -569537,8 +569354,8 @@ _DWORD *__thiscall sub_6719A6(_DWORD *this)
 // 402C2F: using guessed type _DWORD __stdcall std::string::assign(_DWORD, _DWORD, _DWORD);
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
 // 44777F: using guessed type int __thiscall construct_sprite_control(_DWORD);
-// 45A0F8: using guessed type _DWORD __cdecl sub_45A0F8(_DWORD);
-// 46B4E2: using guessed type _DWORD __stdcall sub_46B4E2(_DWORD, _DWORD);
+// 45A0F8: using guessed type _DWORD __cdecl allocate_registered_config_file(_DWORD);
+// 46B4E2: using guessed type _DWORD __stdcall construct_registered_config_file(_DWORD, _DWORD);
 // 46B696: using guessed type _DWORD __stdcall select_settings_section(char *Str);
 // 46C10A: using guessed type _DWORD __stdcall sub_46C10A(_DWORD, _DWORD, __int16);
 // 4708B1: using guessed type int __thiscall sub_4708B1(_DWORD);
@@ -569546,7 +569363,7 @@ _DWORD *__thiscall sub_6719A6(_DWORD *this)
 // 4EB6E7: using guessed type _DWORD __stdcall sub_4EB6E7(_DWORD);
 // 4EE106: using guessed type _DWORD __stdcall get_game_layer_slot(_DWORD, _DWORD);
 // 506755: using guessed type _DWORD __stdcall attach_control_to_service(_DWORD, char);
-// 5067E5: using guessed type _DWORD __stdcall sub_5067E5(_DWORD, char);
+// 5067E5: using guessed type _DWORD __stdcall insert_control_into_control_container(_DWORD, char);
 // 506D94: using guessed type _DWORD __stdcall sub_506D94(_DWORD);
 // 5574A3: using guessed type _DWORD log_source_message(_DWORD, _DWORD, _DWORD, _DWORD, const char *, ...);
 // 566D10: using guessed type _DWORD __stdcall find_or_create_registry_entry(_DWORD);
@@ -570195,13 +570012,13 @@ int __thiscall sub_673621(_DWORD *this, int a2)
   int v37; // [esp+A0h] [ebp-4h]
 
   this[368] = a2;
-  sub_40442F(v28, &v31);
+  initialize_std_string_storage(v28, &v31);
   v37 = 0;
-  sub_40442F(v23, &v30);
+  initialize_std_string_storage(v23, &v30);
   LOBYTE(v37) = 1;
-  sub_40442F(v24, &v32);
+  initialize_std_string_storage(v24, &v32);
   LOBYTE(v37) = 2;
-  sub_40442F(v25, &v34);
+  initialize_std_string_storage(v25, &v34);
   LOBYTE(v37) = 3;
   v3 = strlen(asc_789B68);
   std::string::assign(asc_789B68, v3);
@@ -570272,9 +570089,9 @@ int __thiscall sub_673621(_DWORD *this, int a2)
     v12 = (char *)Key;
   sub_683C85((int)(this + 51), v12);
   (*(void (__thiscall **)(_DWORD *))(this[51] + 152))(this + 51);
-  sub_40442F(v27, (_BYTE *)&a2 + 3);
+  initialize_std_string_storage(v27, (_BYTE *)&a2 + 3);
   LOBYTE(v37) = 12;
-  sub_40442F(v21, &v33);
+  initialize_std_string_storage(v21, &v33);
   v13 = this[50] == 1;
   LOBYTE(v37) = 13;
   v14 = aGab;
@@ -571428,25 +571245,25 @@ int __thiscall sub_674101(int this)
   sub_558032(this + 6952, (_BYTE *)this);
   *(_DWORD *)(this + 4496) = *(_DWORD *)(this + 6948);
   sub_660695(this + 3396, v132, *(_DWORD *)(this + 6944));
-  sub_5067E5(*(_BYTE **)(this + 6944), this + 3396, 1);
+  insert_control_into_control_container(*(_BYTE **)(this + 6944), this + 3396, 1);
   sub_678F75((_DWORD *)(this + 7004), this + 7184);
   sub_678F68((_DWORD *)(this + 7004), this);
-  sub_5067E5((_BYTE *)this, this + 7004, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 7004, 1);
   sub_67B3D2((_DWORD *)(this + 7184), this);
   sub_67B3C8((_DWORD *)(this + 7184), this + 7004);
-  sub_5067E5((_BYTE *)this, this + 7184, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 7184, 1);
   v133 = 39;
   v135 = 192;
   v134 = (dword_78AA4C - 150) / 3;
   v136 = v134 + 150;
   sub_684A1E((_DWORD *)(this + 212), 39, v134, 192, v134 + 150, 0);
-  sub_5067E5((_BYTE *)this, this + 212, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 212, 1);
   v133 = dword_76CDF0;
   v136 = dword_76CDF4 + 10;
   v134 = dword_76CDF4;
   v135 = dword_76CDF0 + 10;
   sub_684A1E((_DWORD *)(this + 936), dword_76CDF0, dword_76CDF4, dword_76CDF0 + 10, dword_76CDF4 + 10, 0);
-  sub_5067E5((_BYTE *)this, this + 936, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 936, 1);
   *(_DWORD *)(this + 7308) = 0;
   *(_DWORD *)(this + 7304) = 0;
   *(_DWORD *)(this + 7312) = 0;
@@ -571456,7 +571273,7 @@ int __thiscall sub_674101(int this)
   *(_DWORD *)(this + 1876) = *(_DWORD *)(this + 6944);
   *(_DWORD *)(this + 1880) = *(_DWORD *)(this + 6948);
   sub_660FE3(this + 1664);
-  sub_5067E5((_BYTE *)this, this + 1664, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 1664, 1);
   v94 = *(_DWORD *)(this + 7336);
   v135 = 4;
   v136 = 453;
@@ -571471,7 +571288,7 @@ int __thiscall sub_674101(int this)
   v136 = 0;
   (*(void (__thiscall **)(int, int *, int))(v96 + 196))(this + 6632, &v135, v99);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 6632) + 176))(this + 6632, 1);
-  sub_5067E5((_BYTE *)this, this + 6632, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 6632, 1);
   v97 = *(_DWORD *)(this + 6944);
   *(_BYTE *)(this + 7324) = 0;
   *(_DWORD *)(this + 7328) = 0;
@@ -571954,7 +571771,7 @@ int __fastcall sub_675D91(int a1, int a2, int a3)
       }
       else if ( a3 == 5001 )
       {
-        if ( sub_4AEFAE(110) )
+        if ( is_global_flag_set(110) )
         {
           v7 = (char *)sub_53F587(76);
           v139 = v7;
@@ -572732,7 +572549,7 @@ LABEL_227:
   v78 = v28 - 15;
   if ( !v78 )
   {
-    if ( sub_4AEFAE(111) )
+    if ( is_global_flag_set(111) )
     {
       v106 = 1;
       v105 = 1;
@@ -574881,7 +574698,7 @@ LABEL_27:
         sub_679054((_DWORD *)this, 0);
         (*(void (__thiscall **)(int))(*(_DWORD *)this + 152))(this);
         (*(void (__thiscall **)(_DWORD))(**(_DWORD **)(this + 156) + 152))(*(_DWORD *)(this + 156));
-        if ( sub_4AEFAE(86) && lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 529, 41) )
+        if ( is_global_flag_set(86) && lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 529, 41) )
         {
           v38 = sub_689E5B(*(_DWORD *)(this + 152), 0);
           X = 0x100000001LL;
@@ -580168,13 +579985,13 @@ _BYTE *__thiscall sub_67F14C(_BYTE *this)
   this[72] = v10;
   std::string::_Tidy(0);
   LOBYTE(v11) = 4;
-  sub_40442F(this + 88, &v10);
+  initialize_std_string_storage(this + 88, &v10);
   LOBYTE(v11) = 5;
-  sub_40442F(this + 104, &v9);
+  initialize_std_string_storage(this + 104, &v9);
   LOBYTE(v11) = 6;
-  sub_40442F(this + 120, &v10);
+  initialize_std_string_storage(this + 120, &v10);
   LOBYTE(v11) = 7;
-  sub_40442F(this + 136, &v9);
+  initialize_std_string_storage(this + 136, &v9);
   *(_DWORD *)this = 0;
   LOBYTE(v11) = 8;
   *((_DWORD *)this + 1) = 0;
@@ -580586,7 +580403,7 @@ int __thiscall sub_67F9D5(int this, int a2, const char *a3)
       a3 = (const char *)rand();
       _itoa(1 - (__int64)((double)(int)a3 * 0.000030518509 * -5.0), Str, 10);
       v16 = (char *)strlen(Str);
-      sub_402BD8(v26, Str, v16);
+      append_std_string_storage_bytes(v26, Str, v16);
       v15 = (const char *)v26[1];
     }
     a3 = Key;
@@ -580847,22 +580664,22 @@ int __thiscall sub_67FFCD(int *this, int a2)
         v5 = *this;
         this[38] = 0;
         (*(void (__thiscall **)(int *))(v5 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v6 = *this;
         this[38] = 1;
         (*(void (__thiscall **)(int *))(v6 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v7 = *this;
         this[38] = 0;
         (*(void (__thiscall **)(int *))(v7 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v8 = *this;
         this[38] = 1;
         (*(void (__thiscall **)(int *))(v8 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         this[38] = 0;
         queue_engine_event((int *)game_engine_address, this + 34);
         v9 = (_BYTE *)this[46];
@@ -580902,34 +580719,34 @@ int __thiscall sub_68010A(int *this, char a2)
     v3 = *this;
     this[38] = 2;
     (*(void (**)(void))(v3 + 208))();
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
     if ( this != (int *)-100 && *((_BYTE *)this + 100) )
       play_2d_sound(*(void **)(game_engine_address + 212), COERCE_FLOAT(1), (char *)this + 100, 100.0, 0, 1, 0);
     Sleep(0x46u);
     v4 = *this;
     this[38] = 0;
     (*(void (__thiscall **)(int *))(v4 + 208))(this);
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
     Sleep(0x3Cu);
     v5 = *this;
     this[38] = 2;
     (*(void (__thiscall **)(int *))(v5 + 208))(this);
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
     Sleep(0x3Cu);
     v6 = *this;
     this[38] = 0;
     (*(void (__thiscall **)(int *))(v6 + 208))(this);
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
     Sleep(0x3Cu);
     v7 = *this;
     this[38] = 2;
     (*(void (__thiscall **)(int *))(v7 + 208))(this);
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
     Sleep(0x3Cu);
     v8 = *this;
     this[38] = 0;
     (*(void (__thiscall **)(int *))(v8 + 208))(this);
-    sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+    process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
   }
   return queue_engine_event((int *)game_engine_address, this + 34);
 }
@@ -581144,22 +580961,22 @@ int __thiscall sub_6804C6(_DWORD *this, int a2)
         this[38] = 0;
         (*(void (__thiscall **)(_DWORD *))(v5 + 208))(this);
         v3 = 1;
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v6 = *this;
         this[38] = 1;
         (*(void (__thiscall **)(_DWORD *))(v6 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v7 = *this;
         this[38] = 0;
         (*(void (__thiscall **)(_DWORD *))(v7 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         Sleep(0x3Cu);
         v8 = *this;
         this[38] = 1;
         (*(void (__thiscall **)(_DWORD *))(v8 + 208))(this);
-        sub_4BA1D4(game_engine_instance_address, 0, 0, 1);
+        process_game_engine_frame(game_engine_instance_address, 0, 0, 1);
         *((_BYTE *)this + 229) = 1;
         this[38] = 0;
         queue_engine_event((int *)game_engine_address, this + 34);
@@ -581983,7 +581800,7 @@ void __usercall sub_6810D2(int a1@<ecx>, int *a2@<edi>)
         v41 = *(int **)(a1 + 336);
         v42 = *(_DWORD *)(a1 + 340);
         sub_520F0C(v40, v54);
-        sub_5067E5((_BYTE *)a1, *v41, 1);
+        insert_control_into_control_container((_BYTE *)a1, *v41, 1);
         v37[0] = *(_DWORD *)(a1 + 204);
         ++v54;
         v37[1] = *(_DWORD *)(a1 + 208);
@@ -582001,7 +581818,7 @@ void __usercall sub_6810D2(int a1@<ecx>, int *a2@<edi>)
         v35 = *(int **)(a1 + 212);
         v36 = *(_DWORD *)(a1 + 216);
         sub_685EE1(v34, v51);
-        sub_5067E5((_BYTE *)a1, *v35, 1);
+        insert_control_into_control_container((_BYTE *)a1, *v35, 1);
         v53 += *(_DWORD *)(a1 + 308);
         ++v51;
       }
@@ -582030,7 +581847,7 @@ void __usercall sub_6810D2(int a1@<ecx>, int *a2@<edi>)
         v17 = *(int **)(a1 + 336);
         v18 = *(_DWORD *)(a1 + 340);
         sub_520F0C(v16, v54);
-        sub_5067E5((_BYTE *)a1, *v17, 1);
+        insert_control_into_control_container((_BYTE *)a1, *v17, 1);
         ++v54;
         ++v52;
         v53 += v46;
@@ -582698,8 +582515,8 @@ int __thiscall sub_681D92(int this)
   v2 = strlen(aOk);
   std::string::assign(aOk, v2);
   sub_67F9D5(this + 208, (int)v4, this != 0 ? (const char *)(this + 196) : 0);
-  sub_5067E5((_BYTE *)this, this + 436, 1);
-  sub_5067E5((_BYTE *)this, this + 208, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 436, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 208, 1);
   *(_DWORD *)(this + 636) = 0;
   *(_DWORD *)(this + 640) = 0;
   *(_DWORD *)(this + 624) = 10;
@@ -583243,7 +583060,7 @@ int __thiscall sub_68278D(int this, char *a2)
   LOBYTE(v10) = *(_BYTE *)(v4 + 332);
   std::string::_Tidy(0);
   std::string::assign(v5, 0, -1);
-  v13 = sub_45A0F8(60);
+  v13 = allocate_registered_config_file(60);
   LOBYTE(v15) = 7;
   if ( v13 )
   {
@@ -583255,7 +583072,7 @@ int __thiscall sub_68278D(int this, char *a2)
     LOBYTE(v15) = 8;
     if ( !v6 )
       v6 = (char *)Key;
-    v7 = sub_46B4E2(v13, v6, a2);
+    v7 = construct_registered_config_file(v13, v6, a2);
   }
   else
   {
@@ -583387,7 +583204,7 @@ void __thiscall sub_682A87(int this, int a2, char a3, char *Str, int a5, int a6)
     v19 = *(_DWORD *)(this + 216);
     v16 = sub_4B28D3(*(_DWORD **)(game_engine_instance_address + 1196), v14);
     sub_4F0DBB(*(_DWORD **)(this + 244), v15, &v20, v16, this, a5, v19);
-    sub_5067E5((_BYTE *)this, *(_DWORD *)(this + 244), 1);
+    insert_control_into_control_container((_BYTE *)this, *(_DWORD *)(this + 244), 1);
     v17 = *(_DWORD **)(this + 220);
     v18 = v17[8];
     v24[0] = v17[7];
@@ -583631,7 +583448,7 @@ int __thiscall sub_682EF2(_DWORD *this, int a2, int a3)
   int v73; // [esp+154h] [ebp-4h]
 
   v69 = this;
-  sub_40442F(&v66, &v68);
+  initialize_std_string_storage(&v66, &v68);
   v4 = (_DWORD *)this[174];
   v73 = 0;
   select_settings_section(v4, aMainScreen);
@@ -583657,7 +583474,7 @@ int __thiscall sub_682EF2(_DWORD *this, int a2, int a3)
         do
         {
           v10 = (char *)strlen(asc_788108);
-          sub_402BD8(&v66, asc_788108, v10);
+          append_std_string_storage_bytes(&v66, asc_788108, v10);
           --v9;
         }
         while ( v9 );
@@ -584701,7 +584518,7 @@ int __thiscall sub_6840C6(int this)
   sub_4246D8((int *)(this + 216), v3);
   sub_47786D((_DWORD *)(this + 216), aSidText14Grn_0);
   sub_683DB0(this + 216, 1, 1, 1, 1);
-  sub_5067E5((_BYTE *)this, this + 216, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 216, 1);
   return this;
 }
 // 403039: using guessed type _DWORD __stdcall std::string::_Tidy(char);
@@ -584984,10 +584801,10 @@ int __thiscall sub_68465F(int this)
   sub_683DA6((_DWORD *)(this + 392), 8);
   sub_683DB0(this + 392, 1, 0, 1, 2);
   sub_683DD8((_BYTE *)(this + 392), 1);
-  sub_5067E5((_BYTE *)this, this + 392, 1);
-  sub_5067E5((_BYTE *)this, this + 632, 1);
-  sub_5067E5((_BYTE *)this, this + 220, 1);
-  sub_5067E5((_BYTE *)this, this + 540, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 392, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 632, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 220, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 540, 1);
   return this;
 }
 // 6846A2: variable 'v3' is possibly undefined
@@ -589075,7 +588892,7 @@ _WORD *sub_687EBB()
   _WORD *v0; // ecx
   _WORD *result; // eax
 
-  v0 = sub_4EE69D(1848);
+  v0 = allocate_registered_private_bottom_layer(1848);
   result = 0;
   if ( v0 )
     return sub_688EB3(v0, 0);
@@ -589145,7 +588962,7 @@ void sub_687F82()
 // 76CF18: using guessed type int dword_76CF18;
 
 //----- (00687F8D) --------------------------------------------------------
-int __thiscall sub_687F8D(int this)
+int __thiscall construct_private_bottom_layer(int this)
 {
   int v2; // edi
   size_t v3; // eax
@@ -589303,10 +589120,10 @@ int __thiscall sub_687F8D(int this)
   v85 = 1;
   dword_76CEC8 = v5;
   dword_76CECC = *(_DWORD *)(this + 356);
-  sub_5067E5((_BYTE *)this, this + 672, 1);
-  sub_5067E5((_BYTE *)this, this + 744, 1);
-  sub_5067E5((_BYTE *)this, this + 816, 1);
-  sub_5067E5((_BYTE *)this, this + 888, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 672, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 744, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 816, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 888, 1);
   attach_control_to_service(this, this + 960, 1);
   if ( *(int *)screen_width_address < 1024 )
   {
@@ -589458,7 +589275,7 @@ int __thiscall sub_687F8D(int this)
   std::string::_Tidy(0);
   std::string::assign(this + 332, 0, -1);
   LOBYTE(v109) = 15;
-  v108 = (int)sub_45A0F8(60);
+  v108 = (int)allocate_registered_config_file(60);
   LOBYTE(v109) = 16;
   if ( v108 )
   {
@@ -589470,7 +589287,7 @@ int __thiscall sub_687F8D(int this)
     LOBYTE(v109) = 17;
     if ( !v34 )
       v34 = (char *)Key;
-    v35 = sub_46B4E2((_BYTE *)v108, v34, v33);
+    v35 = construct_registered_config_file((_BYTE *)v108, v34, v33);
   }
   else
   {
@@ -589609,7 +589426,7 @@ int __thiscall sub_687F8D(int this)
   LOBYTE(v109) = 28;
   if ( !v63 )
     v63 = (char *)Key;
-  sub_46B4E2(v89, v63, v62);
+  construct_registered_config_file(v89, v63, v62);
   LOBYTE(v109) = 30;
   std::string::_Tidy(1);
   if ( !sub_46B663(v89, 1) )
@@ -589695,7 +589512,7 @@ LABEL_60:
   std::string::assign(a1, v78);
   v88 = 1;
   sub_67F9D5(this + 444, (int)v86, this != 0 ? (const char *)(this + 320) : 0);
-  sub_5067E5((_BYTE *)this, this + 444, 1);
+  insert_control_into_control_container((_BYTE *)this, this + 444, 1);
   v79 = *(_DWORD *)(this + 484) - *(_DWORD *)(this + 476);
   v92[0] = *(_DWORD *)(this + 352) - (*(_DWORD *)(this + 480) - *(_DWORD *)(this + 472)) + 630;
   v92[1] = *(_DWORD *)(this + 356) - v79 + 470;
@@ -590192,7 +590009,7 @@ _DWORD *__thiscall sub_689957(
   v30 = 635 - v14;
   (*(void (__thiscall **)(int *, int *))(v15 + 172))(v12, &v30);
   (*(void (__thiscall **)(int *, int))(*v12 + 176))(v12, 1);
-  sub_5067E5(a2, (int)v12, 1);
+  insert_control_into_control_container(a2, (int)v12, 1);
   a4 = (int *)*find_or_create_engine_string_resource((_DWORD *)game_engine_address, (int *)&a4, aSBarTopangleLr, 0, 0);
   sub_56B490((_DWORD *)game_engine_address, (unsigned __int16)a4, 1u);
   v16 = (int)a6;
@@ -590201,7 +590018,7 @@ _DWORD *__thiscall sub_689957(
   v30 = 635 - v14 - 16;
   (*(void (__thiscall **)(int *, int *, int *))(v17 + 196))(a6, &v30, a4);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v16 + 176))(v16, 1);
-  sub_5067E5(a2, v16, 1);
+  insert_control_into_control_container(a2, v16, 1);
   v18 = a9;
   sub_689B50(a9, aSBarTopstripLr, 640 - (635 - v14 - 16 + 12));
   v30 = 635 - v14 - 16 + 12;
@@ -590210,7 +590027,7 @@ _DWORD *__thiscall sub_689957(
   v20 = a7;
   (*(void (__thiscall **)(int, int *, int))(*(_DWORD *)a7 + 196))(a7, &v30, v19);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)v20 + 176))(v20, 1);
-  sub_5067E5(a2, v20, 1);
+  insert_control_into_control_container(a2, v20, 1);
   v21 = a8;
   sub_689B50(a8, aSBarStretch, 640);
   v30 = 0;
@@ -590219,7 +590036,7 @@ _DWORD *__thiscall sub_689957(
   v31 = 25;
   (*(void (__thiscall **)(int, int *, int))(v23 + 196))(a3, &v30, v22);
   (*(void (__thiscall **)(int, int))(*(_DWORD *)a3 + 176))(a3, 1);
-  sub_5067E5(a2, a3, 1);
+  insert_control_into_control_container(a2, a3, 1);
   result = (_DWORD *)a11;
   v25 = a12;
   v26 = a12;
@@ -590410,7 +590227,7 @@ LABEL_17:
   if ( !*(_BYTE *)(this + 468) )
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 444) + 176))(this + 444, 1);
 LABEL_20:
-  result = sub_5067E5((_BYTE *)this, *v4, 1);
+  result = insert_control_into_control_container((_BYTE *)this, *v4, 1);
   if ( !*(_BYTE *)(*v4 + 24) )
     result = (_DWORD *)(*(int (__thiscall **)(int, int))(*(_DWORD *)*v4 + 176))(*v4, 1);
   *(_DWORD *)(this + 348) = a2;
@@ -590527,7 +590344,7 @@ char __thiscall sub_689FE0(int this, int a2, int a3)
     sub_66FF67(&v16, 4);
     *(_BYTE *)(*(_DWORD *)v18 + 74) = 0;
   }
-  v7 = sub_4AEFAE(105);
+  v7 = is_global_flag_set(105);
   v8 = (int *)(*(_DWORD *)(this + 1060) + 28);
   v16 = *v8++;
   v17 = *v8++;
@@ -590637,14 +590454,14 @@ int __fastcall sub_68A1DD(int a1, int a2, int a3)
         v7 = std::string::assign(v5, v6);
         sub_4043C8(&v17, v12);
         v8 = (char *)strlen("\", ");
-        sub_402BD8(&v17, "\", ", v8);
+        append_std_string_storage_bytes(&v17, "\", ", v8);
         v9 = (_BYTE *)format_integer_string((int)v16, v13[2]);
         LOBYTE(v22) = 3;
         sub_4043C8(&v17, v9);
         LOBYTE(v22) = 2;
         std::string::_Tidy(1);
         v10 = (char *)strlen(")");
-        sub_402BD8(&v17, ")", v10);
+        append_std_string_storage_bytes(&v17, ")", v10);
         v11 = v18;
         v21[1] = 2;
         v21[0] = *(_DWORD *)(a1 != 320 ? a1 + 8 : 8);
@@ -590737,14 +590554,14 @@ char __thiscall sub_68A40C(_DWORD *this, char *Str, int *a3, int a4, int a5, cha
     v12 = std::string::assign(v10, v11);
     sub_4043C8(&v24, v18);
     v13 = (char *)strlen("\", ");
-    sub_402BD8(&v24, "\", ", v13);
+    append_std_string_storage_bytes(&v24, "\", ", v13);
     v14 = (_BYTE *)format_integer_string((int)v26, v21);
     LOBYTE(v28) = 3;
     sub_4043C8(&v24, v14);
     LOBYTE(v28) = 2;
     std::string::_Tidy(1);
     v15 = (char *)strlen(")");
-    sub_402BD8(&v24, ")", v15);
+    append_std_string_storage_bytes(&v24, ")", v15);
     v27[1] = 2;
     v16 = v25;
     v27[0] = *(this != 0 ? this + 82 : (_DWORD *)8);
@@ -591005,7 +590822,7 @@ char __thiscall sub_68A9C6(_DWORD *this)
   char result; // al
 
   v2 = *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20);
-  result = sub_4AEFAE(130);
+  result = is_global_flag_set(130);
   if ( !result && v2 == 6 )
   {
     sub_4AEFE9(130);
@@ -591082,7 +590899,7 @@ int __stdcall sub_68AB25(int a1)
 
   sub_4AEFE9(a1);
   v1 = 0;
-  if ( sub_4AEFAE(dword_78AA0C) )
+  if ( is_global_flag_set(dword_78AA0C) )
   {
     v2 = &dword_78AA0C;
     do
@@ -591091,7 +590908,7 @@ int __stdcall sub_68AB25(int a1)
       ++v2;
       ++v1;
     }
-    while ( sub_4AEFAE(v4) );
+    while ( is_global_flag_set(v4) );
   }
   result = *(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56);
   *(_DWORD *)(result + 6476) = v1;
@@ -591130,11 +590947,11 @@ char __thiscall sub_68AB72(int this)
           return sub_68A40C((_DWORD *)this, a2glsv62ou1, 0, 2, 1, 0);
         if ( !sub_68A8A8((_DWORD **)this, 20) )
           return sub_68A40C((_DWORD *)this, a2glsv628c1, 0, 1, 1, 0);
-        if ( sub_4AEFAE(72) )
+        if ( is_global_flag_set(72) )
           return sub_68A40C((_DWORD *)this, a2glsv628d1, 0, 2, 1, 0);
         return sub_68A40C((_DWORD *)this, a10l0m0ll31, 0, 2, 1, 0);
       case 1:
-        if ( !sub_4AEFAE(121) || !sub_4AEFAE(122) || !sub_68B583(*(_DWORD **)(this + 1056), 45) )
+        if ( !is_global_flag_set(121) || !is_global_flag_set(122) || !sub_68B583(*(_DWORD **)(this + 1056), 45) )
         {
           sub_68A40C((_DWORD *)this, a10l0s0l891, 0, 1, 1, 0);
           return sub_68A40C((_DWORD *)this, a2glsv62892, 0, 1, 1, 0);
@@ -591169,13 +590986,13 @@ LABEL_17:
           return sub_68A40C((_DWORD *)this, a2glsv628e1, 0, 2, 1, 0);
         }
       case 2:
-        if ( !sub_4AEFAE(74) && !sub_4AEFAE(75) )
+        if ( !is_global_flag_set(74) && !is_global_flag_set(75) )
           return sub_68A40C((_DWORD *)this, a2glsv628j1, 0, 1, 1, 0);
         if ( sub_679223((_DWORD *)(*(_DWORD *)(this + 368) + 7004), 1, 0) )
           return sub_68A40C((_DWORD *)this, a2glsv62sd1, 0, 1, 1, 0);
         return sub_68A40C((_DWORD *)this, a2glsv628m1, 0, 2, 1, 0);
       case 3:
-        if ( sub_4AEFAE(109) )
+        if ( is_global_flag_set(109) )
           return sub_68A40C((_DWORD *)this, a2glsv628v1, 0, 1, 1, 0);
         if ( lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 138, 308) )
           return sub_68A40C((_DWORD *)this, a2glsv62y41, 0, 1, 1, 0);
@@ -591186,7 +591003,7 @@ LABEL_17:
         return result;
       case 4:
       case 5:
-        if ( sub_4AEFAE(77) || lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 232, 308) )
+        if ( is_global_flag_set(77) || lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 232, 308) )
           return sub_68A40C((_DWORD *)this, a2glsv62921, 0, 1, 1, 0);
         else
           return sub_68A40C((_DWORD *)this, a2glsv62901, 0, 1, 1, 0);
@@ -591196,9 +591013,9 @@ LABEL_17:
         {
           return sub_68A40C((_DWORD *)this, a10lci0l8b1, 0, 1, 1, 0);
         }
-        if ( !sub_4AEFAE(125) && !lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 217, 306) )
+        if ( !is_global_flag_set(125) && !lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 217, 306) )
           return sub_68A40C((_DWORD *)this, a2glsv629b1, 0, 1, 1, 0);
-        if ( sub_4AEFAE(123) && sub_4AEFAE(124) )
+        if ( is_global_flag_set(123) && is_global_flag_set(124) )
         {
           if ( lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 217, 306) )
             return sub_68A40C((_DWORD *)this, a10lci0lb91, 0, 1, 1, 0);
@@ -591211,7 +591028,7 @@ LABEL_17:
           return sub_68A40C((_DWORD *)this, a2glsv62892, 0, 1, 1, 0);
         }
       case 7:
-        if ( !sub_4AEFAE(86) )
+        if ( !is_global_flag_set(86) )
           return sub_68A40C((_DWORD *)this, a2glsv629e1, 0, 1, 1, 0);
         if ( !lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 213, 63)
           && !lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 1186, 308) )
@@ -591221,31 +591038,31 @@ LABEL_17:
         sub_68A40C((_DWORD *)this, a2glsv629f1, 0, 1, 1, 0);
         return sub_68A40C((_DWORD *)this, a2glsv629l1, 0, 1, 1, 0);
       case 8:
-        if ( sub_4AEFAE(83) )
+        if ( is_global_flag_set(83) )
           return sub_68A40C((_DWORD *)this, a2glsv627h1, 0, 2, 1, 0);
         else
           return sub_68A40C((_DWORD *)this, a2glsv629v1, 0, 1, 1, 0);
       case 9:
         if ( *(int *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 96) + 20) < 14 )
           return sub_68A40C((_DWORD *)this, a2g1sv621n1, 0, 1, 1, 0);
-        if ( !sub_68A8BF((_DWORD *)this, 41) && !sub_4AEFAE(115) )
+        if ( !sub_68A8BF((_DWORD *)this, 41) && !is_global_flag_set(115) )
           return sub_68A40C((_DWORD *)this, a2glsv62r61, 0, 1, 1, 0);
-        if ( sub_4AEFAE(115) )
+        if ( is_global_flag_set(115) )
           return sub_68A40C((_DWORD *)this, a2glsv62r91, 0, 2, 1, 0);
         return sub_68A40C((_DWORD *)this, a10l7m0lr72, 0, 1, 1, 0);
       case 10:
         if ( !sub_68B583(*(_DWORD **)(this + 1032), 30) )
           return sub_68A40C((_DWORD *)this, a2glsv62tg1, 0, 1, 1, 0);
-        if ( !sub_68A8A8((_DWORD **)this, 27) && !sub_4AEFAE(118) )
+        if ( !sub_68A8A8((_DWORD **)this, 27) && !is_global_flag_set(118) )
         {
           v6 = 2;
           return sub_68A40C((_DWORD *)this, a2glsv62th1, 0, v6, 1, 0);
         }
-        if ( sub_4AEFAE(119) )
+        if ( is_global_flag_set(119) )
         {
-          if ( sub_4AEFAE(118) )
+          if ( is_global_flag_set(118) )
           {
-            if ( sub_4AEFAE(120) )
+            if ( is_global_flag_set(120) )
             {
               result = sub_68A40C((_DWORD *)this, a2glsv62ag1, 0, 2, 1, 0);
             }
@@ -591258,7 +591075,7 @@ LABEL_17:
           else
           {
             v6 = 1;
-            if ( !sub_4AEFAE(120) )
+            if ( !is_global_flag_set(120) )
               return sub_68A40C((_DWORD *)this, a2glsv62th1, 0, v6, 1, 0);
             result = sub_68A40C((_DWORD *)this, a2glsv62ah1, 0, 1, 1, 0);
           }
@@ -594118,7 +593935,7 @@ int __thiscall sub_68D7A9(int this)
   LOBYTE(v14) = *(_BYTE *)(v3 + 332);
   std::string::_Tidy(0);
   std::string::assign(v21, 0, -1);
-  v19 = sub_45A0F8(60);
+  v19 = allocate_registered_config_file(60);
   LOBYTE(v23) = 17;
   if ( v19 )
   {
@@ -594130,7 +593947,7 @@ int __thiscall sub_68D7A9(int this)
     LOBYTE(v23) = 18;
     if ( !v4 )
       v4 = (char *)Key;
-    v5 = sub_46B4E2(v19, v4, v21);
+    v5 = construct_registered_config_file(v19, v4, v21);
   }
   else
   {
@@ -594186,14 +594003,14 @@ int __thiscall sub_68D7A9(int this)
     sub_68FEE2((_DWORD *)(this + 208), this);
     sub_68F0C8((int *)(this + 208));
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 208) + 176))(this + 208, 1);
-    sub_5067E5((_BYTE *)this, this + 208, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 208, 1);
     v12 = *find_or_create_engine_string_resource((_DWORD *)game_engine_address, (int *)&v19, aSBkgnd, 0, 0);
     v19 = 0;
     v10 = *(_DWORD *)v2;
     v18 = 0;
     (*(void (__thiscall **)(int, int *, int))(v10 + 196))(this + 2400, &v18, v12);
     (*(void (__thiscall **)(int, int))(*(_DWORD *)v2 + 176))(this + 2400, 1);
-    sub_5067E5((_BYTE *)this, this + 2400, 0);
+    insert_control_into_control_container((_BYTE *)this, this + 2400, 0);
     sub_506D94((void *)this, dword_78FC88);
   }
   else
@@ -594438,7 +594255,7 @@ void __thiscall sub_68DFD0(int *this)
       v4 = strlen(Str);
       std::string::assign(Str, v4);
       v5 = (char *)strlen(asc_78B084);
-      sub_402BD8(v3, asc_78B084, v5);
+      append_std_string_storage_bytes(v3, asc_78B084, v5);
       std::string::append(v22, 0, 0xFFFFFFFF);
       v6 = (char *)v3[1];
       v10[0] = 0;
@@ -594635,7 +594452,7 @@ int __thiscall sub_68E393(char *this)
   v26 = 0;
   v27 = 0;
   v32 = 0;
-  sub_402BAA(&v21, aSidsearch, &v31);
+  assign_std_string_storage_from_c_string(&v21, aSidsearch, &v31);
   LOBYTE(v32) = 1;
   append_string_suffix(v19, (char *)&v21, ".txt");
   v1 = v22;
@@ -594645,16 +594462,16 @@ int __thiscall sub_68E393(char *this)
   v2 = v20;
   if ( !v20 )
     v2 = (char *)Key;
-  sub_46B4E2(v12, v2, v1);
+  construct_registered_config_file(v12, v2, v1);
   LOBYTE(v32) = 3;
   if ( sub_46B663(v12, 1) )
   {
     sub_45F040(&v15, (int)v13, (int)&v24);
     if ( !sub_45E92C(&v24) )
       write_source_message(aZProjGk3Gk3app_63, 329, 6, 0, aErrorReadingSi, 0xFFFFFFFF);
-    sub_40442F(v17, &v28);
+    initialize_std_string_storage(v17, &v28);
     LOBYTE(v32) = 4;
-    sub_40442F(v16, &v30);
+    initialize_std_string_storage(v16, &v30);
     LOBYTE(v32) = 5;
     if ( v25 != v26 )
     {
@@ -594684,7 +594501,7 @@ int __thiscall sub_68E393(char *this)
           }
           do
           {
-            sub_402BAA(v14, v7, &v29);
+            assign_std_string_storage_from_c_string(v14, v7, &v29);
             LOBYTE(v32) = 7;
             v8 = (void *)sub_435D73(v23 + 180, v14);
             assign_std_string_storage(v8, v16);
@@ -595416,7 +595233,7 @@ int __thiscall sub_68F4A4(int *this)
   v51 = 0;
   v52 = 0;
   v60 = 0;
-  sub_402BAA(v42, aSidneydialog, &v58);
+  assign_std_string_storage_from_c_string(v42, aSidneydialog, &v58);
   LOBYTE(v60) = 1;
   append_string_suffix(v33, v42, ".txt");
   v1 = v43;
@@ -595426,7 +595243,7 @@ int __thiscall sub_68F4A4(int *this)
   v2 = v34;
   if ( !v34 )
     v2 = (char *)Key;
-  sub_46B4E2(v31, v2, v1);
+  construct_registered_config_file(v31, v2, v1);
   LOBYTE(v60) = 3;
   if ( sub_46B663(v31, 1) )
   {
@@ -595881,7 +595698,7 @@ int __thiscall sub_68FE8D(int *this, int a2, int a3)
       return 1;
     }
   }
-  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+  return sub_50767B(this, a2, a3, (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 // 765A2C: using guessed type int game_engine_instance_address;
 
@@ -596079,7 +595896,7 @@ int __thiscall sub_68FFFE(int this, char a2, char *Str1, int a4, int a5)
     }
     while ( v12 != *(_DWORD *)(this + 2028) )
     {
-      if ( !*(_BYTE *)(v12 + 76) || !sub_4AEFAE(*(_DWORD *)v12) )
+      if ( !*(_BYTE *)(v12 + 76) || !is_global_flag_set(*(_DWORD *)v12) )
       {
         v43 = 0;
         v33 = (int)"LSR";
@@ -596097,10 +595914,10 @@ int __thiscall sub_68FFFE(int this, char a2, char *Str1, int a4, int a5)
             v33 = *v18;
             if ( *(_BYTE *)v45 )
             {
-              if ( sub_4AEFAE(v33) )
+              if ( is_global_flag_set(v33) )
                 goto LABEL_62;
             }
-            else if ( !sub_4AEFAE(v33) )
+            else if ( !is_global_flag_set(v33) )
             {
               goto LABEL_62;
             }
@@ -596113,7 +595930,7 @@ int __thiscall sub_68FFFE(int this, char a2, char *Str1, int a4, int a5)
           v42 = 0;
           v20 = *(_DWORD *)v12 == 52;
           v45 = v19;
-          if ( v20 && sub_4AEFAE(114) && lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 529, 41) )
+          if ( v20 && is_global_flag_set(114) && lookup_flag_manager_nvc_state((uint32_t *)(*(_DWORD *)(game_engine_instance_address + 1092) + 56), 529, 41) )
           {
             v21 = sub_689E5B((int)v19, 0);
             v46 = 1;
@@ -598039,7 +597856,7 @@ int __thiscall sub_691C59(int this)
   LOBYTE(v52) = *(_BYTE *)(v3 + 332);
   std::string::_Tidy(0);
   std::string::assign(v4, 0, -1);
-  v57 = sub_45A0F8(60);
+  v57 = allocate_registered_config_file(60);
   LOBYTE(v60) = 21;
   if ( v57 )
   {
@@ -598051,7 +597868,7 @@ int __thiscall sub_691C59(int this)
     LOBYTE(v60) = 22;
     if ( !v6 )
       v6 = (char *)Key;
-    v7 = sub_46B4E2(v57, v6, v5);
+    v7 = construct_registered_config_file(v57, v6, v5);
   }
   else
   {
@@ -598265,7 +598082,7 @@ int __thiscall sub_691C59(int this)
     v56 = 166;
     v57 = (_BYTE *)((dword_78AA4C - 325) / 2 + 165);
     sub_684A1E((_DWORD *)(this + 252), 13, v55, 166, (int)v57, 0);
-    sub_5067E5((_BYTE *)this, this + 252, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 252, 1);
     v29 = read_integer_setting_or_default(*(_DWORD **)(this + 5088), aKmatchwindowwi, 0);
     v57 = read_integer_setting_or_default(*(_DWORD **)(this + 5088), aKmatchwindowhe, 0);
     sub_69665D((_DWORD *)(this + 1020), this);
@@ -598290,7 +598107,7 @@ int __thiscall sub_691C59(int this)
     v56 = 0;
     (*(void (__thiscall **)(int, int *, int))(v30 + 196))(this + 4772, &v56, v32);
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 4772) + 176))(this + 4772, 1);
-    sub_5067E5((_BYTE *)this, this + 4772, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 4772, 1);
     sub_506D94((void *)this, dword_78FC88);
     LOBYTE(v60) = 27;
     `eh vector destructor iterator'(v41, 0xA8u, 4, (void (__thiscall *)(void *))sub_65D6A5);
@@ -599104,7 +598921,7 @@ int __thiscall sub_6936CC(int this, _DWORD *a2)
     std::string::assign(v7, v8);
     v17 = 0;
     v9 = (char *)strlen("9");
-    sub_402BD8(&v14, "9", v9);
+    append_std_string_storage_bytes(&v14, "9", v9);
     v10 = (char *)*((_DWORD *)sub_53EF87(a2, v13) + 1);
     LOBYTE(v17) = 1;
     if ( !v10 )
@@ -600092,7 +599909,7 @@ int __thiscall sub_694C0D(int this, _DWORD *a2)
   std::string::assign(v15, v16);
   v54 = 1;
   v17 = (char *)strlen("3");
-  sub_402BD8(&v46, "3", v17);
+  append_std_string_storage_bytes(&v46, "3", v17);
   v18 = (char *)*((_DWORD *)sub_53EF87(a2, Destination) + 1);
   LOBYTE(v54) = 2;
   if ( !v18 )
@@ -601261,7 +601078,7 @@ int __thiscall sub_6963BE(int this, int Buffer)
     v14 = 0;
     _itoa(v2 + 1, (char *)&Buffer, 10);
     v5 = (char *)strlen((const char *)&Buffer);
-    sub_402BD8(&v11, &Buffer, v5);
+    append_std_string_storage_bytes(&v11, &Buffer, v5);
     v6 = v12;
     if ( !v12 )
       v6 = (char *)Key;
@@ -601667,7 +601484,7 @@ int __thiscall sub_69698F(int this)
   LOBYTE(v28) = *(_BYTE *)(v3 + 332);
   std::string::_Tidy(0);
   std::string::assign(v4, 0, -1);
-  v38 = (char *)sub_45A0F8(60);
+  v38 = (char *)allocate_registered_config_file(60);
   LOBYTE(v39) = 17;
   if ( v38 )
   {
@@ -601679,7 +601496,7 @@ int __thiscall sub_69698F(int this)
     LOBYTE(v39) = 18;
     if ( !v5 )
       v5 = (char *)Key;
-    v6 = sub_46B4E2(v38, v5, v34);
+    v6 = construct_registered_config_file(v38, v5, v34);
   }
   else
   {
@@ -601770,7 +601587,7 @@ int __thiscall sub_69698F(int this)
     v37 = v35 + 526;
     v38 = (char *)((dword_78AA4C - 340) / 2 + 337);
     sub_698182(this + 208, v35, v36, v35 + 526, (int)v38);
-    sub_5067E5((_BYTE *)this, this + 208, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 208, 1);
     v20 = 0;
     v19 = 0;
     *(_DWORD *)(this + 6004) = 0;
@@ -601780,7 +601597,7 @@ int __thiscall sub_69698F(int this)
     v37 = 0;
     (*(void (__thiscall **)(int, int *, int))(v15 + 196))(this + 5684, &v37, v20);
     (*(void (__thiscall **)(int, int))(*(_DWORD *)(this + 5684) + 176))(this + 5684, 1);
-    sub_5067E5((_BYTE *)this, this + 5684, 1);
+    insert_control_into_control_container((_BYTE *)this, this + 5684, 1);
     sub_506D94((void *)this, dword_78FC88);
     LOBYTE(v39) = 20;
     sub_65D6A5();
@@ -602932,7 +602749,7 @@ int __thiscall sub_698ABE(int this, _BYTE *a2)
   if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 30 )
   {
     sub_4AEFE9(119);
-    if ( sub_4AEFAE(118) )
+    if ( is_global_flag_set(118) )
       ++v6;
   }
   sub_6991E7(this, (&off_79014C)[v6]);
@@ -602979,7 +602796,7 @@ char __thiscall sub_698C20(int this)
   }
   if ( *(_DWORD *)(this + 744) == 6 )
   {
-    if ( v2 != 30 || sub_4AEFAE(118) )
+    if ( v2 != 30 || is_global_flag_set(118) )
     {
       if ( *(_BYTE *)(this + 3180) )
       {
@@ -603103,17 +602920,17 @@ int __thiscall sub_698D69(int this)
   sub_69911C((_DWORD *)this, Buffer);
   strcpy(Buffer, asc_788108);
   sub_69911C((_DWORD *)this, Buffer);
-  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 30 && sub_4AEFAE(118) )
+  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 30 && is_global_flag_set(118) )
     v7 = sub_68B5E7(*(_DWORD **)(this + 3240)) - 26;
   else
     v7 = sub_68B5E7(*(_DWORD **)(this + 3240)) - 27;
   strcpy(Destination, (&off_79014C)[v7]);
   strcat(Destination, aT);
   sub_6991E7(this, Destination);
-  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 30 && !sub_4AEFAE(118) )
+  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 30 && !is_global_flag_set(118) )
     sub_697639(*(_DWORD *)(this + 3244));
-  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 28 && !sub_4AEFAE(148)
-    || sub_68B5E7(*(_DWORD **)(this + 3240)) == 29 && !sub_4AEFAE(149) )
+  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 28 && !is_global_flag_set(148)
+    || sub_68B5E7(*(_DWORD **)(this + 3240)) == 29 && !is_global_flag_set(149) )
   {
     *(_DWORD *)(this + 3204) = 2000;
     v8 = *(_DWORD *)(this + 3244);
@@ -603135,8 +602952,8 @@ int __thiscall sub_698D69(int this)
     }
     sub_557F62(this + 3184);
   }
-  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 28 && !sub_4AEFAE(148)
-    || sub_68B5E7(*(_DWORD **)(this + 3240)) == 29 && !sub_4AEFAE(149) )
+  if ( sub_68B5E7(*(_DWORD **)(this + 3240)) == 28 && !is_global_flag_set(148)
+    || sub_68B5E7(*(_DWORD **)(this + 3240)) == 29 && !is_global_flag_set(149) )
   {
     *(_DWORD *)(this + 3204) = 2000;
     v12 = *(_DWORD *)(this + 3244);
@@ -604746,7 +604563,7 @@ void __thiscall sub_69B600(_DWORD *this, int a2)
     dword_776E54 = *v13;
     dword_776E58 = v13[1];
     dword_776E5C = v13[2];
-    sub_578B90(dword_776EB8, (float *)v2[59], (float *)v2[58], v2[72], 12);
+    transform_vector_array(dword_776EB8, (float *)v2[59], (float *)v2[58], v2[72], 12);
     v58 = dword_791160;
     v14 = (Iostream_init *)allocate_tracked_memory(8 * dword_791160);
     v15 = v14;
@@ -604819,7 +604636,7 @@ void __thiscall sub_69B600(_DWORD *this, int a2)
             if ( v64 )
             {
               v29 = (float *)(v24 + v62[67]);
-              sub_578B90(dword_776EB8, v46, v29, 1, 12);
+              transform_vector_array(dword_776EB8, v46, v29, 1, 12);
               v64 = sub_590610(v46, v29[3], v64);
               if ( v64 == 255 )
                 break;

@@ -100,7 +100,7 @@ extern int __thiscall forward_engine_object_collection_notification(
 extern void log_engine_diagnostic_message(int engine, char *format, ...);
 extern int __thiscall notify_engine_object_collections(void *engine,
                                                        int event);
-extern int sub_570B20(int engine, char *format, ...);
+extern int report_engine_error(int engine, char *format, ...);
 extern void *__thiscall load_display_options_from_settings(
     uint32_t **context, void *display_options);
 extern DWORD __thiscall check_engine_shutdown_warning(uint32_t *engine);
@@ -406,7 +406,8 @@ extern int __stdcall sub_5719F0(int first, int end);
 extern void __thiscall verify_display_mode_state_unchanged(int16_t *state);
 extern uint32_t *__thiscall sub_574230(int16_t *object);
 extern int __thiscall destroy_pointer_vector_elements(int *collection);
-extern int __thiscall sub_4BA1D4(int engine, int elapsed, int first, int second);
+extern int __thiscall process_game_engine_frame(int engine, int elapsed,
+                                                int first, int second);
 extern int __thiscall shutdown_game_application(uint32_t *application);
 extern void __cdecl destroy_callback_registry(void);
 extern int __cdecl destroy_and_clear_owned_object_4bb176(uint32_t *field);
@@ -1811,7 +1812,7 @@ int __stdcall set_global_file_manager(int file_manager)
 
 int __thiscall update_game_state(void *engine, int elapsed)
 {
-  return sub_4BA1D4((int)(intptr_t)engine, elapsed, 1, 1);
+  return process_game_engine_frame((int)(intptr_t)engine, elapsed, 1, 1);
 }
 
 int __thiscall reset_game_engine_content(int *engine)
@@ -2243,7 +2244,7 @@ int __thiscall forward_engine_object_collection_notification(void *engine,
 
 int __thiscall report_out_of_memory(void *engine)
 {
-  return sub_570B20((int)(intptr_t)engine, "Out of memory.");
+  return report_engine_error((int)(intptr_t)engine, "Out of memory.");
 }
 
 void __thiscall set_input_event_state(uint32_t *engine, int event, int value)

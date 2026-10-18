@@ -19,47 +19,47 @@ extern uint32_t *__thiscall remove_interface_layer(uint32_t *manager,
                                                    int layer_address);
 extern int __cdecl destroy_interface_owned_layer(uint32_t *member);
 extern uint32_t *__cdecl allocate_registered_caption_manager(int size);
-extern int __thiscall construct_caption_manager(int object);
-extern uint32_t *__cdecl sub_449990(int size);
-extern uint32_t *__thiscall sub_449A45(uint32_t *object);
-extern uint32_t *__cdecl sub_463749(int size);
-extern uint32_t *__thiscall sub_463808(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE51C(int size);
-extern uint32_t *__thiscall sub_51D106(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE5CB(int size);
-extern uint32_t *__thiscall sub_4FCE7C(uint32_t *object);
-extern uint32_t *__cdecl sub_496005(int size);
-extern uint32_t *__thiscall sub_495548(uint32_t *object);
-extern uint32_t *__cdecl sub_4AA10A(int size);
-extern uint32_t *__thiscall sub_4AA587(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE4F9(int size);
-extern uint32_t *__thiscall sub_51B7A0(uint32_t *object);
-extern uint32_t *__cdecl sub_4BB527(int size);
-extern uint32_t *__thiscall sub_4BB5DC(uint32_t *object);
-extern uint32_t *__cdecl sub_4E9FA3(int size);
-extern uint32_t *__thiscall sub_4EA06C(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE53F(int size);
-extern uint32_t *__thiscall sub_4F3D6D(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE585(int size);
-extern uint32_t *__thiscall sub_4F7F4D(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE5EE(int size);
-extern uint32_t *__thiscall sub_4FD325(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE67A(int size);
-extern uint32_t *__thiscall sub_501A94(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE5A8(int size);
-extern uint32_t *__thiscall sub_4FCBA4(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE562(int size);
-extern uint32_t *__thiscall sub_4F402B(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE69D(int size);
-extern uint32_t *__thiscall sub_687F8D(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE611(int size);
-extern uint32_t *__thiscall sub_4FE08D(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE6C0(int size);
-extern uint32_t *__thiscall sub_5581BD(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE634(int size);
-extern uint32_t *__thiscall sub_4FF3B3(uint32_t *object);
-extern uint32_t *__cdecl sub_4EE657(int size);
-extern uint32_t *__thiscall sub_4FFAFA(uint32_t *object);
+extern uint32_t *__thiscall construct_caption_manager(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_binocs_layer(int size);
+extern uint32_t *__thiscall construct_binocs_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_close_up_layer(int size);
+extern uint32_t *__thiscall construct_close_up_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_config_controls_layer(int size);
+extern uint32_t *__thiscall construct_config_controls_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_confirm_quit_layer(int size);
+extern uint32_t *__thiscall construct_confirm_quit_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_driving_layer(int size);
+extern uint32_t *__thiscall construct_driving_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_fingerprint_layer(int size);
+extern uint32_t *__thiscall construct_fingerprint_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_game_help_layer(int size);
+extern uint32_t *__thiscall construct_game_help_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_game_layer(int size);
+extern uint32_t *__thiscall construct_game_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_inventory_layer(int size);
+extern uint32_t *__thiscall construct_inventory_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_load_save_layer(int size);
+extern uint32_t *__thiscall construct_load_save_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_lsr_layer(int size);
+extern uint32_t *__thiscall construct_lsr_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_modal_message_layer(int size);
+extern uint32_t *__thiscall construct_modal_message_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_movie_layer(int size);
+extern uint32_t *__thiscall construct_movie_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_pause_layer(int size);
+extern uint32_t *__thiscall construct_pause_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_save_game_layer(int size);
+extern uint32_t *__thiscall construct_save_game_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_private_bottom_layer(int size);
+extern uint32_t *__thiscall construct_private_bottom_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_time_block_layer(int size);
+extern uint32_t *__thiscall construct_time_block_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_title_layer(int size);
+extern uint32_t *__thiscall construct_title_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_death_layer(int size);
+extern uint32_t *__thiscall construct_death_layer(uint32_t *object);
+extern uint32_t *__cdecl allocate_registered_finished_layer(int size);
+extern uint32_t *__thiscall construct_finished_layer(uint32_t *object);
 extern int __stdcall assign_layer_name_string(const char *value,
                                               size_t length);
 
@@ -185,37 +185,37 @@ char *__thiscall get_game_layer_slot(char *manager, int layer_id,
 
   switch (layer_id) {
     case 0:
-      memory = sub_449990(460);
-      layer = memory ? sub_449A45(memory) : NULL;
+      memory = allocate_registered_binocs_layer(460);
+      layer = memory ? construct_binocs_layer(memory) : NULL;
       break;
     case 1:
-      memory = sub_463749(564);
-      layer = memory ? sub_463808(memory) : NULL;
+      memory = allocate_registered_close_up_layer(564);
+      layer = memory ? construct_close_up_layer(memory) : NULL;
       break;
     case 2:
-      memory = sub_4EE51C(616);
-      layer = memory ? sub_51D106(memory) : NULL;
+      memory = allocate_registered_config_controls_layer(616);
+      layer = memory ? construct_config_controls_layer(memory) : NULL;
       break;
     case 3:
-      memory = sub_4EE5CB(804);
-      layer = memory ? sub_4FCE7C(memory) : NULL;
+      memory = allocate_registered_confirm_quit_layer(804);
+      layer = memory ? construct_confirm_quit_layer(memory) : NULL;
       break;
     case 4:
-      memory = sub_496005(796);
-      layer = memory ? sub_495548(memory) : NULL;
+      memory = allocate_registered_driving_layer(796);
+      layer = memory ? construct_driving_layer(memory) : NULL;
       break;
     case 5:
-      memory = sub_4AA10A(1752);
-      layer = memory ? sub_4AA587(memory) : NULL;
+      memory = allocate_registered_fingerprint_layer(1752);
+      layer = memory ? construct_fingerprint_layer(memory) : NULL;
       break;
     case 6:
-      memory = sub_4EE4F9(1008);
-      layer = memory ? sub_51B7A0(memory) : NULL;
+      memory = allocate_registered_game_help_layer(1008);
+      layer = memory ? construct_game_help_layer(memory) : NULL;
       break;
     case 7:
     case 15: {
-      memory = sub_4BB527(328);
-      layer = memory ? sub_4BB5DC(memory) : NULL;
+      memory = allocate_registered_game_layer(328);
+      layer = memory ? construct_game_layer(memory) : NULL;
       *slot = (uint32_t)(uintptr_t)layer;
       const char *name = layer_id == 15 ? "SceneLayer" : "InsetLayer";
       assign_layer_name_string(name, strlen(name));
@@ -223,52 +223,52 @@ char *__thiscall get_game_layer_slot(char *manager, int layer_id,
       return (char *)(void *)slot;
     }
     case 8:
-      memory = sub_4E9FA3(648);
-      layer = memory ? sub_4EA06C(memory) : NULL;
+      memory = allocate_registered_inventory_layer(648);
+      layer = memory ? construct_inventory_layer(memory) : NULL;
       break;
     case 9:
-      memory = sub_4EE53F(852);
-      layer = memory ? sub_4F3D6D(memory) : NULL;
+      memory = allocate_registered_load_save_layer(852);
+      layer = memory ? construct_load_save_layer(memory) : NULL;
       break;
     case 10:
-      memory = sub_4EE585(672);
-      layer = memory ? sub_4F7F4D(memory) : NULL;
+      memory = allocate_registered_lsr_layer(672);
+      layer = memory ? construct_lsr_layer(memory) : NULL;
       break;
     case 11:
-      memory = sub_4EE5EE(428);
-      layer = memory ? sub_4FD325(memory) : NULL;
+      memory = allocate_registered_modal_message_layer(428);
+      layer = memory ? construct_modal_message_layer(memory) : NULL;
       break;
     case 12:
-      memory = sub_4EE67A(380);
-      layer = memory ? sub_501A94(memory) : NULL;
+      memory = allocate_registered_movie_layer(380);
+      layer = memory ? construct_movie_layer(memory) : NULL;
       break;
     case 13:
-      memory = sub_4EE5A8(328);
-      layer = memory ? sub_4FCBA4(memory) : NULL;
+      memory = allocate_registered_pause_layer(328);
+      layer = memory ? construct_pause_layer(memory) : NULL;
       break;
     case 14:
-      memory = sub_4EE562(1012);
-      layer = memory ? sub_4F402B(memory) : NULL;
+      memory = allocate_registered_save_game_layer(1012);
+      layer = memory ? construct_save_game_layer(memory) : NULL;
       break;
     case 16:
-      memory = sub_4EE69D(1848);
-      layer = memory ? sub_687F8D(memory) : NULL;
+      memory = allocate_registered_private_bottom_layer(1848);
+      layer = memory ? construct_private_bottom_layer(memory) : NULL;
       break;
     case 17:
-      memory = sub_4EE611(996);
-      layer = memory ? sub_4FE08D(memory) : NULL;
+      memory = allocate_registered_time_block_layer(996);
+      layer = memory ? construct_time_block_layer(memory) : NULL;
       break;
     case 18:
-      memory = sub_4EE6C0(388);
-      layer = memory ? sub_5581BD(memory) : NULL;
+      memory = allocate_registered_title_layer(388);
+      layer = memory ? construct_title_layer(memory) : NULL;
       break;
     case 19:
-      memory = sub_4EE634(800);
-      layer = memory ? sub_4FF3B3(memory) : NULL;
+      memory = allocate_registered_death_layer(800);
+      layer = memory ? construct_death_layer(memory) : NULL;
       break;
     case 20:
-      memory = sub_4EE657(324);
-      layer = memory ? sub_4FFAFA(memory) : NULL;
+      memory = allocate_registered_finished_layer(324);
+      layer = memory ? construct_finished_layer(memory) : NULL;
       break;
     default:
       return (char *)(void *)slot;
@@ -302,8 +302,7 @@ uint32_t *__thiscall get_or_create_caption_manager(uint32_t *manager)
   if (!caption_manager) {
     uint32_t *memory = allocate_registered_caption_manager(484);
     caption_manager = memory
-        ? (uint32_t *)(uintptr_t)construct_caption_manager(
-              (int)(uintptr_t)memory)
+        ? construct_caption_manager(memory)
         : NULL;
     manager[22] = (uint32_t)(uintptr_t)caption_manager;
   }

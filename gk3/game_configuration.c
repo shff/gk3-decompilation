@@ -9,13 +9,13 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7643E0[];
+extern uint32_t static_configuration_type_descriptor[];
 extern int __thiscall construct_game_configuration(int object);
 
 uint32_t *__cdecl allocate_registered_game_configuration(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7643E0,
+  find_or_create_registry_entry(static_configuration_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

@@ -97,8 +97,8 @@ extern char *__thiscall get_game_layer_slot(char *layer_manager, int layer_id,
                                             char create);
 extern void __thiscall clear_pointer_activity_state(int object);
 extern uint32_t *__cdecl get_engine_cursor_screen_position(uint32_t *result);
-extern int __thiscall sub_4BA1D4(int engine, int first, char second,
-                                 char third);
+extern int __thiscall process_game_engine_frame(int engine, int first,
+                                                char second, char third);
 extern int __thiscall camera_rectangles_differ(int *rectangle, int *bounds);
 extern int __thiscall get_mouse_cursor_activity_state(uint32_t *context);
 extern int __thiscall find_or_create_cursor_spec(uint32_t *collection,
@@ -133,13 +133,13 @@ uint32_t *__thiscall activate_interface_manager(uint32_t *manager,
 int __thiscall deactivate_interface_manager(uint32_t *manager,
                                             uint32_t *bounds_target,
                                             uint32_t *deactivation_target);
-extern int __thiscall sub_44D91D(void *object);
-extern int __thiscall sub_44D922(void *object);
-extern int __thiscall sub_44D92C(void *object);
-extern int __thiscall sub_44D936(void *object);
-extern int __thiscall sub_44D93B(void *object);
-extern int __thiscall sub_4CA356(void *state);
-extern int __thiscall sub_4CCA17(void *context);
+extern int __thiscall interface_target_handle_input_event(void *object);
+extern int __thiscall interface_target_pointer_button_1_press(void *object);
+extern int __thiscall interface_target_pointer_button_2_press(void *object);
+extern int __thiscall interface_target_key_release(void *object);
+extern int __thiscall interface_target_pointer_button_3_press(void *object);
+extern int __thiscall take_screenshot(void *state);
+extern int __thiscall write_qa_report(void *context);
 extern int __thiscall dispatch_pointer_position_to_interface_target(
     void *object);
 
@@ -594,7 +594,7 @@ int __thiscall deactivate_interface_manager(
     result = camera_rectangles_differ((int *)(void *)bounds,
                         (int *)(void *)&interface_layer_type_descriptor);
     if (result) {
-      sub_4BA1D4(game_engine_instance_address, 0, 0, 0);
+      process_game_engine_frame(game_engine_instance_address, 0, 0, 0);
       uint32_t *vtable = (uint32_t *)(uintptr_t)deactivation_target[0];
       return ((int (__thiscall *)(uint32_t *, uint32_t, uint32_t *))
           (uintptr_t)vtable[59])(
@@ -904,20 +904,20 @@ int __thiscall set_input_context_event_state(int manager, int event_id,
   if (event_id == 122) {
     uint32_t *engine = (uint32_t *)(uintptr_t)game_engine_instance_address;
     int active_key_state = (get_engine_input_state(engine, 0) >> 3) & 1;
-    return sub_4CA356((void *)(uintptr_t)active_key_state);
+    return take_screenshot((void *)(uintptr_t)active_key_state);
   }
   if (event_id == 120) {
     uint32_t *application =
         (uint32_t *)(uintptr_t)game_engine_instance_address;
     uint32_t *components = (uint32_t *)(uintptr_t)application[273];
-    return sub_4CCA17((void *)(uintptr_t)components[16]);
+    return write_qa_report((void *)(uintptr_t)components[16]);
   }
 
   reset_interface_cursor(
       (uint8_t *)(uintptr_t)((uint32_t *)(uintptr_t)manager)[5]);
   return dispatch_input_event(
       (uint32_t *)(uintptr_t)manager, event_id, event_value,
-      (int (__thiscall *)(int, int, int))sub_44D91D, 0);
+      (int (__thiscall *)(int, int, int))interface_target_handle_input_event, 0);
 }
 
 int __thiscall dispatch_pointer_button_1_press(uint32_t *manager,
@@ -926,7 +926,7 @@ int __thiscall dispatch_pointer_button_1_press(uint32_t *manager,
   reset_interface_cursor((uint8_t *)(uintptr_t)manager[5]);
   return dispatch_pointer_event(
       (int *)(void *)manager, coordinates,
-      (int (__thiscall *)(int, int *))sub_44D922, 0);
+      (int (__thiscall *)(int, int *))interface_target_pointer_button_1_press, 0);
 }
 
 int __thiscall dispatch_pointer_button_2_press(uint32_t *manager,
@@ -935,7 +935,7 @@ int __thiscall dispatch_pointer_button_2_press(uint32_t *manager,
   reset_interface_cursor((uint8_t *)(uintptr_t)manager[5]);
   return dispatch_pointer_event(
       (int *)(void *)manager, coordinates,
-      (int (__thiscall *)(int, int *))sub_44D92C, 0);
+      (int (__thiscall *)(int, int *))interface_target_pointer_button_2_press, 0);
 }
 
 int __thiscall dispatch_pointer_button_3_press(uint32_t *manager,
@@ -944,7 +944,7 @@ int __thiscall dispatch_pointer_button_3_press(uint32_t *manager,
   reset_interface_cursor((uint8_t *)(uintptr_t)manager[5]);
   return dispatch_pointer_event(
       (int *)(void *)manager, coordinates,
-      (int (__thiscall *)(int, int *))sub_44D93B, 0);
+      (int (__thiscall *)(int, int *))interface_target_pointer_button_3_press, 0);
 }
 
 int __thiscall dispatch_interface_key_release(uint32_t *manager,
@@ -953,7 +953,7 @@ int __thiscall dispatch_interface_key_release(uint32_t *manager,
 {
   return dispatch_input_event(
       manager, event_id, event_value,
-      (int (__thiscall *)(int, int, int))sub_44D936, 0);
+      (int (__thiscall *)(int, int, int))interface_target_key_release, 0);
 }
 
 int __thiscall contains_interface_layer(uint32_t *manager, int layer_address)

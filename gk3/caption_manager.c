@@ -34,18 +34,20 @@ extern int caption_manager_default_layout;
 
 extern int __thiscall construct_console_control_base(int object);
 extern uint32_t *__thiscall destroy_mini_console_control_base(uint32_t *object);
-extern int __thiscall find_or_create_registry_entry(uint32_t *registry, uint32_t address);
-extern int __thiscall sub_45B25C(uint32_t *object, char *default_value);
-extern int __thiscall sub_45B1E5(void *object);
-extern int __thiscall sub_45AF2F(uint8_t *object, int enabled);
-extern int __thiscall sub_476C91(uint32_t *object, int *layout);
-extern char *__thiscall sub_46C1FA(uint32_t *settings, const char *name,
-                                   int fallback);
-extern uint32_t *__cdecl sub_45A0F8(int size);
-extern uint32_t *__thiscall sub_46B4E2(uint32_t *object,
-                                      const char *filename, int flags);
+extern int __thiscall initialize_caption_item_collection(
+    uint32_t *object, char *default_value);
+extern int __thiscall register_color_control_member(void *object);
+extern int __thiscall construct_color_control(uint32_t *object, int context);
+extern int __thiscall update_caption_display_state(uint8_t *object,
+                                                   int force_update);
+extern int __thiscall update_control_bounds(uint32_t *object, int *layout);
+extern char *__thiscall read_string_setting_or_default(
+    uint32_t *settings, const char *name, int fallback);
+extern uint32_t *__cdecl allocate_registered_config_file(int size);
+extern uint32_t *__thiscall construct_registered_config_file(
+    uint32_t *object, const char *filename, int flags);
 extern int __thiscall destroy_embedded_caption_control(uint32_t *object);
-extern int __thiscall sub_45B2D5(uint32_t *list);
+extern int __thiscall destroy_caption_item_collection(uint32_t *list);
 extern int __thiscall construct_control_container_base(uint8_t *object, int context);
 extern int __cdecl write_source_message(
     const char *source_file, int line, int category, int flags,
@@ -67,20 +69,21 @@ uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset
           + 197);
-  sub_45B25C((uint32_t *)(void *)(bytes + 376), &default_value);
+  initialize_caption_item_collection(
+      (uint32_t *)(void *)(bytes + 376), &default_value);
   construct_control((int)(uintptr_t)(bytes + 424));
-  sub_45B1E5(bytes + 468);
+  register_color_control_member(bytes + 468);
   *(uint32_t *)(void *)(bytes + 468) = 0;
   *(uint32_t *)(void *)(bytes + 424) =
       (uint32_t)(uintptr_t)embedded_caption_control_vtable;
   *(float *)(void *)(bytes + 472) = 1.0f;
   manager[0] = (uint32_t)(uintptr_t)caption_manager_vtable;
   memset(bytes + 200, 0, 176);
-  sub_45AF2F(bytes, 1);
+  update_caption_display_state(bytes, 1);
+  caption_manager_restore_value = 0;
   caption_manager_current_value =
       *(uint32_t *)(uintptr_t)caption_manager_saved_state_pointer;
-  caption_manager_restore_value = 0;
-  sub_476C91(manager, &caption_manager_default_layout);
+  update_control_bounds(manager, &caption_manager_default_layout);
 
   uint32_t *application_components = (uint32_t *)(uintptr_t)
       *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
@@ -92,7 +95,8 @@ uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
   const float darkness = (float)read_integer_setting_or_default(
       settings, "Shaded Caption Darkness", 50) * 0.01f;
   control = (uint32_t *)(void *)(bytes + 424);
-  caption_color = sub_46C1FA(settings, "Shaded Caption Color", 0);
+  caption_color = read_string_setting_or_default(
+      settings, "Shaded Caption Color", 0);
   if (darkness != *(float *)(void *)(bytes + 472)) {
     *(float *)(void *)(bytes + 472) = darkness;
     ((void (__thiscall *)(uint32_t *))(uintptr_t)
@@ -104,9 +108,9 @@ uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
         *(uint32_t *)(uintptr_t)(control[0] + 156))(control);
   }
 
-  font_colors = sub_45A0F8(60);
+  font_colors = allocate_registered_config_file(60);
   manager[120] = (uint32_t)(uintptr_t)(font_colors
-      ? sub_46B4E2(font_colors, "fontcolor.txt", 0)
+      ? construct_registered_config_file(font_colors, "fontcolor.txt", 0)
       : NULL);
   uint32_t *font_color_file = (uint32_t *)(uintptr_t)manager[120];
   if (!((int (__thiscall *)(uint32_t *, int))(uintptr_t)
@@ -133,7 +137,7 @@ uint32_t *__thiscall destroy_caption_manager_members(uint32_t *manager)
 
   destroy_embedded_caption_control(manager + 106);
   while (manager[105])
-    sub_45B2D5(manager + 94);
+    destroy_caption_item_collection(manager + 94);
   erase_map_entry_impl(
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset
@@ -161,8 +165,13 @@ uint32_t *__thiscall construct_caption_manager_with_context(
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset
           + 197);
-  sub_45B25C((uint32_t *)(void *)(bytes + 376), &default_value);
+  initialize_caption_item_collection(
+      (uint32_t *)(void *)(bytes + 376), &default_value);
+  construct_color_control((uint32_t *)(void *)(bytes + 424), context);
   manager[0] = (uint32_t)(uintptr_t)caption_manager_vtable;
+  caption_manager_restore_value = 0;
+  caption_manager_current_value =
+      *(uint32_t *)(uintptr_t)caption_manager_saved_state_pointer;
   return manager;
 }
 

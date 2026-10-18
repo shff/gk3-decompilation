@@ -32,7 +32,7 @@ extern int dword_76D164;
 extern int dword_76D0A0[15];
 extern int dword_6A9EA4;
 extern int dword_6C1358;
-extern int dword_6A6460;
+extern int default_noun_id;
 extern int first_special_stage_location_id;
 extern int serialized_value_default;
 extern char byte_6A6454;
@@ -97,7 +97,7 @@ extern char __thiscall sub_437A76(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
 extern char __thiscall sub_4B0AF1(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
-extern char __thiscall sub_4053DF(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_noun_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
 extern char __cdecl sub_41F830(uint8_t *serializer, const char *field,
                               char *storage);
@@ -384,8 +384,8 @@ char __thiscall serialize_stage_manager(uint32_t *manager,
              &dword_6A9EA4);
   sub_4B0AF1(serializer, "mLastTime", (int *)(void *)(bytes + 28),
              &dword_6C1358);
-  sub_4053DF(serializer, "mEgo", (int *)(void *)(bytes + 32),
-             &dword_6A6460);
+  serialize_noun_field(serializer, "mEgo", (int *)(void *)(bytes + 32),
+             &default_noun_id);
   sub_41F830(serializer, "mInitialized", (char *)(void *)(bytes + 36));
   sub_5568C3(serializer, "mTimers", (unsigned int)(uintptr_t)(bytes + 40), 0);
   serialize_boolean_field(serializer, "mbPreventVerbCancel",
