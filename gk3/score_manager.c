@@ -18,20 +18,19 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_76C8E8[];
-extern int score_manager_base_offset_adjustment __asm__("dword_76C8E4");
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern uint32_t score_points_by_id[385] __asm__("dword_6D4210");
+extern int score_manager_base_offset_adjustment;
+extern int game_engine_instance_address;
+extern uint32_t score_points_by_id[385];
 extern int game_engine_address;
 extern int serialized_value_default;
-extern int score_id_default_value[8] __asm__("dword_6D7888");
+extern int score_id_default_value[8];
 extern char byte_6A6454;
 extern const char Key[4];
-extern char *score_names_by_id[385] __asm__("off_755E80");
-extern int __cdecl format_integer_string(int string_storage, int value)
-    __asm__("sub_56CE60");
+extern char *score_names_by_id[385];
+extern int __cdecl format_integer_string(int string_storage, int value);
 extern int __cdecl serialize_integer_value_field(
     uint8_t *serializer, const char *field_name, int *value,
-    int *default_value) __asm__("sub_40B684");
+    int *default_value);
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             const char *field_name,
                                             char *value,
@@ -50,12 +49,12 @@ extern char *__thiscall read_integer_setting_or_default(
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
 extern int __cdecl find_string_index(int *names, int count, int name,
-                                     int flags) __asm__("sub_55B54A");
+                                     int flags);
 extern int __thiscall queue_engine_event(uint32_t *engine, int *event);
 extern int __cdecl get_or_create_rc_bar_popper(void);
 extern int __cdecl log_source_message(
     int source_file, int line, int severity, int flags, const char *format,
-    ...) __asm__("sub_5574A3");
+    ...);
 uint32_t *__cdecl allocate_registered_score_manager(int size);
 
 uint8_t *__thiscall initialize_score_id_flags(int *object)

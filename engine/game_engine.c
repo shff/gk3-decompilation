@@ -115,8 +115,8 @@ extern void __thiscall restart_game_engine(int engine);
 extern LONG dword_786904;
 extern uint64_t qword_786908;
 extern CRITICAL_SECTION stru_786910;
-extern int dword_76D3F8;
-extern int dword_76D3FC;
+extern int cursor_default_coordinate_x;
+extern int cursor_default_coordinate_y;
 extern int dword_7739E0;
 extern int dword_7739E4;
 extern int pointer_drag_threshold_x;
@@ -162,8 +162,8 @@ extern int __thiscall sub_44D954(void *value);
 extern int __thiscall sub_44D959(void *value);
 extern int system_profile_address;
 extern char byte_765A30[260];
-extern int dword_7715C8;
-extern int dword_7715CC;
+extern int caption_manager_saved_state_pointer;
+extern int screen_width_address;
 extern const char Str1[4];
 extern char __stdcall sub_4B5E23(char *text);
 extern int __cdecl serialize_sprite_collection(uint32_t *archive, uint32_t *field,
@@ -198,7 +198,7 @@ extern int __thiscall remember_animation_notification_id(int registry,
                                                         int *value);
 extern char *__thiscall get_animation_resource_name(uint32_t *engine, char *result,
                                    int animation);
-extern void sub_5574A3(int source, int line, int severity, size_t flags,
+extern void log_source_message(int source, int line, int severity, size_t flags,
                        char *format, ...);
 extern uint32_t event_handle_vtable[];
 extern unsigned char byte_6C19B8[12];
@@ -392,9 +392,9 @@ extern int __thiscall invoke_graphics_resource_method_by_id(uint32_t *engine, ui
 /* gk3/GK3R_rest.c */
 extern int accelerator_resource_id;
 extern int game_engine_address;
-extern int dword_765A2C;
-extern int dword_764788;
-extern int dword_76C884;
+extern int game_engine_instance_address;
+extern int interface_layer_type_descriptor;
+extern int active_scene_controller_address;
 extern int g_engine_base_offset_adjustment;
 extern int (__stdcall *engine_pointer_vector_vtable)(char);
 uint32_t *__thiscall destroy_engine_base(int engine_address);
@@ -447,7 +447,7 @@ extern int get_application_event_dispatcher(void);
 extern void __thiscall sub_4E825C(int target, uint32_t *message);
 extern void __thiscall sub_594650(int *engine, int first, int second,
                                   int third);
-extern int __thiscall sub_485923(uint32_t *collection, char *name,
+extern int __thiscall create_interface_input_object(uint32_t *collection, char *name,
                                 int mode);
 extern void __thiscall sub_5948E0(int *engine);
 extern int dword_76472C;
@@ -726,7 +726,7 @@ uint32_t *__thiscall destroy_game_engine_instance(uint32_t *engine_words)
   GameEngine *engine = (GameEngine *)(void *)engine_words;
 
   engine->methods = (uint32_t)(uintptr_t)game_engine_vtable;
-  dword_765A2C = 0;
+  game_engine_instance_address = 0;
   destroy_callback_registry();
 
   for (int index = 3; index < 6; ++index)
@@ -762,12 +762,12 @@ int *__thiscall refresh_resources_after_resume(uint32_t *engine_words)
 
   while (entry_words != end_words) {
     sub_4BA969((int)(intptr_t)entry_words);
-    result = sub_588EA0(entry_words, &dword_764788);
+    result = sub_588EA0(entry_words, &interface_layer_type_descriptor);
     entry_words += sizeof(EngineStringStorage) / sizeof(*entry_words);
   }
 
-  if (dword_76C884) {
-    uintptr_t context_address = (uint32_t)dword_76C884;
+  if (active_scene_controller_address) {
+    uintptr_t context_address = (uint32_t)active_scene_controller_address;
     uint32_t renderer_address =
         *(uint32_t *)(uintptr_t)(context_address + 0x50);
     if (renderer_address) {
@@ -1856,7 +1856,7 @@ int __thiscall get_application_relative_time(void *engine)
   int engine_time =
       ((GetEngineTimeMethod)(uintptr_t)methods[28 / sizeof(uint32_t)])(engine);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   uint32_t time_object_address =
       *(uint32_t *)(uintptr_t)(application_address + 68);
   return sub_4E7BC0((uint32_t *)(uintptr_t)time_object_address, engine_time);
@@ -1901,8 +1901,8 @@ int __thiscall load_ambient_map_bitmap(uint32_t *engine, int mode,
 char __thiscall handle_scene_change(uint8_t *engine, int scene)
 {
   (void)scene;
-  if (!engine[1114] && dword_76C884)
-    return sub_5308A5(dword_76C884);
+  if (!engine[1114] && active_scene_controller_address)
+    return sub_5308A5(active_scene_controller_address);
   return 0;
 }
 
@@ -1930,11 +1930,11 @@ int *__thiscall apply_engine_display_state(int *engine, int state,
   sub_594650(engine, state, 0, 0);
   if (center_surface) {
     uint32_t *interface_manager = (uint32_t *)(uintptr_t)
-        *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+        *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
     uint32_t *surface_collection = (uint32_t *)(uintptr_t)
         interface_manager[12];
     uint32_t *surface_entry = (uint32_t *)(uintptr_t)
-        sub_485923(surface_collection,
+        create_interface_input_object(surface_collection,
                    (char *)(uintptr_t)default_cursor_spec_name_address, 1);
     surface = (uint32_t *)(uintptr_t)surface_entry[4];
     uint32_t *vtable = (uint32_t *)(uintptr_t)surface[0];
@@ -1991,7 +1991,7 @@ uint32_t *__thiscall validate_animation_notification(uint32_t *engine,
       *(const char **)(void *)(animation_name_storage_address + sizeof(uint32_t));
   if (!animation_name)
     animation_name = Key;
-  sub_5574A3(
+  log_source_message(
       (int)(intptr_t)"Z:\\Proj\\GK3\\gk3app\\Source\\GameEngine.cpp",
       1905, 6, 0,
       "Illegal .anm notify on frame %d in anim %s: '%s'.\n",
@@ -2011,7 +2011,7 @@ void __stdcall dispatch_application_event(int first, int second)
   InterlockedIncrement(&dword_786928);
 
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   uint32_t event_dispatcher_address =
       *(uint32_t *)(uintptr_t)(application_address + 68);
   sub_4E8BDE((int *)(uintptr_t)event_dispatcher_address, first, second);
@@ -2075,7 +2075,7 @@ int __thiscall destroy_game_engine_members(uint32_t *engine)
   destroy_and_clear_owned_object_4bb1e4(engine + 303);
   destroy_and_clear_owned_object_4bb1ce(engine + 302);
   destroy_and_clear_owned_object_4bb1fa(engine + 297);
-  dword_765A2C = 0;
+  game_engine_instance_address = 0;
   destroy_and_clear_owned_object_4bb210(engine + 294);
   destroy_and_clear_owned_object_4bb226(engine + 293);
   return destroy_and_clear_owned_object_4bb23c(engine + 295);
@@ -2227,7 +2227,7 @@ int __thiscall apply_display_options_from_settings(uint32_t *engine)
   engine[331] = 0;
   memcpy(engine + 28,
          load_display_options_from_settings(
-             *(uint32_t ***)(uintptr_t)((uint32_t)dword_765A2C + 1192),
+             *(uint32_t ***)(uintptr_t)((uint32_t)game_engine_instance_address + 1192),
              display_options),
          sizeof(display_options));
   if (*(uint8_t *)(uintptr_t)fullscreen_flag_address)
@@ -2262,7 +2262,7 @@ void __thiscall set_input_event_state(uint32_t *engine, int event, int value)
     break;
   }
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   set_input_context_event_state(*(int *)(uintptr_t)(application_address + 68), event, value);
   uint64_t elapsed_ticks = __rdtsc() - start_tick;
   EnterCriticalSection(&stru_786934);
@@ -2286,7 +2286,7 @@ void __thiscall clear_input_event_state(uint32_t *engine, int event, int value)
     break;
   }
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_input_event((int *)(uintptr_t)*(uint32_t *)(uintptr_t)(application_address + 68),
              event, value,
              (int (__thiscall *)(int, int, int))sub_44D927, 0);
@@ -2302,7 +2302,7 @@ BOOL __thiscall set_pointer_input_state(uint32_t *engine, int event, int value)
   InterlockedIncrement(&dword_786928);
   engine[332] |= 0x20u;
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   set_input_context_event_state(*(int *)(uintptr_t)(application_address + 68), event, value);
   uint64_t elapsed_ticks = __rdtsc() - start_tick;
   EnterCriticalSection(&stru_786934);
@@ -2322,7 +2322,7 @@ BOOL __thiscall clear_pointer_input_state(uint32_t *engine, int event,
     engine[332] &= ~0x10u;
   engine[332] &= ~0x20u;
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_input_event((int *)(uintptr_t)*(uint32_t *)(uintptr_t)(application_address + 68),
              event, value,
              (int (__thiscall *)(int, int, int))sub_44D927, 0);
@@ -2338,11 +2338,11 @@ void __thiscall pointer_button_1_pressed(uint32_t *engine, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_pointer_button_1_press(*(int *)(uintptr_t)(application_address + 68), point);
   engine[332] |= 1u;
-  engine[333] = dword_76D3F8;
-  engine[334] = dword_76D3FC;
+  engine[333] = cursor_default_coordinate_x;
+  engine[334] = cursor_default_coordinate_y;
   engine[337] = point[0];
   engine[338] = point[1];
   uint64_t elapsed_ticks = __rdtsc() - start_tick;
@@ -2357,7 +2357,7 @@ void __thiscall pointer_button_2_pressed(int engine_address, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_pointer_button_2_press(*(int *)(uintptr_t)(application_address + 68), point);
   *(uint32_t *)(void *)(engine + 1328) |= 2u;
   if (!engine[1372]) {
@@ -2376,7 +2376,7 @@ void __thiscall pointer_button_3_pressed(int engine_address, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_pointer_button_3_press(*(int *)(uintptr_t)(application_address + 68), point);
   *(uint32_t *)(void *)(engine + 1328) |= 4u;
   if (!engine[1372]) {
@@ -2395,8 +2395,8 @@ void __thiscall handle_pointer_movement(int engine_address, uint32_t *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
 
-  if (*(int *)(void *)(engine + 1332) == dword_76D3F8 &&
-      *(int *)(void *)(engine + 1336) == dword_76D3FC) {
+  if (*(int *)(void *)(engine + 1332) == cursor_default_coordinate_x &&
+      *(int *)(void *)(engine + 1336) == cursor_default_coordinate_y) {
     *(int *)(void *)(engine + 1332) = (int)point[0];
     *(int *)(void *)(engine + 1336) = (int)point[1];
     memset(engine + 1376, 0, 0x10u);
@@ -2440,7 +2440,7 @@ void __thiscall handle_pointer_movement(int engine_address, uint32_t *point)
   }
 
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   int input_context = *(int *)(uintptr_t)(application_address + 68);
   update_input_context_pointer_position(input_context, current_point);
   if (engine[1372]) {
@@ -2460,12 +2460,12 @@ void __thiscall handle_pointer_movement(int engine_address, uint32_t *point)
                (int)(intptr_t)(engine + 1348),
                *(int *)(void *)(engine + 1328),
                (int (__thiscall *)(int, int, int, int))sub_44D8FE, 0);
-    *(int *)(void *)(engine + 1348) = dword_76D3F8;
-    *(int *)(void *)(engine + 1352) = dword_76D3FC;
-    *(int *)(void *)(engine + 1356) = dword_76D3F8;
-    *(int *)(void *)(engine + 1360) = dword_76D3FC;
-    *(int *)(void *)(engine + 1364) = dword_76D3F8;
-    *(int *)(void *)(engine + 1368) = dword_76D3FC;
+    *(int *)(void *)(engine + 1348) = cursor_default_coordinate_x;
+    *(int *)(void *)(engine + 1352) = cursor_default_coordinate_y;
+    *(int *)(void *)(engine + 1356) = cursor_default_coordinate_x;
+    *(int *)(void *)(engine + 1360) = cursor_default_coordinate_y;
+    *(int *)(void *)(engine + 1364) = cursor_default_coordinate_x;
+    *(int *)(void *)(engine + 1368) = cursor_default_coordinate_y;
   } else {
     dispatch_pointer_motion_event((uint32_t *)(uintptr_t)input_context,
                (int)(intptr_t)current_point,
@@ -2488,13 +2488,13 @@ void __thiscall pointer_button_1_released(int engine_address, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   dispatch_pointer_event(
       (int *)(uintptr_t)*(uint32_t *)(uintptr_t)(application_address + 68),
       point, (int (__thiscall *)(int, int *))sub_44D94F, 0);
   *(uint32_t *)(void *)(engine + 1328) &= ~1u;
-  *(int *)(void *)(engine + 1332) = dword_76D3F8;
-  *(int *)(void *)(engine + 1336) = dword_76D3FC;
+  *(int *)(void *)(engine + 1332) = cursor_default_coordinate_x;
+  *(int *)(void *)(engine + 1336) = cursor_default_coordinate_y;
   int button_state = *(int *)(void *)(engine + 1328);
   int (__thiscall *callback)(void *) = NULL;
   if (engine[1372]) {
@@ -2519,7 +2519,7 @@ void __thiscall pointer_button_2_released(int *engine, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   int input_context = *(int *)(uintptr_t)(application_address + 68);
   dispatch_pointer_event((int *)(uintptr_t)input_context, point,
              (int (__thiscall *)(int, int *))sub_44D959, 0);
@@ -2541,7 +2541,7 @@ void __thiscall pointer_button_3_released(uint32_t *engine, int *point)
   uint64_t start_tick = __rdtsc();
   InterlockedIncrement(&dword_786904);
   uint32_t application_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   int input_context = *(int *)(uintptr_t)(application_address + 68);
   dispatch_pointer_event((int *)(uintptr_t)input_context, point,
              (int (__thiscall *)(int, int *))sub_44D903, 0);
@@ -2586,7 +2586,7 @@ int __thiscall process_game_window_message(int engine_address,
     if (engine[1372]) {
       engine[1372] = 0;
       uint32_t application_address =
-          *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+          *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
       dispatch_pointer_event_with_state(
           (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(application_address + 68),
           (int)(intptr_t)(engine + 1340), input_state,
@@ -2604,11 +2604,11 @@ int __thiscall process_game_window_message(int engine_address,
       return 1;
     }
     return handle_engine_close_request(
-        (uint8_t *)(uintptr_t)*(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092));
+        (uint8_t *)(uintptr_t)*(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092));
   }
   case 0x111:
     return handle_engine_command_message(
-        (uint8_t *)(uintptr_t)*(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092),
+        (uint8_t *)(uintptr_t)*(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092),
         wparam);
   case 0x401:
     finish_game_startup(engine_address);
@@ -2680,7 +2680,7 @@ int __thiscall initialize_game_engine_runtime(int engine_address)
   *(void **)(void *)(engine + 1180) = lock;
   sub_4DBBE0(lock, (int)GetCurrentThreadId(), GetCurrentThread());
 
-  dword_765A2C = engine_address;
+  game_engine_instance_address = engine_address;
   configure_engine_log_files((char *)engine);
   initialize_game_engine_state(engine_address);
   load_game_engine_settings(engine_address);
@@ -2725,7 +2725,7 @@ int finalize_game_engine_initialization(int engine_address, int context)
   srand(seed);
 
   uint32_t settings_address =
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1192);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1192);
   uint32_t audio_settings = *(uint32_t *)(void *)(engine + 212);
   uint32_t *audio_methods = *(uint32_t **)(uintptr_t)audio_settings;
   char *sample_rate =
@@ -2805,8 +2805,8 @@ void __thiscall persist_resources_with_logging(int *engine, float logger_value,
     get_engine_viewport_rectangle(engine, rectangle, &first_value, &second_value,
                &logger_value);
 
-    int bounds_left = *(int *)(uintptr_t)dword_7715CC;
-    int bounds_top = *(int *)(uintptr_t)dword_7715C8;
+    int bounds_left = *(int *)(uintptr_t)screen_width_address;
+    int bounds_top = *(int *)(uintptr_t)caption_manager_saved_state_pointer;
     int left = rectangle[0] < 0 ? 0 : rectangle[0];
     int top = rectangle[1] < 0 ? 0 : rectangle[1];
     int right = bounds_left < rectangle[2] ? bounds_left : rectangle[2];

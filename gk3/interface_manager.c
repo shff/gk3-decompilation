@@ -16,117 +16,90 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_7664C0[];
-extern int interface_manager_base_offset_adjustment
-    __asm__("dword_7664BC");
-extern int cursor_default_coordinate_x __asm__("dword_76D3F8");
-extern int cursor_default_coordinate_y __asm__("dword_76D3FC");
-extern int interface_layer_type_descriptor __asm__("dword_764788");
-extern int cursor_screen_position_address __asm__("dword_764728");
-extern int game_engine_instance_address __asm__("dword_765A2C");
+extern int interface_manager_base_offset_adjustment;
+extern int cursor_default_coordinate_x;
+extern int cursor_default_coordinate_y;
+extern int interface_layer_type_descriptor;
+extern int cursor_screen_position_address;
+extern int game_engine_instance_address;
 extern int game_engine_address;
 extern uint32_t __stdcall GetForegroundWindow(void);
 extern uint32_t *__cdecl create_window_capture_event(
-    uint32_t **event_storage, int event_id) __asm__("sub_4CE074");
+    uint32_t **event_storage, int event_id);
 extern uint32_t __stdcall SetCapture(uint32_t window);
 extern int __stdcall ReleaseCapture(void);
 extern uint8_t loc_640794;
-extern uint32_t interface_manager_vtable[] __asm__("off_6C8240");
-extern int __thiscall destroy_interface_layer_collection(int list)
-    __asm__("sub_4E8DAB");
-extern int __cdecl destroy_interface_cursor(uint32_t *member)
-    __asm__("sub_4E9587");
-extern int __cdecl destroy_interface_console(uint32_t *member)
-    __asm__("sub_4E959D");
-extern int __cdecl destroy_interface_owned_layer(uint32_t *member)
-    __asm__("sub_4E95B3");
-extern int __cdecl destroy_interface_ui_translator(uint32_t *member)
-    __asm__("sub_4E95C9");
+extern uint32_t interface_manager_vtable[];
+extern int __thiscall destroy_interface_layer_collection(int list);
+extern int __cdecl destroy_interface_cursor(uint32_t *member);
+extern int __cdecl destroy_interface_console(uint32_t *member);
+extern int __cdecl destroy_interface_owned_layer(uint32_t *member);
+extern int __cdecl destroy_interface_ui_translator(uint32_t *member);
 extern void *__thiscall begin_interface_debug_log(
-    int *context, int file, int line, int category, uint32_t *arguments)
-    __asm__("sub_52D127");
-extern void __thiscall end_interface_debug_log(int *context)
-    __asm__("sub_52D18D");
-extern void __cdecl log_interface_debug_message(int context, char *format, ...)
-    __asm__("sub_409150");
+    int *context, int file, int line, int category, uint32_t *arguments);
+extern void __thiscall end_interface_debug_log(int *context);
+extern void __cdecl log_interface_debug_message(int context, char *format, ...);
 extern int __thiscall interface_layer_index_between(uint32_t *first,
-                                                    uint32_t *last)
-    __asm__("sub_4E97B0");
+                                                    uint32_t *last);
 extern int __thiscall get_engine_input_state(uint32_t *engine, char unused);
 extern const char Key[4];
 extern uint32_t *__thiscall initialize_layer_pointer_array(
-    uint32_t *object, char *default_value) __asm__("sub_4E9019");
-extern uint32_t *__cdecl allocate_registered_interface_layer(int size)
-    __asm__("sub_4E7B5E");
+    uint32_t *object, char *default_value);
+extern uint32_t *__cdecl allocate_registered_interface_layer(int size);
 extern uint32_t *__thiscall construct_registered_interface_layer(
-    uint32_t *object, uint32_t *type_descriptor) __asm__("sub_4ED193");
+    uint32_t *object, uint32_t *type_descriptor);
 extern char *__thiscall assign_std_string_storage(char *storage,
                                                   const char *value,
                                                   size_t length);
 extern uint32_t *__cdecl create_layer_child_added_event(
-    uint32_t *member, int layer_id, int layer_address) __asm__("sub_4E686D");
+    uint32_t *member, int layer_id, int layer_address);
 extern uint32_t *__cdecl create_layer_child_removed_event(
-    uint32_t *member, int layer_id, int layer_address) __asm__("sub_4E6964");
-extern void __thiscall destroy_interface_temporary_object(uint32_t *object)
-    __asm__("sub_48567E");
+    uint32_t *member, int layer_id, int layer_address);
+extern void __thiscall destroy_interface_temporary_object(uint32_t *object);
 extern uint32_t *__cdecl allocate_registered_interface_layer_collection(
-    int size) __asm__("sub_4E5FCB");
-extern uint32_t *__thiscall construct_private_bottom_layer(uint32_t *object)
-    __asm__("sub_4E606B");
-extern uint32_t *__thiscall initialize_layer_collection_reference(int *result)
-    __asm__("sub_4E8BF7");
+    int size);
+extern uint32_t *__thiscall construct_private_bottom_layer(uint32_t *object);
+extern uint32_t *__thiscall initialize_layer_collection_reference(int *result);
 extern uint32_t *__thiscall add_layer_collection_reference(
-    uint32_t *member, uint32_t *value) __asm__("sub_4E8DC5");
-extern uint32_t *__cdecl allocate_registered_interface_console(int size)
-    __asm__("sub_4E7B81");
+    uint32_t *member, uint32_t *value);
+extern uint32_t *__cdecl allocate_registered_interface_console(int size);
 extern int __thiscall create_interface_input_object(
-    uint32_t *manager, char *first, int second) __asm__("sub_485923");
-extern uint32_t *__cdecl allocate_registered_cursor(int size)
-    __asm__("sub_4842AB");
-extern uint32_t __thiscall construct_cursor(uint32_t object)
-    __asm__("sub_48436A");
-extern void __thiscall set_cursor_spec(uint32_t object, int context)
-    __asm__("sub_484E36");
+    uint32_t *manager, char *first, int second);
+extern uint32_t *__cdecl allocate_registered_cursor(int size);
+extern uint32_t __thiscall construct_cursor(uint32_t object);
+extern void __thiscall set_cursor_spec(uint32_t object, int context);
 extern char *get_mouse_cursor_worker_manager(void);
-extern int __cdecl set_engine_cursor_screen_position(uint32_t *position)
-    __asm__("sub_5A71A0");
-extern int __thiscall construct_interface_console(int object)
-    __asm__("sub_55903E");
-extern uint32_t *__cdecl allocate_registered_ui_translator(int size)
-    __asm__("sub_4E6D07");
-extern char **__thiscall construct_ui_translator(char **object)
-    __asm__("sub_4E6DBC");
+extern int __cdecl set_engine_cursor_screen_position(uint32_t *position);
+extern int __thiscall construct_interface_console(int object);
+extern uint32_t *__cdecl allocate_registered_ui_translator(int size);
+extern char **__thiscall construct_ui_translator(char **object);
 extern void __thiscall release_layer_collection_reference(
-    uint32_t **objects) __asm__("sub_4E653D");
+    uint32_t **objects);
 extern int __thiscall adjust_interface_layer_iterator(int *iterator,
-                                                      int direction)
-    __asm__("sub_484175");
+                                                      int direction);
 extern uint32_t *__thiscall advance_interface_layer_iterator(
-    uint32_t *iterator) __asm__("sub_4E8CC5");
+    uint32_t *iterator);
 extern uint32_t *__thiscall retain_interface_event_reference(
-    uint32_t *reference, uint32_t **event) __asm__("sub_4E8D98");
-extern int __thiscall append_interface_recipient(int list, uint32_t *value)
-    __asm__("sub_4E8D14");
-extern int __thiscall release_interface_recipient_list(int *list)
-    __asm__("sub_4E8FBF");
+    uint32_t *reference, uint32_t **event);
+extern int __thiscall append_interface_recipient(int list, uint32_t *value);
+extern int __thiscall release_interface_recipient_list(int *list);
 extern uint32_t *__thiscall erase_interface_layer_range(
     int *list, uint32_t *result, int first_start, int first_index,
     uint32_t *first_current, int first_end, int last_start, int last_index,
-    uint32_t *last_current, int last_end) __asm__("sub_4E8E50");
+    uint32_t *last_current, int last_end);
 extern uint32_t *__thiscall retreat_interface_layer_iterator(
-    uint32_t *iterator) __asm__("sub_4E8F94");
-extern int __cdecl release_interface_event_and_get_payload(uint32_t *reference)
-    __asm__("sub_4A2943");
+    uint32_t *iterator);
+extern int __cdecl release_interface_event_and_get_payload(uint32_t *reference);
 extern void __thiscall reset_engine_input_state(int engine);
 extern char __thiscall has_game_layer_object(uint32_t *layer_manager,
                                              int layer_id);
 extern char *__thiscall get_game_layer_slot(char *layer_manager, int layer_id,
                                             char create);
 extern void __thiscall clear_pointer_activity_state(int object);
-extern uint32_t *__cdecl get_engine_cursor_screen_position(uint32_t *result)
-    __asm__("sub_5A7160");
+extern uint32_t *__cdecl get_engine_cursor_screen_position(uint32_t *result);
 extern int __thiscall sub_4BA1D4(int engine, int first, char second,
                                  char third);
-extern int __thiscall sub_45485C(int *rectangle, int *bounds);
+extern int __thiscall camera_rectangles_differ(int *rectangle, int *bounds);
 extern int __thiscall get_mouse_cursor_activity_state(uint32_t *context);
 extern int __thiscall find_or_create_cursor_spec(uint32_t *collection,
                                                 char *name,
@@ -168,7 +141,7 @@ extern int __thiscall sub_44D93B(void *object);
 extern int __thiscall sub_4CA356(void *state);
 extern int __thiscall sub_4CCA17(void *context);
 extern int __thiscall dispatch_pointer_position_to_interface_target(
-    void *object) __asm__("sub_44D945");
+    void *object);
 
 typedef struct {
   uint32_t start;
@@ -618,7 +591,7 @@ int __thiscall deactivate_interface_manager(
     uint32_t bounds[4] = {
         bounds_target[7], bounds_target[8],
         bounds_target[9], bounds_target[10]};
-    result = sub_45485C((int *)(void *)bounds,
+    result = camera_rectangles_differ((int *)(void *)bounds,
                         (int *)(void *)&interface_layer_type_descriptor);
     if (result) {
       sub_4BA1D4(game_engine_instance_address, 0, 0, 0);

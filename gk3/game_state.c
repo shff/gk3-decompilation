@@ -11,11 +11,11 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_765C18[];
-extern int game_state_base_offset_adjustment __asm__("dword_765C14");
-extern int hands_off_state_type_descriptor[15] __asm__("dword_765B90");
-extern int action_skipper_type_descriptor[15] __asm__("dword_765BD8");
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern uint32_t game_state_transition_callbacks[] __asm__("dword_753FD8");
+extern int game_state_base_offset_adjustment;
+extern int hands_off_state_type_descriptor[15];
+extern int action_skipper_type_descriptor[15];
+extern int game_engine_instance_address;
+extern uint32_t game_state_transition_callbacks[];
 extern int __cdecl destroy_action_skipper(uint32_t *object);
 extern int __cdecl release_hands_off_state(uint32_t *object);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
@@ -31,34 +31,25 @@ extern int __thiscall resize_game_state_stack(int *stack,
                                                unsigned int count,
                                                int default_value);
 extern int __thiscall adjust_segmented_storage_iterator(int *iterator,
-                                                        int offset)
-    __asm__("sub_41F561");
+                                                        int offset);
 extern uint32_t *__thiscall initialize_collection_serialization_context(
-    uint32_t *context, int serializer, const char *field_name, int flags)
-    __asm__("sub_56C570");
-extern void __thiscall destroy_collection_serialization_context(int context)
-    __asm__("sub_56C720");
+    uint32_t *context, int serializer, const char *field_name, int flags);
+extern void __thiscall destroy_collection_serialization_context(int context);
 extern uint8_t *__cdecl append_string_suffix(uint8_t *result, char *first,
-                                             char *suffix)
-    __asm__("sub_40157E");
+                                             char *suffix);
 extern char __cdecl serialize_array_count_field(uint8_t *serializer,
                                                 const char *field_name,
                                                 int *value,
-                                                int *default_value)
-    __asm__("sub_404836");
+                                                int *default_value);
 extern uint8_t *__cdecl append_string_storage(uint8_t *result, char *first,
-                                              uint8_t *second)
-    __asm__("sub_404349");
-extern int __cdecl format_integer_string(int string_storage, int value)
-    __asm__("sub_56CE60");
+                                              uint8_t *second);
+extern int __cdecl format_integer_string(int string_storage, int value);
 extern int __cdecl find_string_index(int strings, int count, int value,
-                                     char flags) __asm__("sub_55B54A");
+                                     char flags);
 extern void __thiscall replace_playing_action_state_lock(int *state_lock,
-                                                        int value)
-    __asm__("sub_409304");
+                                                        int value);
 extern void __thiscall replace_skipping_action_state_lock(int *state_lock,
-                                                         int value)
-    __asm__("sub_409344");
+                                                         int value);
 extern int __thiscall tidy_std_string_storage(char *string_storage,
                                                char mode);
 extern char *__thiscall assign_std_string_storage(char *storage,
@@ -66,8 +57,8 @@ extern char *__thiscall assign_std_string_storage(char *storage,
                                                   size_t length);
 extern int log_engine_message(int engine_address, const char *format, ...);
 extern int game_engine_address;
-extern int game_state_symbol_default[8] __asm__("dword_6C24D8");
-extern char *game_state_names[70] __asm__("off_7534BC");
+extern int game_state_symbol_default[8];
+extern char *game_state_names[70];
 extern char byte_6A6454;
 extern const char Key[4];
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
@@ -78,10 +69,9 @@ extern void __thiscall replace_playing_movie_state_lock(int *state_lock,
                                                          int replacement);
 extern void __thiscall replace_sidney_hands_off_state_lock(
     int *state_lock, int replacement);
-extern int is_game_engine_initialized(void) __asm__("sub_4085E4");
+extern int is_game_engine_initialized(void);
 extern int __cdecl log_source_message(int source, int line, int severity,
-                                      size_t reserved, const char *format, ...)
-    __asm__("sub_5574A3");
+                                      size_t reserved, const char *format, ...);
 extern void __cdecl free_tracked_memory(int address);
 
 int game_state_transition_is_available(void);

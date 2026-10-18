@@ -22,19 +22,19 @@ extern int __thiscall construct_control(int object);
 extern int __thiscall set_control_active(uint8_t *control, char active);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t caption_manager_registry[] __asm__("dword_7641A0");
-extern int caption_manager_registry_offset __asm__("dword_764198");
-extern uint32_t caption_manager_vtable[] __asm__("off_6AE970");
-extern uint32_t embedded_caption_control_vtable[] __asm__("off_6AEA48");
-extern int caption_manager_restore_value __asm__("dword_764190");
-extern int caption_manager_current_value __asm__("dword_764194");
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern int caption_manager_saved_state_pointer __asm__("dword_7715C8");
-extern int caption_manager_default_layout __asm__("dword_76D3C0");
+extern uint32_t caption_manager_registry[];
+extern int caption_manager_registry_offset;
+extern uint32_t caption_manager_vtable[];
+extern uint32_t embedded_caption_control_vtable[];
+extern int caption_manager_restore_value;
+extern int caption_manager_current_value;
+extern int game_engine_instance_address;
+extern int caption_manager_saved_state_pointer;
+extern int caption_manager_default_layout;
 
-extern int __thiscall sub_447B7E(int object);
-extern uint32_t *__thiscall sub_447C29(uint32_t *object);
-extern int __thiscall sub_566D10(uint32_t *registry, uint32_t address);
+extern int __thiscall construct_console_control_base(int object);
+extern uint32_t *__thiscall destroy_mini_console_control_base(uint32_t *object);
+extern int __thiscall find_or_create_registry_entry(uint32_t *registry, uint32_t address);
 extern int __thiscall sub_45B25C(uint32_t *object, char *default_value);
 extern int __thiscall sub_45B1E5(void *object);
 extern int __thiscall sub_45AF2F(uint8_t *object, int enabled);
@@ -44,15 +44,14 @@ extern char *__thiscall sub_46C1FA(uint32_t *settings, const char *name,
 extern uint32_t *__cdecl sub_45A0F8(int size);
 extern uint32_t *__thiscall sub_46B4E2(uint32_t *object,
                                       const char *filename, int flags);
-extern int __thiscall destroy_embedded_caption_control(uint32_t *object)
-    __asm__("sub_45A0A1");
+extern int __thiscall destroy_embedded_caption_control(uint32_t *object);
 extern int __thiscall sub_45B2D5(uint32_t *list);
-extern int __thiscall sub_5065FE(uint8_t *object, int context);
-extern int __cdecl write_caption_manager_diagnostic(
+extern int __thiscall construct_control_container_base(uint8_t *object, int context);
+extern int __cdecl write_source_message(
     const char *source_file, int line, int category, int flags,
-    const char *format, int color) __asm__("sub_557404");
+    const char *format, int color);
 extern uint32_t *__thiscall find_or_create_registry_entry(
-    uint32_t *registry, uint32_t address) __asm__("sub_566D10");
+    uint32_t *registry, uint32_t address);
 
 uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
 {
@@ -63,7 +62,7 @@ uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
   char *caption_color;
   uint32_t *font_colors;
 
-  sub_447B7E((int)(uintptr_t)manager);
+  construct_console_control_base((int)(uintptr_t)manager);
   find_or_create_registry_entry(
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset
@@ -113,7 +112,7 @@ uint32_t *__thiscall construct_caption_manager(uint32_t *manager)
   if (!((int (__thiscall *)(uint32_t *, int))(uintptr_t)
           *(uint32_t *)(uintptr_t)(font_color_file[0] + 4))(
               font_color_file, 1)) {
-    write_caption_manager_diagnostic(
+    write_source_message(
         "Z:\\Proj\\GK3\\gk3app\\Source\\CaptionMgr.cpp", 356, 6, 0,
         "Unable to find/load/read font color config file 'fontcolor.txt'.\n",
         -1);
@@ -139,7 +138,7 @@ uint32_t *__thiscall destroy_caption_manager_members(uint32_t *manager)
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset
           + 197);
-  return sub_447C29(manager);
+  return destroy_mini_console_control_base(manager);
 }
 
 uint32_t *__thiscall destroy_caption_manager(uint32_t *manager,
@@ -157,7 +156,7 @@ uint32_t *__thiscall construct_caption_manager_with_context(
   uint8_t *bytes = (uint8_t *)(void *)manager;
   char default_value;
 
-  sub_5065FE(bytes, context);
+  construct_control_container_base(bytes, context);
   find_or_create_registry_entry(
       caption_manager_registry,
       (uint32_t)(uintptr_t)manager + (uint32_t)caption_manager_registry_offset

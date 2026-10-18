@@ -5,16 +5,14 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern int registered_control_base_offset_adjustment
-    __asm__("dword_76496C");
-extern uint32_t registered_control_type_descriptor[15]
-    __asm__("dword_764970");
-extern int sprite_control_base_offset_adjustment __asm__("dword_7648EC");
-extern uint32_t sprite_control_type_descriptor[15] __asm__("dword_7648F0");
-extern uint32_t registered_control_vtable[] __asm__("off_6AAEE4");
-extern uint32_t sprite_control_vtable[] __asm__("off_6AC590");
+extern int registered_control_base_offset_adjustment;
+extern uint32_t registered_control_type_descriptor[15];
+extern int sprite_control_base_offset_adjustment;
+extern uint32_t sprite_control_type_descriptor[15];
+extern uint32_t registered_control_vtable[];
+extern uint32_t sprite_control_vtable[];
 extern uint32_t *__thiscall construct_registered_game_object_base(
-    uint32_t *object, int mode) __asm__("sub_42BFC0");
+    uint32_t *object, int mode);
 
 uint32_t *__thiscall construct_registered_control(uint32_t *object, int mode)
 {

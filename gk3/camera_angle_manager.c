@@ -22,12 +22,12 @@ extern int dword_7647B0;
 extern int dword_7647B4;
 extern int dword_7647B8;
 extern void *Buf2;
-extern int dword_76C884;
+extern int active_scene_controller_address;
 extern int dword_76417C;
 extern int dword_764180;
 extern void *__thiscall (*off_6AE0C8)(void *object, char flags);
 extern uint32_t off_6A72AC[];
-extern int dword_765A2C;
+extern int game_engine_instance_address;
 extern const char Key[4];
 extern int __thiscall tidy_std_string_storage(char *string_storage,
                                              char mode);
@@ -43,7 +43,7 @@ extern uint32_t *__thiscall sub_4589CD(int tree);
 extern uint32_t *__thiscall sub_458925(uint32_t *tree, uint32_t *result,
                                        uint32_t *first, uint32_t *last);
 extern uint32_t *__cdecl sub_457CA5(int size);
-extern uint32_t *__thiscall sub_566D10(uint32_t *registry,
+extern uint32_t *__thiscall find_or_create_registry_entry(uint32_t *registry,
                                       uint32_t address);
 extern void *__thiscall sub_447754(void *object);
 extern uint32_t *__thiscall sub_40ECE2(uint32_t *object);
@@ -53,12 +53,12 @@ extern void __thiscall sub_575F20(float *matrix, float angle);
 extern void __thiscall sub_575F80(float *matrix, float angle);
 extern void __thiscall sub_578B90(float *matrix, float *first,
                                   float *second, int flags, int count);
-extern uint32_t *__thiscall sub_52D127(uint32_t *logger, int source,
+extern uint32_t *__thiscall begin_interface_debug_log(uint32_t *logger, int source,
                                       int line, int category, void *context);
-extern int __thiscall sub_409150(uint32_t *logger, const char *format, ...);
-extern void __thiscall sub_52D18D(int *logger);
+extern int __thiscall log_interface_debug_message(uint32_t *logger, const char *format, ...);
+extern void __thiscall end_interface_debug_log(int *logger);
 extern char *__cdecl sub_475282(int camera_type);
-extern char *__thiscall sub_40EDF5(char *destination, int source);
+extern char *__thiscall copy_camera_angle_state(char *destination, int source);
 extern char __thiscall sub_459038(uint8_t *serializer, int field,
                                  uint32_t *value, int mode);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
@@ -70,7 +70,7 @@ extern void __thiscall sub_45945F(int *iterator, int index);
 extern void __thiscall sub_45367B(int camera, int angle, int *target,
                                   char transition, int flags, char mode);
 extern void __thiscall sub_453A7E(int camera, int angle, char cut, char mode);
-extern int __cdecl sub_5574A3(int source_file, int line, int severity,
+extern int __cdecl log_source_message(int source_file, int line, int severity,
                               int flags, const char *format, ...);
 extern void __cdecl free_tracked_memory(int address);
 
@@ -78,7 +78,7 @@ uint32_t *__thiscall construct_camera_angle(uint32_t *angle)
 {
   sub_447754(angle + 6);
   sub_40ECE2(angle);
-  sub_566D10(dword_7640F8,
+  find_or_create_registry_entry(dword_7640F8,
              (uint32_t)(uintptr_t)angle + (uint32_t)dword_7640F4 + 56);
   angle[0] = (uint32_t)(uintptr_t)off_6A72AC;
   return angle;
@@ -110,7 +110,7 @@ void __thiscall calculate_camera_angle_view_position(float *angle,
 double __thiscall get_camera_angle_field_of_view(float *angle)
 {
   if (angle[6] == 0.0f) {
-    uint32_t viewport = *(uint32_t *)(uintptr_t)(dword_76C884 + 84);
+    uint32_t viewport = *(uint32_t *)(uintptr_t)(active_scene_controller_address + 84);
     return *(float *)(uintptr_t)(viewport + 36);
   }
   return angle[6];
@@ -155,14 +155,14 @@ char __thiscall camera_angles_equal(float *first, float *second)
 void __thiscall log_camera_angle_details(float *angle, uint32_t *context)
 {
   int logger[4];
-  uint32_t *entry = sub_52D127(
+  uint32_t *entry = begin_interface_debug_log(
       (uint32_t *)logger,
       (int)"Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
       118, 7, context);
   const double field_of_view = get_camera_angle_field_of_view(angle);
   char *type = sub_475282(*(int *)(void *)(angle + 7));
 
-  sub_409150(entry,
+  log_interface_debug_message(entry,
              "angles: horizontal = %f, vertical = %f\n"
              "target: x = %f, y = %f, z = %f\n"
              "distance = %f\n"
@@ -174,27 +174,27 @@ void __thiscall log_camera_angle_details(float *angle, uint32_t *context)
              field_of_view * 57.295776,
              type, angle[0] * 57.295776, angle[1] * 57.295776,
              angle[2], angle[3], angle[4]);
-  sub_52D18D((int *)logger);
+  end_interface_debug_log((int *)logger);
 }
 
 void __thiscall log_camera_angle_summary(float *angle, uint32_t *context)
 {
   int logger[4];
-  uint32_t *entry = sub_52D127(
+  uint32_t *entry = begin_interface_debug_log(
       (uint32_t *)logger,
       (int)"Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
       143, 7, context);
   const double field_of_view =
       get_camera_angle_field_of_view(angle) * 57.295776;
 
-  sub_409150(entry,
+  log_interface_debug_message(entry,
              "h=%.2f, v=%.2f, pos=(%.2f,%.2f,%.2f), fov=%.2f",
              angle[0] * 57.295776, angle[1] * 57.295776,
              angle[2], angle[3], angle[4], field_of_view);
   if (context == NULL) {
-    sub_409150(entry, "\n");
+    log_interface_debug_message(entry, "\n");
   }
-  sub_52D18D((int *)logger);
+  end_interface_debug_log((int *)logger);
 }
 
 char *__thiscall format_camera_angle_description(float *angle,
@@ -271,10 +271,10 @@ void __thiscall glide_to_camera_angle(uint32_t *manager, char *name,
   int angle = find_camera_angle_by_name(manager, name);
   if (angle != 0) {
     int camera_manager = *(int *)(uintptr_t)(
-        *(int *)(uintptr_t)(dword_765A2C + 1092) + 40);
+        *(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40);
     sub_45367B(camera_manager, angle, target, transition, flags, mode);
   } else {
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)
             "Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
         232, 6, 0,
@@ -288,10 +288,10 @@ void __thiscall cut_to_camera_angle(uint32_t *manager, char *name,
   int angle = find_camera_angle_by_name(manager, name);
   if (angle != 0) {
     int camera_manager = *(int *)(uintptr_t)(
-        *(int *)(uintptr_t)(dword_765A2C + 1092) + 40);
+        *(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40);
     sub_453A7E(camera_manager, angle, cut, mode);
   } else {
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)
             "Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
         250, 6, 0,
@@ -324,7 +324,7 @@ int __thiscall count_camera_angles_outside_bounds(uint32_t *manager,
       angle_position[1] = camera_position[1];
       angle_position[2] = camera_position[2];
       inside = sub_454F29(
-          *(int *)(uintptr_t)(*(int *)(uintptr_t)(dword_765A2C + 1092) + 40),
+          *(int *)(uintptr_t)(*(int *)(uintptr_t)(game_engine_instance_address + 1092) + 40),
           angle_position);
 
       if ((!inside && !include_contained)
@@ -333,7 +333,7 @@ int __thiscall count_camera_angles_outside_bounds(uint32_t *manager,
         const char *name = *(const char **)(uintptr_t)(iterator + 16);
         if (name == NULL)
           name = Key;
-        sub_5574A3(
+        log_source_message(
             (int)(uintptr_t)
                 "Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
             329, 5, 0, "Warning: Camera ('%s') outside bounds!\n", name);
@@ -362,7 +362,7 @@ int __thiscall set_camera_angle_from_spec(uint32_t *manager, char *name,
 {
   uint32_t *angle = sub_457CA5(56);
   angle = angle ? construct_camera_angle(angle) : NULL;
-  sub_40EDF5((char *)(void *)angle, angle_spec);
+  copy_camera_angle_state((char *)(void *)angle, angle_spec);
 
   char lookup_key[16] = {0};
   lookup_key[0] = (char)((uintptr_t)angle_spec >> 24);
@@ -399,7 +399,7 @@ int __thiscall insert_camera_angle_from_spec(uint32_t *manager, char *name,
                                              int angle_spec)
 {
   if (find_camera_angle_by_name(manager, name) != 0) {
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)
             "Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
         260, 5, 0, "Attempt to insert duplicate camera angle %s.", name);
@@ -452,7 +452,7 @@ uint32_t *__thiscall clear_camera_angles(uint32_t *manager)
 void __thiscall log_camera_angles(uint32_t *manager, uint32_t *context)
 {
   uint32_t logger[4];
-  sub_52D127(logger,
+  begin_interface_debug_log(logger,
              (int)(uintptr_t)
                  "Z:\\Proj\\GK3\\gk3app\\Source\\CameraAngleMgr.cpp",
              376, 7, context);
@@ -464,12 +464,12 @@ void __thiscall log_camera_angles(uint32_t *manager, uint32_t *context)
     const char *name = *(const char **)(void *)(entry + 4);
     if (name == NULL)
       name = Key;
-    sub_409150(logger, "%s = ", name);
+    log_interface_debug_message(logger, "%s = ", name);
     log_camera_angle_summary((float *)(uintptr_t)(entry[7] + 24), logger);
-    sub_409150(logger, "\n");
+    log_interface_debug_message(logger, "\n");
     sub_458A69(&node);
   }
-  sub_52D18D((int *)(void *)logger);
+  end_interface_debug_log((int *)(void *)logger);
 }
 
 uint32_t *__thiscall destroy_camera_angle_map(uint32_t *map)

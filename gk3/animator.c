@@ -35,74 +35,60 @@ extern void __thiscall remove_active_object_child(int object, int child);
 extern int get_scene_layer(void);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t animator_type_descriptor[15] __asm__("dword_7630D0");
-extern int animator_base_offset_adjustment __asm__("dword_7630CC");
-extern uint32_t animation_record_type_descriptor[15]
-    __asm__("dword_763110");
-extern int animation_record_base_offset_adjustment __asm__("dword_76310C");
+extern uint32_t animator_type_descriptor[15];
+extern int animator_base_offset_adjustment;
+extern uint32_t animation_record_type_descriptor[15];
+extern int animation_record_base_offset_adjustment;
 extern uint32_t broadcast_target_type_descriptor[15];
 extern int broadcast_target_base_offset_adjustment;
-extern uint32_t animator_object_vtable[] __asm__("off_6A93D8");
-extern uint32_t animator_vtable[] __asm__("off_6A941C");
-extern uint32_t animator_animation_array_vtable[] __asm__("off_6A9424");
+extern uint32_t animator_object_vtable[];
+extern uint32_t animator_vtable[];
+extern uint32_t animator_animation_array_vtable[];
 extern uint32_t registered_object_base_vtable[];
-extern uint32_t animator_pointer_array_vtable[] __asm__("off_6A9470");
-extern uint32_t animation_record_state_array_vtable[]
-    __asm__("off_6A8FAC");
+extern uint32_t animator_pointer_array_vtable[];
+extern uint32_t animation_record_state_array_vtable[];
 extern int game_engine_address;
 extern uint32_t *__thiscall construct_dynamic_array(uint32_t *object,
                                                     int growth_capacity);
 extern uint32_t *__thiscall construct_byte_list(uint32_t *object,
                                                 uint8_t *default_value);
 extern uint16_t *__thiscall initialize_event_target_subobject(
-    uint16_t *object, int mode) __asm__("sub_406D36");
+    uint16_t *object, int mode);
 extern void __thiscall restore_animation_target_pose(float *target);
-extern uint32_t *__thiscall advance_animation_iterator(uint32_t *iterator)
-    __asm__("sub_4268A8");
-extern void __thiscall release_animation_state_collection_storage(int storage)
-    __asm__("sub_427DFD");
+extern uint32_t *__thiscall advance_animation_iterator(uint32_t *iterator);
+extern void __thiscall release_animation_state_collection_storage(int storage);
 extern int *__thiscall erase_segmented_storage_range(
     int *storage, int *position, int begin, int end, uint32_t *current,
     int current_page_flag, int page_cursor, int directory_cursor,
     uint32_t *directory_end, int directory_capacity);
 extern uint32_t *__thiscall destroy_registered_event_target(uint16_t *object);
 extern char __thiscall serialize_actor_array_field(
-    uint8_t *serializer, const char *field_name, int *value, char flags)
-    __asm__("sub_428005");
+    uint8_t *serializer, const char *field_name, int *value, char flags);
 extern uint8_t *__cdecl append_string_suffix(uint8_t *result, char *first,
-                                             char *suffix)
-    __asm__("sub_40157E");
+                                             char *suffix);
 extern char __cdecl serialize_array_count_field(uint8_t *serializer,
                                                 const char *field_name,
                                                 int *value,
-                                                int *default_value)
-    __asm__("sub_404836");
-extern char __cdecl serialize_integer_field(uint8_t *serializer,
+                                                int *default_value);
+extern char __cdecl serialize_integer_value_field(uint8_t *serializer,
                                             const char *field_name,
-                                            int *value, int *default_value)
-    __asm__("sub_40B684");
-extern void __thiscall resize_dynamic_array(uint32_t *array, int count)
-    __asm__("sub_594000");
+                                            int *value, int *default_value);
+extern void __thiscall resize_dynamic_array(uint32_t *array, int count);
 extern uint32_t *__thiscall initialize_collection_serialization_context(
-    uint32_t *context, int serializer, const char *field_name, int flags)
-    __asm__("sub_56C570");
-extern void __thiscall destroy_collection_serialization_context(int context)
-    __asm__("sub_56C720");
+    uint32_t *context, int serializer, const char *field_name, int flags);
+extern void __thiscall destroy_collection_serialization_context(int context);
 extern char __thiscall serialize_registered_object_array(
-    uint8_t *serializer, int array, int registry) __asm__("sub_56C470");
+    uint8_t *serializer, int array, int registry);
 extern int __thiscall tidy_std_string_storage(char *string_storage,
                                                char mode);
 extern const char Key[4];
 extern int __thiscall stop_engine_animation(uint32_t *engine,
                                             uint16_t animation_id, int flags,
-                                            int reserved)
-    __asm__("sub_5828A0");
+                                            int reserved);
 extern int __thiscall stop_engine_morph_animation(uint32_t *engine,
                                                   uint16_t animation_id,
-                                                  int flags)
-    __asm__("sub_593370");
-extern int __thiscall remove_dynamic_array_element(uint32_t *array, int value)
-    __asm__("sub_594020");
+                                                  int flags);
+extern int __thiscall remove_dynamic_array_element(uint32_t *array, int value);
 extern void __cdecl free_tracked_memory(int address);
 
 uint32_t *__thiscall construct_registered_animator(uint32_t *object,
@@ -328,7 +314,7 @@ char __thiscall serialize_animation_record_array_options(
   if (option_name == NULL)
     option_name = Key;
 
-  const char result = serialize_integer_field(
+  const char result = serialize_integer_value_field(
       serializer, option_name, &auto_delete, &auto_delete);
   tidy_std_string_storage((char *)(void *)option_name_storage, 1);
   if (!serializer[4])

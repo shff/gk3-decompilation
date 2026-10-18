@@ -25,8 +25,8 @@ extern uint32_t *__thiscall initialize_scene_data_load_times(
 extern uint32_t *__thiscall construct_floor_map(uint8_t *object);
 extern uint32_t *__thiscall construct_floor_contact_sound_map(uint8_t *object);
 extern int system_profile_address;
-extern int dword_765A2C;
-extern int dword_76C884;
+extern int game_engine_instance_address;
+extern int active_scene_controller_address;
 extern uint32_t dword_76D168[15];
 extern int dword_76D164;
 extern int dword_76D0A0[15];
@@ -73,7 +73,7 @@ extern uint32_t *__cdecl sub_551F4F(int size);
 extern int __thiscall sub_551FEE(int object, const char *scene_name,
                                  int timeblock);
 extern void *__thiscall sub_555C09(void *object, char release_reference);
-extern void __cdecl sub_557404(const char *source_file, int line,
+extern void __cdecl write_source_message(const char *source_file, int line,
                                int category, int flags, char *format,
                                size_t size);
 extern void *__stdcall GetForegroundWindow(void);
@@ -83,8 +83,8 @@ extern void *__thiscall sub_4864E5(void *context);
 extern int sub_486530(void);
 extern int sub_4C1003(void);
 extern int sub_4CA150(void);
-extern int __thiscall sub_4E8D14(int object, int *value);
-extern int __thiscall sub_4E8FBF(int *object);
+extern int __thiscall append_interface_recipient(int object, int *value);
+extern int __thiscall release_interface_recipient_list(int *object);
 extern int __thiscall sub_53AE6B(uint32_t **manager, int event_id,
                                  int event_data);
 extern uint32_t *__cdecl sub_4085FD(uint32_t **reference, int event_id);
@@ -105,7 +105,7 @@ extern char __thiscall sub_5568C3(uint8_t *serializer, const char *field,
                                  unsigned int storage, char mode);
 extern char __thiscall sub_556934(uint8_t *serializer, const char *field,
                                  int *storage, char mode);
-extern char __thiscall sub_40B684(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_integer_value_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             const char *field, char *storage,
@@ -129,7 +129,7 @@ extern int *__thiscall sub_555BB8(int *iterator);
 extern uint32_t *__thiscall sub_555B65(uint32_t *collection,
                                       uint32_t **entry);
 extern int __cdecl sub_557B2B(int location_id);
-extern void __cdecl sub_5574A3(int source, int line, int category,
+extern void __cdecl log_source_message(int source, int line, int category,
                                int flags, char *format, ...);
 extern int __thiscall sub_585850(uint32_t *engine, unsigned int first,
                                  unsigned int resource_id);
@@ -284,9 +284,9 @@ uint32_t *__thiscall initialize_stage_history_entry(uint32_t *entry)
 
 int __thiscall update_stage_manager_scene_cache(uint32_t *manager)
 {
-  int scene_ego = sub_530B65((uint32_t *)(uintptr_t)dword_76C884);
+  int scene_ego = sub_530B65((uint32_t *)(uintptr_t)active_scene_controller_address);
   if (scene_ego != 0) {
-    uint32_t *scene = (uint32_t *)(uintptr_t)dword_76C884;
+    uint32_t *scene = (uint32_t *)(uintptr_t)active_scene_controller_address;
     uint32_t *scene_state = (uint32_t *)(uintptr_t)(
         *(uint32_t *)(void *)((uint8_t *)(void *)scene + 88));
     manager[8] = scene_state[6];
@@ -299,16 +299,16 @@ int __stdcall set_cd_volume_for_stage_id(int stage_id)
 {
   if (stage_id >= 6) {
     if (stage_id <= 11)
-      return set_active_cd_volume((uint32_t *)(uintptr_t)dword_765A2C, 2, 0);
+      return set_active_cd_volume((uint32_t *)(uintptr_t)game_engine_instance_address, 2, 0);
     if (stage_id <= 17)
-      return set_active_cd_volume((uint32_t *)(uintptr_t)dword_765A2C, 3, 0);
+      return set_active_cd_volume((uint32_t *)(uintptr_t)game_engine_instance_address, 3, 0);
   }
-  return set_active_cd_volume((uint32_t *)(uintptr_t)dword_765A2C, 1, 0);
+  return set_active_cd_volume((uint32_t *)(uintptr_t)game_engine_instance_address, 1, 0);
 }
 
 void *clear_active_scene_resource_caches(void)
 {
-  uint32_t *application = (uint32_t *)(uintptr_t)dword_765A2C;
+  uint32_t *application = (uint32_t *)(uintptr_t)game_engine_instance_address;
   uint32_t *scene_resources = (uint32_t *)(uintptr_t)(
       *(uint32_t *)(void *)((uint8_t *)(void *)application + 1092) + 56);
   uint8_t *buffer_end = (uint8_t *)(uintptr_t)scene_resources[8];
@@ -392,7 +392,7 @@ char __thiscall serialize_stage_manager(uint32_t *manager,
       (char *)(void *)(bytes + 56), &byte_6A6454);
   serialize_boolean_field(serializer, "mbVerbModal",
       (char *)(void *)(bytes + 57), &byte_6A6454);
-  sub_40B684(serializer, "mSceneDataMaxDepth",
+  serialize_integer_value_field(serializer, "mSceneDataMaxDepth",
       (int *)(void *)(bytes + 60), &serialized_value_default);
   char result = sub_556934(serializer, "mSceneDataLoadTimes",
       (int *)(void *)(bytes + 64), 0);
@@ -400,7 +400,7 @@ char __thiscall serialize_stage_manager(uint32_t *manager,
     initialize_stage_resource_maps((char *)(void *)manager);
     if (*(uint32_t *)(void *)(bytes + 12) != 0) {
       float elapsed = (float)sub_52A6A8(
-          (uint32_t **)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1192));
+          (uint32_t **)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1192));
       return (char)sub_4CDFAD(elapsed, 1.0f, 0);
     }
   }
@@ -500,7 +500,7 @@ void __thiscall purge_oldest_stage_resources(uint32_t *manager)
   int location_id = (int)entry[0];
   const char *location_name = (const char *)(uintptr_t)sub_557B2B(location_id);
 
-  sub_5574A3((int)(uintptr_t)
+  log_source_message((int)(uintptr_t)
       "z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp", 553,
       3, 0, "Purging resources Location(%s) Frames(%08d to %08d)\n",
       location_name, first_frame, last_frame);
@@ -633,18 +633,18 @@ int __thiscall prepare_stage_transition(int *manager)
 
   sub_4864E5(NULL);
   if (sub_4CA150()) {
-    uint32_t *application = (uint32_t *)(uintptr_t)dword_765A2C;
+    uint32_t *application = (uint32_t *)(uintptr_t)game_engine_instance_address;
     clear_compiled_sheep_cases(
         (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(application[273] + 56));
   }
 
-  uint32_t *application = (uint32_t *)(uintptr_t)dword_765A2C;
+  uint32_t *application = (uint32_t *)(uintptr_t)game_engine_instance_address;
   uint32_t *engine_state = (uint32_t *)(uintptr_t)application[273];
   uint32_t *scene_state = (uint32_t *)(uintptr_t)engine_state[17];
   value = (int)scene_state[7];
-  sub_4E8D14((int)(uintptr_t)event_data, &value);
+  append_interface_recipient((int)(uintptr_t)event_data, &value);
   value = (int)scene_state[8];
-  sub_4E8D14((int)(uintptr_t)event_data, &value);
+  append_interface_recipient((int)(uintptr_t)event_data, &value);
   sub_53AE6B((uint32_t **)(uintptr_t)engine_state[22], 0,
              (int)(uintptr_t)event_data);
 
@@ -664,7 +664,7 @@ int __thiscall prepare_stage_transition(int *manager)
         (uint32_t *)(uintptr_t)engine_state[8]);
 
   sub_55539C(11, 1250);
-  sub_4E8FBF(event_data);
+  release_interface_recipient_list(event_data);
   return sub_486530();
 }
 
@@ -718,7 +718,7 @@ void __thiscall schedule_or_update_stage_timer(uint32_t *manager,
   const uint32_t begin = timer_collection[1];
   const uint32_t end = timer_collection[2];
   if (begin != 0 && (end - begin) / sizeof(uint32_t) > 5) {
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp",
         897, 5,
         0, "Warning: there are lots of timers (%d)...\n",
@@ -732,7 +732,7 @@ void __thiscall handle_stage_manager_notification(uint32_t *manager,
 {
   const unsigned int notification_type = notification >> 16;
   uint32_t *application_engine_state = (uint32_t *)(uintptr_t)
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
 
   if (notification_type == 1) {
     uint32_t *timer_entry = (uint32_t *)(uintptr_t)manager[11];
@@ -745,7 +745,7 @@ void __thiscall handle_stage_manager_notification(uint32_t *manager,
     }
 
     if (timer_entry == timer_end) {
-      sub_5574A3(
+      log_source_message(
           (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp",
           948, 5,
           0, "Error: got a notify for a timer that doesn't exist! Serial = %d.\n",
@@ -808,14 +808,14 @@ int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
         get_action_vocabulary_string(expected_vocabulary_id);
     char *current_vocabulary =
         get_action_vocabulary_string((int)manager[8]);
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp",
         828, 5, 0, "Current ego (%s) is invalid (should be %s)!\n",
         current_vocabulary, expected_vocabulary);
   }
 
   uint32_t *application_engine_state = (uint32_t *)(uintptr_t)
-      *(uint32_t *)(uintptr_t)((uint32_t)dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)((uint32_t)game_engine_instance_address + 1092);
   uint32_t *flag_manager =
       (uint32_t *)(uintptr_t)application_engine_state[14];
   const int timeblock = (int)manager[5];
@@ -828,11 +828,11 @@ int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
 
   if (location_id != 47 && location_id != 0) {
     const int input_state =
-        get_engine_input_state((uint32_t *)(uintptr_t)dword_765A2C, 1);
+        get_engine_input_state((uint32_t *)(uintptr_t)game_engine_instance_address, 1);
     void *game_window = (void *)(uintptr_t)
         *(uint32_t *)(uintptr_t)(game_engine_address + 16);
     if ((input_state & 8) != 0 && GetForegroundWindow() == game_window) {
-      sub_557404(
+      write_source_message(
           "z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp", 846, 3, 0,
           "Skipping SCENE:ENTER (you held down the shift key)...\n",
           (size_t)0xFFFFFFFFu);

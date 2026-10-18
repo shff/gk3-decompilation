@@ -33,9 +33,8 @@ extern int __thiscall queue_engine_event(uint32_t *engine, int *event);
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_763E30[];
-extern int callback_manager_base_offset_adjustment
-    __asm__("dword_763E2C");
-extern uint32_t callback_manager_vtable[] __asm__("off_6AD568");
+extern int callback_manager_base_offset_adjustment;
+extern uint32_t callback_manager_vtable[];
 extern int game_engine_address;
 
 static CallbackManager *__thiscall construct_registered_callback_manager(

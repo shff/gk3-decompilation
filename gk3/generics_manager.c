@@ -9,18 +9,15 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t generics_manager_type_descriptor[15]
-    __asm__("dword_765CC8");
-extern int generics_manager_base_offset_adjustment __asm__("dword_765CC4");
-extern uint32_t generics_manager_vtable[] __asm__("off_6C30DC");
-extern uint32_t generic_waiter_array_vtable[] __asm__("off_6C30E0");
-extern uint32_t generic_waiter_event_target_vtable[]
-    __asm__("off_6ACD94");
-extern uint32_t generic_waiter_vtable[] __asm__("off_6ACD9C");
+extern uint32_t generics_manager_type_descriptor[15];
+extern int generics_manager_base_offset_adjustment;
+extern uint32_t generics_manager_vtable[];
+extern uint32_t generic_waiter_array_vtable[];
+extern uint32_t generic_waiter_event_target_vtable[];
+extern uint32_t generic_waiter_vtable[];
 extern uint32_t registered_object_base_vtable[];
-extern uint32_t generic_waiter_type_descriptor[15]
-    __asm__("dword_765F08");
-extern int generic_waiter_base_offset_adjustment __asm__("dword_765F04");
+extern uint32_t generic_waiter_type_descriptor[15];
+extern int generic_waiter_base_offset_adjustment;
 extern uint32_t broadcast_target_type_descriptor[15];
 extern int broadcast_target_base_offset_adjustment;
 extern uint8_t *__thiscall construct_registered_object_base(
@@ -28,7 +25,7 @@ extern uint8_t *__thiscall construct_registered_object_base(
 extern uint16_t *__thiscall construct_registered_event_target(
     uint16_t *object);
 extern uint16_t *__thiscall initialize_event_target_subobject(
-    uint16_t *object, int mode) __asm__("sub_406D36");
+    uint16_t *object, int mode);
 extern uint32_t *__thiscall construct_dynamic_array(uint32_t *object,
                                                     int growth_capacity);
 extern int __thiscall tidy_std_string_storage(char *string_storage, char mode);

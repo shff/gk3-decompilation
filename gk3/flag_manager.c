@@ -15,7 +15,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 extern uint32_t unk_765708[];
 extern int dword_765704;
 extern void *__thiscall (*off_6C1340)(void *object, char flags);
-extern int dword_765A2C;
+extern int game_engine_instance_address;
 extern int __thiscall tidy_std_string_storage(char *string_storage, char mode);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                  uint32_t address);
@@ -36,10 +36,10 @@ extern int __thiscall sub_4ADBC5(int object);
 extern int __thiscall sub_402D32(char *string, int position, int count);
 extern uint32_t *__thiscall sub_4AF1BD(uint32_t *map);
 extern uint32_t *__stdcall sub_4AED9D(uint32_t *string, int case_id);
-extern char *__thiscall sub_45C18B(int id);
+extern char *__thiscall get_noun_vocabulary_string(int id);
 extern uint32_t *__thiscall sub_402BAA(uint32_t *string, const char *text,
                                        char *temporary);
-extern uint32_t *__thiscall sub_401C18(uint32_t *destination,
+extern uint32_t *__thiscall assign_std_string_storage(uint32_t *destination,
                                        uint32_t *source);
 extern uint32_t *__thiscall sub_402BD8(uint32_t *string, const void *text,
                                        int length);
@@ -59,7 +59,7 @@ extern void __thiscall sub_53AF6A(uint32_t **sheep_compiler, int compiled_id);
 extern int __thiscall sub_5ED3E1(int result);
 extern int __thiscall sub_55C450(int verb_id);
 extern int __thiscall sub_55C475(int verb_id);
-extern char *__cdecl sub_55C36D(int verb_id);
+extern char *__cdecl get_verb_vocabulary_string(int verb_id);
 extern char *__cdecl get_action_vocabulary_string(int token_id);
 extern uint32_t *__thiscall sub_408A6D(uint32_t *object);
 extern int *__thiscall sub_50303A(uint32_t *object, int value);
@@ -67,16 +67,16 @@ extern char __thiscall sub_5042DA(int *object);
 extern char __thiscall sub_49193B(uint32_t *object, int noun, int verb,
                                  int case_id, char active_ego);
 extern char __cdecl sub_4AEFAE(int flag_id);
-extern int __thiscall sub_557404(const char *source, int line, int severity,
+extern int __thiscall write_source_message(const char *source, int line, int severity,
                                  int flags, const char *format, ...);
-extern int __cdecl sub_5574A3(int source_file, int line, int severity,
+extern int __cdecl log_source_message(int source_file, int line, int severity,
                               int flags, const char *format, ...);
-extern uint32_t *__thiscall sub_52D127(uint32_t *logger, const char *source,
+extern uint32_t *__thiscall begin_interface_debug_log(uint32_t *logger, const char *source,
                                        int line, int severity,
                                        uint32_t *arguments);
-extern void __thiscall sub_52D18D(uint32_t *logger);
+extern void __thiscall end_interface_debug_log(uint32_t *logger);
 extern void __thiscall sub_52D1CF(uint32_t *logger, char *text, size_t length);
-extern uint32_t *__thiscall sub_409150(uint32_t *string, const char *text);
+extern uint32_t *__thiscall log_interface_debug_message(uint32_t *string, const char *text);
 extern char __thiscall sub_4053DF(uint8_t *serializer, const char *field_name,
                                   int *value, int *default_value);
 extern char __thiscall sub_4054E4(uint8_t *serializer, const char *field_name,
@@ -97,9 +97,9 @@ extern int sub_463CF3(void);
 extern int __thiscall sub_4EA9FC(int object);
 extern int __thiscall sub_4EA988(uint32_t *object);
 extern char *__cdecl sub_4AD1DA(int inventory_id);
-extern int __cdecl sub_557404(const char *source, int line, int severity,
+extern int __cdecl write_source_message(const char *source, int line, int severity,
                               int flags, const char *format, ...);
-extern int __cdecl sub_5574A3(int source_file, int line, int severity,
+extern int __cdecl log_source_message(int source_file, int line, int severity,
                               int flags, const char *format, ...);
 extern void __cdecl free_tracked_memory(int address);
 char __thiscall set_flag_manager_inventory_status(
@@ -139,7 +139,7 @@ bool __thiscall serialize_flag_nvc_state(uint32_t *state,
 int __cdecl is_gabe_or_grace_scene_active(void)
 {
   uint32_t application_engine =
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   uint32_t scene =
       *(uint32_t *)(uintptr_t)(application_engine + 96);
   const int scene_id = *(int *)(uintptr_t)(scene + 32);
@@ -149,28 +149,28 @@ int __cdecl is_gabe_or_grace_scene_active(void)
 int __cdecl is_flag_enabled(int index)
 {
   uint32_t *state = (uint32_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return ((state[index / 32 + 10] >> (index % 32)) & 1u) != 0;
 }
 
 int __cdecl set_flag_enabled(int index, char enabled)
 {
   uint32_t *state = (uint32_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return set_flag_bit(state, index, enabled);
 }
 
 int __cdecl get_actor_location(int actor_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return *(int *)(void *)(state + 64 + actor_id * 4);
 }
 
 int __cdecl set_actor_location(int actor_id, int location_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   *(int *)(void *)(state + 64 + actor_id * 4) = location_id;
   return (int)(uintptr_t)state;
 }
@@ -178,14 +178,14 @@ int __cdecl set_actor_location(int actor_id, int location_id)
 char __cdecl is_actor_on_map(int actor_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return state[actor_id + 200];
 }
 
 int __cdecl set_actor_on_map(int actor_id, char on_map)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   state[actor_id + 200] = (uint8_t)on_map;
   return (int)(uintptr_t)state;
 }
@@ -193,14 +193,14 @@ int __cdecl set_actor_on_map(int actor_id, char on_map)
 char __cdecl was_location_visited(int location_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return state[location_id + 6356];
 }
 
 int __cdecl set_location_visited(int location_id, char visited)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   state[location_id + 6356] = (uint8_t)visited;
   return (int)(uintptr_t)state;
 }
@@ -208,14 +208,14 @@ int __cdecl set_location_visited(int location_id, char visited)
 int __cdecl get_global_integer_variable(int variable_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return *(int *)(void *)(state + 6444 + variable_id * 4);
 }
 
 int __cdecl set_global_integer_variable(int variable_id, int value)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   *(int *)(void *)(state + 6444 + variable_id * 4) = value;
   return (int)(uintptr_t)state;
 }
@@ -223,21 +223,21 @@ int __cdecl set_global_integer_variable(int variable_id, int value)
 int __cdecl get_inventory_status(int inventory_id)
 {
   uint8_t *state = (uint8_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return *(int *)(void *)(state + 6652 + inventory_id * 4);
 }
 
 char __cdecl set_inventory_status(int inventory_id, int value)
 {
   uint32_t *state = (uint32_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 56);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 56);
   return set_flag_manager_inventory_status(state, inventory_id, value, 0);
 }
 
 int __thiscall get_selected_inventory_item_for_active_ego(
     uint32_t *flag_manager)
 {
-  uint32_t application = *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+  uint32_t application = *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   uint32_t scene = *(uint32_t *)(uintptr_t)(application + 96);
   int scene_id = *(int *)(uintptr_t)(scene + 32);
 
@@ -246,7 +246,7 @@ int __thiscall get_selected_inventory_item_for_active_ego(
   if (scene_id == 529)
     return (int)flag_manager[1806];
 
-  sub_557404("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 1367,
+  write_source_message("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 1367,
              6, 0, "Ego is not Gabe or Grace.\n", 0xFFFFFFFF);
   return 0;
 }
@@ -263,13 +263,13 @@ int __thiscall is_inventory_item_owned_by_active_ego(
 char __thiscall set_selected_inventory_item_for_active_ego(
     uint32_t *flag_manager, int inventory_id)
 {
-  uint32_t application = *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+  uint32_t application = *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   uint32_t scene = *(uint32_t *)(uintptr_t)(application + 96);
   int scene_id = *(int *)(uintptr_t)(scene + 32);
 
   if (is_gabe_or_grace_scene_active()) {
     if (!is_inventory_item_owned_by_active_ego(flag_manager, inventory_id)) {
-      sub_5574A3(
+      log_source_message(
           (int)(uintptr_t)
               "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
           1378, 5, 0, "Gabe does not have %s.",
@@ -278,7 +278,7 @@ char __thiscall set_selected_inventory_item_for_active_ego(
     flag_manager[1805] = (uint32_t)inventory_id;
   } else if (scene_id == 529) {
     if (!is_inventory_item_owned_by_active_ego(flag_manager, inventory_id)) {
-      sub_5574A3(
+      log_source_message(
           (int)(uintptr_t)
               "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
           1386, 5, 0, "Grace does not have %s.",
@@ -286,7 +286,7 @@ char __thiscall set_selected_inventory_item_for_active_ego(
     }
     flag_manager[1806] = (uint32_t)inventory_id;
   } else {
-    sub_557404("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 1392,
+    write_source_message("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 1392,
                6, 0, "Ego is not Gabe or Grace.\n", 0xFFFFFFFF);
   }
 
@@ -306,7 +306,7 @@ char __thiscall set_flag_manager_inventory_status(
     set_selected_inventory_item_for_active_ego(flag_manager, 0);
   }
 
-  uint32_t application = *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+  uint32_t application = *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   char active = is_game_layer_active(
       *(char **)(uintptr_t)(application + 72), 8);
   if (active && notify)
@@ -471,10 +471,10 @@ int __thiscall clear_compiled_sheep_cases(uint32_t *flag_manager)
   if (compiled_id != -1) {
     sub_402D32((char *)(void *)(flag_manager + 2), 0, -1);
     sub_53ADBD((uint32_t *)(uintptr_t)(
-                   *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 88),
+                   *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                compiled_id);
     sub_53AD82((uint32_t **)(uintptr_t)(
-                   *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 88),
+                   *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                compiled_id);
     flag_manager[1] = UINT32_MAX;
   }
@@ -500,8 +500,8 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
   char added;
 
   if (!*expression) {
-    case_name = sub_45C18B(case_id);
-    sub_5574A3((int)(uintptr_t)
+    case_name = get_noun_vocabulary_string(case_id);
+    log_source_message((int)(uintptr_t)
                    "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
                830, 5, 0,
                "Empty case logic for %s found! Fix yer NVCs.\n", case_name);
@@ -513,7 +513,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
     sub_402BAA((uint32_t *)(void *)initialized_string,
                "symbols\n{\n\tint n$, v$, c$, m$;\n}\n\ncode\n{\n",
                &temporary);
-    sub_401C18(code, (uint32_t *)(void *)initialized_string);
+    assign_std_string_storage(code, (uint32_t *)(void *)initialized_string);
     tidy_std_string_storage(initialized_string, 1);
   }
 
@@ -529,8 +529,8 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
     signature_text = Key;
 
   if (strstr(signature_text, signature_data)) {
-    case_name = sub_45C18B(case_id);
-    sub_5574A3((int)(uintptr_t)
+    case_name = get_noun_vocabulary_string(case_id);
+    log_source_message((int)(uintptr_t)
                    "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
                846, 6, 0,
                "Duplicate case logic for %s found! Fix yer NVCs.\n",
@@ -542,7 +542,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
     sprintf(error_buffer,
             "#symbols{int n$,v$,c$,m$;}code{x$(){m$ = %s;}}", expression);
     if (sub_53B1CA((int ***)(uintptr_t)(
-                       *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 88),
+                       *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                    (int)(uintptr_t)error_buffer)) {
       current_length = (int)flag_manager[4];
       capacity = (int)flag_manager[5];
@@ -550,7 +550,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
           && code[3] < (uint32_t)(capacity + 1024))
         grow_std_string_storage((char *)(void *)code, (uint32_t)(capacity + 1024),
                                 0);
-      case_name = sub_45C18B(case_id);
+      case_name = get_noun_vocabulary_string(case_id);
       sprintf(case_buffer,
               "\t// %s\n\tC%d$()\n\t{\n\t\tm$ = %s;\n\t}\n",
               case_name, case_id, expression);
@@ -576,7 +576,7 @@ int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager)
   int compiled_id;
   char *source;
   uint32_t *sheep_compiler = (uint32_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 88);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88);
 
   if (!flag_manager[4])
     return 0;
@@ -589,7 +589,7 @@ int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager)
                            (uint32_t *)(uintptr_t)flag_manager[4]);
   flag_manager[1] = (uint32_t)compiled_id;
   if (compiled_id == -1) {
-    sub_557404("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 913, 6,
+    write_source_message("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 913, 6,
                0, "Unable to commit/rebuild Sheep cases", 0xFFFFFFFF);
   } else {
     sub_53AD91((uint32_t **)sheep_compiler, compiled_id);
@@ -612,7 +612,7 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
     return result;
 
   uint32_t *sheep_compiler = (uint32_t *)(uintptr_t)(
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092) + 88);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88);
   uint32_t signature_storage[4] = {0};
   uint32_t *signature_object = sub_4AED9D(signature_storage, case_id);
   char *signature = (char *)(uintptr_t)signature_object[1];
@@ -639,12 +639,12 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
     if (evaluation_context[3] != 0)
       return 1;
   } else {
-    sub_5574A3((int)(uintptr_t)
+    log_source_message((int)(uintptr_t)
                    "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp",
                1308, 6, 0,
                "Invalid sheep execution for NVC '%s' '%s' '%s' - result == %d (must be kDone).\\n",
-               get_action_vocabulary_string(noun_id), sub_55C36D(verb_id),
-               sub_45C18B(case_id), execution_result);
+               get_action_vocabulary_string(noun_id), get_verb_vocabulary_string(verb_id),
+               get_noun_vocabulary_string(case_id), execution_result);
     sub_53AF6A((uint32_t **)sheep_compiler, evaluation_id);
   }
   return result;
@@ -660,7 +660,7 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
 
   if (sub_55C450(verb_id) && !sub_55C475(verb_id)) {
     uint32_t *application =
-        (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+        (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
     uint32_t *verb_registry = (uint32_t *)(uintptr_t)application[13];
     if (sub_49193B(verb_registry, noun_id, verb_id, condition_id,
                    (char)is_gabe_or_grace_scene_active()))
@@ -676,7 +676,7 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
   if (condition_id <= 283) {
     if (condition_id == 283) {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
       int *entry = sub_50303A((uint32_t *)object, noun_id);
       return sub_5042DA(entry)
@@ -702,14 +702,14 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
     }
     if (condition_id == 227) {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       char *layers = (char *)(uintptr_t)application[18];
       return is_game_layer_active(layers, 1)
           || is_game_layer_active(layers, 10);
     }
     if (condition_id == 281 || condition_id == 282) {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
       int *entry = sub_50303A((uint32_t *)object, noun_id);
       int present = sub_5042DA(entry);
@@ -730,7 +730,7 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
   switch (condition_id) {
     case 998: {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
       int *entry = sub_50303A((uint32_t *)object, noun_id);
       return !sub_5042DA(entry);
@@ -739,13 +739,13 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
       return (char)is_gabe_or_grace_scene_active();
     case 616: {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       uint32_t *scene = (uint32_t *)(uintptr_t)application[24];
       return (char)(scene[8] == 529);
     }
     case 687: {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       char *layers = (char *)(uintptr_t)application[18];
       return is_game_layer_active(layers, 1)
           || is_game_layer_active(layers, 10)
@@ -753,7 +753,7 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
     }
     case 991: {
       uint32_t *application =
-          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+          (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
       return is_game_layer_active((char *)(uintptr_t)application[18], 8);
     }
     default:
@@ -923,11 +923,11 @@ uint32_t *__thiscall log_flag_manager_sheep_code(uint32_t *flag_manager,
   char *code;
   size_t code_length;
 
-  sub_52D127(logger,
+  begin_interface_debug_log(logger,
              "Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 1230, 7,
              arguments);
   if ((int)flag_manager[1] == -1) {
-    sub_409150(logger, "<no sheep code>\n");
+    log_interface_debug_message(logger, "<no sheep code>\n");
   } else {
     code = (char *)(uintptr_t)flag_manager[3];
     if (!code)
@@ -935,7 +935,7 @@ uint32_t *__thiscall log_flag_manager_sheep_code(uint32_t *flag_manager,
     code_length = flag_manager[4];
     sub_52D1CF(logger, code, code_length);
   }
-  sub_52D18D(logger);
+  end_interface_debug_log(logger);
   return flag_manager;
 }
 

@@ -13,13 +13,12 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 extern uint16_t *__thiscall construct_registered_event_target(
     uint16_t *object);
 extern uint16_t *__thiscall initialize_event_target_subobject(
-    uint16_t *object, int mode) __asm__("sub_406D36");
+    uint16_t *object, int mode);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t action_manager_type_descriptor[15]
-    __asm__("dword_762DD8");
-extern int action_manager_base_offset_adjustment __asm__("dword_762DD4");
-extern uint32_t action_manager_vtable[] __asm__("off_6A6950");
+extern uint32_t action_manager_type_descriptor[15];
+extern int action_manager_base_offset_adjustment;
+extern uint32_t action_manager_vtable[];
 extern uint32_t registered_event_target_vtable[];
 extern uint32_t registered_event_target_type_descriptor[16];
 extern int registered_event_target_base_offset_adjustment;
@@ -46,88 +45,63 @@ extern uint8_t *__thiscall construct_noun_object(
     int fourth, int fifth);
 extern int system_profile_address;
 extern uint8_t *__cdecl append_string_suffix(uint8_t *result, char *first,
-                                             char *suffix)
-    __asm__("sub_40157E");
+                                             char *suffix);
 extern void *__thiscall assign_std_string_storage(void *destination,
-                                                  uint8_t *source)
-    __asm__("sub_401C18");
+                                                  uint8_t *source);
 extern uint8_t *__cdecl append_string_storage(uint8_t *result, char *first,
-                                              uint8_t *second)
-    __asm__("sub_404349");
-extern uint8_t *__cdecl resolve_profile_directory(uint8_t *result, int mode)
-    __asm__("sub_4A596D");
+                                              uint8_t *second);
+extern uint8_t *__cdecl resolve_profile_directory(uint8_t *result, int mode);
 extern int __thiscall tidy_std_string_storage(char *string_storage,
                                               char mode);
 extern void __thiscall replace_playing_action_state_lock(int *collection,
-                                                         int value)
-    __asm__("sub_409304");
+                                                         int value);
 extern void __thiscall replace_skipping_action_state_lock(int *collection,
-                                                          int value)
-    __asm__("sub_409344");
-extern void __cdecl destroy_registered_noun_object(void **object)
-    __asm__("sub_40AD04");
-extern int __thiscall is_action_descriptor_empty(uint32_t *descriptor)
-    __asm__("sub_40134E");
+                                                          int value);
+extern void __cdecl destroy_registered_noun_object(void **object);
+extern int __thiscall is_action_descriptor_empty(uint32_t *descriptor);
 extern char __thiscall serialize_int16_field(uint8_t *serializer,
                                             const char *field,
-                                            int16_t *value)
-    __asm__("sub_40AE69");
-extern char __cdecl serialize_integer_field(uint8_t *serializer,
-                                           const char *field, int *value)
-    __asm__("sub_4092C0");
-extern void __thiscall destroy_playing_action_state_lock(int *object)
-    __asm__("sub_4092ED");
-extern void __thiscall destroy_skipping_action_state_lock(int *object)
-    __asm__("sub_40932D");
-extern int __thiscall clear_current_noun_collection(uint32_t *object)
-    __asm__("sub_40936D");
-extern int __thiscall clear_action_noun_collection(uint32_t *object)
-    __asm__("sub_4093E9");
-extern int __thiscall clear_action_verb_collection(uint32_t *object)
-    __asm__("sub_409481");
+                                            int16_t *value);
+extern char __cdecl serialize_integer_field_with_shared_default(uint8_t *serializer,
+                                           const char *field, int *value);
+extern void __thiscall destroy_playing_action_state_lock(int *object);
+extern void __thiscall destroy_skipping_action_state_lock(int *object);
+extern int __thiscall clear_current_noun_collection(uint32_t *object);
+extern int __thiscall clear_action_noun_collection(uint32_t *object);
+extern int __thiscall clear_action_verb_collection(uint32_t *object);
 extern int __thiscall serialize_action_descriptor(int object,
                                                   uint8_t *serializer,
-                                                  int field)
-    __asm__("sub_401356");
+                                                  int field);
 extern int __thiscall serialize_float_field(float *object,
-                                            uint8_t *serializer, int field)
-    __asm__("sub_40927C");
+                                            uint8_t *serializer, int field);
 /* gk3/game_state.c */
 extern char __cdecl serialize_playing_action_state_lock(
     uint8_t *serializer, const char *field, int *value);
 extern char __cdecl serialize_skipping_action_state_lock(
     uint8_t *serializer, const char *field, int *value);
 extern char __thiscall serialize_current_noun_collection(
-    uint8_t *serializer, const char *field, int *value, char mode)
-    __asm__("sub_40AA77");
+    uint8_t *serializer, const char *field, int *value, char mode);
 extern char __thiscall serialize_action_noun_collection(
-    uint8_t *serializer, const char *field, unsigned int value, int mode)
-    __asm__("sub_40AAFE");
+    uint8_t *serializer, const char *field, unsigned int value, int mode);
 extern char __thiscall serialize_action_verb_collection(
-    uint8_t *serializer, const char *field, unsigned int value, int mode)
-    __asm__("sub_40AB82");
+    uint8_t *serializer, const char *field, unsigned int value, int mode);
 extern char __thiscall serialize_noun_collection_iterator(
     uint8_t *serializer, const char *field, int *iterator, int first,
-    int second, int third, int fourth) __asm__("sub_40AC06");
+    int second, int third, int fourth);
 extern char __thiscall serialize_verb_collection_iterator(
     uint8_t *serializer, const char *field, int *iterator, int first,
-    int second, int third, int fourth) __asm__("sub_40AC85");
+    int second, int third, int fourth);
 extern char __thiscall serialize_event_reference(int *event_reference,
                                                 uint8_t *serializer,
-                                                int field)
-    __asm__("sub_575010");
-extern char *__cdecl get_noun_vocabulary_string(int index)
-    __asm__("sub_45C18B");
-extern char *__cdecl get_verb_vocabulary_string(int index)
-    __asm__("sub_55C36D");
-extern int tidy_temporary_action_strings(void) __asm__("sub_402614");
+                                                int field);
+extern char *__cdecl get_noun_vocabulary_string(int index);
+extern char *__cdecl get_verb_vocabulary_string(int index);
+extern int tidy_temporary_action_strings(void);
 extern uint32_t *__thiscall copy_action_descriptor(uint32_t *descriptor,
-                                                   int source)
-    __asm__("sub_402A2C");
+                                                   int source);
 extern int __cdecl log_source_message(int source_file, int line,
                                       int severity, int flags,
-                                      const char *format, ...)
-    __asm__("sub_5574A3");
+                                      const char *format, ...);
 extern uint32_t unk_766E08[16];
 uint32_t *allocate_registered_action_manager(int size);
 int __thiscall initialize_action_log_filename(int object);
@@ -257,7 +231,7 @@ char __thiscall serialize_action_manager(uint32_t *manager,
 
   serialize_int16_field(serializer, "mActionID",
                         (int16_t *)(void *)(bytes + 12));
-  serialize_integer_field(serializer, "mCurrentState",
+  serialize_integer_field_with_shared_default(serializer, "mCurrentState",
                            (int *)(void *)(bytes + 16));
   serialize_action_descriptor((int)(uintptr_t)(bytes + 20), serializer,
              (int)(uintptr_t)"mCurrentAction");

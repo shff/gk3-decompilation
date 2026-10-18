@@ -11,14 +11,13 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_7666D0[];
-extern int layer_manager_base_offset_adjustment __asm__("dword_7666CC");
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern uint32_t layer_manager_vtable[] __asm__("off_6C8F04");
+extern int layer_manager_base_offset_adjustment;
+extern int game_engine_instance_address;
+extern uint32_t layer_manager_vtable[];
 extern int get_or_create_rc_bar_popper(void);
 extern uint32_t *__thiscall remove_interface_layer(uint32_t *manager,
                                                    int layer_address);
-extern int __cdecl destroy_interface_owned_layer(uint32_t *member)
-    __asm__("sub_4E95B3");
+extern int __cdecl destroy_interface_owned_layer(uint32_t *member);
 extern uint32_t *__cdecl allocate_registered_caption_manager(int size);
 extern int __thiscall construct_caption_manager(int object);
 extern uint32_t *__cdecl sub_449990(int size);
@@ -62,8 +61,7 @@ extern uint32_t *__thiscall sub_4FF3B3(uint32_t *object);
 extern uint32_t *__cdecl sub_4EE657(int size);
 extern uint32_t *__thiscall sub_4FFAFA(uint32_t *object);
 extern int __stdcall assign_layer_name_string(const char *value,
-                                              size_t length)
-    __asm__("sub_402CFD");
+                                              size_t length);
 
 char *__thiscall get_game_layer_slot(char *manager, int layer_id,
                                      char create_if_missing);

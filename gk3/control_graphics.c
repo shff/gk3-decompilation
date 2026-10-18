@@ -7,11 +7,10 @@
 extern int system_profile_address;
 extern const char Key[4];
 extern int __thiscall get_or_create_control_tooltip_storage(
-    uint32_t *control) __asm__("sub_476EB3");
-extern int __thiscall notify_control_tooltip_text_changed(uint8_t *control)
-    __asm__("sub_476F57");
+    uint32_t *control);
+extern int __thiscall notify_control_tooltip_text_changed(uint8_t *control);
 extern bool __cdecl strings_differ(const char *first, char *second,
-                                   size_t max_count) __asm__("sub_45CA98");
+                                   size_t max_count);
 extern char *__thiscall assign_std_string_storage(char *storage,
                                                   const char *value,
                                                   size_t length);

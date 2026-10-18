@@ -13,16 +13,16 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_7650C8[];
-extern int dialogue_manager_base_offset_adjustment __asm__("dword_7650C4");
+extern int dialogue_manager_base_offset_adjustment;
 extern uint32_t broadcast_target_type_descriptor[];
 extern int broadcast_target_base_offset_adjustment;
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern uint32_t dialogue_manager_vtable[] __asm__("off_6BE19C");
+extern int game_engine_instance_address;
+extern uint32_t dialogue_manager_vtable[];
 extern uint32_t registered_object_base_vtable[];
 extern uint8_t byte_6BE250[4];
 extern char byte_6A6454;
-extern int played_dialogue_index_sentinel_address __asm__("dword_765190");
-extern int played_dialogue_index_reference_count __asm__("dword_765194");
+extern int played_dialogue_index_sentinel_address;
+extern int played_dialogue_index_reference_count;
 extern uint8_t *__thiscall construct_registered_object_base(uint8_t *object);
 extern int __thiscall tidy_std_string_storage(char *string_storage, char mode);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
@@ -30,55 +30,46 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
 extern void __cdecl free_tracked_memory(int address);
 extern void __thiscall remove_active_object_child(int object, int child);
 extern char __cdecl serialize_dialogue_string_field(
-    int serializer, int field, void *storage) __asm__("sub_4012C2");
+    int serializer, int field, void *storage);
 extern char __cdecl serialize_dialogue_language_field(
     uint8_t *serializer, const char *field, uint8_t *storage,
-    uint8_t *default_value) __asm__("sub_493527");
+    uint8_t *default_value);
 extern char __thiscall serialize_dialogue_camera_map_field(
-    uint8_t *serializer, const char *field, unsigned int storage, int mode)
-    __asm__("sub_47D0CB");
+    uint8_t *serializer, const char *field, unsigned int storage, int mode);
 extern char __thiscall serialize_dialogue_listener_map_field(
-    uint8_t *serializer, const char *field, unsigned int storage, int mode)
-    __asm__("sub_47D14F");
+    uint8_t *serializer, const char *field, unsigned int storage, int mode);
 extern int __thiscall serialize_dialogue_key_field(
-    int storage, uint8_t *serializer, int field) __asm__("sub_48FEBA");
+    int storage, uint8_t *serializer, int field);
 extern char __thiscall serialize_played_dialogue_index_field(
     uint8_t *serializer, const char *field, uint32_t *storage,
-    uint32_t *default_value) __asm__("sub_492E42");
+    uint32_t *default_value);
 extern char __thiscall serialize_dialogue_sequence_vector(
-    uint8_t *serializer, const char *field, int *storage, char mode)
-    __asm__("sub_493225");
+    uint8_t *serializer, const char *field, int *storage, char mode);
 extern char __thiscall serialize_dialogue_line_vector(
-    uint8_t *serializer, const char *field, int *storage, char mode)
-    __asm__("sub_4932AC");
+    uint8_t *serializer, const char *field, int *storage, char mode);
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             const char *field, char *storage,
                                             char *default_value);
 extern char __cdecl erase_dialogue_sequence_vector_range(
     int first_begin, int first_end, uint32_t *first_capacity, int second_begin,
     int second_end, int second_capacity, uint32_t *parent, int count,
-    char owner) __asm__("sub_493B76");
+    char owner);
 extern char __cdecl erase_dialogue_line_vector_range(
     int first_begin, int first_end, uint32_t *first_capacity, int second_begin,
     int second_end, int second_capacity, uint32_t *parent, int count,
-    char owner) __asm__("sub_493B9C");
-extern void __thiscall remove_dialogue_line_vector_entry(uint32_t *collection)
-    __asm__("sub_4925F2");
+    char owner);
+extern void __thiscall remove_dialogue_line_vector_entry(uint32_t *collection);
 extern void __thiscall remove_dialogue_sequence_vector_entry(
-    uint32_t *collection) __asm__("sub_492572");
+    uint32_t *collection);
 extern uint32_t *__thiscall erase_played_dialogue_index_range(
     uint32_t *index, uint32_t *result, uint32_t *first, uint32_t *last);
 extern uint32_t *__thiscall find_played_dialogue_index_node(
-    uint32_t *index, int key) __asm__("sub_4927F6");
-extern char __cdecl compare_played_dialogue_keys(int first, int second)
-    __asm__("sub_48FF77");
+    uint32_t *index, int key);
+extern char __cdecl compare_played_dialogue_keys(int first, int second);
 extern uint32_t *__thiscall construct_played_dialogue_key(
-    uint32_t *key, int first, int second, int third, char flags)
-    __asm__("sub_48FE9A");
-extern void __thiscall clear_dialogue_listener_map(uint32_t *collection)
-    __asm__("sub_47EE16");
-extern void __thiscall clear_dialogue_camera_map(uint32_t *collection)
-    __asm__("sub_47C71B");
+    uint32_t *key, int first, int second, int third, char flags);
+extern void __thiscall clear_dialogue_listener_map(uint32_t *collection);
+extern void __thiscall clear_dialogue_camera_map(uint32_t *collection);
 extern uint32_t *__thiscall construct_dialogue_camera_map(
     uint32_t *object, char *default_value);
 extern uint32_t *__thiscall construct_dialogue_listener_map(
@@ -89,24 +80,20 @@ extern uint32_t *__thiscall add_active_object_child_with_policy_callback(
     uint8_t *parent, int *child, char retain_reference);
 extern const char Key[];
 extern uint32_t *__thiscall advance_dialogue_sequence_iterator(
-    uint32_t *iterator) __asm__("sub_491C3B");
+    uint32_t *iterator);
 extern int __thiscall adjust_dialogue_sequence_iterator(int *iterator,
-                                                       int amount)
-    __asm__("sub_49298A");
+                                                       int amount);
 extern int *__thiscall erase_dialogue_sequence_iterator_range(
     int *collection, int *result, int first_begin, int first_end,
     uint32_t *first_position, int first_capacity, int second_begin,
-    int second_end, uint32_t *second_position, int second_capacity)
-    __asm__("sub_491DBB");
+    int second_end, uint32_t *second_position, int second_capacity);
 extern uint32_t *__thiscall advance_dialogue_line_iterator(
-    uint32_t *iterator) __asm__("sub_492092");
-extern int __thiscall adjust_dialogue_line_iterator(int *iterator, int amount)
-    __asm__("sub_492A43");
+    uint32_t *iterator);
+extern int __thiscall adjust_dialogue_line_iterator(int *iterator, int amount);
 extern int *__thiscall erase_dialogue_line_iterator_range(
     int *collection, int *result, int first_begin, int first_end,
     uint32_t *first_position, int first_capacity, int second_begin,
-    int second_end, uint32_t *second_position, int second_capacity)
-    __asm__("sub_491F49");
+    int second_end, uint32_t *second_position, int second_capacity);
 
 void __thiscall destroy_played_dialogue_line_list(uint32_t *list)
 {

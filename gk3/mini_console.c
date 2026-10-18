@@ -12,42 +12,36 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_7644B8[];
-extern int mini_console_base_offset_adjustment __asm__("dword_7644B0");
-extern uint32_t mini_console_vtable __asm__("off_6BA948");
-extern int mini_console_coordinate_default_a __asm__("dword_76D3D8");
-extern int mini_console_coordinate_default_b __asm__("dword_76D3DC");
-extern int mini_console_integer_default __asm__("dword_76D514");
-extern uint32_t mini_console_display_type_descriptor[15]
-    __asm__("dword_764538");
-extern uint32_t mini_console_command_type_descriptor[15]
-    __asm__("dword_7644F8");
-extern int mini_console_background_type_descriptor[15]
-    __asm__("dword_763B58");
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern int __thiscall construct_mini_console_control_base(int object)
-    __asm__("sub_447B7E");
+extern int mini_console_base_offset_adjustment;
+extern uint32_t mini_console_vtable;
+extern int mini_console_coordinate_default_a;
+extern int mini_console_coordinate_default_b;
+extern int mini_console_integer_default;
+extern uint32_t mini_console_display_type_descriptor[15];
+extern uint32_t mini_console_command_type_descriptor[15];
+extern int mini_console_background_type_descriptor[15];
+extern int game_engine_instance_address;
+extern int __thiscall construct_console_control_base(int object);
 extern uint32_t *__thiscall destroy_mini_console_control_base(
-    uint32_t *object) __asm__("sub_447C29");
-extern int __thiscall construct_control_container_base(char *object, int mode)
-    __asm__("sub_5065FE");
-extern void __thiscall detach_mini_console_from_log_service(
-    int service, uint8_t *object) __asm__("sub_5069B3");
-extern int __thiscall attach_mini_console_to_log_service(
-    int service, int manager, char active) __asm__("sub_506755");
+    uint32_t *object);
+extern int __thiscall construct_control_container_base(char *object, int mode);
+extern void __thiscall detach_control_from_service(
+    int service, uint8_t *object);
+extern int __thiscall attach_control_to_service(
+    int service, int manager, char active);
 extern void __thiscall initialize_mini_console_version_display(
-    uint32_t *display) __asm__("sub_470C88");
-extern int __thiscall initialize_mini_console(int console)
-    __asm__("sub_471C0B");
-extern char __thiscall serialize_integer_field(
+    uint32_t *display);
+extern int __thiscall initialize_mini_console(int console);
+extern char __thiscall serialize_integer_field_with_supplied_default(
     uint8_t *serializer, const char *field_name, int *value,
-    int *default_value) __asm__("sub_4377C4");
+    int *default_value);
 extern void __cdecl free_tracked_memory(int address);
 
 uint32_t *__cdecl allocate_registered_mini_console(int size);
 
 uint32_t *__thiscall construct_mini_console(uint32_t *console)
 {
-  construct_mini_console_control_base((int)(uintptr_t)console);
+  construct_console_control_base((int)(uintptr_t)console);
   find_or_create_registry_entry(
       unk_7644B8,
       (uint32_t)(uintptr_t)console
@@ -85,7 +79,7 @@ char __thiscall serialize_mini_console_fields(uint32_t *console,
                                               int serialization_flags)
 {
   (void)serialization_flags;
-  serialize_integer_field(serializer, "mOffset",
+  serialize_integer_field_with_supplied_default(serializer, "mOffset",
                           (int *)(void *)(console + 50),
                           &mini_console_integer_default);
   uint32_t *methods = *(uint32_t **)(void *)serializer;
@@ -149,7 +143,7 @@ int __thiscall set_mini_console_visible(uint32_t *console, int visible)
   int result;
 
   if ((uint8_t)visible) {
-    attach_mini_console_to_log_service(
+    attach_control_to_service(
         (int)log_service[7], (int)(uintptr_t)console, 1);
     initialize_mini_console_version_display(
         (uint32_t *)(uintptr_t)console[52]);
@@ -157,7 +151,7 @@ int __thiscall set_mini_console_visible(uint32_t *console, int visible)
   result = ((int (__thiscall *)(uint32_t *, int))(uintptr_t)methods[44])(
       console, visible);
   if (!(uint8_t)visible) {
-    detach_mini_console_from_log_service(
+    detach_control_from_service(
         (int)log_service[7], (uint8_t *)(void *)console);
     return ((int (__thiscall *)(uint32_t *))(uintptr_t)methods[2])(console);
   }

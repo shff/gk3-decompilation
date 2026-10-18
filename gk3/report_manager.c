@@ -21,16 +21,16 @@ extern int dword_76C7E4;
 extern uint32_t dword_76C688[16];
 extern uint32_t off_6D3920[];
 extern int system_profile_address;
-extern int dword_764788;
-extern int dword_765A2C;
-extern int dword_7646C8;
+extern int interface_layer_type_descriptor;
+extern int game_engine_instance_address;
+extern int default_stacked_hook_control;
 extern int game_engine_address;
 extern uint32_t *off_6AB594;
 extern const char Key[4];
 extern char *off_755E74[];
 extern char *off_755E78[];
 extern char *off_755E7C[];
-extern int __thiscall sub_447B7E(int object);
+extern int __thiscall construct_console_control_base(int object);
 extern int *__thiscall set_registry_object_flags(
     uint32_t *registry, uint32_t address, int flags);
 extern char *report_entry_category_name(int index);
@@ -38,13 +38,13 @@ extern char *__thiscall construct_report_entry(char *object, char *name);
 extern int __thiscall insert_pointer_array_element(
     int *array, uint32_t *position, char **value);
 extern uint8_t *__thiscall sub_40442F(uint8_t *string, uint8_t *value);
-extern uint8_t *__cdecl sub_404349(uint8_t *result, char *first,
+extern uint8_t *__cdecl append_string_storage(uint8_t *result, char *first,
                                    uint8_t *second);
 extern uint8_t *__thiscall sub_402BAA(uint8_t *string, char *value,
                                       uint8_t *delimiter);
-extern uint8_t *__cdecl sub_40157E(uint8_t *result, char *first,
+extern uint8_t *__cdecl append_string_suffix(uint8_t *result, char *first,
                                    char *second);
-extern void *__thiscall sub_401C18(void *string, uint8_t *value);
+extern void *__thiscall assign_std_string_storage(void *string, uint8_t *value);
 extern int __thiscall tidy_std_string_storage(char *string_storage, char mode);
 extern uint32_t *__thiscall sub_402BD8(uint32_t *string, const void *value,
                                        char *length);
@@ -74,7 +74,7 @@ extern int __thiscall sub_4A437B(uint32_t *file, char *file_name,
                                  uint32_t creation_disposition,
                                  uint32_t flags_and_attributes);
 extern uint8_t *__cdecl sub_4A51EC(uint8_t *result, char *path);
-extern uint8_t *__cdecl sub_4A596D(uint8_t *result, int mode);
+extern uint8_t *__cdecl resolve_profile_directory(uint8_t *result, int mode);
 extern int __thiscall sub_4A7263(uint32_t *context, uint8_t *path);
 extern uint8_t *__thiscall sub_439D31(uint8_t *context);
 extern uint8_t *__thiscall sub_439CF1(uint8_t *string);
@@ -95,7 +95,7 @@ bool __thiscall ensure_report_entry_log_file_open(int entry_address);
 void __thiscall write_report_entry_message(
     uint32_t *manager, const char *source, int line, int entry_index,
     int flags, char *message, size_t size);
-extern int __thiscall sub_506755(int service, int manager, char active);
+extern int __thiscall attach_control_to_service(int service, int manager, char active);
 extern int __stdcall get_report_indicator_resource_ids(
     int *warning_id, int *error_id);
 extern uint32_t *allocate_registered_report_indicator(int size);
@@ -107,12 +107,12 @@ extern uint32_t *__thiscall resize_pointer_array(
 extern uint32_t *__thiscall sub_5067E5(uint8_t *manager, int object,
                                        char active);
 extern int __thiscall destroy_report_manager_members(uint32_t *manager);
-extern int __thiscall sub_5065FE(char *object, int mode);
-extern void __thiscall sub_5069B3(int manager, uint8_t *object);
+extern int __thiscall construct_control_container_base(char *object, int mode);
+extern void __thiscall detach_control_from_service(int manager, uint8_t *object);
 extern int __thiscall sub_52D7F1(uint32_t *object, int height);
 extern int __thiscall sub_52F84F(int *collection);
 extern int __thiscall sub_52F62D(int *collection);
-extern uint32_t *__thiscall sub_447C29(uint32_t *object);
+extern uint32_t *__thiscall destroy_mini_console_control_base(uint32_t *object);
 
 int __cdecl destroy_report_entry_reference(uint32_t *reference);
 int __cdecl destroy_report_control_reference(uint32_t *reference);
@@ -122,7 +122,7 @@ int __cdecl destroy_report_indicator_reference(uint32_t *reference);
 extern char __thiscall set_control_tooltip_text(uint32_t *object,
                                                 char *label);
 
-extern int dword_7715C8;
+extern int caption_manager_saved_state_pointer;
 extern uint32_t *__cdecl sub_52E2C7(int size);
 extern uint32_t *__thiscall sub_52E37C(uint32_t *object, int *position,
                                        int interval);
@@ -131,11 +131,11 @@ extern uint32_t *__thiscall sub_52E71E(uint32_t *object, int *position,
                                        int interval);
 extern int sub_52FA3F(void);
 extern int __cdecl sub_475064(int text, int *result);
-extern int __cdecl sub_401C83(const char *first, char *second,
+extern int __cdecl compare_cursor_spec_names(const char *first, char *second,
                               size_t count);
 extern uint32_t *__cdecl sub_52C4A0(int size);
 extern int __thiscall sub_52F543(int array, uint32_t **value);
-extern void __cdecl sub_557404(const char *source, int line, int category,
+extern void __cdecl write_source_message(const char *source, int line, int category,
                                int flags, char *message, size_t size);
 extern uint32_t *__thiscall sub_5067E5(uint8_t *manager, int object,
                                        char active);
@@ -195,8 +195,8 @@ bool __thiscall ensure_report_entry_log_file_open(int entry_address)
 
   if (*(int *)(void *)(entry + 52) == -1) {
     if (*(int *)(void *)(entry + 40) == 0) {
-      sub_40157E(temporary_path, (char *)(void *)(entry + 4), ".log");
-      sub_401C18((void *)(entry + 32), temporary_path);
+      append_string_suffix(temporary_path, (char *)(void *)(entry + 4), ".log");
+      assign_std_string_storage((void *)(entry + 32), temporary_path);
       tidy_std_string_storage((char *)temporary_path, 1);
     }
 
@@ -204,7 +204,7 @@ bool __thiscall ensure_report_entry_log_file_open(int entry_address)
     if (file_name == NULL)
       file_name = (char *)Key;
     sub_4A51EC(combined_path, file_name);
-    sub_401C18((void *)(entry + 32), combined_path);
+    assign_std_string_storage((void *)(entry + 32), combined_path);
     tidy_std_string_storage((char *)combined_path, 1);
 
     file_name = *(char **)(void *)(entry + 36);
@@ -223,9 +223,9 @@ bool __thiscall ensure_report_entry_log_file_open(int entry_address)
       path_context[0] = (uint32_t)(uintptr_t)&off_6AB594;
       sub_4A7263(path_context, (uint8_t *)(void *)(entry + 32));
       sub_439E38(path_context, resolved_path);
-      sub_4A596D(base_directory, 1);
-      sub_404349(full_path, (char *)base_directory, resolved_path);
-      sub_401C18((void *)(entry + 32), full_path);
+      resolve_profile_directory(base_directory, 1);
+      append_string_storage(full_path, (char *)base_directory, resolved_path);
+      assign_std_string_storage((void *)(entry + 32), full_path);
       tidy_std_string_storage((char *)full_path, 1);
       tidy_std_string_storage((char *)base_directory, 1);
       tidy_std_string_storage((char *)resolved_path, 1);
@@ -268,7 +268,7 @@ int __thiscall set_report_graph_active(uint32_t *manager, int graph_index,
     }
 
     int position[4] = {20, 0, 120, 0};
-    position[1] = *(int *)(uintptr_t)dword_7715C8
+    position[1] = *(int *)(uintptr_t)caption_manager_saved_state_pointer
         - 2 * (5 * graph_index + 20);
     position[3] = position[1] + 25;
 
@@ -281,7 +281,7 @@ int __thiscall set_report_graph_active(uint32_t *manager, int graph_index,
       if (new_graph != NULL)
         graph = sub_52E71E(new_graph, position, 1000);
     } else if (graph_index == 1) {
-      sub_557404(
+      write_source_message(
           "Z:\\Proj\\GK3\\gk3app\\Source\\ReportMgr.cpp", 918, 6, 0,
           "Unable to create graph - PSAPI.DLL not available on this system",
           0xFFFFFFFF);
@@ -334,12 +334,12 @@ void __thiscall close_report_entry(uint32_t *manager, int entry_index)
     case 1:
       record_warning_report_entry_completion(
           (uint32_t *)(uintptr_t)(*(uint32_t *)(uintptr_t)
-              (dword_765A2C + 1092) + 80));
+              (game_engine_instance_address + 1092) + 80));
       break;
     case 2:
       record_error_report_entry_completion(
           (uint32_t *)(uintptr_t)(*(uint32_t *)(uintptr_t)
-              (dword_765A2C + 1092) + 80));
+              (game_engine_instance_address + 1092) + 80));
       break;
     case 3:
       if (*(uint32_t *)(uintptr_t)(game_engine_address + 88) == 0) {
@@ -534,7 +534,7 @@ void __thiscall write_report_entry_output_chunk(int entry_address,
   if ((entry[6] & 0x10) != 0)
     write_debug_manager_console_text(
         *(int *)(uintptr_t)(*(uint32_t *)(uintptr_t)
-            (dword_765A2C + 1092) + 104),
+            (game_engine_instance_address + 1092) + 104),
         (char *)bytes);
 }
 
@@ -556,7 +556,7 @@ int __thiscall find_or_create_report_entry_index(uint32_t *manager,
       const char *entry_name = (const char *)(uintptr_t)entry[2];
       if (entry_name == NULL)
         entry_name = Key;
-      if (sub_401C83(entry_name, category, 0xFFFFFFFF))
+      if (compare_cursor_spec_names(entry_name, category, 0xFFFFFFFF))
         return (int)(entry_slot - entries);
     }
   }
@@ -581,7 +581,7 @@ int __thiscall refresh_report_manager_display(uint32_t **manager, int a2,
                                                 int argument);
   uint32_t *vtable = (uint32_t *)(uintptr_t)*manager;
   ReportManagerMethod update = (ReportManagerMethod)(uintptr_t)vtable[42];
-  update(manager, dword_764788);
+  update(manager, interface_layer_type_descriptor);
   return resize_report_indicators(manager);
 }
 
@@ -593,7 +593,7 @@ uint32_t *__thiscall destroy_report_manager(uint32_t *manager)
   erase_map_entry_impl(
       unk_76C7E8, (uint32_t)dword_76C7E4
           + (manager != NULL ? (uint32_t)(uintptr_t)manager + 197 : 0));
-  return sub_447C29(manager);
+  return destroy_mini_console_control_base(manager);
 }
 
 uint32_t *__thiscall release_report_manager(uint32_t *manager, char flags)
@@ -617,13 +617,13 @@ int __thiscall destroy_report_manager_members(uint32_t *manager)
   }
 
   if (manager[54] != 0) {
-    sub_5069B3((int)(uintptr_t)manager,
+    detach_control_from_service((int)(uintptr_t)manager,
                (uint8_t *)(uintptr_t)manager[54]);
     destroy_report_control_reference(manager + 54);
   }
 
   if (manager[55] != 0) {
-    sub_5069B3((int)(uintptr_t)manager,
+    detach_control_from_service((int)(uintptr_t)manager,
                (uint8_t *)(uintptr_t)manager[55]);
     destroy_report_control_reference(manager + 55);
   }
@@ -632,7 +632,7 @@ int __thiscall destroy_report_manager_members(uint32_t *manager)
   int *indicators_end = (int *)(uintptr_t)manager[58];
   for (int *indicator = indicators; indicator != indicators_end; ++indicator) {
     if (*indicator != 0) {
-      sub_5069B3((int)(uintptr_t)manager,
+      detach_control_from_service((int)(uintptr_t)manager,
                  (uint8_t *)(uintptr_t)*indicator);
       destroy_report_indicator_reference((uint32_t *)indicator);
     }
@@ -690,14 +690,14 @@ int __thiscall resize_report_indicators(uint32_t **manager)
 
   get_report_indicator_resource_ids(&warning_resource_id, &error_resource_id);
   sub_52D7F1(manager[54],
-      *(int *)(uintptr_t)(dword_7646C8 + 12)
+      *(int *)(uintptr_t)(default_stacked_hook_control + 12)
       - *(int *)(uintptr_t)(warning_resource_id + 72)
       - *(int *)(uintptr_t)(error_resource_id + 72)
       - *(int *)(uintptr_t)(warning_resource_id + 56)
       - *(int *)(uintptr_t)(error_resource_id + 56)
       - 14);
   return sub_52D7F1(manager[55],
-      *(int *)(uintptr_t)(dword_7646C8 + 12)
+      *(int *)(uintptr_t)(default_stacked_hook_control + 12)
       - *(int *)(uintptr_t)(error_resource_id + 72)
       - *(int *)(uintptr_t)(error_resource_id + 56)
       - 12);
@@ -708,7 +708,7 @@ int __thiscall construct_registered_report_manager(int object, int mode)
   uint8_t *bytes = (uint8_t *)(uintptr_t)object;
   uint8_t mode_byte = (uint8_t)((uint32_t)mode >> 24);
 
-  sub_5065FE((char *)(void *)bytes, mode);
+  construct_control_container_base((char *)(void *)bytes, mode);
   find_or_create_registry_entry(
       unk_76C7E8,
       (uint32_t)dword_76C7E4 + (uint32_t)object + 197);
@@ -733,7 +733,7 @@ int __thiscall construct_report_manager(int object)
   char path_separator[16];
   uint32_t report_filename[6];
 
-  sub_447B7E(object);
+  construct_console_control_base(object);
   find_or_create_registry_entry(unk_76C7E8,
              (uint32_t)dword_76C7E4 + (uint32_t)object + 197);
   manager[200] = (uint8_t)default_value;
@@ -761,10 +761,10 @@ int __thiscall construct_report_manager(int object)
 
   sub_40442F((uint8_t *)report_filename, (uint8_t *)&default_value);
   sub_402BAA((uint8_t *)path_separator, "-", (uint8_t *)&delimiter);
-  uint8_t *profile_path = sub_40157E(
+  uint8_t *profile_path = append_string_suffix(
       (uint8_t *)report_path, path_separator,
       (char *)(uintptr_t)system_profile_address);
-  sub_401C18(report_filename, profile_path);
+  assign_std_string_storage(report_filename, profile_path);
   tidy_std_string_storage(report_path, 1);
   tidy_std_string_storage(path_separator, 1);
   size_t extension_length = strlen(".log");
@@ -873,12 +873,12 @@ int __thiscall initialize_application_log_manager(int object)
   uint32_t *error_counter;
   uint32_t text_setting = 0;
   uint32_t application_engine =
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   uint32_t log_service = *(uint32_t *)(uintptr_t)(application_engine + 68);
   int log_service_address =
       *(int *)(uintptr_t)(log_service + 28);
 
-  sub_506755(log_service_address, object, 1);
+  attach_control_to_service(log_service_address, object, 1);
   get_report_indicator_resource_ids(&message_type, &message_id);
   if (warning_counter)
     warning_counter = construct_report_indicator(
@@ -906,7 +906,7 @@ int __thiscall initialize_application_log_manager(int object)
       (ReportManagerMethod)(uintptr_t)(vtable + 168);
   ReportManagerMethod enable_reporting =
       (ReportManagerMethod)(uintptr_t)(vtable + 176);
-  set_reporting_mode(object, dword_764788);
+  set_reporting_mode(object, interface_layer_type_descriptor);
   return enable_reporting(object, 1);
 }
 

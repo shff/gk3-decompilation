@@ -10,15 +10,14 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_763FD8[];
-extern int game_engine_instance_address __asm__("dword_765A2C");
-extern int parent_control_default_object __asm__("dword_7646C0");
-extern int default_stacked_hook_control __asm__("dword_7646C8");
-extern int camera_manager_base_offset_adjustment __asm__("dword_763FD0");
-extern uint32_t user_scene_controller_type_descriptor[15]
-    __asm__("dword_763EB8");
-extern uint32_t camera_manager_vtable[] __asm__("off_6ADAD8");
-extern uint32_t camera_pointer_vector_vtable[] __asm__("off_6ADBA8");
-extern uint32_t camera_dynamic_array_vtable[] __asm__("off_6ADBB0");
+extern int game_engine_instance_address;
+extern int parent_control_default_object;
+extern int default_stacked_hook_control;
+extern int camera_manager_base_offset_adjustment;
+extern uint32_t user_scene_controller_type_descriptor[15];
+extern uint32_t camera_manager_vtable[];
+extern uint32_t camera_pointer_vector_vtable[];
+extern uint32_t dynamic_array_vtable[];
 extern int game_engine_address;
 extern uint32_t *__thiscall construct_stacked_hook_control(
     uint32_t *camera, uint32_t *camera_defaults);
@@ -50,9 +49,8 @@ extern int __thiscall get_top_camera_controller(uint32_t *collection);
 extern void __thiscall pop_camera_stack_through(uint32_t *collection,
                                                 int controller);
 extern void __thiscall pop_top_camera_controller(uint32_t *camera);
-extern int active_scene_controller_address __asm__("dword_76C884");
-extern int __thiscall adjust_camera_stack_iterator(int *iterator, int step)
-    __asm__("sub_44BA0E");
+extern int active_scene_controller_address;
+extern int __thiscall adjust_camera_stack_iterator(int *iterator, int step);
 extern void __thiscall release_segmented_storage(int stack_address);
 extern uint32_t *__thiscall advance_segmented_storage_iterator(
     uint32_t *iterator);
@@ -63,65 +61,51 @@ extern void __thiscall release_camera_hook_stack_page_if_empty(
 extern int *__thiscall remove_camera_controller_popper_for_controller(
     int *camera, int controller);
 extern int __thiscall camera_rectangles_differ(uint32_t *rectangle,
-                                               uint32_t *other)
-    __asm__("sub_45485C");
+                                               uint32_t *other);
 extern unsigned int __thiscall ensure_segmented_storage_capacity(
     uint32_t *stack, int required_slots);
 extern uint32_t *__thiscall decrement_segmented_storage_iterator(
     uint32_t *iterator);
 extern uint8_t *__thiscall append_byte_storage_value(uint32_t *collection,
-                                                     uint8_t *value)
-    __asm__("sub_455541");
-extern void __thiscall pop_byte_storage_value(uint32_t *collection)
-    __asm__("sub_455917");
+                                                     uint8_t *value);
+extern void __thiscall pop_byte_storage_value(uint32_t *collection);
 extern unsigned int __thiscall adjust_segmented_byte_iterator(
-    uint32_t *iterator, int step) __asm__("sub_456072");
+    uint32_t *iterator, int step);
 extern int __thiscall free_pointer_vector_storage(int *collection);
 extern int __thiscall destroy_pointer_vector_elements(int *collection);
 extern uint32_t *__thiscall erase_segmented_byte_storage_range(
     int *collection, uint32_t *temporary, int first, int second,
     uint8_t *third, int fourth, int fifth, int sixth, uint8_t *seventh,
-    int eighth) __asm__("sub_455948");
+    int eighth);
 extern uint32_t *__thiscall append_camera_controller_popper(
-    uint32_t *list, int *value) __asm__("sub_45566A");
+    uint32_t *list, int *value);
 extern int *__thiscall erase_camera_controller_popper_range(
     int *list, int *temporary, int first_begin, int first_end,
     uint32_t *first_position, int first_capacity, int second_begin,
-    int second_end, uint32_t *second_position, int second_capacity)
-    __asm__("sub_455BF4");
+    int second_end, uint32_t *second_position, int second_capacity);
 extern uint32_t *__thiscall advance_camera_controller_popper_iterator(
-    uint32_t *iterator) __asm__("sub_455E53");
+    uint32_t *iterator);
 extern int __thiscall adjust_camera_controller_popper_iterator(
-    int *iterator, int step) __asm__("sub_4563E6");
+    int *iterator, int step);
 extern int __thiscall vector_element_address(uint32_t *collection, int index);
-extern int __thiscall append_integer_array_value(uint32_t *collection,
-                                                 int value)
-    __asm__("sub_593F40");
+extern int __thiscall append_dynamic_array_element(uint32_t *collection,
+                                                 int value);
 extern void __thiscall erase_integer_array_value(uint32_t *collection,
-                                                 int index)
-    __asm__("sub_594060");
+                                                 int index);
 extern int __thiscall find_integer_array_value(uint32_t *collection,
-                                               int value)
-    __asm__("sub_594160");
+                                               int value);
 extern uint32_t *__thiscall create_camera_target_reference(
-    uint32_t *engine, uint16_t target_id, int mode) __asm__("sub_57CA10");
-extern void __thiscall release_camera_target_reference(int **reference)
-    __asm__("sub_4556E3");
-extern int __thiscall destroy_camera_target_reference(int *object)
-    __asm__("sub_5A8490");
+    uint32_t *engine, uint16_t target_id, int mode);
+extern void __thiscall release_camera_target_reference(int **reference);
+extern int __thiscall destroy_camera_target_reference(int *object);
 extern void __cdecl free_tracked_memory(int address);
 extern double __thiscall get_camera_angle_field_of_view(float *value);
 extern char *__thiscall copy_camera_angle_state(char *destination,
-                                                int source)
-    __asm__("sub_40EDF5");
-extern float __thiscall get_engine_camera_pitch(uint32_t *engine)
-    __asm__("sub_57D600");
-extern double __thiscall get_engine_camera_yaw(uint32_t *engine)
-    __asm__("sub_57D5F0");
-extern uint32_t *__thiscall get_engine_camera_position(uint32_t *engine)
-    __asm__("sub_57D620");
-extern float __thiscall get_engine_camera_field_of_view(uint32_t *engine)
-    __asm__("sub_57D6A0");
+                                                int source);
+extern float __thiscall get_engine_camera_pitch(uint32_t *engine);
+extern double __thiscall get_engine_camera_yaw(uint32_t *engine);
+extern uint32_t *__thiscall get_engine_camera_position(uint32_t *engine);
+extern float __thiscall get_engine_camera_field_of_view(uint32_t *engine);
 extern int *__thiscall get_engine_viewport_rectangle(
     int *engine, int *rectangle, float *width, float *height, float *scale);
 extern void __thiscall set_engine_viewport_rectangle(
@@ -143,7 +127,7 @@ int __thiscall construct_camera_manager(int object)
   camera[181] = 1;
   construct_dynamic_array((uint32_t *)(void *)(camera + 184), 20);
   *(uint32_t *)(void *)(camera + 184) =
-      (uint32_t)(uintptr_t)camera_dynamic_array_vtable;
+      (uint32_t)(uintptr_t)dynamic_array_vtable;
   construct_pointer_vector((uint32_t *)(void *)(camera + 208), 20);
   *(uint32_t *)(void *)(camera + 208) =
       (uint32_t)(uintptr_t)camera_pointer_vector_vtable;
@@ -604,12 +588,12 @@ void __thiscall register_camera_target(uint32_t *camera, int target_id,
     return;
   }
 
-  append_integer_array_value(camera + 52, target_id);
+  append_dynamic_array_element(camera + 52, target_id);
   append_byte_storage_value(camera + 58, (uint8_t *)&temporary);
   reference[0] = (int *)create_camera_target_reference(
       (uint32_t *)(uintptr_t)game_engine_address, (uint16_t)target_id, 0);
   reference[0][12] = temporary == 0;
-  append_integer_array_value(camera + 46, (int)(uintptr_t)reference[0]);
+  append_dynamic_array_element(camera + 46, (int)(uintptr_t)reference[0]);
   reference[0] = NULL;
   reference[3] = (int *)-1;
   release_camera_target_reference(reference);

@@ -99,11 +99,10 @@ _Static_assert(sizeof(GameInputIdentifier) == 16,
 extern int game_application_base_offset_adjustment;
 extern uint32_t game_application_type_descriptor[15];
 extern int game_application_lifecycle_callback_list_address;
-extern uint32_t *game_application_event_target_vtable
-    __asm__("off_6A9A30");
-extern uint32_t *game_application_object_vtable __asm__("off_6A9A38");
-extern uint32_t action_manager_type_descriptor[15] __asm__("dword_762DD8");
-extern uint32_t animator_type_descriptor[15] __asm__("dword_7630D0");
+extern uint32_t *game_application_event_target_vtable;
+extern uint32_t *game_application_object_vtable;
+extern uint32_t action_manager_type_descriptor[15];
+extern uint32_t animator_type_descriptor[15];
 extern uint32_t unk_763E30[]; /* Callback-manager type descriptor. */
 extern uint32_t unk_763FD8[]; /* Camera type descriptor. */
 extern uint32_t unk_7640B8[]; /* Camera-angle manager type descriptor. */
@@ -111,8 +110,7 @@ extern uint32_t unk_764D78[]; /* Cursor-manager type descriptor. */
 extern uint32_t unk_7650C8[]; /* Dialogue-manager type descriptor. */
 extern uint32_t unk_765708[]; /* Flag-manager type descriptor. */
 extern uint32_t unk_765C18[]; /* Game-state type descriptor. */
-extern uint32_t generics_manager_type_descriptor[15]
-    __asm__("dword_765CC8");
+extern uint32_t generics_manager_type_descriptor[15];
 extern uint32_t unk_7664C0[]; /* Interface-manager type descriptor. */
 extern uint32_t unk_7666D0[]; /* Layer-manager type descriptor. */
 extern uint32_t unk_76C7E8[]; /* Report-manager type descriptor. */
@@ -122,10 +120,9 @@ extern uint32_t unk_76CFD0[]; /* Soundtrack-manager type descriptor. */
 extern uint32_t unk_76D128[]; /* Stage-manager type descriptor. */
 extern uint32_t unk_7643E0[]; /* Static-configuration type descriptor. */
 extern uint32_t unk_7644B8[]; /* Mini-console type descriptor. */
-extern uint32_t debug_manager_type_descriptor[15] __asm__("dword_764EF0");
+extern uint32_t debug_manager_type_descriptor[15];
 extern uint32_t unk_764F48[]; /* Developer-control type descriptor. */
-extern uint32_t primitive_manager_type_descriptor[15]
-    __asm__("dword_76C060");
+extern uint32_t primitive_manager_type_descriptor[15];
 extern char byte_6A6454;
 extern char __cdecl serialize_boolean_field(uint8_t *reader,
                                            const char *name, char *value,
@@ -142,16 +139,15 @@ extern uint32_t *__thiscall erase_map_entry_impl(
 extern int event_handler_base_offset_adjustment;
 extern uint32_t event_handler_type_descriptor[15];
 extern uint32_t registered_game_object_vtable[];
-extern int game_engine_instance_address __asm__("dword_765A2C");
+extern int game_engine_instance_address;
 extern uint8_t *__thiscall construct_registered_game_object(
     uint8_t *object);
 extern uint32_t *__thiscall stop_all_soundtrack_instances(
     uint32_t *soundtrack_manager);
 extern int __thiscall increment_and_persist_setting_value(
     uint32_t **settings);
-extern int (__stdcall *file_settings_callback)(char)
-    __asm__("off_6ADBB0");
-extern int parent_control_type_descriptor __asm__("dword_7646C0");
+extern int (__stdcall *dynamic_array_vtable)(char);
+extern int parent_control_default_object;
 extern int game_engine_address;
 extern int __stdcall PostMessageA(uint32_t window, uint32_t message,
                                   uint32_t wparam, int32_t lparam);

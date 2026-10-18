@@ -12,47 +12,37 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
 
 /* gk3/GK3R_rest.c */
 extern uint32_t unk_764D78[];
-extern int cursor_spec_collection_base_offset_adjustment
-    __asm__("dword_764D74");
-extern uint32_t cursor_spec_type_descriptor[16] __asm__("dword_764DD0");
-extern int empty_cursor_spec_name_address __asm__("dword_764DB4");
+extern int cursor_spec_collection_base_offset_adjustment;
+extern uint32_t cursor_spec_type_descriptor[16];
+extern int empty_cursor_spec_name_address;
 extern const char Key[4];
-extern uint32_t cursor_spec_collection_vtable __asm__("off_6BCC98");
-extern uint32_t cursor_spec_array_vtable __asm__("off_6BCC9C");
+extern uint32_t cursor_spec_collection_vtable;
+extern uint32_t cursor_spec_array_vtable;
 extern uint32_t *__thiscall construct_dynamic_array(uint32_t *array,
                                                     int growth_capacity);
 extern uint32_t *__thiscall initialize_collection_serialization_context(
-    uint32_t *context, int serializer, const char *field_name, int flags)
-    __asm__("sub_56C570");
+    uint32_t *context, int serializer, const char *field_name, int flags);
 extern char __thiscall serialize_registered_object_array(
-    uint8_t *serializer, int array, int registry) __asm__("sub_56C470");
-extern void __thiscall destroy_collection_serialization_context(int context)
-    __asm__("sub_56C720");
+    uint8_t *serializer, int array, int registry);
+extern void __thiscall destroy_collection_serialization_context(int context);
 extern char __thiscall serialize_cursor_spec_entry_fields(
     uint8_t *serializer, int array, char *context);
 extern uint8_t *__cdecl append_string_suffix(uint8_t *result, char *first,
-                                             char *suffix)
-    __asm__("sub_40157E");
-extern char __cdecl serialize_integer_field(uint8_t *serializer,
+                                             char *suffix);
+extern char __cdecl serialize_integer_value_field(uint8_t *serializer,
                                            const char *field_name,
-                                           int *value, int *default_value)
-    __asm__("sub_40B684");
+                                           int *value, int *default_value);
 extern char __cdecl serialize_array_count_field(uint8_t *serializer,
                                                 const char *field_name,
                                                 int *value,
-                                                int *default_value)
-    __asm__("sub_404836");
-extern void __thiscall resize_dynamic_array(uint32_t *array, int count)
-    __asm__("sub_594000");
+                                                int *default_value);
+extern void __thiscall resize_dynamic_array(uint32_t *array, int count);
 extern int __thiscall tidy_std_string_storage(char *string_storage,
                                               char mode);
-extern int __thiscall initialize_cursor_spec(int object, char *name)
-    __asm__("sub_485D13");
+extern int __thiscall initialize_cursor_spec(int object, char *name);
 extern int __cdecl compare_cursor_spec_names(const char *first, char *second,
-                                            size_t count)
-    __asm__("sub_401C83");
-extern int __thiscall append_dynamic_array_element(uint32_t *array, int value)
-    __asm__("sub_593F40");
+                                            size_t count);
+extern int __thiscall append_dynamic_array_element(uint32_t *array, int value);
 extern int __thiscall destroy_pointer_vector_elements(int *array);
 extern int __thiscall free_dynamic_array_storage(int *array);
 extern void __cdecl free_tracked_memory(int address);
@@ -75,7 +65,7 @@ char __thiscall serialize_cursor_spec_entry_fields(
   if (!option_name)
     option_name = Key;
 
-  char result = serialize_integer_field(serializer, option_name,
+  char result = serialize_integer_value_field(serializer, option_name,
                                         &auto_delete, &auto_delete);
   tidy_std_string_storage((char *)(void *)option_name_storage, 1);
   if (!serializer[4])

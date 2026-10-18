@@ -76,7 +76,7 @@ extern uint32_t *__thiscall sub_5B1360(uint32_t *object, char *storage);
 extern float *__thiscall sub_5CE200(float *object);
 extern void __thiscall sub_5AEF70(int engine);
 extern void __thiscall sub_5B1190(int engine);
-extern int __thiscall sub_593F40(uint32_t *sprite_collection, int sprite);
+extern int __thiscall append_dynamic_array_element(uint32_t *sprite_collection, int sprite);
 extern int __thiscall sub_5A7A10(int engine, int flags, void *lock,
                                  int force);
 extern int __thiscall get_engine_object_by_id(uint32_t *engine,
@@ -231,7 +231,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   uint16_t *sprite = sprite_memory
       ? construct_named_sprite(sprite_memory, "(PrimarySprite)") : NULL;
   set_sprite_surface((int)(uintptr_t)sprite, primary_surface_address);
-  uint32_t sprite_id = (uint16_t)sub_593F40(engine + 71,
+  uint32_t sprite_id = (uint16_t)append_dynamic_array_element(engine + 71,
                                             (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[8] = sprite_id;
@@ -240,7 +240,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   sprite = sprite_memory
       ? construct_named_sprite(sprite_memory, "(ScreenSprite)") : NULL;
   set_sprite_surface((int)(uintptr_t)sprite, screen_surface_address);
-  sprite_id = (uint16_t)sub_593F40(engine + 71, (int)(uintptr_t)sprite);
+  sprite_id = (uint16_t)append_dynamic_array_element(engine + 71, (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[6] = sprite_id;
 
@@ -250,7 +250,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
         ? construct_named_sprite(sprite_memory, "(Screen2Sprite)") : NULL;
     set_sprite_surface((int)(uintptr_t)sprite,
                        secondary_screen_surface_address);
-    sprite_id = (uint16_t)sub_593F40(engine + 71,
+    sprite_id = (uint16_t)append_dynamic_array_element(engine + 71,
                                      (int)(uintptr_t)sprite);
     sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
     engine[7] = sprite_id;
@@ -260,7 +260,7 @@ int __thiscall initialize_graphics_resources(uint32_t *engine)
   sprite = sprite_memory
       ? construct_named_sprite(sprite_memory, "(ZBufferSprite)") : NULL;
   set_sprite_surface((int)(uintptr_t)sprite, z_buffer_surface_address);
-  sprite_id = (uint16_t)sub_593F40(engine + 71, (int)(uintptr_t)sprite);
+  sprite_id = (uint16_t)append_dynamic_array_element(engine + 71, (int)(uintptr_t)sprite);
   sprite_id |= (uint32_t)(uint16_t)sprite[2] << 16;
   engine[9] = sprite_id;
 

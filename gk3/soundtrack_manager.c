@@ -31,7 +31,7 @@ extern uint32_t dword_76D010[15];
 extern int dword_76D00C;
 extern char byte_76CFC9;
 extern int dword_76D550;
-extern int dword_765A2C;
+extern int game_engine_instance_address;
 extern uint8_t *__thiscall construct_registered_object_base(uint8_t *object);
 extern uint32_t *__stdcall allocate_soundtrack_list_node(uint32_t *previous,
                                                          uint32_t *next);
@@ -60,7 +60,7 @@ extern char *__thiscall assign_std_string_storage(char *storage,
                                                   const char *value,
                                                   size_t length);
 extern int __thiscall sub_4296DB(int string, uint8_t *value);
-extern uint32_t *__thiscall sub_566D10(uint32_t *registry,
+extern uint32_t *__thiscall find_or_create_registry_entry(uint32_t *registry,
                                        uint32_t address);
 extern int *__thiscall sub_566840(uint32_t *registry, int name,
                                   uint32_t *version, int object_size,
@@ -99,7 +99,7 @@ extern uint32_t *__thiscall sub_5516F6(uint32_t *list, uint32_t *result,
 extern uint32_t *__thiscall sub_55159C(int list, int *result, int *value);
 extern int __thiscall sub_5505DD(uint32_t *instance);
 extern int __thiscall sub_4EDBEE(int object);
-extern int __cdecl sub_5574A3(int source, int line, int severity,
+extern int __cdecl log_source_message(int source, int line, int severity,
                               int flags, const char *format, ...);
 extern int __thiscall sub_5A96D0(uint32_t *serializer, const char *name);
 extern void __thiscall sub_5AA1C0(uint32_t *serializer, char *name,
@@ -144,7 +144,7 @@ int __thiscall find_soundtrack_node_index(uint32_t *instance)
 uint32_t *__cdecl allocate_registered_soundtrack_instance(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  sub_566D10(dword_76D050, (uint32_t)(uintptr_t)memory)[2] = 1;
+  find_or_create_registry_entry(dword_76D050, (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
 
@@ -154,7 +154,7 @@ uint32_t *__thiscall construct_soundtrack_instance(uint8_t *object,
   uint8_t name_high_byte =
       (uint8_t)((uint32_t)(uintptr_t)name >> 24);
   uint32_t engine_address =
-      *(uint32_t *)(uintptr_t)(dword_765A2C + 1092);
+      *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
   uint32_t context_object =
       *(uint32_t *)(uintptr_t)(engine_address + 68);
   int active_object_context =
@@ -163,7 +163,7 @@ uint32_t *__thiscall construct_soundtrack_instance(uint8_t *object,
 
   sub_483D64((int)(uintptr_t)object, 0, 0, 0, 1,
              active_object_context);
-  sub_566D10(dword_76D050,
+  find_or_create_registry_entry(dword_76D050,
              (uint32_t)(uintptr_t)object + dword_76D04C + 64);
   object[64] = name_high_byte;
   tidy_std_string_storage((char *)object + 64, 0);
@@ -191,7 +191,7 @@ uint32_t *__thiscall construct_registered_soundtrack_instance(
   const uint8_t default_value = (uint8_t)((uint32_t)mode >> 24);
 
   sub_483EBE((int)(uintptr_t)object, mode);
-  sub_566D10(dword_76D050,
+  find_or_create_registry_entry(dword_76D050,
              (uint32_t)(uintptr_t)bytes + dword_76D04C + 64);
   bytes[64] = default_value;
   tidy_std_string_storage((char *)bytes + 64, 0);
@@ -353,7 +353,7 @@ uint32_t *__thiscall restore_soundtrack_serialized_state(
   char *soundtrack_type = (char *)(uintptr_t)(uint32_t)sub_5AA330(
       state, "SoundType", (int)(uintptr_t)default_type);
   if (!sub_475757(soundtrack_type, (int *)(void *)(instance + 20))) {
-    sub_5574A3(
+    log_source_message(
         (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\SoundMgr.cpp",
         648, 5, 0, "SoundTrack(%s) contains Illegal SoundType(%s)\n",
         (const char *)(uintptr_t)(state_address + 4), soundtrack_type);
@@ -423,7 +423,7 @@ int __thiscall insert_soundtrack_snapshot_entry(void *snapshot,
 
 uint8_t *__thiscall construct_soundtrack_snapshot(uint8_t *object)
 {
-  sub_566D10(dword_76D010,
+  find_or_create_registry_entry(dword_76D010,
              (uint32_t)(uintptr_t)object + (uint32_t)dword_76D00C + 4);
   object[4] = 0;
   *(uint32_t *)(void *)(object + 8) = 0;
@@ -441,7 +441,7 @@ uint8_t *__thiscall construct_registered_soundtrack_snapshot(
     uint8_t *object, int mode)
 {
   const uint8_t default_value = (uint8_t)((uint32_t)mode >> 24);
-  sub_566D10(dword_76D010,
+  find_or_create_registry_entry(dword_76D010,
              (uint32_t)(uintptr_t)object + (uint32_t)dword_76D00C + 4);
   object[4] = default_value;
   *(uint32_t *)(void *)(object + 8) = 0;
@@ -577,7 +577,7 @@ int __thiscall load_soundtrack_instance_from_state(
                                      (int *)(uintptr_t)entry_address);
       } else if (*kind != '\0' && strcasecmp(kind, "SoundTrack") != 0 &&
                  strcasecmp(kind, "Restore") != 0) {
-        sub_5574A3(
+        log_source_message(
             (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\SoundMgr.cpp",
             559, 5, 0, "SndTrack::Load(%s): unknown sound type '%s'\n",
             (const char *)(uintptr_t)(entry_address + 4), kind);
