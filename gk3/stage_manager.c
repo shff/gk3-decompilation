@@ -17,9 +17,9 @@ extern uint16_t *__thiscall construct_registered_event_target(
     uint16_t *object);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_76D128[];
-extern int dword_76D124;
-extern uint32_t off_6EE718[];
+extern uint32_t stage_manager_type_descriptor[];
+extern int stage_manager_base_offset_adjustment;
+extern uint32_t stage_manager_vtable[];
 extern uint32_t *__thiscall initialize_scene_data_load_times(
     uint32_t *object, char *default_value);
 extern uint32_t *__thiscall construct_floor_map(uint8_t *object);
@@ -27,115 +27,115 @@ extern uint32_t *__thiscall construct_floor_contact_sound_map(uint8_t *object);
 extern int system_profile_address;
 extern int game_engine_instance_address;
 extern int active_scene_controller_address;
-extern uint32_t dword_76D168[15];
-extern int dword_76D164;
-extern int dword_76D0A0[15];
-extern int dword_6A9EA4;
-extern int dword_6C1358;
+extern uint32_t scene_load_type_descriptor[15];
+extern int scene_load_base_offset_adjustment;
+extern int stage_type_descriptor[15];
+extern int default_location_id;
+extern int default_time_block_id;
 extern int default_noun_id;
 extern int first_special_stage_location_id;
 extern int serialized_value_default;
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern int shared_ordered_string_map_nil_node;
 extern int shared_ordered_string_map_instance_count;
 extern int frame_number;
 extern int game_engine_address;
-extern int __thiscall sub_530B65(uint32_t *scene);
+extern int __thiscall get_scene_ego(uint32_t *scene);
 extern int __thiscall set_active_cd_volume(uint32_t *engine, int volume_id,
                                            int mode);
-extern uint8_t *__thiscall sub_45DA2D(uint8_t *object);
-extern uint32_t *__thiscall sub_45DA68(uint32_t *map, uint32_t *result,
+extern uint8_t *__thiscall load_character_and_face_data(uint8_t *object);
+extern uint32_t *__thiscall find_and_retain_string_map_value(uint32_t *map, uint32_t *result,
                                        char *key);
-extern char **__thiscall sub_45DACE(uint32_t *map, char **result, char *key);
-extern int __thiscall sub_4B2FDB(int object, const char *name);
-extern char __thiscall sub_4B10B6(int object, const char *name);
-extern uint32_t *__thiscall sub_552739(int object);
-extern uint32_t *__cdecl sub_55406D(int size);
-extern uint16_t *__thiscall sub_554122(uint16_t *timer, int noun_id,
+extern char **__thiscall find_and_retain_string_map_string_value(uint32_t *map, char **result, char *key);
+extern int __thiscall load_stage_sound_map(int object, const char *name);
+extern char __thiscall load_floor_mapping_file(int object, const char *name);
+extern uint32_t *__thiscall destroy_stage(int object);
+extern uint32_t *__cdecl allocate_registered_stage_timer(int size);
+extern uint16_t *__thiscall construct_stage_timer(uint16_t *timer, int noun_id,
                                        int verb_id, int duration);
-extern char __thiscall sub_5542E3(int timer, int noun_id, int verb_id,
+extern char __thiscall update_matching_stage_timer(int timer, int noun_id, int verb_id,
                                   int duration);
-extern int __thiscall sub_555AC2(int collection, uint32_t *value);
-extern int __thiscall sub_555AD3(uint32_t *collection, int entry);
-extern void __thiscall sub_557F62(int timer);
+extern int __thiscall append_stage_timer_to_collection(int collection, uint32_t *value);
+extern int __thiscall remove_stage_timer_from_collection(uint32_t *collection, int entry);
+extern void __thiscall start_stage_timer(int timer);
 extern bool __cdecl __uncaught_exception(void);
-extern int __thiscall sub_4078BB(uint32_t *dispatcher);
-extern int *__thiscall sub_408A6D(uint32_t *dispatcher);
-extern uint32_t **__thiscall sub_50303A(int *targets, int event_id);
-extern int __thiscall sub_40764E(uint32_t *dispatcher, double elapsed,
+extern int __thiscall is_event_dispatcher_ready(uint32_t *dispatcher);
+extern int *__thiscall get_last_current_noun_collection_entry(uint32_t *dispatcher);
+extern uint32_t **__thiscall find_noun_object_by_id(int *targets, int event_id);
+extern int __thiscall try_dispatch_action(uint32_t *dispatcher, double elapsed,
                                  int noun_id, int verb_id,
                                  uint32_t **target, char active, int flags);
 extern int __thiscall detach_game_layer_18(uint32_t *layer_manager);
 extern int __thiscall get_engine_input_state(uint32_t *application,
                                               char input_state);
 extern char *__cdecl get_action_vocabulary_string(int token_id);
-extern uint32_t *__cdecl sub_551F4F(int size);
-extern int __thiscall sub_551FEE(int object, const char *scene_name,
+extern uint32_t *__cdecl allocate_registered_stage(int size);
+extern int __thiscall construct_stage_scene_data(int object, const char *scene_name,
                                  int timeblock);
-extern void *__thiscall sub_555C09(void *object, char release_reference);
+extern void *__thiscall release_stage_reference(void *object, char release_reference);
 extern void __cdecl write_source_message(const char *source_file, int line,
                                int category, int flags, char *format,
                                size_t size);
 extern void *__stdcall GetForegroundWindow(void);
 extern uint32_t *__thiscall update_active_soundtrack_instances(
     uint32_t *manager);
-extern void *__thiscall sub_4864E5(void *context);
-extern int sub_486530(void);
-extern int sub_4C1003(void);
-extern int sub_4CA150(void);
+extern void *__thiscall pause_engine_clock_and_lock_scene(void *context);
+extern int unlock_scene_and_resume_engine_clock(void);
+extern int has_animation_resource_manager(void);
+extern int has_current_scene(void);
 extern int __thiscall append_interface_recipient(int object, int *value);
 extern int __thiscall release_interface_recipient_list(int *object);
-extern int __thiscall sub_53AE6B(uint32_t **manager, int event_id,
+extern int __thiscall reevaluate_sheep_cases_for_recipients(uint32_t **manager, int event_id,
                                  int event_data);
-extern uint32_t *__cdecl sub_4085FD(uint32_t **reference, int event_id);
-extern void __cdecl sub_4FC993(uint32_t *reference);
-extern void __cdecl sub_55539C(int command, int duration);
+extern uint32_t *__cdecl create_event_callback_reference(uint32_t **reference, int event_id);
+extern void __cdecl dispatch_interface_event_and_release_temporary_object(uint32_t *reference);
+extern void __cdecl stop_soundtrack_instances_by_flags(int command, int duration);
 extern int __thiscall clear_compiled_sheep_cases(uint32_t *manager);
 extern int *__thiscall stop_and_clear_animator_records(uint32_t *animator);
 extern int *__thiscall stop_and_clear_animator_state(uint32_t *animator);
-extern char __thiscall sub_437A76(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_location_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
-extern char __thiscall sub_4B0AF1(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_time_block_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
 extern char __thiscall serialize_noun_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
-extern char __cdecl sub_41F830(uint8_t *serializer, const char *field,
+extern char __cdecl serialize_boolean_field_with_false_default(uint8_t *serializer, const char *field,
                               char *storage);
-extern char __thiscall sub_5568C3(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_stage_timer_collection(uint8_t *serializer, const char *field,
                                  unsigned int storage, char mode);
-extern char __thiscall sub_556934(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_stage_scene_load_times(uint8_t *serializer, const char *field,
                                  int *storage, char mode);
 extern char __thiscall serialize_integer_value_field(uint8_t *serializer, const char *field,
                                  int *storage, int *default_value);
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             const char *field, char *storage,
                                             char *default_value);
-extern double __thiscall sub_52A6A8(uint32_t **object);
-extern int __stdcall sub_4CDFAD(float first, float second, char flags);
+extern double __thiscall get_configured_display_gamma(uint32_t **object);
+extern int __stdcall set_display_gamma(float first, float second, char flags);
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
 extern void __cdecl free_tracked_memory(int address);
-extern void __thiscall sub_5567A0(int *iterator);
-extern uint32_t *__thiscall sub_555FE1(uint32_t *map, uint32_t *result,
+extern void __thiscall advance_character_data_map_iterator(int *iterator);
+extern uint32_t *__thiscall erase_character_data_map_node(uint32_t *map, uint32_t *result,
                                        uint32_t *node);
-extern int __thiscall sub_45F2E4(uint32_t **string_storage);
-extern int __thiscall sub_556747(int *iterator, int step);
-extern int *__thiscall sub_555D52(int *collection, int *insert_position,
+extern int __thiscall release_and_destroy_string_storage(uint32_t **string_storage);
+extern int __thiscall advance_segmented_array_iterator(int *iterator, int step);
+extern int *__thiscall merge_stage_scene_load_time_ranges(int *collection, int *insert_position,
                                   int first_begin, int first_end,
                                   int *first_cursor, int first_limit,
                                   int second_begin, int second_end,
                                   int *second_cursor, int second_limit);
-extern int *__thiscall sub_555BB8(int *iterator);
-extern uint32_t *__thiscall sub_555B65(uint32_t *collection,
+extern int *__thiscall advance_stage_scene_load_time_iterator(int *iterator);
+extern uint32_t *__thiscall append_stage_scene_load_time_entry(uint32_t *collection,
                                       uint32_t **entry);
-extern int __cdecl sub_557B2B(int location_id);
+extern int __cdecl get_location_name(int location_id);
 extern void __cdecl log_source_message(int source, int line, int category,
                                int flags, char *format, ...);
-extern int __thiscall sub_585850(uint32_t *engine, unsigned int first,
+extern int __thiscall destroy_engine_objects_by_id_range(uint32_t *engine, unsigned int first,
                                  unsigned int resource_id);
-extern void __thiscall sub_566440(char *engine, unsigned int first,
+extern void __thiscall destroy_engine_resources_by_id_range(char *engine, unsigned int first,
                                   unsigned int resource_id);
-extern void __thiscall sub_555FB1(uint32_t *collection);
+extern void __thiscall remove_stage_collection_entry(uint32_t *collection);
 
 void __thiscall purge_oldest_stage_resources(uint32_t *manager);
 uint32_t *__thiscall unregister_stage_history_entry(uint32_t *entry);
@@ -183,8 +183,8 @@ uint32_t *__thiscall clear_character_data_map_range(
 
   while (cursor != last) {
     uint32_t *node = cursor;
-    sub_5567A0((int *)(void *)&cursor);
-    sub_555FE1(map, result, node);
+    advance_character_data_map_iterator((int *)(void *)&cursor);
+    erase_character_data_map_node(map, result, node);
   }
   *result = (uint32_t)(uintptr_t)cursor;
   return result;
@@ -218,7 +218,7 @@ void __stdcall free_character_data_map_nodes(uint32_t *node)
     uint32_t *next = (uint32_t *)(uintptr_t)*node;
     free_character_data_map_nodes(
         (uint32_t *)(uintptr_t)node[2]);
-    sub_45F2E4((uint32_t **)(void *)(node + 3));
+    release_and_destroy_string_storage((uint32_t **)(void *)(node + 3));
     free_tracked_memory((int)(uintptr_t)node);
     node = next;
   }
@@ -267,7 +267,7 @@ uint32_t *__thiscall initialize_scene_data_load_times(
 uint32_t *__cdecl allocate_registered_stage_history_entry(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(dword_76D168,
+  find_or_create_registry_entry(scene_load_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -275,7 +275,7 @@ uint32_t *__cdecl allocate_registered_stage_history_entry(int size)
 uint32_t *__thiscall initialize_stage_history_entry(uint32_t *entry)
 {
   find_or_create_registry_entry(
-      dword_76D168, (uint32_t)(uintptr_t)entry + (uint32_t)dword_76D164);
+      scene_load_type_descriptor, (uint32_t)(uintptr_t)entry + (uint32_t)scene_load_base_offset_adjustment);
   entry[0] = 0;
   entry[1] = 0;
   entry[2] = 0;
@@ -284,7 +284,7 @@ uint32_t *__thiscall initialize_stage_history_entry(uint32_t *entry)
 
 int __thiscall update_stage_manager_scene_cache(uint32_t *manager)
 {
-  int scene_ego = sub_530B65((uint32_t *)(uintptr_t)active_scene_controller_address);
+  int scene_ego = get_scene_ego((uint32_t *)(uintptr_t)active_scene_controller_address);
   if (scene_ego != 0) {
     uint32_t *scene = (uint32_t *)(uintptr_t)active_scene_controller_address;
     uint32_t *scene_state = (uint32_t *)(uintptr_t)(
@@ -360,10 +360,10 @@ uint32_t *__thiscall construct_character_data(uint32_t *character_data)
 
 char __thiscall initialize_stage_resource_maps(char *manager)
 {
-  sub_45DA2D((uint8_t *)(void *)(manager + 112));
-  sub_4B2FDB((int)(uintptr_t)(manager + 176), "Footsteps");
-  sub_4B2FDB((int)(uintptr_t)(manager + 208), "Footscuffs");
-  return sub_4B10B6((int)(uintptr_t)(manager + 144), "FloorMap");
+  load_character_and_face_data((uint8_t *)(void *)(manager + 112));
+  load_stage_sound_map((int)(uintptr_t)(manager + 176), "Footsteps");
+  load_stage_sound_map((int)(uintptr_t)(manager + 208), "Footscuffs");
+  return load_floor_mapping_file((int)(uintptr_t)(manager + 144), "FloorMap");
 }
 
 char __thiscall serialize_stage_manager(uint32_t *manager,
@@ -371,37 +371,37 @@ char __thiscall serialize_stage_manager(uint32_t *manager,
 {
   (void)mode;
   uint8_t *bytes = (uint8_t *)(void *)manager;
-  uint32_t *stage_default = (uint32_t *)(void *)dword_76D0A0;
+  uint32_t *stage_default = (uint32_t *)(void *)stage_type_descriptor;
 
   (*(void (__thiscall **)(uint8_t *, const char *, int, uint32_t *))
       (uintptr_t)(*(uint32_t *)(void *)serializer + 68))(
           serializer, "mStage", (int)(uintptr_t)(bytes + 12), stage_default);
-  sub_437A76(serializer, "mCurrentLocation", (int *)(void *)(bytes + 16),
-             &dword_6A9EA4);
-  sub_4B0AF1(serializer, "mCurrentTime", (int *)(void *)(bytes + 20),
-             &dword_6C1358);
-  sub_437A76(serializer, "mLastLocation", (int *)(void *)(bytes + 24),
-             &dword_6A9EA4);
-  sub_4B0AF1(serializer, "mLastTime", (int *)(void *)(bytes + 28),
-             &dword_6C1358);
+  serialize_location_field(serializer, "mCurrentLocation", (int *)(void *)(bytes + 16),
+             &default_location_id);
+  serialize_time_block_field(serializer, "mCurrentTime", (int *)(void *)(bytes + 20),
+             &default_time_block_id);
+  serialize_location_field(serializer, "mLastLocation", (int *)(void *)(bytes + 24),
+             &default_location_id);
+  serialize_time_block_field(serializer, "mLastTime", (int *)(void *)(bytes + 28),
+             &default_time_block_id);
   serialize_noun_field(serializer, "mEgo", (int *)(void *)(bytes + 32),
              &default_noun_id);
-  sub_41F830(serializer, "mInitialized", (char *)(void *)(bytes + 36));
-  sub_5568C3(serializer, "mTimers", (unsigned int)(uintptr_t)(bytes + 40), 0);
+  serialize_boolean_field_with_false_default(serializer, "mInitialized", (char *)(void *)(bytes + 36));
+  serialize_stage_timer_collection(serializer, "mTimers", (unsigned int)(uintptr_t)(bytes + 40), 0);
   serialize_boolean_field(serializer, "mbPreventVerbCancel",
-      (char *)(void *)(bytes + 56), &byte_6A6454);
+      (char *)(void *)(bytes + 56), &default_false_boolean_value);
   serialize_boolean_field(serializer, "mbVerbModal",
-      (char *)(void *)(bytes + 57), &byte_6A6454);
+      (char *)(void *)(bytes + 57), &default_false_boolean_value);
   serialize_integer_value_field(serializer, "mSceneDataMaxDepth",
       (int *)(void *)(bytes + 60), &serialized_value_default);
-  char result = sub_556934(serializer, "mSceneDataLoadTimes",
+  char result = serialize_stage_scene_load_times(serializer, "mSceneDataLoadTimes",
       (int *)(void *)(bytes + 64), 0);
   if (serializer[4] == 0) {
     initialize_stage_resource_maps((char *)(void *)manager);
     if (*(uint32_t *)(void *)(bytes + 12) != 0) {
-      float elapsed = (float)sub_52A6A8(
+      float elapsed = (float)get_configured_display_gamma(
           (uint32_t **)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1192));
-      return (char)sub_4CDFAD(elapsed, 1.0f, 0);
+      return (char)set_display_gamma(elapsed, 1.0f, 0);
     }
   }
   return result;
@@ -417,7 +417,7 @@ void __thiscall adjust_stage_history_after_transition(uint32_t *manager,
   int iterator[5] = {
       (int)manager[21], (int)manager[22], (int)manager[23],
       (int)manager[24], 0};
-  sub_556747(iterator, -1);
+  advance_segmented_array_iterator(iterator, -1);
   *(int *)(uintptr_t)(*(uint32_t *)(uintptr_t)iterator[2] + 8) = frame - 1;
 
   iterator[0] = (int)manager[17];
@@ -458,16 +458,16 @@ uint32_t *__thiscall record_stage_visit(uint32_t *manager, int location_id,
     int entry_address = *current_cursor;
     if (*(int *)(uintptr_t)entry_address == location_id) {
       if (entry_address != 0) {
-        erase_map_entry_impl(dword_76D168,
-            (uint32_t)entry_address + (uint32_t)dword_76D164);
+        erase_map_entry_impl(scene_load_type_descriptor,
+            (uint32_t)entry_address + (uint32_t)scene_load_base_offset_adjustment);
         free_tracked_memory(entry_address);
       }
       int merged_state[4];
       int next_position[4] = {
           current_begin, current_end, (int)(uintptr_t)current_cursor,
           current_limit};
-      sub_556747(next_position, 1);
-      sub_555D52((int *)(void *)(manager + 16), merged_state,
+      advance_segmented_array_iterator(next_position, 1);
+      merge_stage_scene_load_time_ranges((int *)(void *)(manager + 16), merged_state,
           current_begin, current_end, current_cursor, current_limit,
           next_position[0], next_position[1],
           (int *)(void *)&next_position[2], next_position[3]);
@@ -476,7 +476,7 @@ uint32_t *__thiscall record_stage_visit(uint32_t *manager, int location_id,
       int iterator[4] = {
           current_begin, current_end, (int)(uintptr_t)current_cursor,
           current_limit};
-    sub_555BB8(iterator);
+    advance_stage_scene_load_time_iterator(iterator);
     current_cursor = (int *)(uintptr_t)iterator[2];
   }
 
@@ -488,7 +488,7 @@ uint32_t *__thiscall record_stage_visit(uint32_t *manager, int location_id,
   entry[1] = frame_count;
   entry[0] = (uint32_t)location_id;
   entry[2] = frame_count;
-  return sub_555B65(manager + 16, &new_entry);
+  return append_stage_scene_load_time_entry(manager + 16, &new_entry);
 }
 
 void __thiscall purge_oldest_stage_resources(uint32_t *manager)
@@ -498,26 +498,26 @@ void __thiscall purge_oldest_stage_resources(uint32_t *manager)
   int first_frame = (int)entry[1];
   int last_frame = (int)entry[2];
   int location_id = (int)entry[0];
-  const char *location_name = (const char *)(uintptr_t)sub_557B2B(location_id);
+  const char *location_name = (const char *)(uintptr_t)get_location_name(location_id);
 
   log_source_message((int)(uintptr_t)
       "z:\\Proj\\GK3\\gk3app\\Source\\StageMgr.cpp", 553,
       3, 0, "Purging resources Location(%s) Frames(%08d to %08d)\n",
       location_name, first_frame, last_frame);
-  sub_585850((uint32_t *)(uintptr_t)game_engine_address, 0, entry[2]);
-  sub_566440((char *)(uintptr_t)game_engine_address, 0, entry[2]);
+  destroy_engine_objects_by_id_range((uint32_t *)(uintptr_t)game_engine_address, 0, entry[2]);
+  destroy_engine_resources_by_id_range((char *)(uintptr_t)game_engine_address, 0, entry[2]);
   if (entry != NULL) {
     unregister_stage_history_entry(entry);
     free_tracked_memory((int)(uintptr_t)entry);
   }
   if (manager[27] != 0)
-    sub_555FB1(manager + 16);
+    remove_stage_collection_entry(manager + 16);
 }
 
 uint32_t *__thiscall unregister_stage_history_entry(uint32_t *entry)
 {
-  return erase_map_entry_impl(dword_76D168,
-      (uint32_t)(uintptr_t)entry + (uint32_t)dword_76D164);
+  return erase_map_entry_impl(scene_load_type_descriptor,
+      (uint32_t)(uintptr_t)entry + (uint32_t)scene_load_base_offset_adjustment);
 }
 
 int __thiscall construct_registered_stage_manager(int object, int mode)
@@ -527,8 +527,8 @@ int __thiscall construct_registered_stage_manager(int object, int mode)
 
   construct_registered_event_target((uint16_t *)(void *)bytes);
   find_or_create_registry_entry(
-      unk_76D128,
-      (uint32_t)dword_76D124 + (uint32_t)object + 12);
+      stage_manager_type_descriptor,
+      (uint32_t)stage_manager_base_offset_adjustment + (uint32_t)object + 12);
   *(uint32_t *)(void *)(bytes + 12) = 0;
   *(uint32_t *)(void *)(bytes + 44) = 0;
   bytes[40] = (uint8_t)default_value;
@@ -540,7 +540,7 @@ int __thiscall construct_registered_stage_manager(int object, int mode)
   construct_floor_map(bytes + 144);
   construct_floor_contact_sound_map(bytes + 176);
   construct_floor_contact_sound_map(bytes + 208);
-  *(uint32_t *)(void *)bytes = (uint32_t)(uintptr_t)off_6EE718;
+  *(uint32_t *)(void *)bytes = (uint32_t)(uintptr_t)stage_manager_vtable;
   return object;
 }
 
@@ -548,8 +548,8 @@ int __thiscall construct_stage_manager(int object)
 {
   char default_value;
   construct_registered_event_target((uint16_t *)(uintptr_t)object);
-  find_or_create_registry_entry(unk_76D128,
-             (uint32_t)dword_76D124 + (uint32_t)object + 12);
+  find_or_create_registry_entry(stage_manager_type_descriptor,
+             (uint32_t)stage_manager_base_offset_adjustment + (uint32_t)object + 12);
   *(uint32_t *)(uintptr_t)(object + 12) = 0;
   *(uint32_t *)(uintptr_t)(object + 44) = 0;
   *(uint8_t *)(uintptr_t)(object + 40) = (uint8_t)default_value;
@@ -561,7 +561,7 @@ int __thiscall construct_stage_manager(int object)
   construct_floor_map((uint8_t *)(uintptr_t)(object + 144));
   construct_floor_contact_sound_map((uint8_t *)(uintptr_t)(object + 176));
   construct_floor_contact_sound_map((uint8_t *)(uintptr_t)(object + 208));
-  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)off_6EE718;
+  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)stage_manager_vtable;
   reset_stage_manager_state((uint32_t *)(uintptr_t)object);
   initialize_stage_resource_maps((char *)(uintptr_t)object);
   return object;
@@ -570,7 +570,7 @@ int __thiscall construct_stage_manager(int object)
 uint32_t *__cdecl allocate_registered_stage_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_76D128,
+  find_or_create_registry_entry(stage_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -601,7 +601,7 @@ int shutdown_stage_manager(uint32_t *manager)
 void __thiscall release_stage_manager_owned_reference(int *reference)
 {
   if (*reference != 0) {
-    sub_552739(*reference);
+    destroy_stage(*reference);
     free_tracked_memory(*reference);
   }
 }
@@ -611,7 +611,7 @@ void __thiscall replace_stage_manager_owned_reference(int *reference,
 {
   if (*reference != object) {
     if (*reference != 0) {
-      sub_552739(*reference);
+      destroy_stage(*reference);
       free_tracked_memory(*reference);
     }
     *reference = object;
@@ -621,7 +621,7 @@ void __thiscall replace_stage_manager_owned_reference(int *reference,
 int __thiscall clear_stage_manager_scene_load_times(uint32_t *storage)
 {
   while (storage[11] != 0)
-    sub_555FB1(storage);
+    remove_stage_collection_entry(storage);
   return (int)storage[11];
 }
 
@@ -631,8 +631,8 @@ int __thiscall prepare_stage_transition(int *manager)
   int value;
   uint32_t *callback_reference = NULL;
 
-  sub_4864E5(NULL);
-  if (sub_4CA150()) {
+  pause_engine_clock_and_lock_scene(NULL);
+  if (has_current_scene()) {
     uint32_t *application = (uint32_t *)(uintptr_t)game_engine_instance_address;
     clear_compiled_sheep_cases(
         (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(application[273] + 56));
@@ -645,27 +645,27 @@ int __thiscall prepare_stage_transition(int *manager)
   append_interface_recipient((int)(uintptr_t)event_data, &value);
   value = (int)scene_state[8];
   append_interface_recipient((int)(uintptr_t)event_data, &value);
-  sub_53AE6B((uint32_t **)(uintptr_t)engine_state[22], 0,
+  reevaluate_sheep_cases_for_recipients((uint32_t **)(uintptr_t)engine_state[22], 0,
              (int)(uintptr_t)event_data);
 
-  if (sub_4C1003())
+  if (has_animation_resource_manager())
     stop_and_clear_animator_records(
         (uint32_t *)(uintptr_t)engine_state[8]);
 
-  sub_4085FD(&callback_reference, 3);
-  sub_4FC993(callback_reference);
+  create_event_callback_reference(&callback_reference, 3);
+  dispatch_interface_event_and_release_temporary_object(callback_reference);
   replace_stage_manager_owned_reference((int *)(void *)(manager + 3), 0);
 
   callback_reference = NULL;
-  sub_4085FD(&callback_reference, 4);
-  sub_4FC993(callback_reference);
-  if (sub_4C1003())
+  create_event_callback_reference(&callback_reference, 4);
+  dispatch_interface_event_and_release_temporary_object(callback_reference);
+  if (has_animation_resource_manager())
     stop_and_clear_animator_state(
         (uint32_t *)(uintptr_t)engine_state[8]);
 
-  sub_55539C(11, 1250);
+  stop_soundtrack_instances_by_flags(11, 1250);
   release_interface_recipient_list(event_data);
-  return sub_486530();
+  return unlock_scene_and_resume_engine_clock();
 }
 
 int __stdcall get_stage_transition_vocabulary_id(int location_id)
@@ -682,13 +682,13 @@ uint32_t *__thiscall find_stage_scene_data_object(uint32_t *manager,
                                                   uint32_t *result,
                                                   char *name)
 {
-  return sub_45DA68((uint32_t *)(void *)(manager + 28), result, name);
+  return find_and_retain_string_map_value((uint32_t *)(void *)(manager + 28), result, name);
 }
 
 char **__thiscall find_stage_scene_data_string(uint32_t *manager,
                                                char **result, char *name)
 {
-  return sub_45DACE((uint32_t *)(void *)(manager + 28), result, name);
+  return find_and_retain_string_map_string_value((uint32_t *)(void *)(manager + 28), result, name);
 }
 
 void __thiscall schedule_or_update_stage_timer(uint32_t *manager,
@@ -700,20 +700,20 @@ void __thiscall schedule_or_update_stage_timer(uint32_t *manager,
       (const uint32_t *)(uintptr_t)manager[12];
 
   for (; timer_entry != timer_end; ++timer_entry) {
-    if (sub_5542E3((int)*timer_entry, noun_id, verb_id, duration))
+    if (update_matching_stage_timer((int)*timer_entry, noun_id, verb_id, duration))
       return;
   }
 
-  uint16_t *timer = sub_554122(
-      (uint16_t *)(void *)sub_55406D(64), noun_id, verb_id, duration);
+  uint16_t *timer = construct_stage_timer(
+      (uint16_t *)(void *)allocate_registered_stage_timer(64), noun_id, verb_id, duration);
   uint32_t *timer_words = (uint32_t *)(void *)timer;
   timer_words[7] = manager[2];
   timer_words[8] = (uint16_t)timer[26] | 0x10000u;
-  sub_557F62((int)(uintptr_t)timer);
+  start_stage_timer((int)(uintptr_t)timer);
 
   uint32_t *timer_collection = manager + 10;
   uint32_t timer_address = (uint32_t)(uintptr_t)timer;
-  sub_555AC2((int)(uintptr_t)timer_collection, &timer_address);
+  append_stage_timer_to_collection((int)(uintptr_t)timer_collection, &timer_address);
 
   const uint32_t begin = timer_collection[1];
   const uint32_t end = timer_collection[2];
@@ -756,24 +756,24 @@ void __thiscall handle_stage_manager_notification(uint32_t *manager,
     uint32_t *timer = (uint32_t *)(uintptr_t)*timer_entry;
     uint32_t *event_dispatcher =
         (uint32_t *)(uintptr_t)application_engine_state[7];
-    if (!sub_4078BB(event_dispatcher) || __uncaught_exception()) {
+    if (!is_event_dispatcher_ready(event_dispatcher) || __uncaught_exception()) {
       timer[5] = 2000;
-      sub_557F62((int)(uintptr_t)timer);
+      start_stage_timer((int)(uintptr_t)timer);
       return;
     }
 
     const int noun_id = (int)timer[14];
     const int verb_id = (int)timer[15];
-    sub_555AD3(manager + 10, (int)(uintptr_t)timer_entry);
+    remove_stage_timer_from_collection(manager + 10, (int)(uintptr_t)timer_entry);
     typedef void (__thiscall *DestroyStageTimer)(uint32_t *timer,
                                                  int free_memory);
     DestroyStageTimer destroy_timer =
         (DestroyStageTimer)(uintptr_t)timer[0];
     destroy_timer(timer, 1);
 
-    int *event_targets = sub_408A6D(event_dispatcher);
-    uint32_t **target = sub_50303A(event_targets, noun_id);
-    sub_40764E(event_dispatcher, elapsed, noun_id, verb_id, target, 1, 0);
+    int *event_targets = get_last_current_noun_collection_entry(event_dispatcher);
+    uint32_t **target = find_noun_object_by_id(event_targets, noun_id);
+    try_dispatch_action(event_dispatcher, elapsed, noun_id, verb_id, target, 1, 0);
   } else if (notification_type == 2) {
     detach_game_layer_18(
         (uint32_t *)(uintptr_t)application_engine_state[18]);
@@ -782,20 +782,20 @@ void __thiscall handle_stage_manager_notification(uint32_t *manager,
 
 int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
 {
-  sub_4864E5(NULL);
+  pause_engine_clock_and_lock_scene(NULL);
   manager[8] = (uint32_t)get_stage_transition_vocabulary_id(
       (int)manager[5]);
 
   const int location_id = (int)manager[4];
   if (location_id != 47 && location_id != 0) {
-    uint32_t *scene_data_map = sub_551F4F(76);
+    uint32_t *scene_data_map = allocate_registered_stage(76);
     int scene_data = scene_data_map
-        ? sub_551FEE((int)(uintptr_t)scene_data_map,
+        ? construct_stage_scene_data((int)(uintptr_t)scene_data_map,
                      (const char *)(uintptr_t)manager[4], (int)manager[5])
         : 0;
     if ((int)manager[3] != scene_data) {
       if (manager[3] != 0)
-        sub_555C09((void *)(uintptr_t)manager[3], 1);
+        release_stage_reference((void *)(uintptr_t)manager[3], 1);
       manager[3] = (uint32_t)scene_data;
     }
     update_stage_manager_scene_cache(manager);
@@ -823,8 +823,8 @@ int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
   ((uint8_t *)(void *)flag_manager)[location_id + 6356] = 1;
 
   uint32_t *callback_reference = NULL;
-  sub_4085FD(&callback_reference, 1);
-  sub_4FC993(callback_reference);
+  create_event_callback_reference(&callback_reference, 1);
+  dispatch_interface_event_and_release_temporary_object(callback_reference);
 
   if (location_id != 47 && location_id != 0) {
     const int input_state =
@@ -837,7 +837,7 @@ int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
           "Skipping SCENE:ENTER (you held down the shift key)...\n",
           (size_t)0xFFFFFFFFu);
     } else {
-      sub_40764E(
+      try_dispatch_action(
           (uint32_t *)(uintptr_t)application_engine_state[7], elapsed,
           1037, 51, NULL, 1, 0);
     }
@@ -845,5 +845,5 @@ int __thiscall handle_stage_scene_entry(uint32_t *manager, double elapsed)
 
   update_active_soundtrack_instances(
       (uint32_t *)(uintptr_t)application_engine_state[23]);
-  return sub_486530();
+  return unlock_scene_and_resume_engine_clock();
 }

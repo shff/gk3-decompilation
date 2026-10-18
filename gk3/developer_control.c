@@ -9,17 +9,17 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_764F48[];
+extern uint32_t developer_control_type_descriptor[];
 extern int __thiscall construct_developer_control(int object);
 extern int __thiscall populate_developer_control_menu(int developer_control);
 extern int __thiscall attach_developer_control_to_interface(
     uint8_t *developer_control);
-extern int __thiscall nullsub_109(uint32_t object);
+extern int __thiscall developer_control_shutdown_noop(uint32_t object);
 
 uint32_t *__cdecl allocate_registered_developer_control(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_764F48,
+  find_or_create_registry_entry(developer_control_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -48,7 +48,7 @@ int initialize_developer_control(uint32_t *developer_control)
 
 int shutdown_developer_control(uint32_t *developer_control)
 {
-  return nullsub_109((uint32_t)(uintptr_t)developer_control);
+  return developer_control_shutdown_noop((uint32_t)(uintptr_t)developer_control);
 }
 
 char __thiscall is_developer_control_option_enabled(

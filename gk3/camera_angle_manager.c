@@ -14,7 +14,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7640B8[];
+extern uint32_t camera_angle_manager_type_descriptor[];
 extern uint32_t camera_angle_type_registry[15];
 extern int camera_angle_manager_registry_adjustment;
 extern int camera_angle_registry_adjustment;
@@ -497,7 +497,7 @@ uint32_t *__thiscall destroy_camera_angle_manager_members(uint32_t *manager)
   clear_camera_angles(manager);
   destroy_camera_angle_map(manager + 1);
   return erase_map_entry_impl(
-      unk_7640B8,
+      camera_angle_manager_type_descriptor,
       (uint32_t)camera_angle_manager_registry_adjustment
           + ((uintptr_t)manager != 0
                  ? (uint32_t)(uintptr_t)(manager + 1)
@@ -541,7 +541,7 @@ void __thiscall initialize_camera_angle_map(uint32_t *map)
 char *__thiscall construct_camera_angle_manager(char *object)
 {
   char default_value;
-  find_or_create_registry_entry(unk_7640B8,
+  find_or_create_registry_entry(camera_angle_manager_type_descriptor,
              (uint32_t)(uintptr_t)&object[camera_angle_manager_registry_adjustment + 4]);
   object[12] = 0;
   object[4] = default_value;
@@ -555,7 +555,7 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
                                                             int unused)
 {
   char default_value;
-  find_or_create_registry_entry(unk_7640B8,
+  find_or_create_registry_entry(camera_angle_manager_type_descriptor,
              (uint32_t)(uintptr_t)&object[camera_angle_manager_registry_adjustment + 4]);
   object[12] = 0;
   object[4] = default_value;
@@ -568,7 +568,7 @@ char *__thiscall construct_registered_camera_angle_manager(char *object,
 uint32_t *allocate_registered_camera_angle_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7640B8,
+  find_or_create_registry_entry(camera_angle_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

@@ -10,7 +10,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_765C18[];
+extern uint32_t game_state_type_descriptor[];
 extern int game_state_base_offset_adjustment;
 extern int hands_off_state_type_descriptor[15];
 extern int action_skipper_type_descriptor[15];
@@ -59,7 +59,7 @@ extern int log_engine_message(int engine_address, const char *format, ...);
 extern int game_engine_address;
 extern int game_state_symbol_default[8];
 extern char *game_state_names[70];
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern const char Key[4];
 extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                            const char *field_name,
@@ -213,7 +213,7 @@ uint32_t *__thiscall construct_game_state(uint32_t *object)
   uint8_t initial_value = 0;
 
   find_or_create_registry_entry(
-      unk_765C18,
+      game_state_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)game_state_base_offset_adjustment);
   construct_game_state_stack(object + 2, &initial_value);
@@ -450,7 +450,7 @@ char __cdecl serialize_playing_action_state_lock(uint8_t *serializer,
 {
   char locked = serializer[4] ? (char)(*state_lock != 0) : 0;
   char result = serialize_boolean_field(serializer, field_name, &locked,
-                                        &byte_6A6454);
+                                        &default_false_boolean_value);
   if (!serializer[4] && locked) {
     uint32_t *transition = allocate_tracked_memory(sizeof(uint32_t));
     if (transition != NULL)
@@ -467,7 +467,7 @@ char __cdecl serialize_skipping_action_state_lock(uint8_t *serializer,
 {
   char locked = serializer[4] ? (char)(*state_lock != 0) : 0;
   char result = serialize_boolean_field(serializer, field_name, &locked,
-                                        &byte_6A6454);
+                                        &default_false_boolean_value);
   if (!serializer[4] && locked) {
     uint32_t *transition = allocate_tracked_memory(sizeof(uint32_t));
     if (transition != NULL)
@@ -484,7 +484,7 @@ char __cdecl serialize_playing_movie_state_lock(uint8_t *serializer,
 {
   char locked = serializer[4] ? (char)(*state_lock != 0) : 0;
   char result = serialize_boolean_field(serializer, field_name, &locked,
-                                        &byte_6A6454);
+                                        &default_false_boolean_value);
   if (!serializer[4] && locked) {
     uint32_t *transition = allocate_tracked_memory(sizeof(uint32_t));
     if (transition != NULL)
@@ -501,7 +501,7 @@ char __cdecl serialize_sidney_hands_off_state_lock(uint8_t *serializer,
 {
   char locked = serializer[4] ? (char)(*state_lock != 0) : 0;
   char result = serialize_boolean_field(serializer, field_name, &locked,
-                                        &byte_6A6454);
+                                        &default_false_boolean_value);
   if (!serializer[4] && locked) {
     uint32_t *transition = allocate_tracked_memory(sizeof(uint32_t));
     if (transition != NULL)
@@ -584,7 +584,7 @@ char __thiscall serialize_game_state_stack(uint8_t *serializer,
 uint32_t *allocate_registered_game_state(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_765C18,
+  find_or_create_registry_entry(game_state_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -601,7 +601,7 @@ uint32_t *__thiscall destroy_game_state(uint32_t *object)
   release_hands_off_state(object + 1);
   clear_game_state_stack(object + 2);
   return erase_map_entry_impl(
-      unk_765C18,
+      game_state_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)game_state_base_offset_adjustment);
 }

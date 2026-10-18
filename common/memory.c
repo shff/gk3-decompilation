@@ -7,7 +7,7 @@ extern int game_engine_address;
 extern int __thiscall reclaim_engine_resources(char *engine,
                                                 int target_bytes);
 extern int tracked_memory_lock_initialized;
-extern CRITICAL_SECTION stru_76D518;
+extern CRITICAL_SECTION tracked_memory_lock;
 extern int tracked_memory_total_bytes;
 
 /* Microsoft C runtime import (named malloc_1 by IDA). */
@@ -18,7 +18,7 @@ uint32_t *__cdecl allocate_tracked_memory(int size)
   uint32_t *allocation;
 
   if (tracked_memory_lock_initialized)
-    EnterCriticalSection(&stru_76D518);
+    EnterCriticalSection(&tracked_memory_lock);
 
   allocation = malloc_1(size + (int)sizeof(*allocation));
   if (!allocation) {
@@ -50,7 +50,7 @@ allocation_succeeded:
   *allocation = (uint32_t)size;
   tracked_memory_total_bytes += size;
   if (tracked_memory_lock_initialized)
-    LeaveCriticalSection(&stru_76D518);
+    LeaveCriticalSection(&tracked_memory_lock);
   return allocation + 1;
 }
 
@@ -58,11 +58,11 @@ void __cdecl free_tracked_memory(int address)
 {
   if (address) {
     if (tracked_memory_lock_initialized)
-      EnterCriticalSection(&stru_76D518);
+      EnterCriticalSection(&tracked_memory_lock);
     tracked_memory_total_bytes -=
         *(uint32_t *)(uintptr_t)(address - (int)sizeof(uint32_t));
     free((void *)(uintptr_t)(address - (int)sizeof(uint32_t)));
     if (tracked_memory_lock_initialized)
-      LeaveCriticalSection(&stru_76D518);
+      LeaveCriticalSection(&tracked_memory_lock);
   }
 }

@@ -13,100 +13,100 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_76CFD0[];
-extern int dword_76CFCC;
-extern uint32_t off_6EE4E0[];
-extern uint32_t off_6EE384;
-extern uint32_t off_6EE340;
-extern uint32_t off_6EE49C;
+extern uint32_t soundtrack_manager_type_descriptor[];
+extern int soundtrack_manager_base_offset_adjustment;
+extern uint32_t soundtrack_manager_vtable[];
+extern uint32_t soundtrack_instance_vtable;
+extern uint32_t soundtrack_instance_event_target_vtable;
+extern uint32_t soundtrack_snapshot_vtable;
 extern uint32_t broadcast_target_type_descriptor[];
 extern int broadcast_target_base_offset_adjustment;
 extern uint32_t registered_object_base_vtable[];
 extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t key);
 extern const char Key[];
-extern uint32_t dword_76D050[15];
-extern int dword_76D04C;
-extern uint32_t dword_76D010[15];
-extern int dword_76D00C;
-extern char byte_76CFC9;
-extern int dword_76D550;
+extern uint32_t soundtrack_instance_type_descriptor[15];
+extern int soundtrack_instance_base_offset_adjustment;
+extern uint32_t soundtrack_snapshot_type_descriptor[15];
+extern int soundtrack_snapshot_base_offset_adjustment;
+extern char soundtrack_snapshot_registry_shutdown_flag;
+extern int registered_type_descriptor_count;
 extern int game_engine_instance_address;
 extern uint8_t *__thiscall construct_registered_object_base(uint8_t *object);
 extern uint32_t *__stdcall allocate_soundtrack_list_node(uint32_t *previous,
                                                          uint32_t *next);
-extern uint32_t *__cdecl sub_4B8C45(int size);
-extern uint8_t *__cdecl sub_440E04(int size);
-extern uint8_t *__cdecl sub_54F4E4(int entry);
-extern int *__cdecl sub_54FA5E(uint32_t *entry);
-extern int __thiscall sub_54FB62(int object);
+extern uint32_t *__cdecl allocate_registered_gconfig_file(int size);
+extern uint8_t *__cdecl allocate_registered_soundtrack_snapshot(int size);
+extern uint8_t *__cdecl deserialize_soundtrack_sound_entry(int entry);
+extern int *__cdecl deserialize_soundtrack_wait_entry(uint32_t *entry);
+extern int __thiscall construct_soundtrack_presentation_entry(int object);
 extern int __thiscall find_map_value_impl(uint32_t *map, uint32_t key);
-extern void __thiscall sub_551655(uint32_t *list);
-extern uint32_t *__thiscall sub_551818(uint32_t *list, uint32_t *context,
+extern void __thiscall destroy_soundtrack_list_storage(uint32_t *list);
+extern uint32_t *__thiscall erase_soundtrack_list_range(uint32_t *list, uint32_t *context,
                                       uint32_t *first, uint32_t *sentinel);
-extern uint32_t *__thiscall sub_5517E0(uint32_t *list, uint32_t *result,
+extern uint32_t *__thiscall append_soundtrack_manager_list_node(uint32_t *list, uint32_t *result,
                                        int list_end, uint32_t **value);
 uint32_t *__thiscall reset_soundtrack_playback(int object);
-extern int __stdcall sub_55131E(int16_t identifier, int list_address);
-extern void __thiscall sub_551694(uint32_t *collection, uint32_t **value);
-extern int __thiscall sub_551631(int list_address, uint32_t *value);
-extern char *__thiscall sub_5A9220(char *string, const char *value);
-extern char __thiscall sub_5A9D20(const char *string, int mode);
-extern uint32_t *__thiscall sub_5AA570(uint32_t *string);
-extern char __thiscall sub_5A9850(uint32_t *string, int mode);
-extern int *__thiscall sub_406C06(int *reference, int mode);
+extern int __stdcall find_soundtrack_list_entry_by_identifier(int16_t identifier, int list_address);
+extern void __thiscall remove_soundtrack_instance_from_manager(uint32_t *collection, uint32_t **value);
+extern int __thiscall append_soundtrack_snapshot_entry(int list_address, uint32_t *value);
+extern char *__thiscall construct_named_gconfig_file(char *string, const char *value);
+extern char __thiscall save_gconfig_file(const char *string, int mode);
+extern uint32_t *__thiscall destroy_gconfig_file(uint32_t *string);
+extern char __thiscall load_gconfig_file(uint32_t *string, int mode);
+extern int *__thiscall replace_soundtrack_event_reference_and_queue_previous(int *reference, int mode);
 extern int __thiscall tidy_std_string_storage(char *storage, char mode);
 extern char *__thiscall assign_std_string_storage(char *storage,
                                                   const char *value,
                                                   size_t length);
-extern int __thiscall sub_4296DB(int string, uint8_t *value);
+extern int __thiscall add_soundtrack_snapshot_name(int string, uint8_t *value);
 extern uint32_t *__thiscall find_or_create_registry_entry(uint32_t *registry,
                                        uint32_t address);
-extern int *__thiscall sub_566840(uint32_t *registry, int name,
+extern int *__thiscall register_runtime_type_descriptor(uint32_t *registry, int name,
                                   uint32_t *version, int object_size,
                                   int growth, int factory, int serializer,
                                   int first_flag, int second_flag,
                                   int *cookie);
-extern void __thiscall sub_566BE0(uint32_t *registry);
-extern uint32_t *__stdcall sub_551766(uint32_t *previous, uint32_t *next);
-extern int __thiscall sub_483EBE(int object, int mode);
-extern int __thiscall sub_483D64(int object, int first, int second,
+extern void __thiscall destroy_runtime_type_descriptor(uint32_t *registry);
+extern uint32_t *__stdcall allocate_soundtrack_list_node_with_links(uint32_t *previous, uint32_t *next);
+extern int __thiscall initialize_registered_soundtrack_instance_active_object(int object, int mode);
+extern int __thiscall initialize_soundtrack_instance_active_object(int object, int first, int second,
                                  int third, int flags, int context);
-extern uint32_t *__thiscall sub_483FD1(int object);
-extern void __thiscall sub_5515C0(uint32_t *collection);
-extern int __thiscall sub_5517C0(int *collection);
-extern char __cdecl sub_551D01(uint32_t *first, uint32_t *sentinel,
+extern uint32_t *__thiscall destroy_soundtrack_instance_active_object(int object);
+extern void __thiscall destroy_soundtrack_instance_node_list(uint32_t *collection);
+extern int __thiscall clear_soundtrack_snapshot_member_array(int *collection);
+extern char __cdecl destroy_soundtrack_instance_list_objects(uint32_t *first, uint32_t *sentinel,
                                char mode);
 extern int __thiscall destroy_string_vector(int *vector);
-extern char __thiscall sub_436CF9(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_soundtrack_snapshot_names(uint8_t *serializer, const char *field,
                                   unsigned int value, int flags);
-extern char __thiscall sub_551C3C(uint8_t *serializer, const char *field,
+extern char __thiscall serialize_soundtrack_snapshot_members(uint8_t *serializer, const char *field,
                                   unsigned int value, char flags);
 extern int *__thiscall replace_event_reference_and_queue_previous(
     int *reference, int *replacement);
-extern int __cdecl sub_551CAD(int list_address, uint32_t **value);
-extern uint32_t *__thiscall sub_5AA650(uint32_t *state, uint32_t **cursor);
-extern uint32_t *__thiscall sub_5AA630(uint32_t *cursor, uint32_t **state);
-extern char *__thiscall sub_5AA150(uint32_t *cursor);
-extern int __thiscall sub_5AA680(char *cursor, uint32_t **state);
-extern int __thiscall sub_5AA170(int state, char *section);
-extern int __thiscall sub_5AA330(uint32_t *state, char *name, int fallback);
-extern int __thiscall sub_5AA350(uint32_t *state, char *name, int fallback);
-extern int __thiscall sub_5AA400(uint32_t *state, char *name, int fallback);
-extern int __thiscall sub_475757(char *value, int *result);
-extern uint32_t *__thiscall sub_5516F6(uint32_t *list, uint32_t *result,
+extern int __cdecl soundtrack_list_contains_instance(int list_address, uint32_t **value);
+extern uint32_t *__thiscall get_first_config_entry(uint32_t *state, uint32_t **cursor);
+extern uint32_t *__thiscall set_config_entry_iterator(uint32_t *cursor, uint32_t **state);
+extern char *__thiscall get_config_entry_name(uint32_t *cursor);
+extern int __thiscall get_next_config_entry(char *cursor, uint32_t **state);
+extern int __thiscall select_or_create_gconfig_section(int state, char *section);
+extern int __thiscall get_config_string_value(uint32_t *state, char *name, int fallback);
+extern int __thiscall get_config_integer_value(uint32_t *state, char *name, int fallback);
+extern int __thiscall get_config_boolean_value(uint32_t *state, char *name, int fallback);
+extern int __thiscall parse_soundtrack_type_name(char *value, int *result);
+extern uint32_t *__thiscall append_soundtrack_instance_list_node(uint32_t *list, uint32_t *result,
                                        int sentinel, int *value);
-extern uint32_t *__thiscall sub_55159C(int list, int *result, int *value);
-extern int __thiscall sub_5505DD(uint32_t *instance);
-extern int __thiscall sub_4EDBEE(int object);
+extern uint32_t *__thiscall append_soundtrack_presentation_sound(int list, int *result, int *value);
+extern int __thiscall get_soundtrack_instance_load_result(uint32_t *instance);
+extern int __thiscall get_elapsed_game_time(int object);
 extern int __cdecl log_source_message(int source, int line, int severity,
                               int flags, const char *format, ...);
-extern int __thiscall sub_5A96D0(uint32_t *serializer, const char *name);
-extern void __thiscall sub_5AA1C0(uint32_t *serializer, char *name,
+extern int __thiscall create_gconfig_section_entry(uint32_t *serializer, const char *name);
+extern void __thiscall write_config_string_entry(uint32_t *serializer, char *name,
                                  const char *value);
-extern void __thiscall sub_5AA1E0(uint32_t *serializer, char *name,
+extern void __thiscall write_config_integer_entry(uint32_t *serializer, char *name,
                                  int value);
-extern const char *__cdecl sub_475726(int soundtrack_type);
+extern const char *__cdecl soundtrack_type_name(int soundtrack_type);
 
 void __thiscall set_soundtrack_instance_active(uint32_t *manager,
                                                int instance_address,
@@ -144,7 +144,7 @@ int __thiscall find_soundtrack_node_index(uint32_t *instance)
 uint32_t *__cdecl allocate_registered_soundtrack_instance(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(dword_76D050, (uint32_t)(uintptr_t)memory)[2] = 1;
+  find_or_create_registry_entry(soundtrack_instance_type_descriptor, (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
 
@@ -161,20 +161,20 @@ uint32_t *__thiscall construct_soundtrack_instance(uint8_t *object,
       *(int *)(uintptr_t)(context_object + 32);
   uint32_t *instance = (uint32_t *)(void *)object;
 
-  sub_483D64((int)(uintptr_t)object, 0, 0, 0, 1,
+  initialize_soundtrack_instance_active_object((int)(uintptr_t)object, 0, 0, 0, 1,
              active_object_context);
-  find_or_create_registry_entry(dword_76D050,
-             (uint32_t)(uintptr_t)object + dword_76D04C + 64);
+  find_or_create_registry_entry(soundtrack_instance_type_descriptor,
+             (uint32_t)(uintptr_t)object + soundtrack_instance_base_offset_adjustment + 64);
   object[64] = name_high_byte;
   tidy_std_string_storage((char *)object + 64, 0);
   instance[24] = 0;
   instance[25] = 0;
   object[104] = 1;
-  instance[28] = (uint32_t)(uintptr_t)sub_551766(NULL, NULL);
+  instance[28] = (uint32_t)(uintptr_t)allocate_soundtrack_list_node_with_links(NULL, NULL);
   instance[29] = 0;
   object[108] = name_high_byte;
-  instance[0] = (uint32_t)(uintptr_t)&off_6EE384;
-  instance[3] = (uint32_t)(uintptr_t)&off_6EE340;
+  instance[0] = (uint32_t)(uintptr_t)&soundtrack_instance_vtable;
+  instance[3] = (uint32_t)(uintptr_t)&soundtrack_instance_event_target_vtable;
   assign_std_string_storage((char *)object + 64, name, strlen(name));
   instance[20] = 4;
   object[84] = 0;
@@ -190,19 +190,19 @@ uint32_t *__thiscall construct_registered_soundtrack_instance(
   uint8_t *bytes = (uint8_t *)(void *)object;
   const uint8_t default_value = (uint8_t)((uint32_t)mode >> 24);
 
-  sub_483EBE((int)(uintptr_t)object, mode);
-  find_or_create_registry_entry(dword_76D050,
-             (uint32_t)(uintptr_t)bytes + dword_76D04C + 64);
+  initialize_registered_soundtrack_instance_active_object((int)(uintptr_t)object, mode);
+  find_or_create_registry_entry(soundtrack_instance_type_descriptor,
+             (uint32_t)(uintptr_t)bytes + soundtrack_instance_base_offset_adjustment + 64);
   bytes[64] = default_value;
   tidy_std_string_storage((char *)bytes + 64, 0);
   object[24] = 0;
   object[25] = 0;
   bytes[104] = 1;
   bytes[108] = default_value;
-  object[28] = (uint32_t)(uintptr_t)sub_551766(NULL, NULL);
+  object[28] = (uint32_t)(uintptr_t)allocate_soundtrack_list_node_with_links(NULL, NULL);
   object[29] = 0;
-  object[0] = (uint32_t)(uintptr_t)&off_6EE384;
-  object[3] = (uint32_t)(uintptr_t)&off_6EE340;
+  object[0] = (uint32_t)(uintptr_t)&soundtrack_instance_vtable;
+  object[3] = (uint32_t)(uintptr_t)&soundtrack_instance_event_target_vtable;
   object[20] = 4;
   bytes[84] = 0;
   object[22] = 0;
@@ -222,19 +222,19 @@ uint32_t *__cdecl create_registered_soundtrack_instance(void)
 uint32_t *__thiscall destroy_soundtrack_instance_members(
     uint32_t *instance)
 {
-  *instance = (uint32_t)(uintptr_t)&off_6EE384;
-  instance[3] = (uint32_t)(uintptr_t)&off_6EE340;
+  *instance = (uint32_t)(uintptr_t)&soundtrack_instance_vtable;
+  instance[3] = (uint32_t)(uintptr_t)&soundtrack_instance_event_target_vtable;
   uint32_t *sentinel = (uint32_t *)(uintptr_t)instance[28];
-  sub_551D01((uint32_t *)(uintptr_t)*sentinel, sentinel,
+  destroy_soundtrack_instance_list_objects((uint32_t *)(uintptr_t)*sentinel, sentinel,
              (char)(uintptr_t)instance);
-  sub_5515C0(instance + 27);
-  sub_406C06((int *)(void *)(instance + 24), 0);
+  destroy_soundtrack_instance_node_list(instance + 27);
+  replace_soundtrack_event_reference_and_queue_previous((int *)(void *)(instance + 24), 0);
   tidy_std_string_storage((char *)(void *)instance + 64, 1);
   erase_map_entry_impl(
-      dword_76D050,
-      (uint32_t)dword_76D04C +
+      soundtrack_instance_type_descriptor,
+      (uint32_t)soundtrack_instance_base_offset_adjustment +
           (instance != NULL ? (uint32_t)(uintptr_t)(instance + 16) : 0));
-  return sub_483FD1((int)(uintptr_t)instance);
+  return destroy_soundtrack_instance_active_object((int)(uintptr_t)instance);
 }
 
 int __thiscall release_registered_soundtrack_instance(
@@ -287,11 +287,11 @@ uint32_t *__thiscall soundtrack_node_at_index(uint32_t *instance, int index)
 uint32_t *__thiscall append_soundtrack_sound_entry(uint32_t *instance,
                                                    int entry_address)
 {
-  uint8_t *sound = sub_54F4E4(entry_address);
+  uint8_t *sound = deserialize_soundtrack_sound_entry(entry_address);
   if (sound != NULL) {
     int entry = (int)(uintptr_t)sound;
     int result;
-    return sub_5516F6(instance + 27, (uint32_t *)(void *)&result,
+    return append_soundtrack_instance_list_node(instance + 27, (uint32_t *)(void *)&result,
                       (int)instance[28], &entry);
   }
   return (uint32_t *)(void *)sound;
@@ -300,7 +300,7 @@ uint32_t *__thiscall append_soundtrack_sound_entry(uint32_t *instance,
 uint32_t *__thiscall append_soundtrack_presentation_entry(
     uint32_t *instance, int entry_address)
 {
-  uint8_t *sound = sub_54F4E4(entry_address);
+  uint8_t *sound = deserialize_soundtrack_sound_entry(entry_address);
   uint32_t *presentation;
   int result;
 
@@ -319,15 +319,15 @@ uint32_t *__thiscall append_soundtrack_presentation_entry(
 
   presentation = (uint32_t *)allocate_tracked_memory(28);
   if (presentation != NULL)
-    sub_54FB62((int)(uintptr_t)presentation);
+    construct_soundtrack_presentation_entry((int)(uintptr_t)presentation);
   int presentation_address = (int)(uintptr_t)presentation;
-  sub_5516F6(instance + 27, (uint32_t *)(void *)&result,
+  append_soundtrack_instance_list_node(instance + 27, (uint32_t *)(void *)&result,
              (int)instance[28], &presentation_address);
 
 append_sound:
   {
     int sound_address = (int)(uintptr_t)sound;
-    return sub_55159C((int)(uintptr_t)(presentation + 3), &result,
+    return append_soundtrack_presentation_sound((int)(uintptr_t)(presentation + 3), &result,
                       &sound_address);
   }
 }
@@ -335,11 +335,11 @@ append_sound:
 int *__thiscall append_soundtrack_wait_entry(uint32_t *instance,
                                              int *entry)
 {
-  int *wait = sub_54FA5E((uint32_t *)entry);
+  int *wait = deserialize_soundtrack_wait_entry((uint32_t *)entry);
   if (wait != NULL) {
     int wait_address = (int)(uintptr_t)wait;
     int result;
-    return (int *)sub_5516F6(instance + 27, (uint32_t *)(void *)&result,
+    return (int *)append_soundtrack_instance_list_node(instance + 27, (uint32_t *)(void *)&result,
                              (int)instance[28], &wait_address);
   }
   return wait;
@@ -349,10 +349,10 @@ uint32_t *__thiscall restore_soundtrack_serialized_state(
     uint32_t *instance, int state_address)
 {
   uint32_t *state = (uint32_t *)(uintptr_t)state_address;
-  const char *default_type = sub_475726((int)instance[20]);
-  char *soundtrack_type = (char *)(uintptr_t)(uint32_t)sub_5AA330(
+  const char *default_type = soundtrack_type_name((int)instance[20]);
+  char *soundtrack_type = (char *)(uintptr_t)(uint32_t)get_config_string_value(
       state, "SoundType", (int)(uintptr_t)default_type);
-  if (!sub_475757(soundtrack_type, (int *)(void *)(instance + 20))) {
+  if (!parse_soundtrack_type_name(soundtrack_type, (int *)(void *)(instance + 20))) {
     log_source_message(
         (int)(uintptr_t)"z:\\Proj\\GK3\\gk3app\\Source\\SoundMgr.cpp",
         648, 5, 0, "SoundTrack(%s) contains Illegal SoundType(%s)\n",
@@ -360,10 +360,10 @@ uint32_t *__thiscall restore_soundtrack_serialized_state(
     instance[20] = 4;
   }
 
-  sub_5AA170(state_address, "Restore");
-  if (sub_5AA350(state, "Version", 0) > 0) {
-    int playback_state = sub_5AA350(state, "State", (int)instance[13]);
-    int remaining_ms = sub_5AA350(state, "MS", 0);
+  select_or_create_gconfig_section(state_address, "Restore");
+  if (get_config_integer_value(state, "Version", 0) > 0) {
+    int playback_state = get_config_integer_value(state, "State", (int)instance[13]);
+    int remaining_ms = get_config_integer_value(state, "MS", 0);
     if (remaining_ms <= 0) {
       if (playback_state >= 0)
         --playback_state;
@@ -376,11 +376,11 @@ uint32_t *__thiscall restore_soundtrack_serialized_state(
     }
     instance[13] = (uint32_t)playback_state;
     ((uint8_t *)(void *)instance)[84] =
-        (uint8_t)sub_5AA400(state, "Stopping",
+        (uint8_t)get_config_boolean_value(state, "Stopping",
                            ((uint8_t *)(void *)instance)[84]);
 
-    int current_node_index = sub_5AA350(state, "CurrentNode", -1);
-    int current_sound_index = sub_5AA350(state, "CurrentSound", -1);
+    int current_node_index = get_config_integer_value(state, "CurrentNode", -1);
+    int current_sound_index = get_config_integer_value(state, "CurrentSound", -1);
     uint32_t current_node_address = 0;
     uint32_t *current_node =
         soundtrack_node_at_index(instance, current_node_index);
@@ -398,7 +398,7 @@ uint32_t *__thiscall restore_soundtrack_serialized_state(
       }
       instance[22] = (uint32_t)(uintptr_t)current_sound;
       if (current_sound != NULL) {
-        current_sound[3] = (uint32_t)sub_5AA350(
+        current_sound[3] = (uint32_t)get_config_integer_value(
             state, "CurrentSoundHandle", 0);
       }
     }
@@ -415,16 +415,16 @@ int __thiscall insert_soundtrack_snapshot_entry(void *snapshot,
   name_storage[0] = (char)((uintptr_t)name_storage >> 24);
   tidy_std_string_storage(name_storage, 0);
   assign_std_string_storage(name_storage, name, strlen(name));
-  sub_4296DB((int)(uintptr_t)((uint8_t *)snapshot + 4),
+  add_soundtrack_snapshot_name((int)(uintptr_t)((uint8_t *)snapshot + 4),
              (uint8_t *)name_storage);
   tidy_std_string_storage(name_storage, 1);
-  return sub_551631((int)(uintptr_t)snapshot + 20, &serialized_entry);
+  return append_soundtrack_snapshot_entry((int)(uintptr_t)snapshot + 20, &serialized_entry);
 }
 
 uint8_t *__thiscall construct_soundtrack_snapshot(uint8_t *object)
 {
-  find_or_create_registry_entry(dword_76D010,
-             (uint32_t)(uintptr_t)object + (uint32_t)dword_76D00C + 4);
+  find_or_create_registry_entry(soundtrack_snapshot_type_descriptor,
+             (uint32_t)(uintptr_t)object + (uint32_t)soundtrack_snapshot_base_offset_adjustment + 4);
   object[4] = 0;
   *(uint32_t *)(void *)(object + 8) = 0;
   *(uint32_t *)(void *)(object + 12) = 0;
@@ -433,7 +433,7 @@ uint8_t *__thiscall construct_soundtrack_snapshot(uint8_t *object)
   *(uint32_t *)(void *)(object + 24) = 0;
   *(uint32_t *)(void *)(object + 28) = 0;
   *(uint32_t *)(void *)(object + 32) = 0;
-  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&off_6EE49C;
+  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&soundtrack_snapshot_vtable;
   return object;
 }
 
@@ -441,8 +441,8 @@ uint8_t *__thiscall construct_registered_soundtrack_snapshot(
     uint8_t *object, int mode)
 {
   const uint8_t default_value = (uint8_t)((uint32_t)mode >> 24);
-  find_or_create_registry_entry(dword_76D010,
-             (uint32_t)(uintptr_t)object + (uint32_t)dword_76D00C + 4);
+  find_or_create_registry_entry(soundtrack_snapshot_type_descriptor,
+             (uint32_t)(uintptr_t)object + (uint32_t)soundtrack_snapshot_base_offset_adjustment + 4);
   object[4] = default_value;
   *(uint32_t *)(void *)(object + 8) = 0;
   *(uint32_t *)(void *)(object + 12) = 0;
@@ -451,13 +451,13 @@ uint8_t *__thiscall construct_registered_soundtrack_snapshot(
   *(uint32_t *)(void *)(object + 24) = 0;
   *(uint32_t *)(void *)(object + 28) = 0;
   *(uint32_t *)(void *)(object + 32) = 0;
-  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&off_6EE49C;
+  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)&soundtrack_snapshot_vtable;
   return object;
 }
 
 uint8_t *__cdecl create_registered_soundtrack_snapshot(void)
 {
-  uint8_t *memory = (uint8_t *)sub_440E04(36);
+  uint8_t *memory = (uint8_t *)allocate_registered_soundtrack_snapshot(36);
   return memory != NULL
              ? construct_registered_soundtrack_snapshot(memory, 0)
              : NULL;
@@ -466,7 +466,7 @@ uint8_t *__cdecl create_registered_soundtrack_snapshot(void)
 uint32_t *__thiscall destroy_soundtrack_snapshot_members(
     uint32_t *snapshot)
 {
-  *snapshot = (uint32_t)(uintptr_t)&off_6EE49C;
+  *snapshot = (uint32_t)(uintptr_t)&soundtrack_snapshot_vtable;
   uint32_t *entry_begin = (uint32_t *)(uintptr_t)snapshot[6];
   uint32_t *entry_end = (uint32_t *)(uintptr_t)snapshot[7];
   for (uint32_t *entry = entry_begin; entry != entry_end; ++entry) {
@@ -477,11 +477,11 @@ uint32_t *__thiscall destroy_soundtrack_snapshot_members(
       ((DestroySnapshotEntry)(uintptr_t)vtable[0])(object, 1);
     }
   }
-  sub_5517C0((int *)(void *)(snapshot + 5));
+  clear_soundtrack_snapshot_member_array((int *)(void *)(snapshot + 5));
   destroy_string_vector((int *)(void *)(snapshot + 1));
   return erase_map_entry_impl(
-      dword_76D010,
-      (uint32_t)dword_76D00C +
+      soundtrack_snapshot_type_descriptor,
+      (uint32_t)soundtrack_snapshot_base_offset_adjustment +
           (snapshot != NULL ? (uint32_t)(uintptr_t)(snapshot + 1) : 0));
 }
 
@@ -498,9 +498,9 @@ char __thiscall serialize_soundtrack_snapshot(uint32_t *snapshot,
                                               int flags)
 {
   (void)flags;
-  sub_436CF9(serializer, "pausedSndTracksNames",
+  serialize_soundtrack_snapshot_names(serializer, "pausedSndTracksNames",
              (unsigned int)(uintptr_t)(snapshot + 1), 3);
-  char result = sub_551C3C(serializer, "pausedSndTracks",
+  char result = serialize_soundtrack_snapshot_members(serializer, "pausedSndTracks",
                            (unsigned int)(uintptr_t)(snapshot + 5), 1);
   if (!serializer[4]) {
     uint32_t *serialized_entry =
@@ -530,8 +530,8 @@ char __cdecl serialize_registered_soundtrack_snapshot(
 
 int *__thiscall register_soundtrack_snapshot_type(void)
 {
-  return sub_566840(
-      dword_76D010, (int)(uintptr_t)"SoundTrackPauseCookie",
+  return register_runtime_type_descriptor(
+      soundtrack_snapshot_type_descriptor, (int)(uintptr_t)"SoundTrackPauseCookie",
       (uint32_t *)(uintptr_t)3, 36, 500,
       (int)(uintptr_t)create_registered_soundtrack_snapshot,
       (int)(uintptr_t)serialize_registered_soundtrack_snapshot, 0, 0, 0);
@@ -539,10 +539,10 @@ int *__thiscall register_soundtrack_snapshot_type(void)
 
 static void __cdecl shutdown_soundtrack_snapshot_registry(void)
 {
-  if ((byte_76CFC9 & 1) == 0) {
-    byte_76CFC9 |= 1;
-    sub_566BE0(dword_76D010);
-    --dword_76D550;
+  if ((soundtrack_snapshot_registry_shutdown_flag & 1) == 0) {
+    soundtrack_snapshot_registry_shutdown_flag |= 1;
+    destroy_runtime_type_descriptor(soundtrack_snapshot_type_descriptor);
+    --registered_type_descriptor_count;
   }
 }
 
@@ -554,20 +554,20 @@ int __cdecl initialize_soundtrack_snapshot_type(void)
 
 void initialize_soundtrack_snapshot_registry_offset(void)
 {
-  dword_76D00C = -4;
+  soundtrack_snapshot_base_offset_adjustment = -4;
 }
 
 int __thiscall load_soundtrack_instance_from_state(
     uint32_t *instance, uint32_t *serialized_state)
 {
   uint32_t *cursor = serialized_state;
-  const char *first_entry = (const char *)sub_5AA650(serialized_state, &cursor);
+  const char *first_entry = (const char *)get_first_config_entry(serialized_state, &cursor);
   int entry_address = (int)(uintptr_t)serialized_state;
 
   if (first_entry != NULL) {
     do {
-      sub_5AA630((uint32_t *)(uintptr_t)entry_address, &cursor);
-      const char *kind = sub_5AA150((uint32_t *)(uintptr_t)entry_address);
+      set_config_entry_iterator((uint32_t *)(uintptr_t)entry_address, &cursor);
+      const char *kind = get_config_entry_name((uint32_t *)(uintptr_t)entry_address);
       if (strcasecmp(kind, "SOUND") == 0) {
         append_soundtrack_sound_entry(instance, entry_address);
       } else if (strcasecmp(kind, "PRS") == 0) {
@@ -582,52 +582,52 @@ int __thiscall load_soundtrack_instance_from_state(
             559, 5, 0, "SndTrack::Load(%s): unknown sound type '%s'\n",
             (const char *)(uintptr_t)(entry_address + 4), kind);
       }
-    } while (sub_5AA680((char *)(uintptr_t)entry_address, &cursor));
+    } while (get_next_config_entry((char *)(uintptr_t)entry_address, &cursor));
   }
 
   restore_soundtrack_serialized_state(instance, entry_address);
-  return sub_5505DD(instance);
+  return get_soundtrack_instance_load_result(instance);
 }
 
 uint32_t *__thiscall serialize_soundtrack_instance(
     uint32_t *instance, uint32_t *serializer)
 {
-  sub_5A96D0(serializer, "SoundTrack");
-  sub_5AA1C0(serializer, "SoundType", sub_475726(instance[20]));
-  sub_5A96D0(serializer, "Restore");
-  sub_5AA1E0(serializer, "Version", 1);
+  create_gconfig_section_entry(serializer, "SoundTrack");
+  write_config_string_entry(serializer, "SoundType", soundtrack_type_name(instance[20]));
+  create_gconfig_section_entry(serializer, "Restore");
+  write_config_integer_entry(serializer, "Version", 1);
 
   const uint32_t duration = instance[11];
   if (duration != 0) {
-    const uint32_t elapsed = (uint32_t)sub_4EDBEE((int)(uintptr_t)(instance + 10));
+    const uint32_t elapsed = (uint32_t)get_elapsed_game_time((int)(uintptr_t)(instance + 10));
     const int remaining = elapsed < duration ? (int)(duration - elapsed) : 1;
-    sub_5AA1E0(serializer, "MS", remaining);
+    write_config_integer_entry(serializer, "MS", remaining);
   }
 
-  sub_5AA1E0(serializer, "State", (int)instance[13]);
+  write_config_integer_entry(serializer, "State", (int)instance[13]);
   if (((uint8_t *)instance)[84] != 0)
-    sub_5AA1E0(serializer, "Stopping", ((uint8_t *)instance)[84]);
+    write_config_integer_entry(serializer, "Stopping", ((uint8_t *)instance)[84]);
 
   uint32_t *current_node = (uint32_t *)(uintptr_t)instance[23];
   if (current_node != NULL) {
     const int node_index = find_soundtrack_node_index(instance);
     if (node_index >= 0)
-      sub_5AA1E0(serializer, "CurrentNode", node_index);
+      write_config_integer_entry(serializer, "CurrentNode", node_index);
 
     uint32_t *current_sound = (uint32_t *)(uintptr_t)instance[22];
     if (current_sound != NULL) {
       uint32_t *sound_node = (uint32_t *)(uintptr_t)current_node[2];
       const int sound_type = (int)sound_node[1];
       if (sound_type == 1) {
-        sub_5AA1E0(serializer, "CurrentSound", 0);
+        write_config_integer_entry(serializer, "CurrentSound", 0);
       } else if (sound_type == 3) {
-        sub_5AA1E0(serializer, "CurrentSound",
+        write_config_integer_entry(serializer, "CurrentSound",
                    find_soundtrack_member_index(
                        sound_node, (int)(uintptr_t)current_sound));
       } else {
         goto serialize_owned_entries;
       }
-      sub_5AA1E0(serializer, "CurrentSoundHandle",
+      write_config_integer_entry(serializer, "CurrentSoundHandle",
                  (int)current_sound[3]);
     }
   }
@@ -652,14 +652,14 @@ serialize_owned_entries:
 uint32_t *__thiscall find_soundtrack_by_id(uint32_t *manager,
                                            int16_t identifier)
 {
-  return (uint32_t *)(uintptr_t)sub_55131E(
+  return (uint32_t *)(uintptr_t)find_soundtrack_list_entry_by_identifier(
       identifier, (int)(uintptr_t)(manager + 3));
 }
 
 uint32_t *__thiscall find_soundtrack_by_name(uint32_t *manager,
                                              int16_t name_key)
 {
-  return (uint32_t *)(uintptr_t)sub_55131E(
+  return (uint32_t *)(uintptr_t)find_soundtrack_list_entry_by_identifier(
       name_key, (int)(uintptr_t)(manager + 6));
 }
 
@@ -724,7 +724,7 @@ int __thiscall query_soundtrack_instance_value(uint32_t *manager,
 void __thiscall remove_and_destroy_soundtrack_instance(
     uint32_t *manager, uint32_t *instance)
 {
-  sub_551694(manager + 3, &instance);
+  remove_soundtrack_instance_from_manager(manager + 3, &instance);
   if (instance != NULL) {
     uint32_t *vtable = (uint32_t *)(uintptr_t)instance[0];
     typedef void (__thiscall *DestroySoundtrackInstance)(uint32_t *, int);
@@ -764,10 +764,10 @@ uint32_t *__thiscall serialize_soundtrack_instances(uint32_t *manager)
     uint32_t serialized_state[75];
     if (name == NULL)
       name = Key;
-    sub_5A9220((char *)serialized_state, name);
+    construct_named_gconfig_file((char *)serialized_state, name);
     serialize_soundtrack_instance(instance, serialized_state);
-    sub_5A9D20((const char *)serialized_state, 0);
-    result = sub_5AA570(serialized_state);
+    save_gconfig_file((const char *)serialized_state, 0);
+    result = destroy_gconfig_file(serialized_state);
     node = (uint32_t *)(uintptr_t)*node;
   }
   return result;
@@ -799,9 +799,9 @@ void __thiscall capture_and_remove_soundtrack_instances(
 
       if (name == NULL)
         name = Key;
-      serialized_state = sub_4B8C45(300);
+      serialized_state = allocate_registered_gconfig_file(300);
       if (serialized_state != NULL)
-        serialized_name = sub_5A9220((char *)serialized_state, name);
+        serialized_name = construct_named_gconfig_file((char *)serialized_state, name);
       else
         serialized_name = NULL;
 
@@ -816,7 +816,7 @@ void __thiscall capture_and_remove_soundtrack_instances(
             (SetSoundtrackMode)(uintptr_t)vtable[14];
         set_mode(instance, mode);
       }
-      sub_5517E0((uint32_t *)(void *)&temporary,
+      append_soundtrack_manager_list_node((uint32_t *)(void *)&temporary,
                  (uint32_t *)(void *)&temporary_node,
                  (int)(uintptr_t)temporary.sentinel, &instance);
     }
@@ -829,7 +829,7 @@ void __thiscall capture_and_remove_soundtrack_instances(
     remove_and_destroy_soundtrack_instance(manager, instance);
     node = (uint32_t *)(uintptr_t)*node;
   }
-  sub_551655((uint32_t *)(void *)&temporary);
+  destroy_soundtrack_list_storage((uint32_t *)(void *)&temporary);
 }
 
 void __thiscall restore_soundtrack_instances(uint32_t *manager,
@@ -851,7 +851,7 @@ void __thiscall restore_soundtrack_instances(uint32_t *manager,
                               (char *)serialized_state + 4)
                         : NULL;
     uint32_t *registry_entry = (uint32_t *)(uintptr_t)find_map_value_impl(
-        dword_76D050, (uint32_t)(uintptr_t)instance);
+        soundtrack_instance_type_descriptor, (uint32_t)(uintptr_t)instance);
     registry_entry[2] = 4;
     load_soundtrack_instance_from_state((uint32_t *)(void *)instance,
                                         serialized_state);
@@ -863,19 +863,19 @@ int *__stdcall create_soundtrack_instance_from_name(char *name)
 {
   int *instance = NULL;
   uint32_t serialized_state[76];
-  sub_5A9220((char *)serialized_state, name);
-  if (sub_5A9850(serialized_state, 0)) {
+  construct_named_gconfig_file((char *)serialized_state, name);
+  if (load_gconfig_file(serialized_state, 0)) {
     uint8_t *instance_memory =
         (uint8_t *)allocate_registered_soundtrack_instance(120);
     if (instance_memory != NULL)
       instance = (int *)construct_soundtrack_instance(instance_memory, name);
     uint32_t *registry_entry = (uint32_t *)(uintptr_t)find_map_value_impl(
-        dword_76D050, (uint32_t)(uintptr_t)instance);
+        soundtrack_instance_type_descriptor, (uint32_t)(uintptr_t)instance);
     registry_entry[2] = 4;
     load_soundtrack_instance_from_state((uint32_t *)(void *)instance,
                                         serialized_state);
   }
-  sub_5AA570(serialized_state);
+  destroy_gconfig_file(serialized_state);
   return instance;
 }
 
@@ -889,8 +889,8 @@ void __thiscall set_soundtrack_instance_active(uint32_t *manager,
 
   uint32_t *list = manager + 3;
   uint32_t *list_result = list;
-  if (sub_551CAD((int)(uintptr_t)list, &instance))
-    sub_5517E0(list, (uint32_t *)(void *)&list_result,
+  if (soundtrack_list_contains_instance((int)(uintptr_t)list, &instance))
+    append_soundtrack_manager_list_node(list, (uint32_t *)(void *)&list_result,
                (int)list[1], &instance);
   if (active != 0) {
     uint32_t *vtable = (uint32_t *)(uintptr_t)instance[0];
@@ -914,8 +914,8 @@ uint8_t *__thiscall construct_registered_soundtrack_manager(uint8_t *object,
   *(uint32_t *)(void *)object =
       (uint32_t)(uintptr_t)registered_object_base_vtable;
   find_or_create_registry_entry(
-      unk_76CFD0,
-      (uint32_t)(uintptr_t)&((char *)(void *)object)[dword_76CFCC + 9]);
+      soundtrack_manager_type_descriptor,
+      (uint32_t)(uintptr_t)&((char *)(void *)object)[soundtrack_manager_base_offset_adjustment + 9]);
   object[12] = (uint8_t)default_value;
   *((uint32_t *)(void *)object + 4) =
       (uint32_t)(uintptr_t)allocate_soundtrack_list_node(NULL, NULL);
@@ -924,7 +924,7 @@ uint8_t *__thiscall construct_registered_soundtrack_manager(uint8_t *object,
   *((uint32_t *)(void *)object + 7) =
       (uint32_t)(uintptr_t)allocate_soundtrack_list_node(NULL, NULL);
   *((uint32_t *)(void *)object + 8) = 0;
-  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)off_6EE4E0;
+  *(uint32_t *)(void *)object = (uint32_t)(uintptr_t)soundtrack_manager_vtable;
   *((uint32_t *)(void *)object + 9) = 0;
   return object;
 }
@@ -933,8 +933,8 @@ int __thiscall construct_soundtrack_manager(int object)
 {
   char default_value;
   construct_registered_object_base((uint8_t *)(uintptr_t)object);
-  find_or_create_registry_entry(unk_76CFD0,
-             (uint32_t)dword_76CFCC + (uint32_t)object + 9);
+  find_or_create_registry_entry(soundtrack_manager_type_descriptor,
+             (uint32_t)soundtrack_manager_base_offset_adjustment + (uint32_t)object + 9);
   *(uint8_t *)(uintptr_t)(object + 12) = (uint8_t)default_value;
   *(uint32_t *)(uintptr_t)(object + 16) =
       (uint32_t)(uintptr_t)allocate_soundtrack_list_node(NULL, NULL);
@@ -943,7 +943,7 @@ int __thiscall construct_soundtrack_manager(int object)
   *(uint32_t *)(uintptr_t)(object + 28) =
       (uint32_t)(uintptr_t)allocate_soundtrack_list_node(NULL, NULL);
   *(uint32_t *)(uintptr_t)(object + 32) = 0;
-  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)off_6EE4E0;
+  *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)soundtrack_manager_vtable;
   *(uint32_t *)(uintptr_t)(object + 36) = 0;
   return object;
 }
@@ -974,14 +974,14 @@ int *__thiscall dispatch_soundtrack_command_to_matching_instances(
     }
     node = (uint32_t *)(uintptr_t)*node;
   }
-  return sub_406C06(result_reference, 0);
+  return replace_soundtrack_event_reference_and_queue_previous(result_reference, 0);
 }
 
 void __thiscall handle_soundtrack_resource_message(uint32_t *manager,
                                                    int message)
 {
   if (message == 1125) {
-    uint8_t *snapshot = sub_440E04(36);
+    uint8_t *snapshot = allocate_registered_soundtrack_snapshot(36);
     manager[9] = (uint32_t)(uintptr_t)(snapshot != NULL
                                           ? construct_soundtrack_snapshot(snapshot)
                                           : NULL);
@@ -1000,13 +1000,13 @@ void __thiscall handle_soundtrack_resource_message(uint32_t *manager,
 
 uint32_t *__thiscall destroy_soundtrack_manager_members(uint32_t *manager)
 {
-  *manager = (uint32_t)(uintptr_t)off_6EE4E0;
+  *manager = (uint32_t)(uintptr_t)soundtrack_manager_vtable;
   reset_soundtrack_playback((int)(uintptr_t)manager);
-  sub_551655(manager + 6);
-  sub_551655(manager + 3);
+  destroy_soundtrack_list_storage(manager + 6);
+  destroy_soundtrack_list_storage(manager + 3);
   erase_map_entry_impl(
-      unk_76CFD0,
-      (uint32_t)dword_76CFCC + (manager != NULL
+      soundtrack_manager_type_descriptor,
+      (uint32_t)soundtrack_manager_base_offset_adjustment + (manager != NULL
                                     ? (uint32_t)(uintptr_t)manager + 9
                                     : 0));
   *manager = (uint32_t)(uintptr_t)registered_object_base_vtable;
@@ -1032,7 +1032,7 @@ typedef int (__thiscall *SetSoundtrackInstanceActiveMethod)(
 uint32_t *__cdecl allocate_registered_soundtrack_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_76CFD0,
+  find_or_create_registry_entry(soundtrack_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -1100,7 +1100,7 @@ static uint32_t *__thiscall clear_soundtrack_instance_list(int list_address)
   uint32_t *sentinel = (uint32_t *)(uintptr_t)list[1];
   uint32_t context = (uint32_t)list_address;
   uint32_t *first = (uint32_t *)(uintptr_t)*sentinel;
-  return sub_551818(list, &context, first, sentinel);
+  return erase_soundtrack_list_range(list, &context, first, sentinel);
 }
 
 uint32_t *__thiscall reset_soundtrack_playback(int object)

@@ -93,8 +93,8 @@ enum {
 extern int game_engine_address;
 extern int fullscreen_flag_address;
 extern int window_menu_resource_id;
-extern char byte_75D7E4;
-extern char byte_77368C;
+extern char moving_window_rectangle_adjustment_enabled;
+extern char convert_moving_window_rectangle_to_client_coordinates;
 extern int zero_point_x;
 extern int zero_point_y;
 
@@ -458,10 +458,10 @@ static void __thiscall adjust_moving_window_rectangle(uint8_t *engine, RECT *rec
     return;
   }
 
-  if (!byte_75D7E4)
+  if (!moving_window_rectangle_adjustment_enabled)
     return;
 
-  if (byte_77368C) {
+  if (convert_moving_window_rectangle_to_client_coordinates) {
     POINT origin = {rectangle->left, rectangle->top};
     ScreenToClient(*(HWND *)(engine + ENGINE_WINDOW_OFFSET), &origin);
     const LONG horizontal_shift = origin.x - rectangle->left;

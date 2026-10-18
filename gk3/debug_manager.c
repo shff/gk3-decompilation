@@ -23,7 +23,7 @@ extern int key_binding_tree_nil_node_address;
 extern int key_binding_tree_reference_count;
 extern uint32_t debug_console_type_descriptor[15];
 extern uint32_t sprite_control_type_descriptor[15];
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern uint32_t debug_manager_event_target_vtable[];
 extern uint32_t debug_manager_vtable[];
 extern uint32_t debug_console_vtable[];
@@ -64,7 +64,7 @@ extern uint32_t *__thiscall find_debug_key_binding_node(
 extern void __cdecl write_source_message(
     const char *source, int line, int category, int flags, char *message,
     size_t size);
-extern uint32_t loc_6399FA[];
+extern uint32_t recursive_debug_console_creation_failure[];
 extern const char Key[4];
 
 char __thiscall set_debug_manager_console_open(uint32_t *manager, char open,
@@ -172,14 +172,14 @@ int __thiscall serialize_debug_manager(uint32_t *manager,
   serialize_object_reference(serializer, "mConsole",
                              (int)(uintptr_t)(bytes + 56), debug_console_type_descriptor);
   serialize_boolean_field(serializer, "mCreatingConsole",
-                          (char *)(void *)(bytes + 60), &byte_6A6454);
+                          (char *)(void *)(bytes + 60), &default_false_boolean_value);
   write_diagnostic_message(serializer, "member: type=%s, owner type=%s",
                            (const char *)(uintptr_t)sprite_control_type_descriptor[0],
                            (const char *)(uintptr_t)debug_manager_type_descriptor[0]);
   serialize_boolean_field(serializer, "mKeyWaiting",
-                          (char *)(void *)(bytes + 136), &byte_6A6454);
+                          (char *)(void *)(bytes + 136), &default_false_boolean_value);
   serialize_boolean_field(serializer, "mKeyUsed",
-                          (char *)(void *)(bytes + 137), &byte_6A6454);
+                          (char *)(void *)(bytes + 137), &default_false_boolean_value);
   serialize_key_binding_collection(serializer, "mKeyBindings",
              (uint32_t *)(void *)(bytes + 140), 3);
   if (!serializer[4])
@@ -308,7 +308,7 @@ char __thiscall is_debug_manager_console_open(uint32_t *manager)
 
 uint32_t *__thiscall create_debug_manager_console(uint8_t *manager)
 {
-  uint32_t *result = loc_6399FA;
+  uint32_t *result = recursive_debug_console_creation_failure;
 
   if (!*(uint32_t *)(void *)(manager + 56)) {
     if (manager[60]) {

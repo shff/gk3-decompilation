@@ -50,7 +50,7 @@ _Static_assert(sizeof(EngineEventQueue) == 16,
 
 /* gk3/GK3R_rest.c */
 extern uint32_t registered_event_registry[18];
-extern uint16_t word_751900; /* Next registered event-target ID. */
+extern uint16_t next_registered_event_target_id; /* Next registered event-target ID. */
 extern int registered_event_target_base_offset_adjustment;
 extern uint32_t registered_event_target_type_descriptor[16];
 extern uint32_t registered_event_target_vtable[];
@@ -73,9 +73,9 @@ uint16_t *__thiscall construct_registered_event_target(
       (RegisteredEventTarget *)(void *)event_target;
   int registration_arguments[2];
 
-  target->target_id = word_751900++;
-  if (!word_751900)
-    word_751900 = 1;
+  target->target_id = next_registered_event_target_id++;
+  if (!next_registered_event_target_id)
+    next_registered_event_target_id = 1;
 
   registration_arguments[1] = (int)(uintptr_t)target;
   find_or_create_registry_entry(

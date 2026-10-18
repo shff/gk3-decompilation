@@ -52,7 +52,7 @@ extern int __cdecl _strcmpi(const char *left, const char *right);
 
 /* gk3/GK3R_rest.c */
 extern int application_instance;
-extern uint16_t word_776F34;
+extern uint16_t resource_language_id;
 
 /* platform/settings.c */
 extern uint32_t *__thiscall construct_settings_context(uint32_t *object);
@@ -98,10 +98,10 @@ int __cdecl matches_localized_command_line_option(unsigned int resource_id,
   HINSTANCE instance = (HINSTANCE)(intptr_t)application_instance;
   HRSRC resource = NULL;
 
-  if (instance && word_776F34) {
+  if (instance && resource_language_id) {
     resource = FindResourceExA(
         instance, (LPCSTR)RT_STRING,
-        MAKEINTRESOURCEA((resource_id >> 4) + 1), (WORD)word_776F34);
+        MAKEINTRESOURCEA((resource_id >> 4) + 1), (WORD)resource_language_id);
   }
 
   bool loaded_localized_option = false;

@@ -11,7 +11,7 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_764D78[];
+extern uint32_t cursor_manager_type_descriptor[];
 extern int cursor_spec_collection_base_offset_adjustment;
 extern uint32_t cursor_spec_type_descriptor[16];
 extern int empty_cursor_spec_name_address;
@@ -113,7 +113,7 @@ char __thiscall serialize_cursor_spec_collection_value(
 uint32_t *construct_cursor_spec_collection(uint32_t *object)
 {
   find_or_create_registry_entry(
-      unk_764D78,
+      cursor_manager_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)cursor_spec_collection_base_offset_adjustment + 4);
   construct_dynamic_array(object + 1, 20);
@@ -168,7 +168,7 @@ uint32_t *__thiscall destroy_cursor_spec_collection_members(
     destroy_pointer_vector_elements((int *)(void *)array);
   free_dynamic_array_storage((int *)(void *)array);
   return erase_map_entry_impl(
-      unk_764D78,
+      cursor_manager_type_descriptor,
       (uint32_t)cursor_spec_collection_base_offset_adjustment
           + (uint32_t)(uintptr_t)array);
 }
@@ -238,7 +238,7 @@ int __thiscall destroy_cursor_spec_array(int *array)
 uint32_t *__cdecl allocate_registered_cursor_spec_collection(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_764D78,
+  find_or_create_registry_entry(cursor_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

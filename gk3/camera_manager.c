@@ -9,7 +9,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_763FD8[];
+extern uint32_t camera_type_descriptor[];
 extern int game_engine_instance_address;
 extern int parent_control_default_object;
 extern int default_stacked_hook_control;
@@ -119,7 +119,7 @@ int __thiscall construct_camera_manager(int object)
 
   construct_stacked_hook_control((uint32_t *)(void *)camera,
                                  (uint32_t *)(uintptr_t)default_stacked_hook_control);
-  find_or_create_registry_entry(unk_763FD8,
+  find_or_create_registry_entry(camera_type_descriptor,
              (uint32_t)camera_manager_base_offset_adjustment
                  + (uint32_t)object + 129);
   construct_byte_list((uint32_t *)(void *)(camera + 132), &default_value);
@@ -165,7 +165,7 @@ int __thiscall construct_camera_manager(int object)
 uint32_t *allocate_registered_camera(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_763FD8,
+  find_or_create_registry_entry(camera_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

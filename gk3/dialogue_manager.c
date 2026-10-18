@@ -12,15 +12,15 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7650C8[];
+extern uint32_t dialogue_manager_type_descriptor[];
 extern int dialogue_manager_base_offset_adjustment;
 extern uint32_t broadcast_target_type_descriptor[];
 extern int broadcast_target_base_offset_adjustment;
 extern int game_engine_instance_address;
 extern uint32_t dialogue_manager_vtable[];
 extern uint32_t registered_object_base_vtable[];
-extern uint8_t byte_6BE250[4];
-extern char byte_6A6454;
+extern uint8_t default_dialogue_language[4];
+extern char default_false_boolean_value;
 extern int played_dialogue_index_sentinel_address;
 extern int played_dialogue_index_reference_count;
 extern uint8_t *__thiscall construct_registered_object_base(uint8_t *object);
@@ -341,7 +341,7 @@ char __thiscall serialize_dialogue_manager(uint32_t *manager,
              (int)(uintptr_t)"mLine",
              (uint8_t *)(void *)manager + 12);
   serialize_dialogue_language_field(serializer, "mLanguage",
-             (uint8_t *)(void *)manager + 28, byte_6BE250);
+             (uint8_t *)(void *)manager + 28, default_dialogue_language);
   serialize_dialogue_string_field((int)(uintptr_t)serializer,
              (int)(uintptr_t)"mCurrentConversation",
              (uint8_t *)(void *)manager + 32);
@@ -358,7 +358,7 @@ char __thiscall serialize_dialogue_manager(uint32_t *manager,
   serialize_dialogue_line_vector(serializer, "mLines", (int *)(void *)
              ((uint8_t *)(void *)manager + 224), 0);
   return serialize_boolean_field(serializer, "mSequencePlaying",
-      (char *)(void *)((uint8_t *)(void *)manager + 272), &byte_6A6454);
+      (char *)(void *)((uint8_t *)(void *)manager + 272), &default_false_boolean_value);
 }
 
 uint32_t *__thiscall destroy_dialogue_manager_members(uint32_t *manager)
@@ -392,7 +392,7 @@ uint32_t *__thiscall destroy_dialogue_manager_members(uint32_t *manager)
   tidy_std_string_storage((char *)(void *)((uint8_t *)(void *)manager + 12), 1);
   tidy_std_string_storage((char *)(void *)((uint8_t *)(void *)manager + 32), 1);
   erase_map_entry_impl(
-      unk_7650C8, (uint32_t)dialogue_manager_base_offset_adjustment
+      dialogue_manager_type_descriptor, (uint32_t)dialogue_manager_base_offset_adjustment
           + (manager != NULL ? (uint32_t)(uintptr_t)manager + 9 : 0));
   *manager = (uint32_t)(uintptr_t)registered_object_base_vtable;
   return erase_map_entry_impl(
@@ -423,7 +423,7 @@ char *__thiscall construct_registered_dialogue_manager(char *object,
   *(uint32_t *)(void *)bytes =
       (uint32_t)(uintptr_t)registered_object_base_vtable;
   find_or_create_registry_entry(
-      unk_7650C8,
+      dialogue_manager_type_descriptor,
       (uint32_t)(uintptr_t)&object[
           dialogue_manager_base_offset_adjustment + 9]);
   bytes[12] = (uint8_t)default_value_b;
@@ -455,7 +455,7 @@ int __thiscall construct_dialogue_manager(int object, int mode)
   uint8_t mode_byte = (uint8_t)((uint32_t)mode >> 24);
 
   construct_registered_object_base(bytes);
-  find_or_create_registry_entry(unk_7650C8,
+  find_or_create_registry_entry(dialogue_manager_type_descriptor,
              (uint32_t)(uintptr_t)object
                  + (uint32_t)dialogue_manager_base_offset_adjustment + 9);
   bytes[12] = mode_byte;
@@ -489,7 +489,7 @@ int __thiscall construct_dialogue_manager(int object, int mode)
 uint32_t *__cdecl allocate_registered_dialogue_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7650C8,
+  find_or_create_registry_entry(dialogue_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

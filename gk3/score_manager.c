@@ -17,14 +17,14 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_76C8E8[];
+extern uint32_t score_manager_type_descriptor[];
 extern int score_manager_base_offset_adjustment;
 extern int game_engine_instance_address;
 extern uint32_t score_points_by_id[385];
 extern int game_engine_address;
 extern int serialized_value_default;
 extern int score_id_default_value[8];
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern const char Key[4];
 extern char *score_names_by_id[385];
 extern int __cdecl format_integer_string(int string_storage, int value);
@@ -281,7 +281,7 @@ int __thiscall serialize_score_flag_map(uint32_t *manager,
       char enabled = (char)read_current_score_flag(score_id);
       serialize_score_id_field(serializer, "score", &serialized_score_id,
                                score_id_default_value);
-      serialize_boolean_field(serializer, "set", &enabled, &byte_6A6454);
+      serialize_boolean_field(serializer, "set", &enabled, &default_false_boolean_value);
       end_entry(serializer);
     }
   } else {
@@ -297,10 +297,10 @@ int __thiscall serialize_score_flag_map(uint32_t *manager,
       tidy_std_string_storage((char *)(void *)entry_index_storage, 1);
 
       int serialized_score_id = *score_id_default_value;
-      char enabled = byte_6A6454;
+      char enabled = default_false_boolean_value;
       serialize_score_id_field(serializer, "score", &serialized_score_id,
                                score_id_default_value);
-      serialize_boolean_field(serializer, "set", &enabled, &byte_6A6454);
+      serialize_boolean_field(serializer, "set", &enabled, &default_false_boolean_value);
       end_entry(serializer);
       if (is_valid_score_id(serialized_score_id))
         write_current_score_flag(serialized_score_id, enabled);
@@ -335,7 +335,7 @@ char __cdecl serialize_registered_score_manager(int object,
 int __thiscall construct_score_manager(int object)
 {
   char default_value;
-  find_or_create_registry_entry(unk_76C8E8,
+  find_or_create_registry_entry(score_manager_type_descriptor,
       (uint32_t)object + (uint32_t)score_manager_base_offset_adjustment);
   *(uint8_t *)(uintptr_t)(object + 8) = (uint8_t)default_value;
   *(uint32_t *)(uintptr_t)(object + 12) = 0;
@@ -350,7 +350,7 @@ int __thiscall construct_registered_score_manager(int object, int unused)
 {
   char default_value;
 
-  find_or_create_registry_entry(unk_76C8E8,
+  find_or_create_registry_entry(score_manager_type_descriptor,
                                 (uint32_t)object
                                     + (uint32_t)score_manager_base_offset_adjustment);
   *(uint8_t *)(uintptr_t)(object + 8) = (uint8_t)default_value;
@@ -373,7 +373,7 @@ uint32_t *__cdecl create_registered_score_manager(void)
 uint32_t *__cdecl allocate_registered_score_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_76C8E8,
+  find_or_create_registry_entry(score_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
@@ -390,7 +390,7 @@ uint32_t *__thiscall destroy_score_manager(int *object)
 {
   destroy_score_id_flags(object + 2);
   return erase_map_entry_impl(
-      unk_76C8E8,
+      score_manager_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)score_manager_base_offset_adjustment);
 }

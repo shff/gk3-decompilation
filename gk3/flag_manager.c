@@ -32,7 +32,6 @@ extern int __thiscall grow_std_string_storage(char *string_storage,
 extern uint8_t *__thiscall resize_byte_vector(int *vector, unsigned int count,
                                              uint8_t *fill_value);
 extern uint32_t *__cdecl allocate_registered_flag_manager(int size);
-extern int __thiscall sub_4ADBC5(int object);
 extern int __thiscall erase_std_string_range(char *string, int position,
                                              int count);
 extern uint32_t *__thiscall clear_tree_map(uint32_t *map);
@@ -44,28 +43,28 @@ extern uint32_t *__thiscall assign_std_string_storage(uint32_t *destination,
                                        uint32_t *source);
 extern uint32_t *__thiscall append_std_string_storage_bytes(uint32_t *string, const void *text,
                                        int length);
-extern char __thiscall sub_53B1CA(int ***sheep_compiler, int source);
-extern int __thiscall sub_53ADBD(uint32_t *sheep_compiler, int compiled_id);
-extern int __thiscall sub_53AD82(uint32_t **sheep_compiler, int compiled_id);
-extern int __thiscall sub_53AD6B(int *sheep_compiler, const char *name,
+extern char __thiscall is_sheep_source_syntax_valid(int ***sheep_compiler, int source);
+extern int __thiscall release_compiled_sheep_reference(uint32_t *sheep_compiler, int compiled_id);
+extern int __thiscall mark_compiled_sheep_inactive(uint32_t **sheep_compiler, int compiled_id);
+extern int __thiscall compile_sheep_source(int *sheep_compiler, const char *name,
                                  uint32_t *source, uint32_t *compiled);
-extern int __thiscall sub_53AD91(uint32_t **sheep_compiler, int compiled_id);
-extern char __thiscall sub_53AE7E(uint32_t *sheep_compiler, int compiled_id,
+extern int __thiscall retain_compiled_sheep_source(uint32_t **sheep_compiler, int compiled_id);
+extern char __thiscall compiled_sheep_uses_illegal_wait_function(uint32_t *sheep_compiler, int compiled_id,
                                   char rebuild);
-extern int __thiscall sub_53AEE0(uint32_t **sheep_compiler, int compiled_id,
+extern int __thiscall start_sheep_evaluation(uint32_t **sheep_compiler, int compiled_id,
                                 char *signature, int *result, int flags);
-extern int __thiscall sub_53B225(uint32_t *sheep_compiler, int compiled_id);
-extern int __thiscall sub_53B23B(uint32_t *sheep_compiler, int compiled_id);
-extern void __thiscall sub_53AF6A(uint32_t **sheep_compiler, int compiled_id);
-extern int __thiscall sub_5ED3E1(int result);
-extern int __thiscall sub_55C450(int verb_id);
-extern int __thiscall sub_55C475(int verb_id);
+extern int __thiscall get_compiled_sheep_entry(uint32_t *sheep_compiler, int compiled_id);
+extern int __thiscall get_sheep_evaluation_state(uint32_t *sheep_compiler, int compiled_id);
+extern void __thiscall shutdown_sheep_evaluation(uint32_t **sheep_compiler, int compiled_id);
+extern int __thiscall process_sheep_machine(int result);
+extern int __thiscall is_topic_verb(int verb_id);
+extern int __thiscall is_verb_type_4(int verb_id);
 extern char *__cdecl get_verb_vocabulary_string(int verb_id);
 extern char *__cdecl get_action_vocabulary_string(int token_id);
-extern uint32_t *__thiscall sub_408A6D(uint32_t *object);
-extern int *__thiscall sub_50303A(uint32_t *object, int value);
-extern char __thiscall sub_5042DA(int *object);
-extern char __thiscall sub_49193B(uint32_t *object, int noun, int verb,
+extern uint32_t *__thiscall get_last_current_noun_collection_entry(uint32_t *object);
+extern int *__thiscall find_noun_object_by_id(uint32_t *object, int value);
+extern char __thiscall has_applicable_topic_verb(int *object);
+extern char __thiscall has_verb_registry_nvc_entry(uint32_t *object, int noun, int verb,
                                  int case_id, char active_ego);
 extern char __cdecl is_global_flag_set(int flag_id);
 extern int __thiscall write_source_message(const char *source, int line, int severity,
@@ -87,15 +86,15 @@ extern char __cdecl serialize_boolean_field(uint8_t *serializer,
                                             char *value, char *default_value);
 extern int default_noun_id;
 extern int default_verb_id;
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern char *Key;
-extern uint32_t unk_6BFF88[];
-extern int dword_6C01BC;
+extern uint32_t default_inventory_status_values[];
+extern int last_default_inventory_status_value;
 int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager);
 extern int __thiscall set_flag_bit(uint32_t *state, int index, char enabled);
 extern char __thiscall is_game_layer_active(char *layer, int layer_id);
 extern int get_inventory_layer_instance(void);
-extern int __thiscall sub_4EA9FC(int object);
+extern int __thiscall refresh_inventory_layer(int object);
 extern int __thiscall select_inventory_item_control(uint32_t *object);
 extern char *__cdecl get_inventory_item_name(int inventory_id);
 extern int __cdecl write_source_message(const char *source, int line, int severity,
@@ -131,7 +130,7 @@ bool __thiscall serialize_flag_nvc_state(uint32_t *state,
   if (!serialize_verb_field(serializer, "verb", (int *)(state + 1), &default_verb_id))
     success = false;
   if (!serialize_boolean_field(serializer, "egoIsGabe",
-                                (char *)state + 8, &byte_6A6454))
+                                (char *)state + 8, &default_false_boolean_value))
     success = false;
   end(serializer);
   return success;
@@ -311,7 +310,7 @@ char __thiscall set_flag_manager_inventory_status(
   char active = is_game_layer_active(
       *(char **)(uintptr_t)(application + 72), 8);
   if (active && notify)
-    return (char)sub_4EA9FC(get_inventory_layer_instance());
+    return (char)refresh_inventory_layer(get_inventory_layer_instance());
   return active;
 }
 
@@ -471,10 +470,10 @@ int __thiscall clear_compiled_sheep_cases(uint32_t *flag_manager)
   int compiled_id = (int)flag_manager[1];
   if (compiled_id != -1) {
     erase_std_string_range((char *)(void *)(flag_manager + 2), 0, -1);
-    sub_53ADBD((uint32_t *)(uintptr_t)(
+    release_compiled_sheep_reference((uint32_t *)(uintptr_t)(
                    *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                compiled_id);
-    sub_53AD82((uint32_t **)(uintptr_t)(
+    mark_compiled_sheep_inactive((uint32_t **)(uintptr_t)(
                    *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                compiled_id);
     flag_manager[1] = UINT32_MAX;
@@ -542,7 +541,7 @@ int __thiscall add_compiled_sheep_case(uint32_t *flag_manager, int case_id,
     (void)expression_length;
     sprintf(error_buffer,
             "#symbols{int n$,v$,c$,m$;}code{x$(){m$ = %s;}}", expression);
-    if (sub_53B1CA((int ***)(uintptr_t)(
+    if (is_sheep_source_syntax_valid((int ***)(uintptr_t)(
                        *(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092) + 88),
                    (int)(uintptr_t)error_buffer)) {
       current_length = (int)flag_manager[4];
@@ -585,7 +584,7 @@ int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager)
   source = (char *)(uintptr_t)flag_manager[3];
   if (!source)
     source = Key;
-  compiled_id = sub_53AD6B((int *)sheep_compiler, "Case Evaluation",
+  compiled_id = compile_sheep_source((int *)sheep_compiler, "Case Evaluation",
                            (uint32_t *)source,
                            (uint32_t *)(uintptr_t)flag_manager[4]);
   flag_manager[1] = (uint32_t)compiled_id;
@@ -593,11 +592,11 @@ int __thiscall rebuild_compiled_sheep_cases(uint32_t *flag_manager)
     write_source_message("Z:\\Proj\\GK3\\gk3app\\Source\\FlagMgr.cpp", 913, 6,
                0, "Unable to commit/rebuild Sheep cases", 0xFFFFFFFF);
   } else {
-    sub_53AD91((uint32_t **)sheep_compiler, compiled_id);
+    retain_compiled_sheep_source((uint32_t **)sheep_compiler, compiled_id);
   }
 
   if (compiled_id != -1
-      && sub_53AE7E(sheep_compiler, compiled_id, 1))
+      && compiled_sheep_uses_illegal_wait_function(sheep_compiler, compiled_id, 1))
     clear_compiled_sheep_cases(flag_manager);
   return compiled_id;
 }
@@ -619,14 +618,14 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
   char *signature = (char *)(uintptr_t)signature_object[1];
   if (!signature)
     signature = Key;
-  int evaluation_id = sub_53AEE0((uint32_t **)sheep_compiler,
+  int evaluation_id = start_sheep_evaluation((uint32_t **)sheep_compiler,
                                  (int)flag_manager[1], signature, NULL, 0);
   tidy_std_string_storage((char *)(void *)signature_object, 1);
   if (evaluation_id == -1)
     return result;
 
   int *case_data = (int *)(uintptr_t)
-      sub_53B225(sheep_compiler, (int)flag_manager[1]);
+      get_compiled_sheep_entry(sheep_compiler, (int)flag_manager[1]);
   uint32_t *evaluation_context =
       (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(case_data + 6);
   evaluation_context[0] = (uint32_t)noun_id;
@@ -634,8 +633,8 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
   evaluation_context[2] = (uint32_t)case_id;
   evaluation_context[3] = 0;
 
-  int evaluation_state = sub_53B23B(sheep_compiler, evaluation_id);
-  int execution_result = sub_5ED3E1(evaluation_state);
+  int evaluation_state = get_sheep_evaluation_state(sheep_compiler, evaluation_id);
+  int execution_result = process_sheep_machine(evaluation_state);
   if (execution_result == 2) {
     if (evaluation_context[3] != 0)
       return 1;
@@ -646,7 +645,7 @@ char __thiscall evaluate_compiled_sheep_case(uint32_t *flag_manager,
                "Invalid sheep execution for NVC '%s' '%s' '%s' - result == %d (must be kDone).\\n",
                get_action_vocabulary_string(noun_id), get_verb_vocabulary_string(verb_id),
                get_noun_vocabulary_string(case_id), execution_result);
-    sub_53AF6A((uint32_t **)sheep_compiler, evaluation_id);
+    shutdown_sheep_evaluation((uint32_t **)sheep_compiler, evaluation_id);
   }
   return result;
 }
@@ -659,11 +658,11 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
   uint8_t compiled_match = 0;
   char result;
 
-  if (sub_55C450(verb_id) && !sub_55C475(verb_id)) {
+  if (is_topic_verb(verb_id) && !is_verb_type_4(verb_id)) {
     uint32_t *application =
         (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
     uint32_t *verb_registry = (uint32_t *)(uintptr_t)application[13];
-    if (sub_49193B(verb_registry, noun_id, verb_id, condition_id,
+    if (has_verb_registry_nvc_entry(verb_registry, noun_id, verb_id, condition_id,
                    (char)is_gabe_or_grace_scene_active()))
       return 0;
     effective_verb = verb_id;
@@ -678,9 +677,9 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
     if (condition_id == 283) {
       uint32_t *application =
           (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
-      int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
-      int *entry = sub_50303A((uint32_t *)object, noun_id);
-      return sub_5042DA(entry)
+      int *object = (int *)get_last_current_noun_collection_entry((uint32_t *)(uintptr_t)application[7]);
+      int *entry = find_noun_object_by_id((uint32_t *)object, noun_id);
+      return has_applicable_topic_verb(entry)
           && lookup_flag_manager_nvc_state(flag_manager, noun_id, 252);
     }
     if (condition_id <= 83) {
@@ -711,9 +710,9 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
     if (condition_id == 281 || condition_id == 282) {
       uint32_t *application =
           (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
-      int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
-      int *entry = sub_50303A((uint32_t *)object, noun_id);
-      int present = sub_5042DA(entry);
+      int *object = (int *)get_last_current_noun_collection_entry((uint32_t *)(uintptr_t)application[7]);
+      int *entry = find_noun_object_by_id((uint32_t *)object, noun_id);
+      int present = has_applicable_topic_verb(entry);
       if (condition_id == 282)
         return present;
       return present && !lookup_flag_manager_nvc_state(flag_manager, noun_id, 252);
@@ -732,9 +731,9 @@ char __thiscall evaluate_flag_manager_condition(uint32_t *flag_manager,
     case 998: {
       uint32_t *application =
           (uint32_t *)(uintptr_t)*(uint32_t *)(uintptr_t)(game_engine_instance_address + 1092);
-      int *object = (int *)sub_408A6D((uint32_t *)(uintptr_t)application[7]);
-      int *entry = sub_50303A((uint32_t *)object, noun_id);
-      return !sub_5042DA(entry);
+      int *object = (int *)get_last_current_noun_collection_entry((uint32_t *)(uintptr_t)application[7]);
+      int *entry = find_noun_object_by_id((uint32_t *)object, noun_id);
+      return !has_applicable_topic_verb(entry);
     }
     case 519:
       return (char)is_gabe_or_grace_scene_active();
@@ -957,11 +956,11 @@ uint32_t *__thiscall reset_flag_manager_state(uint32_t *flag_manager)
   flag_manager[1805] = 0;
   flag_manager[1806] = 0;
 
-  uint32_t *default_values = unk_6BFF88;
+  uint32_t *default_values = default_inventory_status_values;
   uint32_t *inventory_status = flag_manager + 1663;
   do {
     *inventory_status++ = *default_values++;
-  } while (default_values <= (uint32_t *)&dword_6C01BC);
+  } while (default_values <= (uint32_t *)&last_default_inventory_status_value);
   return clear_tree_map(flag_manager + 1659);
 }
 
@@ -1058,7 +1057,7 @@ int __thiscall construct_flag_manager(int object)
   initialize_flag_map((uint32_t *)(uintptr_t)(object + 6636));
   *(uint32_t *)(uintptr_t)object = (uint32_t)(uintptr_t)&flag_manager_vtable;
   initialize_flag_manager_storage((int *)(uintptr_t)object);
-  sub_4ADBC5(object);
+  reset_flag_manager_state((uint32_t *)(uintptr_t)object);
   return object;
 }
 

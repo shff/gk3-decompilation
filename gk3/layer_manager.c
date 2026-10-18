@@ -10,7 +10,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7666D0[];
+extern uint32_t layer_manager_type_descriptor[];
 extern int layer_manager_base_offset_adjustment;
 extern int game_engine_instance_address;
 extern uint32_t layer_manager_vtable[];
@@ -85,7 +85,7 @@ uint32_t *__thiscall construct_registered_layer_manager(uint32_t *object,
                                                          int unused)
 {
   find_or_create_registry_entry(
-      unk_7666D0,
+      layer_manager_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)layer_manager_base_offset_adjustment + 4);
   object[0] = (uint32_t)(uintptr_t)layer_manager_vtable;
@@ -94,7 +94,7 @@ uint32_t *__thiscall construct_registered_layer_manager(uint32_t *object,
 
 uint32_t *__thiscall construct_layer_manager(uint32_t *object)
 {
-  find_or_create_registry_entry(unk_7666D0,
+  find_or_create_registry_entry(layer_manager_type_descriptor,
              (uint32_t)(uintptr_t)object
                  + (uint32_t)layer_manager_base_offset_adjustment + 4);
   object[0] = (uint32_t)(uintptr_t)layer_manager_vtable;
@@ -106,7 +106,7 @@ uint32_t *__thiscall construct_layer_manager(uint32_t *object)
 uint32_t *__cdecl allocate_registered_layer_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7666D0,
+  find_or_create_registry_entry(layer_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

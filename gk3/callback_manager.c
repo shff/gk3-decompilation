@@ -32,7 +32,7 @@ extern uint32_t *__thiscall destroy_registered_event_target(uint16_t *object);
 extern int __thiscall queue_engine_event(uint32_t *engine, int *event);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_763E30[];
+extern uint32_t callback_manager_type_descriptor[];
 extern int callback_manager_base_offset_adjustment;
 extern uint32_t callback_manager_vtable[];
 extern int game_engine_address;
@@ -41,7 +41,7 @@ static CallbackManager *__thiscall construct_registered_callback_manager(
     CallbackManager *object, int unused)
 {
   construct_registered_event_target((uint16_t *)(void *)object);
-  find_or_create_registry_entry(unk_763E30,
+  find_or_create_registry_entry(callback_manager_type_descriptor,
              (uint32_t)(uintptr_t)object
                  + (uint32_t)callback_manager_base_offset_adjustment + 12);
   object->vtable = callback_manager_vtable;
@@ -52,7 +52,7 @@ static CallbackManager *__thiscall construct_callback_manager(
     CallbackManager *object)
 {
   construct_registered_event_target((uint16_t *)(void *)object);
-  find_or_create_registry_entry(unk_763E30,
+  find_or_create_registry_entry(callback_manager_type_descriptor,
              (uint32_t)(uintptr_t)object
                  + (uint32_t)callback_manager_base_offset_adjustment + 12);
   object->vtable = callback_manager_vtable;
@@ -62,7 +62,7 @@ static CallbackManager *__thiscall construct_callback_manager(
 static CallbackManager *allocate_registered_callback_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_763E30,
+  find_or_create_registry_entry(callback_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return (CallbackManager *)(void *)memory;
 }
@@ -101,7 +101,7 @@ uint32_t *__thiscall destroy_callback_manager_members(
     }
     v2 += 2;
   }
-  erase_map_entry_impl(unk_763E30,
+  erase_map_entry_impl(callback_manager_type_descriptor,
       (uint32_t)callback_manager_base_offset_adjustment
       + (manager != NULL ? (uint32_t)(uintptr_t)manager + 12 : 0));
   return destroy_registered_event_target((uint16_t *)(void *)manager);

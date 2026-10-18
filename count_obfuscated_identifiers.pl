@@ -23,9 +23,11 @@ find(
             my $contents = <$file>;
             close $file or die "cannot close $_: $!\n";
 
-            my %by_prefix;
+            my (%by_identifier, %by_prefix);
             while ($contents =~ /$pattern/g) {
-                my ($prefix) = $& =~ /\A([A-Za-z]+)_/;
+                my $identifier = $&;
+                next if $by_identifier{$identifier}++;
+                my ($prefix) = $identifier =~ /\A([A-Za-z]+)_/;
                 ++$by_prefix{$prefix};
             }
 
@@ -38,7 +40,7 @@ find(
 );
 
 @counts = sort { $b->[0] <=> $a->[0] || $a->[1] cmp $b->[1] } @counts;
-print "usages\tfile\tprefix breakdown\n";
+print "identifiers\tfile\tprefix breakdown\n";
 for my $entry (@counts) {
     my ($total, $path, $by_prefix) = @$entry;
     my $relative_path = File::Spec->abs2rel($path, $root);

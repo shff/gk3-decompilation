@@ -16,7 +16,7 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_76C7E8[];
+extern uint32_t report_manager_type_descriptor[];
 extern int report_manager_registry_offset;
 extern uint32_t report_entry_registry[16];
 extern uint32_t report_manager_vtable[];
@@ -599,7 +599,7 @@ uint32_t *__thiscall destroy_report_manager(uint32_t *manager)
       (int *)(void *)(manager + 56));
   destroy_report_entry_pointer_array((int *)(void *)(manager + 50));
   erase_map_entry_impl(
-      unk_76C7E8, (uint32_t)report_manager_registry_offset
+      report_manager_type_descriptor, (uint32_t)report_manager_registry_offset
           + (manager != NULL ? (uint32_t)(uintptr_t)manager + 197 : 0));
   return destroy_mini_console_control_base(manager);
 }
@@ -718,7 +718,7 @@ int __thiscall construct_registered_report_manager(int object, int mode)
 
   construct_control_container_base((char *)(void *)bytes, mode);
   find_or_create_registry_entry(
-      unk_76C7E8,
+      report_manager_type_descriptor,
       (uint32_t)report_manager_registry_offset + (uint32_t)object + 197);
   bytes[200] = mode_byte;
   *(uint32_t *)(void *)(bytes + 204) = 0;
@@ -742,7 +742,7 @@ int __thiscall construct_report_manager(int object)
   uint32_t report_filename[6];
 
   construct_console_control_base(object);
-  find_or_create_registry_entry(unk_76C7E8,
+  find_or_create_registry_entry(report_manager_type_descriptor,
              (uint32_t)report_manager_registry_offset + (uint32_t)object + 197);
   manager[200] = (uint8_t)default_value;
   *(uint32_t *)(void *)(manager + 204) = 0;
@@ -923,7 +923,7 @@ int __thiscall initialize_application_log_manager(int object)
 uint32_t *__cdecl allocate_registered_report_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_76C7E8,
+  find_or_create_registry_entry(report_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

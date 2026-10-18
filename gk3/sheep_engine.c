@@ -12,14 +12,14 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
 extern int __thiscall vector_element_address(uint32_t *collection, int index);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_76CA08[];
+extern uint32_t sheep_engine_type_descriptor[];
 extern uint8_t *__thiscall construct_sheep_engine(uint8_t *object);
 extern void __thiscall shutdown_sheep_machine(int object);
 
 uint32_t *__cdecl allocate_registered_sheep_engine(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_76CA08,
+  find_or_create_registry_entry(sheep_engine_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

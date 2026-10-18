@@ -103,27 +103,27 @@ extern uint32_t *game_application_event_target_vtable;
 extern uint32_t *game_application_object_vtable;
 extern uint32_t action_manager_type_descriptor[15];
 extern uint32_t animator_type_descriptor[15];
-extern uint32_t unk_763E30[]; /* Callback-manager type descriptor. */
-extern uint32_t unk_763FD8[]; /* Camera type descriptor. */
-extern uint32_t unk_7640B8[]; /* Camera-angle manager type descriptor. */
-extern uint32_t unk_764D78[]; /* Cursor-manager type descriptor. */
-extern uint32_t unk_7650C8[]; /* Dialogue-manager type descriptor. */
+extern uint32_t callback_manager_type_descriptor[]; /* Callback-manager type descriptor. */
+extern uint32_t camera_type_descriptor[]; /* Camera type descriptor. */
+extern uint32_t camera_angle_manager_type_descriptor[]; /* Camera-angle manager type descriptor. */
+extern uint32_t cursor_manager_type_descriptor[]; /* Cursor-manager type descriptor. */
+extern uint32_t dialogue_manager_type_descriptor[]; /* Dialogue-manager type descriptor. */
 extern uint32_t flag_manager_type_descriptor[];
-extern uint32_t unk_765C18[]; /* Game-state type descriptor. */
+extern uint32_t game_state_type_descriptor[]; /* Game-state type descriptor. */
 extern uint32_t generics_manager_type_descriptor[15];
-extern uint32_t unk_7664C0[]; /* Interface-manager type descriptor. */
-extern uint32_t unk_7666D0[]; /* Layer-manager type descriptor. */
-extern uint32_t unk_76C7E8[]; /* Report-manager type descriptor. */
-extern uint32_t unk_76C8E8[]; /* Score-manager type descriptor. */
-extern uint32_t unk_76CA08[]; /* Sheep-engine type descriptor. */
-extern uint32_t unk_76CFD0[]; /* Soundtrack-manager type descriptor. */
-extern uint32_t unk_76D128[]; /* Stage-manager type descriptor. */
+extern uint32_t interface_manager_type_descriptor[]; /* Interface-manager type descriptor. */
+extern uint32_t layer_manager_type_descriptor[]; /* Layer-manager type descriptor. */
+extern uint32_t report_manager_type_descriptor[]; /* Report-manager type descriptor. */
+extern uint32_t score_manager_type_descriptor[]; /* Score-manager type descriptor. */
+extern uint32_t sheep_engine_type_descriptor[]; /* Sheep-engine type descriptor. */
+extern uint32_t soundtrack_manager_type_descriptor[]; /* Soundtrack-manager type descriptor. */
+extern uint32_t stage_manager_type_descriptor[]; /* Stage-manager type descriptor. */
 extern uint32_t static_configuration_type_descriptor[]; /* Static-configuration type descriptor. */
-extern uint32_t unk_7644B8[]; /* Mini-console type descriptor. */
+extern uint32_t mini_console_type_descriptor[]; /* Mini-console type descriptor. */
 extern uint32_t debug_manager_type_descriptor[15];
-extern uint32_t unk_764F48[]; /* Developer-control type descriptor. */
+extern uint32_t developer_control_type_descriptor[]; /* Developer-control type descriptor. */
 extern uint32_t primitive_manager_type_descriptor[15];
-extern char byte_6A6454;
+extern char default_false_boolean_value;
 extern char __cdecl serialize_boolean_field(uint8_t *reader,
                                            const char *name, char *value,
                                            char *default_value);
@@ -577,25 +577,25 @@ int __thiscall serialize_game_application_fields(
   static const GameApplicationSerializedObjectField object_fields[] = {
     { "mActionMgr", offsetof(GameApplication, action_manager), action_manager_type_descriptor },
     { "mAnimator", offsetof(GameApplication, animator), animator_type_descriptor },
-    { "mCallbackMgr", offsetof(GameApplication, callback_manager), unk_763E30 },
-    { "mCamera", offsetof(GameApplication, camera), unk_763FD8 },
-    { "mCameraAngleMgr", offsetof(GameApplication, camera_angle_manager), unk_7640B8 },
-    { "mCursorMgr", offsetof(GameApplication, cursor_manager), unk_764D78 },
-    { "mDialogueMgr", offsetof(GameApplication, dialogue_manager), unk_7650C8 },
+    { "mCallbackMgr", offsetof(GameApplication, callback_manager), callback_manager_type_descriptor },
+    { "mCamera", offsetof(GameApplication, camera), camera_type_descriptor },
+    { "mCameraAngleMgr", offsetof(GameApplication, camera_angle_manager), camera_angle_manager_type_descriptor },
+    { "mCursorMgr", offsetof(GameApplication, cursor_manager), cursor_manager_type_descriptor },
+    { "mDialogueMgr", offsetof(GameApplication, dialogue_manager), dialogue_manager_type_descriptor },
     { "mFlagMgr", offsetof(GameApplication, flag_manager), flag_manager_type_descriptor },
-    { "mGameState", offsetof(GameApplication, game_state), unk_765C18 },
+    { "mGameState", offsetof(GameApplication, game_state), game_state_type_descriptor },
     { "mGenerics", offsetof(GameApplication, generics_manager), generics_manager_type_descriptor },
-    { "mInterfaceMgr", offsetof(GameApplication, interface_manager), unk_7664C0 },
-    { "mLayerMgr", offsetof(GameApplication, layer_manager), unk_7666D0 },
-    { "mReportMgr", offsetof(GameApplication, report_manager), unk_76C7E8 },
-    { "mScoreMgr", offsetof(GameApplication, score_manager), unk_76C8E8 },
-    { "mSheepEngine", offsetof(GameApplication, sheep_engine), unk_76CA08 },
-    { "mSoundTrackMgr", offsetof(GameApplication, soundtrack_manager), unk_76CFD0 },
-    { "mStageMgr", offsetof(GameApplication, stage_manager), unk_76D128 },
+    { "mInterfaceMgr", offsetof(GameApplication, interface_manager), interface_manager_type_descriptor },
+    { "mLayerMgr", offsetof(GameApplication, layer_manager), layer_manager_type_descriptor },
+    { "mReportMgr", offsetof(GameApplication, report_manager), report_manager_type_descriptor },
+    { "mScoreMgr", offsetof(GameApplication, score_manager), score_manager_type_descriptor },
+    { "mSheepEngine", offsetof(GameApplication, sheep_engine), sheep_engine_type_descriptor },
+    { "mSoundTrackMgr", offsetof(GameApplication, soundtrack_manager), soundtrack_manager_type_descriptor },
+    { "mStageMgr", offsetof(GameApplication, stage_manager), stage_manager_type_descriptor },
     { "mStaticConfig", offsetof(GameApplication, static_configuration), static_configuration_type_descriptor },
-    { "mMiniConsole", offsetof(GameApplication, mini_console), unk_7644B8 },
+    { "mMiniConsole", offsetof(GameApplication, mini_console), mini_console_type_descriptor },
     { "mDebugMgr", offsetof(GameApplication, debug_manager), debug_manager_type_descriptor },
-    { "mDevControl", offsetof(GameApplication, developer_control), unk_764F48 },
+    { "mDevControl", offsetof(GameApplication, developer_control), developer_control_type_descriptor },
     { "mPrimitiveMgr", offsetof(GameApplication, primitive_manager), primitive_manager_type_descriptor }
   };
   uint32_t *reader_methods = *(uint32_t **)(void *)reader;
@@ -605,11 +605,11 @@ int __thiscall serialize_game_application_fields(
 
   (void)serialization_flags;
   serialize_boolean_field(reader, "mIsClosing",
-                          (char *)&application->is_closing, &byte_6A6454);
+                          (char *)&application->is_closing, &default_false_boolean_value);
   serialize_boolean_field(reader, "mFastQuit",
-                          (char *)&application->fast_quit, &byte_6A6454);
+                          (char *)&application->fast_quit, &default_false_boolean_value);
   serialize_boolean_field(reader, "mMainReady",
-                          (char *)&application->main_ready, &byte_6A6454);
+                          (char *)&application->main_ready, &default_false_boolean_value);
 
   for (size_t index = 0;
        index < sizeof(object_fields) / sizeof(object_fields[0]); ++index) {

@@ -15,7 +15,7 @@ extern uint32_t *__thiscall find_or_create_registry_entry(
     uint32_t *registry, uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7664C0[];
+extern uint32_t interface_manager_type_descriptor[];
 extern int interface_manager_base_offset_adjustment;
 extern int cursor_default_coordinate_x;
 extern int cursor_default_coordinate_y;
@@ -28,7 +28,7 @@ extern uint32_t *__cdecl create_window_capture_event(
     uint32_t **event_storage, int event_id);
 extern uint32_t __stdcall SetCapture(uint32_t window);
 extern int __stdcall ReleaseCapture(void);
-extern uint8_t loc_640794;
+extern uint8_t no_mouse_capture_target_sentinel;
 extern uint32_t interface_manager_vtable[];
 extern int __thiscall destroy_interface_layer_collection(int list);
 extern int __cdecl destroy_interface_cursor(uint32_t *member);
@@ -182,7 +182,7 @@ uint32_t *__thiscall destroy_interface_manager_members(uint32_t *manager)
   while (manager[21])
     destroy_interface_layer_collection((int)(uintptr_t)(manager + 10));
   return erase_map_entry_impl(
-      unk_7664C0,
+      interface_manager_type_descriptor,
       (uint32_t)(uintptr_t)(manager + 1)
           + (uint32_t)interface_manager_base_offset_adjustment);
 }
@@ -1075,7 +1075,7 @@ void *__thiscall clear_interface_mouse_capture_target(uint32_t *manager)
     destroy_interface_temporary_object(event_storage);
     return (void *)(uintptr_t)ReleaseCapture();
   }
-  return &loc_640794;
+  return &no_mouse_capture_target_sentinel;
 }
 
 void *__thiscall clear_interface_mouse_capture_target_if_matches(
@@ -1092,7 +1092,7 @@ uint32_t *__thiscall construct_registered_interface_manager(
 {
   char default_value;
   find_or_create_registry_entry(
-      unk_7664C0,
+      interface_manager_type_descriptor,
       (uint32_t)(uintptr_t)object
           + (uint32_t)interface_manager_base_offset_adjustment + 4);
   initialize_layer_pointer_array(object + 10, &default_value);
@@ -1103,7 +1103,7 @@ uint32_t *__thiscall construct_registered_interface_manager(
 uint32_t *__thiscall construct_interface_manager(uint32_t *object)
 {
   char default_value;
-  find_or_create_registry_entry(unk_7664C0,
+  find_or_create_registry_entry(interface_manager_type_descriptor,
              (uint32_t)(uintptr_t)object
                  + (uint32_t)interface_manager_base_offset_adjustment + 4);
   initialize_layer_pointer_array(object + 10, &default_value);
@@ -1247,7 +1247,7 @@ void initialize_application_interface_manager(
 uint32_t *__cdecl allocate_registered_interface_manager(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7664C0,
+  find_or_create_registry_entry(interface_manager_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }

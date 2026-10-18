@@ -102,7 +102,7 @@ extern uint32_t *__thiscall copy_action_descriptor(uint32_t *descriptor,
 extern int __cdecl log_source_message(int source_file, int line,
                                       int severity, int flags,
                                       const char *format, ...);
-extern uint32_t unk_766E08[16];
+extern uint32_t noun_object_type_descriptor[16];
 uint32_t *allocate_registered_action_manager(int size);
 int __thiscall initialize_action_log_filename(int object);
 int __thiscall reset_action_descriptor(uint32_t *descriptor);
@@ -251,11 +251,11 @@ char __thiscall serialize_action_manager(uint32_t *manager,
   SerializeObjectReferenceMethod serialize_object_reference =
       (SerializeObjectReferenceMethod)(uintptr_t)serializer_vtable[68 / 4];
   serialize_object_reference(serializer, "mpCurrentObject",
-                              (int)(uintptr_t)(bytes + 140), unk_766E08);
+                              (int)(uintptr_t)(bytes + 140), noun_object_type_descriptor);
   serialize_event_reference((int *)(void *)(bytes + 144), serializer,
              (int)(uintptr_t)"mExtNotify");
   serialize_object_reference(serializer, "mpSheepCommandNoun",
-                              (int)(uintptr_t)(bytes + 156), unk_766E08);
+                              (int)(uintptr_t)(bytes + 156), noun_object_type_descriptor);
   serialize_action_noun_collection(serializer, "mTriggerNouns",
              (unsigned int)(uintptr_t)(bytes + 176), 1);
   serialize_action_verb_collection(serializer, "mTriggerVerbs",

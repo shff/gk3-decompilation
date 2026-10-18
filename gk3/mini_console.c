@@ -11,7 +11,7 @@ extern uint32_t *__thiscall erase_map_entry_impl(uint32_t *registry,
                                                   uint32_t address);
 
 /* gk3/GK3R_rest.c */
-extern uint32_t unk_7644B8[];
+extern uint32_t mini_console_type_descriptor[];
 extern int mini_console_base_offset_adjustment;
 extern uint32_t mini_console_vtable;
 extern int mini_console_coordinate_default_a;
@@ -43,7 +43,7 @@ uint32_t *__thiscall construct_mini_console(uint32_t *console)
 {
   construct_console_control_base((int)(uintptr_t)console);
   find_or_create_registry_entry(
-      unk_7644B8,
+      mini_console_type_descriptor,
       (uint32_t)(uintptr_t)console
           + (uint32_t)mini_console_base_offset_adjustment + 197);
   console[0] = (uint32_t)(uintptr_t)&mini_console_vtable;
@@ -61,7 +61,7 @@ uint32_t *__thiscall construct_registered_mini_console(uint32_t *console,
 {
   construct_control_container_base((char *)(void *)console, mode);
   find_or_create_registry_entry(
-      unk_7644B8,
+      mini_console_type_descriptor,
       (uint32_t)(uintptr_t)console
           + (uint32_t)mini_console_base_offset_adjustment + 197);
   console[0] = (uint32_t)(uintptr_t)&mini_console_vtable;
@@ -119,7 +119,7 @@ uint32_t *__thiscall destroy_mini_console_members(uint32_t *console)
     }
   }
   erase_map_entry_impl(
-      unk_7644B8,
+      mini_console_type_descriptor,
       (uint32_t)mini_console_base_offset_adjustment
           + (uint32_t)(uintptr_t)console + 197);
   return destroy_mini_console_control_base(console);
@@ -161,7 +161,7 @@ int __thiscall set_mini_console_visible(uint32_t *console, int visible)
 uint32_t *__cdecl allocate_registered_mini_console(int size)
 {
   uint32_t *memory = allocate_tracked_memory(size);
-  find_or_create_registry_entry(unk_7644B8,
+  find_or_create_registry_entry(mini_console_type_descriptor,
                                 (uint32_t)(uintptr_t)memory)[2] = 1;
   return memory;
 }
