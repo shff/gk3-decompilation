@@ -13240,8 +13240,6 @@ void __cdecl free_tracked_memory(int a1);
 unsigned int __thiscall sub_566320(int this, unsigned int a2, int a3, int a4);
 unsigned int __thiscall sub_5663E0(_DWORD *this, unsigned int a2);
 void __thiscall destroy_engine_resources_by_id_range(char *this, unsigned int a2, unsigned int a3);
-int __thiscall reclaim_engine_resources(char *this, int a2);
-int __thiscall sub_566570(char *this, unsigned int a2);
 int __thiscall report_out_of_memory(void *this);
 // const char *__cdecl std::_Get_future_error_what(_DWORD); weak
 int __thiscall sub_566690(int *this, int a2);
@@ -13305,7 +13303,6 @@ int *__thiscall sub_568900(int *this, int a2, _DWORD *a3);
 int __thiscall sub_5689B0(int *this);
 int __thiscall sub_568A80(int *this);
 int __cdecl sub_568AC0(const char *a1, _DWORD *a2, int a3);
-int __cdecl sub_568CD0(int a1, int a2);
 int __cdecl sub_568D60(_WORD *a1, int *a2, int a3, int a4, int a5, int a6, int a7);
 int __cdecl sub_569710(_DWORD *a1, int a2, int a3, int a4, int a5, int a6, int a7);
 int __cdecl sub_569770(int *a1);
@@ -15883,7 +15880,7 @@ void __cdecl sub_5EA8B4(); // idb
 void sub_5EA8D4();
 int __thiscall sub_5EA8DF(int this, int a2, int a3);
 _WORD *__thiscall sub_5EA9A2(_DWORD *this, int a2);
-_WORD *__thiscall sub_5EA9B9(_DWORD *this, int a2);
+_WORD *__thiscall find_sheep_machine_registry_entry(_DWORD *this, int a2);
 _BYTE *__thiscall sub_5EA9F5(_BYTE *this);
 _BYTE *__thiscall sub_5EAA38(_BYTE *this);
 _DWORD *__thiscall sub_5EAA6B(_DWORD *this);
@@ -15982,10 +15979,8 @@ int __thiscall sub_5ED32B(void *this, int a2);
 _DWORD *__thiscall sub_5ED34F(int *this);
 int __thiscall process_sheep_machine(int this);
 void __thiscall shutdown_sheep_machine(int this);
-int __thiscall sub_5ED599(_DWORD *this);
-int __thiscall sub_5ED5AD(_DWORD *this);
 // void __userpurge sub_5ED5C0(int a1@<ecx>, int a2@<ebp>, _DWORD *a3, int a4, _DWORD *a5, int a6);
-void __thiscall sub_5ED650(int *this, int a2);
+void __thiscall set_active_object_parent(int *this, int a2);
 const char *__thiscall sub_5ED683(_DWORD *this);
 const char *__thiscall sub_5ED6A2(_DWORD *this);
 int __thiscall sub_5ED6EF(_DWORD *this, int a2);
@@ -15999,13 +15994,12 @@ void __thiscall sub_5EE19B(int *this, int a2);
 _DWORD *__thiscall sub_5EE1F6(_DWORD *this, _DWORD *a2);
 void __thiscall sub_5EE217(int this, char a2);
 // void __userpurge sub_5EE4F9(int *a1@<ecx>, int a2@<ebp>, int a3);
-void __thiscall sub_5EE520(int *this);
-int __thiscall sub_5EE53D(int *this);
+void __thiscall release_sheep_machine(int *this);
 int __thiscall sub_5EE556(int this);
 char __thiscall sub_5EE5BC(int this);
 unsigned int __thiscall sub_5EE661(int *this, unsigned int a2, _DWORD *a3);
 char *__thiscall sub_5EE6D3(int this, char *a2);
-int __thiscall sub_5EE6E4(int this);
+int __thiscall destroy_sheep_machine_string_queue(int this);
 int __thiscall sub_5EE6FB(int *this, _DWORD *a2, int a3, _DWORD *a4);
 _DWORD *__thiscall sub_5EE8CB(_DWORD *this, _DWORD *a2, int *a3);
 int __thiscall sub_5EE8FD(int *this);
@@ -45107,7 +45101,7 @@ int dword_76C9F4; // weak
 int dword_76C9F8; // weak
 char byte_76CA00; // weak
 int dword_76CA04; // weak
-_DWORD dword_76CA08[15]; // weak
+_DWORD sheep_engine_runtime_type_descriptor[15]; // weak
 _UNKNOWN unk_76CA44; // weak
 _UNKNOWN unk_76CA45; // weak
 int dword_76CA48; // weak
@@ -356041,7 +356035,7 @@ int sub_53A8AB()
 int *sub_53A8B5()
 {
   return register_runtime_type_descriptor(
-           dword_76CA08,
+           sheep_engine_runtime_type_descriptor,
            (int)"SheepEngine",
            (_DWORD *)2,
            24,
@@ -356052,7 +356046,7 @@ int *sub_53A8B5()
            0,
            0);
 }
-// 76CA08: using guessed type _DWORD dword_76CA08[15];
+// 76CA08: using guessed type _DWORD sheep_engine_runtime_type_descriptor[15];
 
 //----- (0053A8ED) --------------------------------------------------------
 void __cdecl sub_53A8ED()
@@ -356060,7 +356054,7 @@ void __cdecl sub_53A8ED()
   if ( (byte_76CA00 & 1) == 0 )
   {
     byte_76CA00 |= 1u;
-    destroy_runtime_type_descriptor(&sheep_engine_type_descriptor);
+    destroy_runtime_type_descriptor(sheep_engine_runtime_type_descriptor);
     --registered_type_descriptor_count;
   }
 }
@@ -356082,7 +356076,7 @@ _BYTE *__thiscall construct_sheep_engine(_BYTE *this)
   int v3; // eax
   char v5; // [esp+13h] [ebp-Dh]
 
-  find_or_create_registry_entry(dword_76CA08, (unsigned int)&this[dword_76CA04 + 4]);
+  find_or_create_registry_entry(sheep_engine_runtime_type_descriptor, (unsigned int)&this[dword_76CA04 + 4]);
   this[8] = v5;
   *((_DWORD *)this + 3) = 0;
   *((_DWORD *)this + 4) = 0;
@@ -356099,7 +356093,7 @@ _BYTE *__thiscall construct_sheep_engine(_BYTE *this)
 // 53A948: variable 'v5' is possibly undefined
 // 6D7BB4: using guessed type int (__stdcall *off_6D7BB4)(char);
 // 76CA04: using guessed type int dword_76CA04;
-// 76CA08: using guessed type _DWORD dword_76CA08[15];
+// 76CA08: using guessed type _DWORD sheep_engine_runtime_type_descriptor[15];
 
 //----- (0053A995) --------------------------------------------------------
 _DWORD *__cdecl sub_53A995(int a1)
@@ -356126,7 +356120,7 @@ _BYTE *__thiscall sub_53A9D4(_BYTE *this, int a2)
 {
   char v4; // [esp+7h] [ebp-1h]
 
-  find_or_create_registry_entry(dword_76CA08, (unsigned int)&this[dword_76CA04 + 4]);
+  find_or_create_registry_entry(sheep_engine_runtime_type_descriptor, (unsigned int)&this[dword_76CA04 + 4]);
   this[8] = v4;
   *((_DWORD *)this + 3) = 0;
   *((_DWORD *)this + 4) = 0;
@@ -356137,7 +356131,7 @@ _BYTE *__thiscall sub_53A9D4(_BYTE *this, int a2)
 // 53A9F0: variable 'v4' is possibly undefined
 // 6D7BB4: using guessed type int (__stdcall *off_6D7BB4)(char);
 // 76CA04: using guessed type int dword_76CA04;
-// 76CA08: using guessed type _DWORD dword_76CA08[15];
+// 76CA08: using guessed type _DWORD sheep_engine_runtime_type_descriptor[15];
 
 //----- (0053AA0B) --------------------------------------------------------
 char __cdecl sub_53AA0B(_BYTE *a1)
@@ -356278,11 +356272,11 @@ _DWORD *__fastcall sub_53AC65(_DWORD *a1)
   v2 = a1 + 1;
   sub_53B75F(a1 + 1);
   sub_53B46B(a1 + 2);
-  return erase_map_entry_impl(dword_76CA08, dword_76CA04 + (a1 != 0 ? (unsigned int)v2 : 0));
+  return erase_map_entry_impl(sheep_engine_runtime_type_descriptor, dword_76CA04 + (a1 != 0 ? (unsigned int)v2 : 0));
 }
 // 6D7BB4: using guessed type int (__stdcall *off_6D7BB4)(char);
 // 76CA04: using guessed type int dword_76CA04;
-// 76CA08: using guessed type _DWORD dword_76CA08[15];
+// 76CA08: using guessed type _DWORD sheep_engine_runtime_type_descriptor[15];
 
 //----- (0053ACCB) --------------------------------------------------------
 void __thiscall sub_53ACCB(int *this, _DWORD *a2)
@@ -360802,7 +360796,7 @@ int __cdecl sub_53EE13(int a1, int a2, const char **a3)
 //----- (0053EE34) --------------------------------------------------------
 int __cdecl sub_53EE34(int a1)
 {
-  sub_5ED650(*(int **)(a1 + 20), *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 68) + 32));
+  set_active_object_parent(*(int **)(a1 + 20), *(_DWORD *)(*(_DWORD *)(*(_DWORD *)(game_engine_instance_address + 1092) + 68) + 32));
   return 0;
 }
 // 765A2C: using guessed type int game_engine_instance_address;
@@ -360813,7 +360807,7 @@ int __usercall sub_53EE54@<eax>(int a1@<ebp>, int a2)
   int v2; // eax
 
   v2 = sub_483E63(a1);
-  sub_5ED650(*(int **)(a2 + 20), v2);
+  set_active_object_parent(*(int **)(a2 + 20), v2);
   return 0;
 }
 
@@ -399416,37 +399410,10 @@ void __thiscall destroy_engine_resources_by_id_range(char *this, unsigned int a2
 // 6008C3: using guessed type void __thiscall std::_Lockit::~_Lockit(std::_Lockit *__hidden this);
 
 //----- (00566550) --------------------------------------------------------
-int __thiscall reclaim_engine_resources(char *this, int a2)
-{
-  return sub_566570(this, tracked_memory_total_bytes - a2);
-}
+/* Extracted to engine/game_engine.c as reclaim_engine_resources. */
 
 //----- (00566570) --------------------------------------------------------
-int __thiscall sub_566570(char *this, unsigned int a2)
-{
-  int v3; // edi
-  int v4; // eax
-  _DWORD v6[8]; // [esp+8h] [ebp-20h] BYREF
-
-  v6[4] = &tracked_memory_lock;
-  if ( tracked_memory_lock_initialized )
-    EnterCriticalSection(&tracked_memory_lock);
-  v6[3] = this + 332;
-  v6[7] = 0;
-  v3 = 0;
-  v6[0] = this + 428;
-  v6[1] = this + 356;
-  for ( v6[2] = this + 380; tracked_memory_total_bytes > a2; v3 = 1 )
-  {
-    v4 = sub_568CD0((int)v6, 4);
-    if ( !v4 )
-      break;
-    (*(void (__thiscall **)(int))(*(_DWORD *)v4 + 8))(v4);
-  }
-  if ( tracked_memory_lock_initialized )
-    LeaveCriticalSection(&tracked_memory_lock);
-  return v3;
-}
+/* Extracted to engine/game_engine.c as release_engine_resources_until_memory_target. */
 
 //----- (00566640) --------------------------------------------------------
 /* Extracted to engine/game_engine.c. */
@@ -400490,54 +400457,7 @@ LABEL_17:
 // 7715D8: using guessed type int file_manager_address;
 
 //----- (00568CD0) --------------------------------------------------------
-int __cdecl sub_568CD0(int a1, int a2)
-{
-  unsigned int v3; // ebx
-  int v4; // ecx
-  int v5; // esi
-  _DWORD *v6; // edi
-  int v7; // eax
-  int v8; // edx
-  bool v9; // zf
-  int v11; // [esp+4h] [ebp-4h]
-  int v12; // [esp+10h] [ebp+8h]
-
-  v3 = 0;
-  v4 = 0;
-  v11 = 0;
-  if ( a2 <= 0 )
-    return 0;
-  v12 = a2;
-  do
-  {
-    v5 = 0;
-    v6 = *(_DWORD **)a1;
-    if ( *(int *)(*(_DWORD *)a1 + 8) > 0 )
-    {
-      do
-      {
-        v7 = *(_DWORD *)vector_element_address(v6, v5);
-        if ( v7 && *(int *)(v7 + 40) <= 0 && *(_WORD *)(v7 + 6) )
-        {
-          v8 = *(_DWORD *)(v7 + 44);
-          if ( frame_number - v8 > v3 )
-          {
-            v3 = frame_number - v8;
-            v11 = v7;
-          }
-        }
-        ++v5;
-      }
-      while ( v5 < v6[2] );
-      v4 = v11;
-    }
-    v9 = v12 == 1;
-    a1 += 4;
-    --v12;
-  }
-  while ( !v9 );
-  return v4;
-}
+/* Extracted to engine/game_engine.c as a private resource-selection helper. */
 // 75D748: using guessed type int frame_number;
 
 //----- (00568D60) --------------------------------------------------------
@@ -510990,28 +510910,14 @@ _WORD *__thiscall sub_5EA9A2(_DWORD *this, int a2)
 {
   _WORD *result; // eax
 
-  result = sub_5EA9B9(this, a2);
+  result = find_sheep_machine_registry_entry(this, a2);
   if ( result )
     return (_WORD *)sub_5EA650((int)result);
   return result;
 }
 
 //----- (005EA9B9) --------------------------------------------------------
-_WORD *__thiscall sub_5EA9B9(_DWORD *this, int a2)
-{
-  int v2; // edx
-  _WORD *result; // eax
-
-  v2 = this[21];
-  if ( !v2 )
-    return 0;
-  if ( (unsigned __int16)a2 >= (unsigned int)((this[22] - v2) / 12) )
-    return 0;
-  result = (_WORD *)(this[21] + 12 * (unsigned __int16)a2);
-  if ( *result != HIWORD(a2) )
-    return 0;
-  return result;
-}
+/* Extracted to gk3/sheep_engine.c as find_sheep_machine_registry_entry. */
 
 //----- (005EA9F5) --------------------------------------------------------
 _BYTE *__thiscall sub_5EA9F5(_BYTE *this)
@@ -513638,67 +513544,20 @@ LABEL_12:
   }
   else if ( v3 == 2 )
   {
-    sub_5EE520((int *)this);
+    release_sheep_machine((int *)this);
   }
   return v3;
 }
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (005ED538) --------------------------------------------------------
-void __thiscall shutdown_sheep_machine(int this)
-{
-  int v2; // edi
-  int v3; // ebp
-  _WORD *v4; // eax
-
-  sub_5ED599((_DWORD *)(this + 24));
-  *(_DWORD *)(this + 68) = -1;
-  v2 = 0;
-  v3 = sub_5ED5AD((_DWORD *)this);
-  if ( v3 > 0 )
-  {
-    do
-    {
-      v4 = sub_5EA9B9(*(_DWORD **)(this + 12), *(_DWORD *)(*(_DWORD *)(this + 76) + 8 * v2 + 4));
-      if ( v4 && *((_BYTE *)v4 + 2) )
-        *((_DWORD *)v4 + 1) = 0;
-      ++v2;
-    }
-    while ( v2 < v3 );
-  }
-  sub_5EE6E4(this + 72);
-  *(_BYTE *)(this + 90) = 0;
-  *(_BYTE *)(this + 89) = 0;
-  *(_DWORD *)(this + 92) = 0;
-  sub_5EE520((int *)this);
-}
+/* Extracted to gk3/sheep_engine.c as shutdown_sheep_machine. */
 
 //----- (005ED599) --------------------------------------------------------
-int __thiscall sub_5ED599(_DWORD *this)
-{
-  int result; // eax
-
-  result = 0;
-  *this = 0;
-  this[2] = 0;
-  this[4] = 0;
-  this[1] = 0;
-  this[3] = 0;
-  this[6] = 0;
-  return result;
-}
+/* Extracted to gk3/sheep_engine.c as clear_sheep_machine_callback_state. */
 
 //----- (005ED5AD) --------------------------------------------------------
-int __thiscall sub_5ED5AD(_DWORD *this)
-{
-  int v1; // edx
-
-  v1 = this[19];
-  if ( v1 )
-    return (this[20] - v1) >> 3;
-  else
-    return 0;
-}
+/* Extracted to gk3/sheep_engine.c as count_sheep_machine_registry_entries. */
 
 //----- (005ED5C0) --------------------------------------------------------
 void __userpurge sub_5ED5C0(int a1@<ecx>, int a2@<ebp>, _DWORD *a3, int a4, _DWORD *a5, int a6)
@@ -513731,25 +513590,7 @@ void __userpurge sub_5ED5C0(int a1@<ecx>, int a2@<ebp>, _DWORD *a3, int a4, _DWO
 // 765A2C: using guessed type int game_engine_instance_address;
 
 //----- (005ED650) --------------------------------------------------------
-void __thiscall sub_5ED650(int *this, int a2)
-{
-  _DWORD *v3; // ecx
-
-  v3 = (_DWORD *)this[4];
-  if ( v3 != (_DWORD *)a2 )
-  {
-    if ( v3 )
-    {
-      remove_active_object_child(v3, (int)this);
-      this[4] = 0;
-    }
-    if ( a2 )
-    {
-      add_active_object_child(a2, this, 1);
-      this[4] = a2;
-    }
-  }
-}
+/* Extracted to engine/active_objects.c as set_active_object_parent. */
 
 //----- (005ED683) --------------------------------------------------------
 const char *__thiscall sub_5ED683(_DWORD *this)
@@ -514673,30 +514514,14 @@ void __userpurge sub_5EE4F9(int *a1@<ecx>, int a2@<ebp>, int a3)
   v5 = a3;
   if ( !a3 )
     v5 = sub_483E63(a2);
-  sub_5ED650(a1, v5);
+  set_active_object_parent(a1, v5);
 }
 
 //----- (005EE520) --------------------------------------------------------
-void __thiscall sub_5EE520(int *this)
-{
-  sub_5EE53D(this);
-  --*(_DWORD *)(this[5] + 12);
-  this[5] = 0;
-  sub_5ED650(this, 0);
-}
+/* Extracted to gk3/sheep_engine.c as release_sheep_machine. */
 
 //----- (005EE53D) --------------------------------------------------------
-int __thiscall sub_5EE53D(int *this)
-{
-  _DWORD *v1; // esi
-  int result; // eax
-
-  v1 = this + 24;
-  result = queue_engine_event((int *)game_engine_address, this + 24);
-  *v1 = 0;
-  v1[1] = 0;
-  return result;
-}
+/* Extracted to gk3/sheep_engine.c as queue_sheep_machine_completion_event. */
 // 7715D4: using guessed type int game_engine_address;
 
 //----- (005EE556) --------------------------------------------------------
@@ -514763,7 +514588,7 @@ char __thiscall sub_5EE5BC(int this)
 LABEL_6:
     if ( v4 )
     {
-      sub_5EE6E4(v5);
+      destroy_sheep_machine_string_queue(v5);
       if ( is_developer_control_option_enabled(*(_BYTE **)(*(_DWORD *)(game_engine_instance_address + 1092) + 104), 28) )
       {
         v11 = sub_5ED6EF((_DWORD *)this, -1);
@@ -514826,11 +514651,7 @@ char *__thiscall sub_5EE6D3(int this, char *a2)
 }
 
 //----- (005EE6E4) --------------------------------------------------------
-int __thiscall sub_5EE6E4(int this)
-{
-  sub_5EE91D((_DWORD *)this, *(char **)(this + 4), *(char **)(this + 8));
-  return sub_5EE967((int *)this);
-}
+/* Extracted to gk3/sheep_engine.c as destroy_sheep_machine_string_queue. */
 
 //----- (005EE6FB) --------------------------------------------------------
 int __thiscall sub_5EE6FB(int *this, _DWORD *a2, int a3, _DWORD *a4)

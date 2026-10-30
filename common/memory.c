@@ -4,8 +4,8 @@
 
 /* gk3/GK3R_rest.c */
 extern int game_engine_address;
-extern int __thiscall reclaim_engine_resources(char *engine,
-                                                int target_bytes);
+extern int __thiscall reclaim_engine_resources(uint8_t *engine,
+                                               int target_bytes);
 extern int tracked_memory_lock_initialized;
 extern CRITICAL_SECTION tracked_memory_lock;
 extern int tracked_memory_total_bytes;

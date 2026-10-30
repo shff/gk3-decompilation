@@ -169,3 +169,23 @@ void __thiscall remove_active_object_child(int object_address, int child)
   else
     remove_linked_collection_entry(children, child);
 }
+
+void __thiscall set_active_object_parent(int *child, int parent_address)
+{
+  uint32_t *child_words = (uint32_t *)(void *)child;
+  const int child_address = (int)(uintptr_t)child_words;
+  const int current_parent = (int)child_words[4];
+
+  if (current_parent == parent_address)
+    return;
+
+  if (current_parent != 0) {
+    remove_active_object_child(current_parent, child_address);
+    child_words[4] = 0;
+  }
+
+  if (parent_address != 0) {
+    add_active_object_child(parent_address, child, 1);
+    child_words[4] = (uint32_t)parent_address;
+  }
+}

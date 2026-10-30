@@ -537,6 +537,9 @@ extern int __thiscall destroy_message_hook_list(int *message_hooks);
 
 /* common/memory.c */
 extern void __cdecl free_tracked_memory(int address);
+extern CRITICAL_SECTION tracked_memory_lock;
+extern int tracked_memory_lock_initialized;
+extern int tracked_memory_total_bytes;
 
 typedef struct {
   uint8_t instance_byte;
@@ -1074,6 +1077,74 @@ void clear_global_engine_caches(void)
   global_resource_ids_begin = 0;
   global_resource_ids_end = 0;
   global_resource_ids_capacity = 0;
+}
+
+static int find_oldest_reclaimable_engine_object(
+    uint8_t *const collection_addresses[], int collection_count)
+{
+  int oldest_object = 0;
+  uint32_t oldest_age = 0;
+
+  for (int collection_index = 0; collection_index < collection_count;
+       ++collection_index) {
+    EngineObjectCollection *collection =
+        (EngineObjectCollection *)(void *)collection_addresses[collection_index];
+    for (int object_index = 0; object_index < collection->count; ++object_index) {
+      const int object = *(int *)(uintptr_t)vector_element_address(
+          (uint32_t *)(void *)collection, object_index);
+      if (!object || *(int *)(uintptr_t)(object + 40) > 0 ||
+          !*(uint16_t *)(uintptr_t)(object + 6))
+        continue;
+
+      const uint32_t age =
+          (uint32_t)(frame_number - *(int *)(uintptr_t)(object + 44));
+      if (age > oldest_age) {
+        oldest_age = age;
+        oldest_object = object;
+      }
+    }
+  }
+  return oldest_object;
+}
+
+static int release_engine_resources_until_memory_target(uint8_t *engine,
+                                                        uint32_t target_bytes)
+{
+  uint8_t *collection_addresses[] = {
+    engine + 428,
+    engine + 356,
+    engine + 380,
+    engine + 332
+  };
+  int released_any = 0;
+
+  if (tracked_memory_lock_initialized)
+    EnterCriticalSection(&tracked_memory_lock);
+
+  while ((uint32_t)tracked_memory_total_bytes > target_bytes) {
+    const int object = find_oldest_reclaimable_engine_object(
+        collection_addresses,
+        (int)(sizeof(collection_addresses) / sizeof(collection_addresses[0])));
+    if (!object)
+      break;
+
+    const uint32_t *methods = *(uint32_t **)(uintptr_t)object;
+    typedef void (__thiscall *ReleaseObjectMethod)(int object);
+    ((ReleaseObjectMethod)(uintptr_t)methods[2])(object);
+    released_any = 1;
+  }
+
+  if (tracked_memory_lock_initialized)
+    LeaveCriticalSection(&tracked_memory_lock);
+  return released_any;
+}
+
+int __thiscall reclaim_engine_resources(uint8_t *engine,
+                                        int bytes_to_reclaim)
+{
+  const uint32_t target_bytes =
+      (uint32_t)(tracked_memory_total_bytes - bytes_to_reclaim);
+  return release_engine_resources_until_memory_target(engine, target_bytes);
 }
 
 int __thiscall release_game_engine_resources(uint32_t *engine_words)

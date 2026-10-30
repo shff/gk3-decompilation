@@ -115,7 +115,7 @@ extern uint32_t interface_manager_type_descriptor[]; /* Interface-manager type d
 extern uint32_t layer_manager_type_descriptor[]; /* Layer-manager type descriptor. */
 extern uint32_t report_manager_type_descriptor[]; /* Report-manager type descriptor. */
 extern uint32_t score_manager_type_descriptor[]; /* Score-manager type descriptor. */
-extern uint32_t sheep_engine_type_descriptor[]; /* Sheep-engine type descriptor. */
+extern uint32_t sheep_engine_runtime_type_descriptor[];
 extern uint32_t soundtrack_manager_type_descriptor[]; /* Soundtrack-manager type descriptor. */
 extern uint32_t stage_manager_type_descriptor[]; /* Stage-manager type descriptor. */
 extern uint32_t static_configuration_type_descriptor[]; /* Static-configuration type descriptor. */
@@ -589,7 +589,7 @@ int __thiscall serialize_game_application_fields(
     { "mLayerMgr", offsetof(GameApplication, layer_manager), layer_manager_type_descriptor },
     { "mReportMgr", offsetof(GameApplication, report_manager), report_manager_type_descriptor },
     { "mScoreMgr", offsetof(GameApplication, score_manager), score_manager_type_descriptor },
-    { "mSheepEngine", offsetof(GameApplication, sheep_engine), sheep_engine_type_descriptor },
+    { "mSheepEngine", offsetof(GameApplication, sheep_engine), sheep_engine_runtime_type_descriptor },
     { "mSoundTrackMgr", offsetof(GameApplication, soundtrack_manager), soundtrack_manager_type_descriptor },
     { "mStageMgr", offsetof(GameApplication, stage_manager), stage_manager_type_descriptor },
     { "mStaticConfig", offsetof(GameApplication, static_configuration), static_configuration_type_descriptor },
